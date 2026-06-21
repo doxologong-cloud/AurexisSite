@@ -24,7 +24,7 @@
 /* Typography & Base */
 body {
     font-family: 'Space Grotesk', sans-serif;
-    background-color: var(--bg-dark);
+    background-color: var(--bg-color);
     color: var(--text-main);
     overflow-x: hidden;
     line-height: 1.6;
