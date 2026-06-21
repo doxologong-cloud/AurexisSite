@@ -35,6 +35,7 @@ def send_email(to_email, code):
     service_id = os.getenv("EMAILJS_SERVICE_ID", "service_ib5so3b")
     template_id = os.getenv("EMAILJS_TEMPLATE_ID", "template_hwk92vh")
     public_key = os.getenv("EMAILJS_PUBLIC_KEY", "kYhDdXzww191JNlMc")
+    private_key = os.getenv("EMAILJS_PRIVATE_KEY", "TSRZvPlfaj6paVRfmVzCW")
     
     if not service_id or not template_id or not public_key:
         print(f"MOCK EMAIL SENT: Code {code} to {to_email}")
@@ -45,6 +46,7 @@ def send_email(to_email, code):
         "service_id": service_id,
         "template_id": template_id,
         "user_id": public_key,
+        "accessToken": private_key,
         "template_params": {
             "to_email": to_email,
             "code": code
