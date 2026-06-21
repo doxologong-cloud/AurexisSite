@@ -1,8 +1,6 @@
 from flask import Flask, render_template, request, jsonify, session
 import sqlite3
-import smtplib
-from email.mime.text import MIMEText
-from email.mime.multipart import MIMEMultipart
+import requests
 import random
 import os
 import hashlib
@@ -34,32 +32,34 @@ init_db()
 verification_codes = {}
 
 def send_email(to_email, code):
-    sender_email = os.getenv("SMTP_EMAIL")
-    sender_password = os.getenv("SMTP_PASSWORD")
+    service_id = os.getenv("EMAILJS_SERVICE_ID", "service_ib5so3b")
+    template_id = os.getenv("EMAILJS_TEMPLATE_ID", "template_hwk92vh")
+    public_key = os.getenv("EMAILJS_PUBLIC_KEY", "kYhDdXzww191JNlMc")
     
-    if not sender_email or not sender_password:
+    if not service_id or not template_id or not public_key:
         print(f"MOCK EMAIL SENT: Code {code} to {to_email}")
-        return True # Mock success if no SMTP configured
+        return True # Mock success
 
+    url = "https://api.emailjs.com/api/v1.0/email/send"
+    payload = {
+        "service_id": service_id,
+        "template_id": template_id,
+        "user_id": public_key,
+        "template_params": {
+            "to_email": to_email,
+            "code": code
+        }
+    }
+    
     try:
-        msg = MIMEMultipart()
-        msg['From'] = sender_email
-        msg['To'] = to_email
-        msg['Subject'] = "Aurexis Studio - Код подтверждения"
-        
-        body = f"Ваш код подтверждения: {code}\nНикому не сообщайте этот код."
-        msg.attach(MIMEText(body, 'plain'))
-
-        smtp_host = os.getenv("SMTP_HOST", "smtp.mail.ru")
-        smtp_port = int(os.getenv("SMTP_PORT", 465))
-        server = smtplib.SMTP_SSL(smtp_host, smtp_port)
-        server.login(sender_email, sender_password)
-        text = msg.as_string()
-        server.sendmail(sender_email, to_email, text)
-        server.quit()
-        return True
+        response = requests.post(url, json=payload)
+        if response.status_code == 200:
+            return True
+        else:
+            print(f"EmailJS API Error: {response.text}")
+            return False
     except Exception as e:
-        print(f"SMTP Error: {e}")
+        print(f"Request Error: {e}")
         return False
 
 @app.route('/')
