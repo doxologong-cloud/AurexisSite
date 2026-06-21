@@ -27,6 +27,7 @@ body {
     color: var(--text-main);
     overflow-x: hidden;
     line-height: 1.6;
+    cursor: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24"><defs><linearGradient id="gold" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="%23FFE373"/><stop offset="100%" stop-color="%23D4AF37"/></linearGradient><filter id="shadow"><feDropShadow dx="0" dy="2" stdDeviation="1.5" flood-color="%23000" flood-opacity="0.8"/></filter></defs><g filter="url(%23shadow)"><polygon points="11,2 2,20 8,20 11,13" fill="url(%23gold)"/><polygon points="13,2 22,20 16,20 13,13" fill="url(%23gold)"/></g></svg>') 12 2, auto;
 }
 
 h1, h2, h3, h4 {
@@ -36,6 +37,7 @@ h1, h2, h3, h4 {
 a {
     text-decoration: none;
     color: inherit;
+    cursor: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><defs><linearGradient id="gold" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="%23ffffff"/><stop offset="100%" stop-color="%23FFE373"/></linearGradient><filter id="shadow"><feDropShadow dx="0" dy="2" stdDeviation="1.5" flood-color="%23000" flood-opacity="0.8"/></filter></defs><g filter="url(%23shadow)"><polygon points="11,2 2,20 8,20 11,13" fill="url(%23gold)"/><polygon points="13,2 22,20 16,20 13,13" fill="url(%23gold)"/></g></svg>') 12 2, pointer !important;
 }
 
 /* Background Animations */
