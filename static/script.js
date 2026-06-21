@@ -267,7 +267,7 @@ document.addEventListener('DOMContentLoaded', () => {
         document.getElementById('acc-email').textContent = userData.email;
         document.getElementById('acc-avatar').textContent = userData.nickname.charAt(0).toUpperCase();
 
-        if (showAlert) alert(`Успешный вход! Добро пожаловать, ${userData.nickname}!`);
+        // if (showAlert) alert(`Успешный вход! Добро пожаловать, ${userData.nickname}!`);
     }
 
     // Logout
@@ -279,6 +279,6 @@ document.addEventListener('DOMContentLoaded', () => {
         document.getElementById('nav-account').style.display = 'none';
         document.getElementById('open-auth').style.display = 'inline-block';
         window.location.hash = '#home'; // Go back to home
-        alert('Вы вышли из аккаунта.');
+        // alert('Вы вышли из аккаунта.');
     });
 });
