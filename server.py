@@ -1,5 +1,5 @@
 from flask import Flask, render_template, request, jsonify, session
-import sqlite3
+import sqlite3 # Kept for backwards compatibility but unused
 import requests
 import random
 import os
@@ -11,22 +11,38 @@ load_dotenv()
 app = Flask(__name__)
 app.secret_key = os.getenv("SECRET_KEY", "super-secret-key-12345")
 
-# Database initialization
-def init_db():
-    conn = sqlite3.connect('users.db')
-    c = conn.cursor()
-    c.execute('''
-        CREATE TABLE IF NOT EXISTS users (
-            id INTEGER PRIMARY KEY AUTOINCREMENT,
-            nickname TEXT NOT NULL,
-            email TEXT UNIQUE NOT NULL,
-            password TEXT NOT NULL
-        )
-    ''')
-    conn.commit()
-    conn.close()
+SUPABASE_URL = "https://bbeaokhcckhuhcxnagsf.supabase.co"
+SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImJiZWFva2hjY2todWhjeG5hZ3NmIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODIwNjMxNzIsImV4cCI6MjA5NzYzOTE3Mn0.uO8VD42bQ9W9udl2GWF02uK8zpVCXR2QEo0nrMps6OM"
 
-init_db()
+def get_supabase_headers():
+    return {
+        "apikey": SUPABASE_KEY,
+        "Authorization": f"Bearer {SUPABASE_KEY}",
+        "Content-Type": "application/json",
+        "Prefer": "return=representation"
+    }
+
+def get_user_by_email(email):
+    try:
+        url = f"{SUPABASE_URL}/rest/v1/users?email=eq.{email}&select=*"
+        res = requests.get(url, headers=get_supabase_headers())
+        if res.status_code == 200:
+            users = res.json()
+            if len(users) > 0:
+                return users[0]
+    except Exception as e:
+        print("Supabase GET error:", e)
+    return None
+
+def create_user(nickname, email, password):
+    try:
+        url = f"{SUPABASE_URL}/rest/v1/users"
+        payload = {"nickname": nickname, "email": email, "password": password}
+        res = requests.post(url, json=payload, headers=get_supabase_headers())
+        return res.status_code in [200, 201]
+    except Exception as e:
+        print("Supabase POST error:", e)
+        return False
 
 # Temporary store for verification codes
 verification_codes = {}
@@ -74,13 +90,8 @@ def register():
     email = data.get('email')
     
     # Check if user already exists
-    conn = sqlite3.connect('users.db')
-    c = conn.cursor()
-    c.execute("SELECT id FROM users WHERE email=?", (email,))
-    if c.fetchone():
-        conn.close()
+    if get_user_by_email(email):
         return jsonify({"success": False, "message": "Эта почта уже зарегистрирована."})
-    conn.close()
 
     # Generate and send code
     code = str(random.randint(1000, 9999))
@@ -105,12 +116,9 @@ def verify():
         user_data = verification_codes[email]
         
         # Save to DB
-        conn = sqlite3.connect('users.db')
-        c = conn.cursor()
-        c.execute("INSERT INTO users (nickname, email, password) VALUES (?, ?, ?)",
-                  (user_data['nickname'], email, user_data['password']))
-        conn.commit()
-        conn.close()
+        success = create_user(user_data['nickname'], email, user_data['password'])
+        if not success:
+            return jsonify({"success": False, "message": "Ошибка сохранения в облако."})
         
         del verification_codes[email]
         session['user'] = {"nickname": user_data['nickname'], "email": email}
@@ -124,14 +132,10 @@ def login():
     email = data.get('email')
     password = hashlib.sha256(data.get('password').encode()).hexdigest()
     
-    conn = sqlite3.connect('users.db')
-    c = conn.cursor()
-    c.execute("SELECT nickname, email FROM users WHERE email=? AND password=?", (email, password))
-    user = c.fetchone()
-    conn.close()
+    user = get_user_by_email(email)
     
-    if user:
-        session['user'] = {"nickname": user[0], "email": user[1]}
+    if user and user.get('password') == password:
+        session['user'] = {"nickname": user.get('nickname'), "email": email}
         return jsonify({"success": True, "user": session['user']})
     return jsonify({"success": False, "message": "Неверная почта или пароль."})
 

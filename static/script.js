@@ -280,5 +280,16 @@ document.addEventListener('DOMContentLoaded', () => {
         document.getElementById('open-auth').style.display = 'inline-block';
         window.location.hash = '#home'; // Go back to home
         // alert('Вы вышли из аккаунта.');
+
+        // Reset auth modal to Registration form
+        verifyForm.style.display = 'none';
+        document.querySelector('.auth-tabs').style.display = 'flex';
+        authSocialWrap.style.display = 'block';
+        loginForm.style.display = 'none';
+        registerForm.style.display = 'flex';
+        
+        authTabs.forEach(t => t.classList.remove('active'));
+        const regTab = document.querySelector('.auth-tab[data-tab="register"]');
+        if(regTab) regTab.classList.add('active');
     });
 });
