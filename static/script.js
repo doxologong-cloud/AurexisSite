@@ -1316,15 +1316,34 @@ async function sendGlobalChat() {
                 const reader = res.body.getReader();
                 const decoder = new TextDecoder('utf-8');
                 let fullReply = '';
+                let partialChunk = '';
                 
                 while (true) {
                     const { value, done } = await reader.read();
                     if (done) break;
                     
-                    const chunk = decoder.decode(value, {stream: true});
-                    fullReply += chunk;
-                    contentBox.textContent = fullReply;
-                    aiChatBox.scrollTop = aiChatBox.scrollHeight;
+                    const chunkText = decoder.decode(value, {stream: true});
+                    partialChunk += chunkText;
+                    
+                    const lines = partialChunk.split('\n');
+                    partialChunk = lines.pop(); // keep the last incomplete line
+                    
+                    for(let line of lines) {
+                        if(line.startsWith('data: ') && line !== 'data: [DONE]') {
+                            try {
+                                const data = JSON.parse(line.slice(6));
+                                const content = data.choices[0]?.delta?.content || '';
+                                if(content.startsWith('EASTEREGG:')) {
+                                    handleEasterEgg(content.split(':')[1]);
+                                    contentBox.innerHTML = '<span style="color:var(--neon-primary)">[ СИСТЕМНАЯ АНОМАЛИЯ ОБНАРУЖЕНА ]</span>';
+                                    continue;
+                                }
+                                fullReply += content;
+                                contentBox.textContent = fullReply;
+                                aiChatBox.scrollTop = aiChatBox.scrollHeight;
+                            } catch(e) {}
+                        }
+                    }
                 }
                 aiChatHistory.push({role: 'assistant', content: fullReply});
             } else {
@@ -1611,3 +1630,361 @@ function triggerApocalypse() {
         
     }, 10000);
 }
+
+
+// ==========================================
+// MESSENGER LOGIC
+// ==========================================
+
+let activeChatId = null;
+let messagePollingInterval = null;
+let lastMessageTime = 0;
+
+document.addEventListener('DOMContentLoaded', () => {
+    // Navigation
+    document.querySelector('.nav-feed-link')?.addEventListener('click', (e) => {
+        if(!window.currentUser) {
+            e.preventDefault();
+            showToast('Войдите, чтобы открыть Ленту', 'error');
+            return;
+        }
+        showView('view-messenger');
+        loadChats();
+    });
+
+    // New Chat Modal
+    const newChatModal = document.getElementById('new-chat-modal');
+    document.getElementById('new-chat-btn')?.addEventListener('click', () => {
+        newChatModal.style.display = 'flex';
+    });
+    document.getElementById('close-chat-modal')?.addEventListener('click', () => {
+        newChatModal.style.display = 'none';
+    });
+
+    // Tabs
+    const tabDm = document.getElementById('tab-dm');
+    const tabGroup = document.getElementById('tab-group');
+    const dmForm = document.getElementById('dm-form');
+    const groupForm = document.getElementById('group-form');
+    let createChatType = 'chat_dm';
+
+    tabDm?.addEventListener('click', () => {
+        createChatType = 'chat_dm';
+        tabDm.style.opacity = '1';
+        tabGroup.style.opacity = '0.5';
+        dmForm.style.display = 'block';
+        groupForm.style.display = 'none';
+    });
+
+    tabGroup?.addEventListener('click', () => {
+        createChatType = 'chat_group';
+        tabGroup.style.opacity = '1';
+        tabDm.style.opacity = '0.5';
+        groupForm.style.display = 'block';
+        dmForm.style.display = 'none';
+    });
+
+    // Create Chat Submit
+    document.getElementById('create-chat-submit')?.addEventListener('click', async () => {
+        const payload = { type: createChatType };
+        if(createChatType === 'chat_dm') {
+            payload.target_email = document.getElementById('dm-email').value.trim();
+        } else {
+            payload.target_email = document.getElementById('group-emails').value.trim();
+            payload.group_name = document.getElementById('group-name').value.trim();
+        }
+
+        if(!payload.target_email) return showToast('Введите email', 'error');
+
+        try {
+            const res = await fetch('/api/create_chat', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(payload)
+            });
+            const data = await res.json();
+            if(res.ok) {
+                showToast('Чат создан!', 'success');
+                newChatModal.style.display = 'none';
+                loadChats();
+            } else {
+                showToast(data.error || 'Ошибка', 'error');
+            }
+        } catch (e) {
+            console.error(e);
+        }
+    });
+
+    // Send Message
+    document.getElementById('messenger-send-btn')?.addEventListener('click', sendMessengerMessage);
+    document.getElementById('messenger-input')?.addEventListener('keypress', (e) => {
+        if(e.key === 'Enter') sendMessengerMessage();
+    });
+
+    // Stickers Panel
+    const stickersBtn = document.getElementById('stickers-btn');
+    const stickersPanel = document.getElementById('stickers-panel');
+    stickersBtn?.addEventListener('click', () => {
+        stickersPanel.style.display = stickersPanel.style.display === 'none' ? 'grid' : 'none';
+    });
+    
+    document.querySelectorAll('.sticker-item').forEach(sticker => {
+        sticker.addEventListener('click', () => {
+            const url = sticker.src;
+            sendMessengerMessage(`STICKER:${url}`);
+            stickersPanel.style.display = 'none';
+        });
+    });
+});
+
+async function loadChats() {
+    const chatsList = document.getElementById('chats-list');
+    chatsList.innerHTML = '<div style="text-align: center; color: #888; margin-top: 20px;">Загрузка...</div>';
+    
+    try {
+        const res = await fetch('/api/get_chats');
+        const data = await res.json();
+        
+        if(res.ok) {
+            chatsList.innerHTML = '';
+            if(data.chats.length === 0) {
+                chatsList.innerHTML = '<div style="padding: 20px; color: #888; text-align:center;">У вас пока нет чатов</div>';
+                return;
+            }
+            
+            data.chats.forEach(chat => {
+                const el = document.createElement('div');
+                el.className = `chat-item ${activeChatId === chat.id ? 'active' : ''}`;
+                el.onclick = () => openChat(chat);
+                
+                const initial = chat.name.charAt(0).toUpperCase();
+                
+                el.innerHTML = `
+                    <div class="chat-item-avatar">${initial}</div>
+                    <div class="chat-item-info">
+                        <span class="chat-item-name">${chat.name}</span>
+                        <span class="chat-item-type">${chat.type === 'chat_group' ? 'Группа' : 'Личный'}</span>
+                    </div>
+                `;
+                chatsList.appendChild(el);
+            });
+        }
+    } catch(e) {
+        console.error(e);
+    }
+}
+
+async function openChat(chat) {
+    activeChatId = chat.id;
+    document.getElementById('no-chat-selected').style.display = 'none';
+    document.getElementById('active-chat').style.display = 'flex';
+    document.getElementById('active-chat-name').textContent = chat.name;
+    
+    // Highlight in list
+    document.querySelectorAll('.chat-item').forEach(el => el.classList.remove('active'));
+    // Since we re-render chats often, precise highlighting might require loadChats re-run or DOM traversal
+    loadChats();
+    
+    loadChatMessages();
+    
+    // Setup polling
+    if(messagePollingInterval) clearInterval(messagePollingInterval);
+    messagePollingInterval = setInterval(loadChatMessages, 3000);
+}
+
+async function loadChatMessages() {
+    if(!activeChatId) return;
+    
+    try {
+        const res = await fetch(`/api/get_chat_messages/${activeChatId}`);
+        const data = await res.json();
+        
+        if(res.ok) {
+            const container = document.getElementById('active-chat-messages');
+            container.innerHTML = '';
+            
+            data.messages.forEach(msg => {
+                const isSentByMe = msg.sender_email === window.currentUser.email;
+                const el = document.createElement('div');
+                el.className = `chat-msg ${isSentByMe ? 'sent' : 'received'}`;
+                
+                let contentHTML = escapeHTML(msg.message);
+                if(msg.message.startsWith('STICKER:')) {
+                    el.classList.add('chat-msg-sticker');
+                    contentHTML = `<img src="${escapeHTML(msg.message.replace('STICKER:', ''))}" alt="sticker">`;
+                }
+                
+                const time = new Date(msg.created_at).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
+                
+                el.innerHTML = `
+                    ${!isSentByMe ? `<span class="chat-msg-sender">${escapeHTML(msg.sender_email.split('@')[0])}</span>` : ''}
+                    ${contentHTML}
+                    <span class="chat-msg-time">${time}</span>
+                `;
+                container.appendChild(el);
+            });
+            
+            container.scrollTop = container.scrollHeight;
+        }
+    } catch(e) {
+        console.error(e);
+    }
+}
+
+async function sendMessengerMessage(forceMessage = null) {
+    if(!activeChatId) return;
+    
+    const input = document.getElementById('messenger-input');
+    const message = typeof forceMessage === 'string' ? forceMessage : input.value.trim();
+    if(!message) return;
+    
+    input.value = '';
+    
+    // Optimistic UI could be added here, but simple fetch is fine
+    try {
+        await fetch('/api/send_chat_message', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ chat_id: activeChatId, message })
+        });
+        loadChatMessages();
+    } catch(e) {
+        console.error(e);
+    }
+}
+
+// Utility to escape HTML to prevent XSS
+function escapeHTML(str) {
+    return str.replace(/[&<>'"]/g, 
+        tag => ({
+            '&': '&amp;',
+            '<': '&lt;',
+            '>': '&gt;',
+            "'": '&#39;',
+            '"': '&quot;'
+        }[tag] || tag)
+    );
+}
+
+
+// ==========================================
+// EASTER EGGS
+// ==========================================
+
+function handleEasterEgg(eggCode) {
+    if(eggCode === 'matrix') {
+        const matrixCanvas = document.createElement('canvas');
+        matrixCanvas.id = 'matrix-canvas';
+        matrixCanvas.style.position = 'fixed';
+        matrixCanvas.style.top = '0';
+        matrixCanvas.style.left = '0';
+        matrixCanvas.style.width = '100vw';
+        matrixCanvas.style.height = '100vh';
+        matrixCanvas.style.zIndex = '9999';
+        matrixCanvas.style.pointerEvents = 'none';
+        document.body.appendChild(matrixCanvas);
+        
+        const ctx = matrixCanvas.getContext('2d');
+        matrixCanvas.width = window.innerWidth;
+        matrixCanvas.height = window.innerHeight;
+        
+        const katakana = 'アァカサタナハマヤャラワガザダバパイィキシチニヒミリヰギジヂビピウゥクスツヌフムユュルグズブヅプエェケセテネヘメレゲゼデベペオォコソトノホモヨョロゴゾドボポヴッン';
+        const latin = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+        const nums = '0123456789';
+        const alphabet = katakana + latin + nums;
+        
+        const fontSize = 16;
+        const columns = matrixCanvas.width / fontSize;
+        const drops = [];
+        for(let x = 0; x < columns; x++) drops[x] = 1;
+        
+        const matrixInterval = setInterval(() => {
+            ctx.fillStyle = 'rgba(0, 0, 0, 0.05)';
+            ctx.fillRect(0, 0, matrixCanvas.width, matrixCanvas.height);
+            
+            ctx.fillStyle = '#0F0';
+            ctx.font = fontSize + 'px monospace';
+            
+            for(let i = 0; i < drops.length; i++) {
+                const text = alphabet.charAt(Math.floor(Math.random() * alphabet.length));
+                ctx.fillText(text, i * fontSize, drops[i] * fontSize);
+                
+                if(drops[i] * fontSize > matrixCanvas.height && Math.random() > 0.975)
+                    drops[i] = 0;
+                
+                drops[i]++;
+            }
+        }, 30);
+        
+        setTimeout(() => {
+            clearInterval(matrixInterval);
+            matrixCanvas.style.transition = 'opacity 2s';
+            matrixCanvas.style.opacity = '0';
+            setTimeout(() => matrixCanvas.remove(), 2000);
+        }, 5000);
+    }
+    
+    if(eggCode === 'dox_me') {
+        document.body.style.animation = 'shake 0.5s infinite';
+        setTimeout(() => {
+            document.body.style.animation = '';
+        }, 2000);
+        
+        if(!document.getElementById('shake-style')) {
+            const style = document.createElement('style');
+            style.id = 'shake-style';
+            style.innerHTML = `
+                @keyframes shake {
+                    0% { transform: translate(1px, 1px) rotate(0deg); }
+                    10% { transform: translate(-1px, -2px) rotate(-1deg); }
+                    20% { transform: translate(-3px, 0px) rotate(1deg); }
+                    30% { transform: translate(3px, 2px) rotate(0deg); }
+                    40% { transform: translate(1px, -1px) rotate(1deg); }
+                    50% { transform: translate(-1px, 2px) rotate(-1deg); }
+                    60% { transform: translate(-3px, 1px) rotate(0deg); }
+                    70% { transform: translate(3px, 1px) rotate(-1deg); }
+                    80% { transform: translate(-1px, -1px) rotate(1deg); }
+                    90% { transform: translate(1px, 2px) rotate(0deg); }
+                    100% { transform: translate(1px, -2px) rotate(-1deg); }
+                }
+            `;
+            document.head.appendChild(style);
+        }
+    }
+}
+
+
+// ==========================================
+// PORTFOLIO 3D TILT
+// ==========================================
+
+document.addEventListener('DOMContentLoaded', () => {
+    // Navigate to portfolio
+    document.querySelector('a[href="#portfolio"]')?.addEventListener('click', (e) => {
+        e.preventDefault();
+        showView('view-portfolio');
+    });
+
+    const cards = document.querySelectorAll('.tilt-card');
+    cards.forEach(card => {
+        card.addEventListener('mousemove', (e) => {
+            const rect = card.getBoundingClientRect();
+            const x = e.clientX - rect.left;
+            const y = e.clientY - rect.top;
+            
+            const centerX = rect.width / 2;
+            const centerY = rect.height / 2;
+            
+            const rotateX = ((y - centerY) / centerY) * -10;
+            const rotateY = ((x - centerX) / centerX) * 10;
+            
+            card.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale3d(1.05, 1.05, 1.05)`;
+            card.style.boxShadow = `${-rotateY}px ${rotateX}px 20px rgba(0, 255, 136, 0.2)`;
+        });
+        
+        card.addEventListener('mouseleave', () => {
+            card.style.transform = 'perspective(1000px) rotateX(0) rotateY(0) scale3d(1, 1, 1)';
+            card.style.boxShadow = 'none';
+        });
+    });
+});
