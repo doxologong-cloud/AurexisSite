@@ -16,7 +16,7 @@
 <script src="https://cdn.jsdelivr.net/npm/particles.js@2.0.0/particles.min.js"></script>
 <!-- Styles -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-<link href="{{ url_for('static', filename='style.css') }}?v=67" rel="stylesheet"></link>
+<link href="{{ url_for('static', filename='style.css') }}?v=68" rel="stylesheet"></link>
 <script>
     (function() {
         const theme = localStorage.getItem('aurex_theme') || 'matrix';
@@ -341,16 +341,16 @@
 </button>
 </div>
 <script>
-                        <span data-i18n="t_67">document.getElementById('toggle-review-btn').addEventListener('click', function() {
+                        document.getElementById('toggle-review-btn').addEventListener('click', function() {
                             const container = document.getElementById('review-form-container');
                             if (container.style.display === 'none') {
                                 container.style.display = 'block';
-                                this.textContent = 'Свернуть';
+                                this.textContent = __('Свернуть');
                             } else {
                                 container.style.display = 'none';
-                                this.textContent = 'Развернуть';
+                                this.textContent = __('Развернуть');
                             }
-                        });</span>
+                        });
                     </script>
 <!-- Tickets Section -->
 <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; margin-top: 20px;">
@@ -385,16 +385,16 @@
 <div style="color: var(--text-muted); text-align: center;"><span data-i18n="t_75">Загрузка тикетов...</span></div>
 </div>
 <script>
-                        <span data-i18n="t_76">document.getElementById('toggle-ticket-btn').addEventListener('click', function() {
+                        document.getElementById('toggle-ticket-btn').addEventListener('click', function() {
                             const container = document.getElementById('ticket-form-container');
                             if (container.style.display === 'none') {
                                 container.style.display = 'block';
-                                this.textContent = 'Скрыть';
+                                this.textContent = __('Скрыть');
                             } else {
                                 container.style.display = 'none';
-                                this.textContent = 'Новый тикет';
+                                this.textContent = __('Новый тикет');
                             }
-                        });</span>
+                        });
                     </script>
 <button class="btn btn-secondary" onclick="document.getElementById('logout-btn').click()" style="background: #ff3333; border-color: #ff3333; width: 100%;"><i class="fa-solid fa-door-open"></i> <span data-i18n="t_77">Выйти из аккаунта</span></button>
 </div>
@@ -500,7 +500,7 @@
             100% { transform: translate(0) }
         }
     </style>
-<script src="{{ url_for('static', filename='script.js') }}?v=67"></script>
+<script src="{{ url_for('static', filename='script.js') }}?v=68"></script>
 <!-- Hacker Terminal -->
 <div class="view" id="view-hacker" style="background: #000; color: #0f0; font-family: monospace; padding: 20px; font-size: 16px; overflow-y: auto; height: 100vh; width: 100%; box-sizing: border-box;">
 <div id="hacker-output"></div>

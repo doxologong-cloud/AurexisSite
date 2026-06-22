@@ -1,0 +1,4 @@
+Line 348: this.textContent = 'Свернуть';
+Line 351: this.textContent = 'Развернуть';
+Line 392: this.textContent = 'Скрыть';
+Line 395: this.textContent = 'Новый тикет';

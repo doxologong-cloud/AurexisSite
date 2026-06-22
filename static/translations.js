@@ -486,3 +486,35 @@ window.dynamicTranslations = {
     "ВСЁ РУШИТСЯ!": "EVERYTHING IS COLLAPSING!",
     "ОБЕРНИСЬ": "TURN BACK"
 };
+
+
+window.__ = function(ruText) {
+    const lang = localStorage.getItem('aurex_lang') || 'ru';
+    if (lang === 'ru') return ruText;
+    if (window.dynamicTranslations && window.dynamicTranslations[ruText]) {
+        return window.dynamicTranslations[ruText];
+    }
+    return ruText;
+};
+
+window.applyTranslations = function() {
+    const lang = localStorage.getItem('aurex_lang') || 'ru';
+    
+    document.querySelectorAll('[data-i18n]').forEach(el => {
+        const key = el.getAttribute('data-i18n');
+        if (translations[key]) {
+            el.innerHTML = translations[key][lang];
+        }
+    });
+
+    document.querySelectorAll('[data-i18n-placeholder]').forEach(el => {
+        const key = el.getAttribute('data-i18n-placeholder');
+        if (translations[key]) {
+            el.placeholder = translations[key][lang];
+        }
+    });
+};
+
+document.addEventListener('DOMContentLoaded', () => {
+    window.applyTranslations();
+});

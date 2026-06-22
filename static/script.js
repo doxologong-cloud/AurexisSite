@@ -1514,10 +1514,11 @@ async function sendGlobalChat() {
         aiAbortController = new AbortController();
         
         try {
+            const lang = localStorage.getItem('aurex_lang') || 'ru';
             const res = await fetch('/api/ai/chat', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ message: text, history: aiChatHistory }),
+                body: JSON.stringify({ message: text, history: aiChatHistory, lang: lang }),
                 signal: aiAbortController.signal
             });
             
