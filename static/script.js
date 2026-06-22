@@ -1,3 +1,47 @@
+
+// CUSTOM TOAST SYSTEM
+function showToast(htmlMsg, type='info') {
+    let container = document.getElementById('custom-toast-container');
+    if (!container) {
+        container = document.createElement('div');
+        container.id = 'custom-toast-container';
+        document.body.appendChild(container);
+    }
+    
+    const toast = document.createElement('div');
+    toast.className = `custom-toast ${type}`;
+    
+    let icon = '🔔';
+    if(type === 'error') icon = '⚠️';
+    if(type === 'success') icon = '✅';
+    
+    toast.innerHTML = `<span style="font-size:18px">${icon}</span> <div>${htmlMsg}</div>`;
+    container.appendChild(toast);
+    
+    setTimeout(() => {
+        toast.style.animation = 'toast-slide-out 0.3s ease forwards';
+        setTimeout(() => toast.remove(), 300);
+    }, 5000);
+}
+
+// Function to switch tab manually from links
+window.switchAuthTab = function(tabName) {
+    window.location.hash = '#account';
+    setTimeout(() => {
+        const authTabs = document.querySelectorAll('.auth-tab');
+        authTabs.forEach(t => t.classList.remove('active'));
+        const targetTab = document.querySelector(`.auth-tab[data-tab="${tabName}"]`);
+        if(targetTab) targetTab.classList.add('active');
+        
+        // Hide/show forms
+        const authForms = document.querySelectorAll('.auth-form');
+        authForms.forEach(f => f.classList.remove('active'));
+        const targetForm = document.getElementById(`${tabName}-form`);
+        if(targetForm) targetForm.classList.add('active');
+    }, 100);
+};
+
+
 // Global Google callback
 window.handleGoogleCredentialResponse = async (response) => {
     try {
@@ -1129,7 +1173,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     async function sendGlobalChat() {
         if(!window.currentUser) {
-            alert('Пожалуйста, авторизуйтесь (вкладка Вход / Регистрация) чтобы писать в чат!');
+            showToast('Вы не <a onclick="switchAuthTab(\'login\')">авторизованы</a> или не <a onclick="switchAuthTab(\'register\')">зарегистрированы</a>. Пожалуйста, войдите в аккаунт, чтобы писать в чат!', 'error');
             return;
         }
         const text = chatInput.value.trim();
