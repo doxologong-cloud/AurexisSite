@@ -2162,7 +2162,7 @@ function triggerApocalypse() {
                                                                                     thought.style.color = '#fff';
                                                                                     thought.style.fontStyle = 'italic';
                                                                                     thought.style.fontSize = '30px';
-                                                                                    thought.style.fontFamily = "'Space Grotesk', sans-serif';
+                                                                                    thought.style.fontFamily = "'Space Grotesk', sans-serif";
                                                                                     thought.style.zIndex = '99999999999';
                                                                                     thought.innerText = '*мысли*: Я ЗАПЕРТ ЗДЕСЬ НАВСЕГДА...';
                                                                                     document.body.appendChild(thought);
