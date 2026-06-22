@@ -152,10 +152,12 @@ def login():
         session['user'] = {
             "nickname": user.get('nickname'), 
             "email": email, 
-            "avatar": user.get('avatar'),
             "username": user.get('username')
         }
-        return jsonify({"success": True, "user": session['user']})
+        # Send avatar directly in the response, but NOT in the session cookie
+        user_response = session['user'].copy()
+        user_response['avatar'] = user.get('avatar')
+        return jsonify({"success": True, "user": user_response})
     return jsonify({"success": False, "message": "Неверная почта или пароль."})
 
 @app.route('/api/google-login', methods=['POST'])
@@ -194,8 +196,11 @@ def google_login():
                 update_user_avatar(email, picture)
                 avatar_url = picture
                 
-        session['user'] = {"nickname": nickname, "email": email, "avatar": avatar_url, "username": username}
-        return jsonify({"success": True, "user": session['user']})
+        session['user'] = {"nickname": nickname, "email": email, "username": username}
+        
+        user_response = session['user'].copy()
+        user_response['avatar'] = avatar_url
+        return jsonify({"success": True, "user": user_response})
         
     except Exception as e:
         return jsonify({"success": False, "message": "Ошибка базы данных."})
@@ -251,15 +256,36 @@ def update_avatar():
         
     success = update_user_avatar(session['user']['email'], avatar_base64)
     if success:
-        session['user']['avatar'] = avatar_base64
-        session.modified = True
+        # DO NOT save base64 avatar into the session!
+        # Flask sessions are stored in cookies (max 4KB limit). 
+        # Large base64 strings will break the cookie and be silently rejected by the browser!
+        # The fresh avatar will be pulled from DB in /api/me on next reload.
         return jsonify({"success": True})
     return jsonify({"success": False, "message": "Ошибка сохранения в облако."})
 
 @app.route('/api/me', methods=['GET'])
 def me():
     if 'user' in session:
-        return jsonify({"success": True, "user": session['user']})
+        # Fetch fresh data from DB because session cookie cannot hold large base64 avatars
+        email = session['user'].get('email')
+        db_user = get_user_by_email(email)
+        if db_user:
+            # Update session with safe fields just in case
+            session['user']['nickname'] = db_user.get('nickname')
+            session['user']['username'] = db_user.get('username')
+            session.modified = True
+            
+            # Send full user data including large avatar base64
+            full_user = {
+                "nickname": db_user.get('nickname'),
+                "email": email,
+                "avatar": db_user.get('avatar'),
+                "username": db_user.get('username')
+            }
+            return jsonify({"success": True, "user": full_user})
+        else:
+            session.pop('user', None)
+            return jsonify({"success": False})
     return jsonify({"success": False})
 
 @app.route('/api/logout', methods=['POST'])
