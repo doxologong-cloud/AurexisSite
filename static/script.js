@@ -1129,13 +1129,32 @@ document.addEventListener('DOMContentLoaded', () => {
         const text = chatInput.value.trim();
         if(!text) return;
         chatInput.value = '';
+        
+        // Optimistic UI Update (Instant visual feedback)
+        const chatMsgs = document.getElementById('chat-messages');
+        const div = document.createElement('div');
+        div.className = 'chat-msg chat-self';
+        const nickname = window.currentUser.nickname || 'Я';
+        const avatar = window.currentUser.avatar || '/static/assets/default-avatar.png';
+        const isAdmin = window.currentUser.is_admin;
+        div.innerHTML = `
+            <div class="chat-msg-header">
+                <img src="${avatar}" class="chat-avatar">
+                <span style="color: ${isAdmin ? 'var(--neon-purple)' : 'inherit'}">${escapeHTML(nickname)} ${isAdmin ? '🌸' : ''}</span>
+            </div>
+            <div style="word-break: break-word;">${escapeHTML(text)}</div>
+        `;
+        chatMsgs.appendChild(div);
+        chatMsgs.scrollTop = chatMsgs.scrollHeight;
+
         try {
             const res = await fetch('/api/global-chat', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ message: text })
             });
-            if(res.ok) {
+            if(!res.ok) {
+                // Silently reload to fix sync if failed
                 loadGlobalChat();
             }
         } catch(e) { console.log(e); }
