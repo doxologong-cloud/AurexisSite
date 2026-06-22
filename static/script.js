@@ -8,17 +8,7 @@ window.handleGoogleCredentialResponse = async (response) => {
         });
         const data = await res.json();
         if (data.success && data.user) {
-            document.getElementById('modal-auth').style.display = 'none';
-            document.getElementById('open-auth').style.display = 'none';
-            document.getElementById('nav-account').style.display = 'flex';
-            document.getElementById('nav-username').textContent = data.user.nickname;
-            
-            const avatarImg = document.getElementById('nav-avatar-img');
-            if(data.user.avatar) {
-                avatarImg.src = data.user.avatar;
-            } else {
-                avatarImg.src = "/static/assets/default-avatar.png";
-            }
+            if(window.loginUser) window.loginUser(data.user);
         } else {
             alert('Ошибка входа через Google: ' + data.message);
         }
@@ -283,20 +273,26 @@ document.addEventListener('DOMContentLoaded', () => {
     checkSession();
 
     // Login Function
-    function loginUser(userData, showAlert = true) {
-        modals.auth.classList.remove('show-modal');
+    window.loginUser = function(userData, showAlert = true) {
+        document.getElementById('modal-auth').style.display = 'none';
         
         // Update Navbar
         document.getElementById('open-auth').style.display = 'none';
-        document.getElementById('nav-account').style.display = 'inline-block';
+        document.getElementById('nav-account').style.display = 'flex';
+        document.getElementById('nav-username').textContent = userData.nickname;
         
-        // Populate Account Data
-        document.getElementById('acc-nickname').textContent = userData.nickname;
-        document.getElementById('acc-email').textContent = userData.email;
-        document.getElementById('acc-avatar').textContent = userData.nickname.charAt(0).toUpperCase();
-
-        // if (showAlert) alert(`Успешный вход! Добро пожаловать, ${userData.nickname}!`);
-    }
+        const avatarUrl = userData.avatar || "/static/assets/default-avatar.png";
+        document.getElementById('nav-avatar-img').src = avatarUrl;
+        
+        // Populate Account Data (Profile View)
+        const accNick = document.getElementById('acc-nickname');
+        const accEmail = document.getElementById('acc-email');
+        const accAvatar = document.getElementById('acc-avatar-img');
+        
+        if (accNick) accNick.textContent = userData.nickname;
+        if (accEmail) accEmail.textContent = userData.email;
+        if (accAvatar) accAvatar.src = avatarUrl;
+    };
 
     // Logout
     document.getElementById('logout-btn').addEventListener('click', async () => {
@@ -371,6 +367,8 @@ document.addEventListener('DOMContentLoaded', () => {
                         const data = await res.json();
                         if(data.success) {
                             navAvatarImg.src = base64Avatar;
+                            const accAvatar = document.getElementById('acc-avatar-img');
+                            if(accAvatar) accAvatar.src = base64Avatar;
                         } else {
                             alert("Ошибка обновления аватарки: " + data.message);
                         }

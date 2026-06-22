@@ -47,6 +47,7 @@
                     <span id="nav-username">User</span>
                 </div>
                 <div class="dropdown-menu">
+                    <a href="#account" class="dropdown-item" id="go-profile-btn" style="text-decoration: none; display: block;">Мой профиль</a>
                     <div class="dropdown-item" id="change-avatar-btn">Сменить аватар</div>
                     <div class="dropdown-item" id="logout-btn" style="color: #ff4444;">Выйти</div>
                 </div>
@@ -154,6 +155,33 @@
                             <p>Эстетика во всём. От продуманных эмбедов до безупречной логики интерфейсов — мы задаём тренды, а не следуем им.</p>
                         </div>
                     </div>
+                </div>
+            </section>
+        </div>
+
+        <!-- Account View -->
+        <div id="view-account" class="view hidden-view">
+            <section class="about-section" style="padding-top: 40px;">
+                <h2 class="section-title">Мой аккаунт</h2>
+                <div class="about-content" style="text-align: left;">
+                    <div style="display: flex; align-items: center; gap: 20px; margin-bottom: 30px;">
+                        <img src="{{ url_for('static', filename='assets/default-avatar.png') }}" alt="User" id="acc-avatar-img" style="width: 80px; height: 80px; border-radius: 50%; object-fit: cover; border: 2px solid var(--neon-primary);">
+                        <div>
+                            <h3 id="acc-nickname" style="font-size: 1.8rem; margin-bottom: 5px;">Пользователь</h3>
+                            <p id="acc-email" style="color: var(--text-muted); margin-bottom: 0;">user@mail.com</p>
+                        </div>
+                    </div>
+                    
+                    <h3 style="color: var(--neon-primary); margin-bottom: 15px;">Управление подписками</h3>
+                    <div class="features" style="margin-bottom: 30px;">
+                        <div class="feature-item">
+                            <h4 style="margin-bottom: 10px;">AUREXIS FLORA</h4>
+                            <p style="font-size: 0.9rem; color: var(--text-muted); margin-bottom: 15px;">Статус: <span style="color: #ff4444;">Не активна</span></p>
+                            <button class="btn btn-primary" style="padding: 8px 15px; font-size: 0.9rem;">Приобрести</button>
+                        </div>
+                    </div>
+
+                    <button class="btn btn-secondary" onclick="document.getElementById('logout-btn').click()" style="background: #ff3333; border-color: #ff3333; width: 100%;">Выйти из аккаунта</button>
                 </div>
             </section>
         </div>
