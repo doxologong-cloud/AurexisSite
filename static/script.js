@@ -1181,93 +1181,93 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // --- BOT BUILDER LOGIC ---
-    const builderNameInput = document.getElementById('builder-bot-name');
-    const builderColorInput = document.getElementById('builder-bot-color');
-    const mockMessagesContainer = document.getElementById('discord-mock-messages');
     
-    function updateMockBotIdentity() {
-        const newName = builderNameInput ? builderNameInput.value || 'AUREXIS DEMO' : 'AUREXIS DEMO';
-        const newColor = builderColorInput ? builderColorInput.value || '#e5b322' : '#e5b322';
-        document.querySelectorAll('.discord-author').forEach(el => {
-            el.textContent = newName;
-            el.style.color = newColor;
+    // --- AI TERMINAL LOGIC ---
+    const aiInput = document.getElementById('ai-input');
+    const aiSendBtn = document.getElementById('ai-send-btn');
+    const aiChatBox = document.getElementById('ai-chat-box');
+
+    function escapeHTML(str) {
+        return str.replace(/[&<>"'`]/g, function(m) {
+            return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;", "`": "&#x60;" }[m];
         });
     }
 
-    if (builderNameInput) builderNameInput.addEventListener('input', updateMockBotIdentity);
-    if (builderColorInput) builderColorInput.addEventListener('input', updateMockBotIdentity);
-
-    function addMockMessage(contentHTML) {
-        const newName = builderNameInput ? builderNameInput.value || 'AUREXIS DEMO' : 'AUREXIS DEMO';
-        const newColor = builderColorInput ? builderColorInput.value || '#e5b322' : '#e5b322';
+    function addMessageToTerminal(role, text) {
         const msgDiv = document.createElement('div');
-        msgDiv.className = 'discord-msg';
+        msgDiv.className = `ai-msg ${role === 'user' ? 'user-msg' : 'flora-msg'}`;
+        
+        let avatarSrc = '/static/assets/logo.png';
+        let nameHTML = '<span class="flora-name">AUREXIS FLORA</span>';
+        
+        if (role === 'user') {
+            avatarSrc = window.currentUser ? window.currentUser.avatar : '/static/assets/default-avatar.png';
+            const name = window.currentUser ? window.currentUser.nickname : 'Гость';
+            nameHTML = `<span class="user-name">${escapeHTML(name)}</span>`;
+        }
+
         msgDiv.innerHTML = `
-            <img src="/static/assets/logo.png" class="discord-avatar">
-            <div class="discord-msg-content">
-                <div class="discord-msg-header">
-                    <span class="discord-author" style="color: ${newColor};">${newName}</span>
-                    <span class="discord-bot-tag">BOT</span>
-                    <span class="discord-time">Только что</span>
-                </div>
-                <div class="discord-text">${contentHTML}</div>
+            <img src="${avatarSrc}" class="${role === 'user' ? 'user-avatar' : 'ai-avatar'}">
+            <div class="ai-text">
+                ${nameHTML}
+                <div class="msg-content">${role === 'user' ? escapeHTML(text) : text}</div>
             </div>
         `;
-        if (mockMessagesContainer) {
-            mockMessagesContainer.appendChild(msgDiv);
-            mockMessagesContainer.scrollTop = mockMessagesContainer.scrollHeight;
+        
+        aiChatBox.appendChild(msgDiv);
+        aiChatBox.scrollTop = aiChatBox.scrollHeight;
+        return msgDiv.querySelector('.msg-content');
+    }
+
+    async function sendToAI() {
+        if(!aiInput || !aiInput.value.trim()) return;
+        const text = aiInput.value.trim();
+        aiInput.value = '';
+        
+        // Add user msg
+        addMessageToTerminal('user', text);
+        
+        // Add typing indicator
+        const contentBox = addMessageToTerminal('ai', '<div class="typing-indicator"></div><div class="typing-indicator" style="animation-delay:0.2s"></div><div class="typing-indicator" style="animation-delay:0.4s"></div>');
+        
+        try {
+            const res = await fetch('/api/ai/chat', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ message: text })
+            });
+            
+            const data = await res.json();
+            if (res.ok) {
+                // Smooth typewriter effect
+                contentBox.innerHTML = '';
+                const reply = data.reply;
+                let i = 0;
+                const interval = setInterval(() => {
+                    contentBox.innerHTML += reply.charAt(i);
+                    i++;
+                    aiChatBox.scrollTop = aiChatBox.scrollHeight;
+                    if (i >= reply.length) {
+                        clearInterval(interval);
+                        // Optional formatting of bold text
+                        contentBox.innerHTML = contentBox.innerHTML.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
+                        contentBox.innerHTML = contentBox.innerHTML.replace(/\n/g, '<br>');
+                    }
+                }, 15);
+            } else {
+                contentBox.innerHTML = `<span style="color:#ff4444">Ошибка связи с ИИ: ${data.error || 'Неизвестная ошибка'}</span>`;
+            }
+        } catch(e) {
+            contentBox.innerHTML = '<span style="color:#ff4444">Ошибка сети при связи с ИИ-ядром.</span>';
         }
     }
 
-    const modules = [
-        { id: 'module-music', html: '<div class="discord-embed"><div class="discord-embed-title">🎵 Сейчас играет</div><div>Cyberpunk Mix 2026 - Synthwave Radio</div></div>' },
-        { id: 'module-economy', html: '💰 <strong>@user</strong>, ваш баланс пополнен на 500 монет! Текущий баланс: 1500.' },
-        { id: 'module-moderation', html: '🔨 <strong>@troll</strong> был предупрежден модератором <strong>@admin</strong>. Причина: Спам.' },
-        { id: 'module-ai', html: '🧠 <em>Генерирую ответ...</em><br>Искусственный интеллект AUREXIS FLORA готов к работе. Задайте мне любой вопрос.' }
-    ];
-
-    modules.forEach(mod => {
-        const toggle = document.getElementById(mod.id);
-        if (toggle) {
-            toggle.addEventListener('change', (e) => {
-                if (e.target.checked) {
-                    setTimeout(() => addMockMessage(mod.html), 300);
-                }
-            });
-        }
-    });
-
-    const builderOrderBtn = document.getElementById('builder-order-btn');
-    if (builderOrderBtn) {
-        builderOrderBtn.addEventListener('click', () => {
-            if (!window.currentUser) {
-                alert('Пожалуйста, авторизуйтесь для заказа!');
-                document.getElementById('open-auth').click();
-                return;
-            }
-            const botName = builderNameInput ? builderNameInput.value || 'AUREXIS DEMO' : 'AUREXIS DEMO';
-            const botColor = builderColorInput ? builderColorInput.value || '#e5b322' : '#e5b322';
-            let activeModules = [];
-            modules.forEach(mod => {
-                const checkbox = document.getElementById(mod.id);
-                if (checkbox && checkbox.checked) {
-                    activeModules.push(mod.id.replace('module-', ''));
-                }
-            });
-            
-            const orderText = `ЗАКАЗ БОТА:
-Имя: ${botName}
-Цвет: ${botColor}
-Модули: ${activeModules.length > 0 ? activeModules.join(', ') : 'Базовый функционал'}`;
-
-            // Open ticket modal and prefill
-            const ticketModal = document.getElementById('modal-ticket');
-            if(ticketModal) {
-                ticketModal.style.display = 'flex';
-                document.getElementById('ticket-topic').value = 'Заказ кастомного бота';
-                document.getElementById('ticket-message').value = orderText;
-            }
+    if (aiSendBtn) {
+        aiSendBtn.addEventListener('click', sendToAI);
+    }
+    if (aiInput) {
+        aiInput.addEventListener('keypress', (e) => {
+            if(e.key === 'Enter') sendToAI();
         });
     }
 

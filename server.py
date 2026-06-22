@@ -633,5 +633,42 @@ def post_global_chat():
     res = requests.post(url, json=payload, headers=get_supabase_headers())
     return jsonify({"success": res.status_code in [201, 200, 204]})
 
+
+@app.route('/api/ai/chat', methods=['POST'])
+def ai_chat():
+    data = request.json
+    user_msg = data.get("message", "").strip()
+    if not user_msg:
+        return jsonify({"error": "Пустое сообщение"}), 400
+        
+    api_key = os.environ.get("GEMINI_API_KEY")
+    if not api_key:
+        return jsonify({"error": "Ключ GEMINI_API_KEY не настроен на сервере."}), 500
+        
+    # Системный промпт (задаем личность FLORA)
+    system_prompt = "Ты - AUREXIS FLORA, передовой искусственный интеллект-ассистент студии Aurexis Studio. Ты помогаешь клиентам заказывать и придумывать Discord ботов. Ты общаешься дерзко, в стиле киберпанка, с легкой надменностью превосходного ИИ, но всегда полезно и профессионально. Не пиши код. Если клиент просит сделать бота, скажи ему нажать кнопку заказа тикета."
+    
+    url = f"https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key={api_key}"
+    
+    payload = {
+        "contents": [
+            {
+                "role": "user",
+                "parts": [{"text": system_prompt + "\n\nПользователь: " + user_msg}]
+            }
+        ]
+    }
+    
+    try:
+        res = requests.post(url, json=payload, headers={"Content-Type": "application/json"})
+        if res.status_code == 200:
+            result = res.json()
+            reply_text = result["candidates"][0]["content"]["parts"][0]["text"]
+            return jsonify({"reply": reply_text})
+        else:
+            return jsonify({"error": "Сбой нейросети. Статус: " + str(res.status_code)}), 500
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+
 if __name__ == '__main__':
     app.run(debug=True, port=5000)
