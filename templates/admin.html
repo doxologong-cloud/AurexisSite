@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Админ-панель | Aurexis Studio</title>
+    <link rel="icon" type="image/x-icon" href="{{ url_for('static', filename='assets/favicon.ico') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <style>
+        .admin-container {
+            max-width: 1000px;
+            margin: 100px auto;
+            background: rgba(0, 0, 0, 0.4);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 15px;
+            padding: 40px;
+            box-shadow: 0 0 30px rgba(0,0,0,0.5);
+            backdrop-filter: blur(10px);
+        }
+        .admin-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+        .admin-table th, .admin-table td {
+            padding: 15px;
+            text-align: left;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+        }
+        .admin-table th {
+            color: var(--neon-primary);
+            font-weight: 600;
+        }
+        .flora-toggle {
+            background: transparent;
+            border: 1px solid var(--neon-purple);
+            color: white;
+            padding: 5px 10px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        .flora-toggle.active {
+            background: rgba(0, 255, 170, 0.2);
+            border-color: #00ffaa;
+            color: #00ffaa;
+        }
+        .flora-toggle:hover {
+            box-shadow: 0 0 10px var(--neon-purple);
+        }
+    </style>
+</head>
+<body>
+    <div id="particles-js"></div>
+
+    <div class="admin-container">
+        <h1 class="section-title">Панель управления</h1>
+        <p style="text-align: center; color: var(--text-muted); margin-bottom: 30px;">Управление пользователями и подписками</p>
+        
+        <table class="admin-table">
+            <thead>
+                <tr>
+                    <th>Юзернейм</th>
+                    <th>Никнейм</th>
+                    <th>Почта</th>
+                    <th>Flora Status</th>
+                    <th>Действия</th>
+                </tr>
+            </thead>
+            <tbody id="users-tbody">
+                <!-- Users will be loaded here -->
+            </tbody>
+        </table>
+        
+        <div style="text-align: center; margin-top: 30px;">
+            <a href="/" class="btn btn-secondary">Вернуться на сайт</a>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
+    <script>
+        particlesJS.load('particles-js', '/static/particles.json');
+
+        async function loadUsers() {
+            const tbody = document.getElementById('users-tbody');
+            tbody.innerHTML = '<tr><td colspan="5" style="text-align:center;">Загрузка...</td></tr>';
+            
+            try {
+                const res = await fetch('/api/admin/users');
+                const data = await res.json();
+                
+                if (data.success) {
+                    tbody.innerHTML = '';
+                    data.users.forEach(u => {
+                        const tr = document.createElement('tr');
+                        const isFlora = u.flora_status === true;
+                        
+                        tr.innerHTML = `
+                            <td><a href="/u/${u.username}" target="_blank" style="color: var(--neon-purple); text-decoration: none;">${u.username || '---'}</a></td>
+                            <td>${u.nickname}</td>
+                            <td>${u.email}</td>
+                            <td id="flora-status-${u.email}">${isFlora ? '<span style="color:#00ffaa;">Активна</span>' : '<span style="color:#ff4444;">Нет</span>'}</td>
+                            <td>
+                                <button class="flora-toggle ${isFlora ? 'active' : ''}" onclick="toggleFlora('${u.email}', ${!isFlora})">
+                                    ${isFlora ? 'Забрать Flora' : 'Выдать Flora'}
+                                </button>
+                            </td>
+                        `;
+                        tbody.appendChild(tr);
+                    });
+                } else {
+                    tbody.innerHTML = `<tr><td colspan="5" style="text-align:center; color:#ff4444;">${data.message}</td></tr>`;
+                }
+            } catch (e) {
+                tbody.innerHTML = '<tr><td colspan="5" style="text-align:center; color:#ff4444;">Ошибка соединения</td></tr>';
+            }
+        }
+
+        async function toggleFlora(email, newStatus) {
+            try {
+                const res = await fetch('/api/admin/update-flora', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ email: email, flora_status: newStatus })
+                });
+                const data = await res.json();
+                if (data.success) {
+                    loadUsers(); // reload table
+                } else {
+                    alert('Ошибка: ' + data.message);
+                }
+            } catch (e) {
+                alert('Ошибка соединения');
+            }
+        }
+
+        loadUsers();
+    </script>
+</body>
+</html>

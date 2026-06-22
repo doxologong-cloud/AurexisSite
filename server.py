@@ -152,7 +152,9 @@ def login():
         session['user'] = {
             "nickname": user.get('nickname'), 
             "email": email, 
-            "username": user.get('username')
+            "username": user.get('username'),
+            "is_admin": user.get('is_admin', False),
+            "flora_status": user.get('flora_status', False)
         }
         # Send avatar directly in the response, but NOT in the session cookie
         user_response = session['user'].copy()
@@ -192,11 +194,19 @@ def google_login():
             nickname = user.get('nickname')
             avatar_url = user.get('avatar')
             username = user.get('username')
+            is_admin = user.get('is_admin', False)
+            flora_status = user.get('flora_status', False)
             if not avatar_url and picture:
                 update_user_avatar(email, picture)
                 avatar_url = picture
                 
-        session['user'] = {"nickname": nickname, "email": email, "username": username}
+        session['user'] = {
+            "nickname": nickname, 
+            "email": email, 
+            "username": username,
+            "is_admin": is_admin if 'is_admin' in locals() else False,
+            "flora_status": flora_status if 'flora_status' in locals() else False
+        }
         
         user_response = session['user'].copy()
         user_response['avatar'] = avatar_url
@@ -273,6 +283,8 @@ def me():
             # Update session with safe fields just in case
             session['user']['nickname'] = db_user.get('nickname')
             session['user']['username'] = db_user.get('username')
+            session['user']['is_admin'] = db_user.get('is_admin', False)
+            session['user']['flora_status'] = db_user.get('flora_status', False)
             session.modified = True
             
             # Send full user data including large avatar base64
@@ -280,7 +292,9 @@ def me():
                 "nickname": db_user.get('nickname'),
                 "email": email,
                 "avatar": db_user.get('avatar'),
-                "username": db_user.get('username')
+                "username": db_user.get('username'),
+                "is_admin": db_user.get('is_admin', False),
+                "flora_status": db_user.get('flora_status', False)
             }
             return jsonify({"success": True, "user": full_user})
         else:
@@ -292,6 +306,57 @@ def me():
 def logout():
     session.pop('user', None)
     return jsonify({"success": True})
+
+# --- PUBLIC PROFILES ---
+@app.route('/u/<username>')
+def public_profile(username):
+    # Search for user by username
+    if not username.startswith('@'):
+        username = '@' + username
+    url = f"{SUPABASE_URL}/rest/v1/users?username=eq.{username}&select=*"
+    res = requests.get(url, headers=get_supabase_headers())
+    if res.status_code == 200:
+        users = res.json()
+        if len(users) > 0:
+            target_user = users[0]
+            return render_template('profile.html', target_user=target_user)
+    return "Пользователь не найден", 404
+
+# --- ADMIN ROUTES ---
+@app.route('/admin')
+def admin_panel():
+    if 'user' not in session or not session['user'].get('is_admin'):
+        return "Доступ запрещен", 403
+    return render_template('admin.html')
+
+@app.route('/api/admin/users', methods=['GET'])
+def admin_get_users():
+    if 'user' not in session or not session['user'].get('is_admin'):
+        return jsonify({"success": False, "message": "Доступ запрещен"})
+    url = f"{SUPABASE_URL}/rest/v1/users?select=*"
+    res = requests.get(url, headers=get_supabase_headers())
+    if res.status_code == 200:
+        users = res.json()
+        # Remove passwords for safety
+        for u in users:
+            u.pop('password', None)
+        return jsonify({"success": True, "users": users})
+    return jsonify({"success": False, "message": "Ошибка БД"})
+
+@app.route('/api/admin/update-flora', methods=['POST'])
+def admin_update_flora():
+    if 'user' not in session or not session['user'].get('is_admin'):
+        return jsonify({"success": False, "message": "Доступ запрещен"})
+    data = request.json
+    target_email = data.get('email')
+    new_status = data.get('flora_status')
+    
+    url = f"{SUPABASE_URL}/rest/v1/users?email=eq.{target_email}"
+    payload = {"flora_status": new_status}
+    res = requests.patch(url, json=payload, headers=get_supabase_headers())
+    if res.status_code in [200, 204]:
+        return jsonify({"success": True})
+    return jsonify({"success": False, "message": "Ошибка сохранения"})
 
 if __name__ == '__main__':
     app.run(debug=True, port=5000)

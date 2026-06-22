@@ -288,10 +288,26 @@ document.addEventListener('DOMContentLoaded', () => {
         const accNick = document.getElementById('acc-nickname');
         const accUsername = document.getElementById('acc-username');
         const accAvatar = document.getElementById('acc-avatar-img');
+        const adminLink = document.getElementById('nav-admin-link');
+        const floraStatus = document.getElementById('acc-flora-status');
         
         if (accNick) accNick.textContent = userData.nickname;
         if (accUsername) accUsername.textContent = userData.username || '@user';
         if (accAvatar) accAvatar.src = avatarUrl;
+        
+        if (adminLink) {
+            adminLink.style.display = userData.is_admin ? 'block' : 'none';
+        }
+        
+        if (floraStatus) {
+            if (userData.flora_status) {
+                floraStatus.textContent = 'Активна';
+                floraStatus.style.color = '#00ffaa';
+            } else {
+                floraStatus.textContent = 'Не активна';
+                floraStatus.style.color = '#ff4444';
+            }
+        }
     };
 
     // Logout
