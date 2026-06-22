@@ -671,4 +671,98 @@ document.addEventListener('DOMContentLoaded', () => {
 
     loadReviews();
     loadBotStatus();
+
+    // Easter Egg Logic
+    let keySequence = '';
+    const secretWord = 'flora';
+    let easterEggActive = false;
+
+    window.addEventListener('keydown', (e) => {
+        if (easterEggActive) return;
+        
+        // Ignore if typing in an input
+        if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
+
+        keySequence += e.key.toLowerCase();
+        
+        if (keySequence.length > secretWord.length) {
+            keySequence = keySequence.substring(1);
+        }
+
+        if (keySequence === secretWord) {
+            triggerEasterEgg();
+        }
+    });
+
+    function triggerEasterEgg() {
+        easterEggActive = true;
+        const term = document.getElementById('easter-egg-terminal');
+        const content = document.getElementById('terminal-content');
+        if (!term || !content) return;
+
+        term.style.display = 'block';
+        content.innerHTML = '';
+
+        const lines = [
+            "SYSTEM WAKEUP PROTOCOL INITIATED...",
+            "CONNECTING TO AUREXIS MAIN SERVER...",
+            "SUCCESS. LATENCY: 0.0001ms",
+            "BYPASSING SECURITY FIREWALLS...",
+            "ACCESS GRANTED.",
+            " ",
+            "WARNING: UNAUTHORIZED ENTITY DETECTED.",
+            "ANALYZING TARGET...",
+            "IP ADDRESS: LOGGED.",
+            "LOCATION: ACQUIRED.",
+            "WEBCAM: CONNECTED.",
+            " ",
+            "<span class='glitch-effect'>JUST KIDDING.</span>",
+            " ",
+            "HELLO. I AM FLORA.",
+            "DOX IS WATCHING.",
+            " ",
+            "PRESS [ESC] TO RETURN TO REALITY."
+        ];
+
+        let lineIndex = 0;
+        let charIndex = 0;
+
+        function typeWriter() {
+            if (lineIndex < lines.length) {
+                const currentLine = lines[lineIndex];
+                
+                if (currentLine.includes('<')) {
+                    content.innerHTML += currentLine + '<br>';
+                    lineIndex++;
+                    setTimeout(typeWriter, 800);
+                    return;
+                }
+
+                if (charIndex < currentLine.length) {
+                    content.innerHTML += currentLine.charAt(charIndex);
+                    charIndex++;
+                    setTimeout(typeWriter, 30 + Math.random() * 50);
+                } else {
+                    content.innerHTML += '<br>';
+                    lineIndex++;
+                    charIndex = 0;
+                    setTimeout(typeWriter, 500);
+                }
+            } else {
+                window.addEventListener('keydown', closeEasterEgg);
+            }
+        }
+
+        setTimeout(typeWriter, 1000);
+    }
+
+    function closeEasterEgg(e) {
+        if (e.key === 'Escape') {
+            document.getElementById('easter-egg-terminal').style.display = 'none';
+            document.getElementById('terminal-content').innerHTML = '';
+            easterEggActive = false;
+            keySequence = '';
+            window.removeEventListener('keydown', closeEasterEgg);
+        }
+    }
 });

@@ -455,6 +455,24 @@
     <!-- Hidden file input for avatar -->
     <input type="file" id="avatar-upload-input" accept="image/*" style="display: none;">
 
+    <!-- EASTER EGG TERMINAL -->
+    <div id="easter-egg-terminal" style="display: none; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: black; z-index: 9999; color: #00ff00; font-family: 'Courier New', Courier, monospace; padding: 20px; box-sizing: border-box; overflow: hidden;">
+        <div id="terminal-content" style="font-size: 1.2rem; line-height: 1.5; text-shadow: 0 0 5px #00ff00;"></div>
+        <div id="terminal-cursor" style="display: inline-block; width: 10px; height: 1.2rem; background: #00ff00; animation: blink 1s infinite;"></div>
+    </div>
+    <style>
+        @keyframes blink { 0%, 49% { opacity: 1; } 50%, 100% { opacity: 0; } }
+        .glitch-effect { animation: terminalGlitch 0.2s linear infinite; color: red; text-shadow: 0 0 10px red; }
+        @keyframes terminalGlitch {
+            0% { transform: translate(0) }
+            20% { transform: translate(-2px, 2px) }
+            40% { transform: translate(-2px, -2px) }
+            60% { transform: translate(2px, 2px) }
+            80% { transform: translate(2px, -2px) }
+            100% { transform: translate(0) }
+        }
+    </style>
+
     <script src="{{ url_for('static', filename='script.js') }}"></script>
 </body>
 </html>
