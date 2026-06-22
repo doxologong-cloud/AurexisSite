@@ -1263,6 +1263,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     let aiChatHistory = [];
     let aiAbortController = null;
+    let isGenerating = false;
     const aiStopBtn = document.getElementById('ai-stop-btn');
     if(aiStopBtn) {
         aiStopBtn.addEventListener('click', () => {
@@ -1273,7 +1274,9 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     async function sendToAI() {
+        if(isGenerating) return;
         if(!aiInput || !aiInput.value.trim()) return;
+        isGenerating = true;
         const text = aiInput.value.trim();
         aiInput.value = '';
         
@@ -1314,7 +1317,12 @@ document.addEventListener('DOMContentLoaded', () => {
                 }
                 aiChatHistory.push({role: 'assistant', content: fullReply});
             } else {
-                contentBox.textContent = 'Ошибка подключения к серверу.';
+                try {
+                    const errData = await res.json();
+                    contentBox.innerHTML = `<span style="color:#ff4444">Ошибка: ${errData.error || 'Сбой сервера'}</span>`;
+                } catch(e) {
+                    contentBox.innerHTML = '<span style="color:#ff4444">Ошибка подключения к серверу.</span>';
+                }
             }
         } catch (e) {
             if(e.name === 'AbortError') {
@@ -1325,6 +1333,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 contentBox.textContent = 'Ошибка сети.';
             }
         } finally {
+            isGenerating = false;
             if(aiSendBtn) aiSendBtn.style.display = 'block';
             if(aiStopBtn) aiStopBtn.style.display = 'none';
             aiAbortController = null;
