@@ -1,0 +1,7 @@
+<div class="nav-links">
+<a href="#home">Главная</a>
+<a href="#about">О нас</a>
+<a href="#portfolio">Магазин Ботов</a>
+<a class="nav-ai-link" href="#builder">Нейро-Ассистент 🧠</a>
+<a class="nav-feed-link" href="#messenger">Лента 💬</a>
+<a class="nav-link" href="#" onclick="switchView('view-editor')">Редактор</a></div>
