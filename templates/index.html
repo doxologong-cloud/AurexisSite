@@ -16,7 +16,7 @@
 <script src="https://cdn.jsdelivr.net/npm/particles.js@2.0.0/particles.min.js"></script>
 <!-- Styles -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-<link href="{{ url_for('static', filename='style.css') }}?v=72" rel="stylesheet"></link>
+<link href="{{ url_for('static', filename='style.css') }}?v=73" rel="stylesheet"></link>
 <script>
     (function() {
         const theme = localStorage.getItem('aurex_theme') || 'matrix';
@@ -424,6 +424,24 @@
         <div style="font-weight: bold; color: #00ff88;"><span data-i18n="t_84">Киберпанк</span></div>
         <div style="font-size: 0.8rem; color: #888;"><span data-i18n="t_85">Токсичный Неон</span></div>
     </div>
+
+    <div class="theme-card" id="card-vampire" onclick="changeTheme('vampire')">
+        <div class="theme-card-color" style="background: linear-gradient(135deg, #ff0000, #550000); box-shadow: 0 0 10px #ff0000;"></div>
+        <div style="font-weight: bold; color: #ff0000;"><span data-i18n="t_vampire_title">Кровавая</span></div>
+        <div style="font-size: 0.8rem; color: #888;"><span data-i18n="t_vampire_desc">Тьма и Кровь</span></div>
+    </div>
+
+    <div class="theme-card" id="card-ocean" onclick="changeTheme('ocean')">
+        <div class="theme-card-color" style="background: linear-gradient(135deg, #00ffff, #0000ff); box-shadow: 0 0 10px #00ffff;"></div>
+        <div style="font-weight: bold; color: #00ffff;"><span data-i18n="t_ocean_title">Океан</span></div>
+        <div style="font-size: 0.8rem; color: #888;"><span data-i18n="t_ocean_desc">Глубина Неона</span></div>
+    </div>
+
+    <div class="theme-card" id="card-hacked" onclick="changeTheme('hacked')">
+        <div class="theme-card-color" style="background: repeating-linear-gradient(45deg, #ff0000, #000 10px); box-shadow: 0 0 15px red; border: 1px solid red; animation: terminalGlitch 0.2s infinite;"></div>
+        <div style="font-weight: bold; color: red;"><span data-i18n="t_hacked_title">HACKED</span></div>
+        <div style="font-size: 0.8rem; color: #888;"><span data-i18n="t_hacked_desc">Owner Only</span></div>
+    </div>
 </div>
 
 <div style="margin-top: 40px;">
@@ -432,6 +450,27 @@
 <option value="ru"><span data-i18n="t_87">Русский (RU)</span></option>
 <option value="en">English (EN)</option>
 </select>
+</div>
+
+<div style="margin-top: 40px;">
+    <h3 style="color: var(--neon-color); margin-bottom: 15px;"><span data-i18n="t_adv_settings">Дополнительные функции</span></h3>
+    <div style="display: flex; flex-direction: column; gap: 15px;">
+        <label style="display: flex; align-items: center; justify-content: space-between; width: 300px; color: #fff;">
+            <span data-i18n="t_anim_toggle">Анимации интерфейса</span>
+            <label class="switch" style="position: relative; display: inline-block; width: 50px; height: 24px;">
+                <input type="checkbox" id="anim-toggle" checked onchange="toggleAnimations(this.checked)" style="opacity: 0; width: 0; height: 0;">
+                <span class="slider" style="position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background-color: #333; transition: .4s; border-radius: 24px;"></span>
+            </label>
+        </label>
+
+        <label style="display: flex; align-items: center; justify-content: space-between; width: 300px; color: #fff;">
+            <span data-i18n="t_particles_toggle">Частицы на фоне</span>
+            <label class="switch" style="position: relative; display: inline-block; width: 50px; height: 24px;">
+                <input type="checkbox" id="particles-toggle" checked onchange="toggleParticles(this.checked)" style="opacity: 0; width: 0; height: 0;">
+                <span class="slider" style="position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background-color: #333; transition: .4s; border-radius: 24px;"></span>
+            </label>
+        </label>
+    </div>
 </div>
 </div>
 </div>
@@ -500,7 +539,7 @@
             100% { transform: translate(0) }
         }
     </style>
-<script src="{{ url_for('static', filename='script.js') }}?v=72"></script>
+<script src="{{ url_for('static', filename='script.js') }}?v=73"></script>
 <!-- Hacker Terminal -->
 <div class="view" id="view-hacker" style="background: #000; color: #0f0; font-family: monospace; padding: 20px; font-size: 16px; overflow-y: auto; height: 100vh; width: 100%; box-sizing: border-box;">
 <div id="hacker-output"></div>

@@ -1,59 +1,115 @@
-import os
+import re
 
 with open('static/script.js', 'r', encoding='utf-8') as f:
-    text = f.read()
+    js = f.read()
 
-# Fix keylogger
-text = text.replace(
-    "document.addEventListener('keydown', (e) => {",
-    "document.addEventListener('keydown', (e) => {\n    if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;"
-)
+# 1. Add hacker mode globals
+hacker_globals = """
+// ==========================================
+// HACKER MODE LOGIC
+// ==========================================
+let hackerModeInterval = null;
 
-# Add creepy face to STAGE 1
-face_js = """    // Creepy face out of balls
-    setTimeout(() => {
-        const faceContainer = document.createElement('div');
-        faceContainer.className = 'creepy-face';
-        faceContainer.style.width = '40vw';
-        faceContainer.style.height = '30vw';
-        faceContainer.style.position = 'fixed';
-        faceContainer.style.top = '50%';
-        faceContainer.style.left = '50%';
-        faceContainer.style.transform = 'translate(-50%, -50%)';
-        faceContainer.style.opacity = '0';
-        faceContainer.style.transition = 'opacity 2s';
-        faceContainer.style.zIndex = '1000';
-        faceContainer.style.pointerEvents = 'none';
-        
-        const dots = [
-            // Left eye
-            [15, 20], [20, 25], [25, 30], [30, 30], [35, 25],
-            // Right eye
-            [85, 20], [80, 25], [75, 30], [70, 30], [65, 25],
-            // Smile
-            [10, 60], [20, 75], [30, 85], [40, 90], [50, 92], [60, 90], [70, 85], [80, 75], [90, 60]
-        ];
-        
-        dots.forEach(pos => {
-            const ball = document.createElement('div');
-            ball.style.position = 'absolute';
-            ball.style.left = pos[0] + '%';
-            ball.style.top = pos[1] + '%';
-            ball.style.width = '2vw';
-            ball.style.height = '2vw';
-            ball.style.backgroundColor = '#ff0033';
-            ball.style.borderRadius = '50%';
-            ball.style.boxShadow = '0 0 15px #ff0033, 0 0 30px #ff0000';
-            faceContainer.appendChild(ball);
-        });
-        document.body.appendChild(faceContainer);
-        setTimeout(() => faceContainer.style.opacity = '1', 100);
-    }, 4000);
+function enableHackerMode() {
+    if (!window.currentUser || !window.currentUser.is_admin) {
+        showToast('ACCESS DENIED', 'error');
+        changeTheme('matrix');
+        return;
+    }
+    document.body.classList.add('hacked-theme');
     
-    // STAGE 1: Gravity Drop"""
+    // Start generating fake bugs
+    hackerModeInterval = setInterval(() => {
+        const bug = document.createElement('div');
+        bug.className = 'fake-bug';
+        bug.style.position = 'fixed';
+        bug.style.top = Math.random() * window.innerHeight + 'px';
+        bug.style.left = Math.random() * window.innerWidth + 'px';
+        bug.style.color = 'red';
+        bug.style.fontFamily = 'monospace';
+        bug.style.fontSize = (Math.random() * 20 + 10) + 'px';
+        bug.style.pointerEvents = 'none';
+        bug.style.zIndex = '999999';
+        bug.style.textShadow = '0 0 10px red';
+        bug.style.opacity = '0.8';
+        
+        const msgs = ['[ERROR] MEMORY LEAK', 'SYSTEM CORRUPTED', 'NULL POINTER', 'FATAL EXCEPTION', 'STACK OVERFLOW'];
+        bug.textContent = msgs[Math.floor(Math.random() * msgs.length)];
+        
+        document.body.appendChild(bug);
+        
+        setTimeout(() => {
+            if (bug.parentNode) bug.parentNode.removeChild(bug);
+        }, 2000 + Math.random() * 3000);
+    }, 1000);
+}
 
-text = text.replace("// STAGE 1: Gravity Drop", face_js)
+function disableHackerMode() {
+    document.body.classList.remove('hacked-theme');
+    if (hackerModeInterval) clearInterval(hackerModeInterval);
+    document.querySelectorAll('.fake-bug').forEach(e => e.remove());
+}
+
+function toggleAnimations(enabled) {
+    if (!enabled) {
+        document.body.classList.add('no-animations');
+    } else {
+        document.body.classList.remove('no-animations');
+    }
+    localStorage.setItem('aurexis_animations', enabled);
+}
+
+// Ensure settings toggles are synced on load
+document.addEventListener('DOMContentLoaded', () => {
+    const animEnabled = localStorage.getItem('aurexis_animations') !== 'false';
+    const animToggle = document.getElementById('anim-toggle');
+    if (animToggle) animToggle.checked = animEnabled;
+    toggleAnimations(animEnabled);
+});
+
+function changeTheme(themeName) {"""
+
+js = js.replace("function changeTheme(themeName) {", hacker_globals)
+
+# 2. Add new themes to changeTheme
+new_themes = """    } else if (themeName === 'vampire') {
+        root.style.setProperty('--neon-color', '#ff0000');
+        root.style.setProperty('--bg-color', '#1a0000');
+        root.style.setProperty('--glow-color', 'rgba(255, 0, 0, 0.5)');
+        root.style.setProperty('--neon-primary', '#ff0000');
+        color1 = 'ff4d4d'; color2 = 'cc0000'; ptrColor1 = 'ffffff'; ptrColor2 = 'ff4d4d';
+    } else if (themeName === 'ocean') {
+        root.style.setProperty('--neon-color', '#00ffff');
+        root.style.setProperty('--bg-color', '#000a1a');
+        root.style.setProperty('--glow-color', 'rgba(0, 255, 255, 0.5)');
+        root.style.setProperty('--neon-primary', '#0088ff');
+        color1 = '66ffff'; color2 = '0088ff'; ptrColor1 = 'ffffff'; ptrColor2 = '66ffff';
+    } else if (themeName === 'hacked') {
+        root.style.setProperty('--neon-color', '#ff0000');
+        root.style.setProperty('--bg-color', '#000000');
+        root.style.setProperty('--glow-color', 'rgba(255, 0, 0, 0.8)');
+        root.style.setProperty('--neon-primary', '#ff0000');
+        color1 = 'ff0000'; color2 = '8b0000'; ptrColor1 = 'ff0000'; ptrColor2 = 'ff0000';
+    }
+"""
+
+js = js.replace("color1 = '66ffeb'; color2 = '00ffcc'; ptrColor1 = 'ffffff'; ptrColor2 = '66ffeb';\n    }", "color1 = '66ffeb'; color2 = '00ffcc'; ptrColor1 = 'ffffff'; ptrColor2 = '66ffeb';\n" + new_themes)
+
+# 3. Handle hacker mode toggle inside changeTheme
+change_theme_end = """
+    // Update active card
+    document.querySelectorAll('.theme-card').forEach(c => c.classList.remove('active'));
+    const activeCard = document.getElementById('card-' + themeName);
+    if(activeCard) activeCard.classList.add('active');
+    
+    if (themeName === 'hacked') {
+        enableHackerMode();
+    } else {
+        disableHackerMode();
+    }
+}"""
+
+js = re.sub(r"// Update active card.*?if\(activeCard\) activeCard\.classList\.add\('active'\);\n}", change_theme_end, js, flags=re.DOTALL)
 
 with open('static/script.js', 'w', encoding='utf-8') as f:
-    f.write(text)
-print("Updated successfully")
+    f.write(js)
