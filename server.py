@@ -690,23 +690,12 @@ def ai_chat():
         if res.status_code != 200:
             return jsonify({"error": f"Ошибка от GROQ. Статус: {res.status_code}. Текст: {res.text}"}), 500
 
-        def generate():
-            for line in res.iter_lines():
-                if line:
-                    line = line.decode('utf-8')
-                    if line.startswith('data: '):
-                        data_str = line[6:]
-                        if data_str == '[DONE]':
-                            break
-                        try:
-                            import json
-                            data_json = json.loads(data_str)
-                            delta = data_json['choices'][0]['delta']
-                            if 'content' in delta:
-                                yield delta['content']
-                        except Exception as e:
-                            pass
-        return Response(generate(), mimetype='text/plain')
+    def generate():
+        for line in res.iter_lines():
+            if line:
+                line = line.decode("utf-8")
+                yield line + "\n\n"
+    return Response(generate(), mimetype='text/event-stream')
     except Exception as e:
         return jsonify({"error": str(e)}), 500
 
