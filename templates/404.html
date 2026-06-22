@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ошибка 404 | Aurexis Studio</title>
+    <link rel="icon" type="image/x-icon" href="{{ url_for('static', filename='assets/favicon.ico') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <style>
+        body, html {
+            height: 100%;
+            margin: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-color: var(--bg-dark);
+            font-family: 'Inter', sans-serif;
+            overflow: hidden;
+            text-align: center;
+        }
+        .error-container {
+            z-index: 10;
+            background: rgba(0, 0, 0, 0.6);
+            border: 1px solid rgba(255, 0, 85, 0.3);
+            padding: 50px;
+            border-radius: 20px;
+            box-shadow: 0 0 40px rgba(255, 0, 85, 0.2);
+            backdrop-filter: blur(10px);
+            animation: glitch 2s infinite;
+        }
+        .error-code {
+            font-size: 8rem;
+            font-weight: 900;
+            color: transparent;
+            -webkit-text-stroke: 2px #ff0055;
+            margin: 0;
+            line-height: 1;
+            text-shadow: 0 0 20px rgba(255, 0, 85, 0.5);
+        }
+        .error-text {
+            font-size: 1.5rem;
+            color: white;
+            margin-top: 10px;
+            margin-bottom: 30px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+        .error-desc {
+            color: var(--text-muted);
+            margin-bottom: 40px;
+        }
+        @keyframes glitch {
+            0% { box-shadow: 0 0 40px rgba(255, 0, 85, 0.2); }
+            50% { box-shadow: 0 0 60px rgba(255, 0, 85, 0.4); border-color: rgba(255, 0, 85, 0.6); }
+            100% { box-shadow: 0 0 40px rgba(255, 0, 85, 0.2); }
+        }
+    </style>
+</head>
+<body>
+    <div id="particles-js"></div>
+
+    <div class="error-container">
+        <h1 class="error-code">404</h1>
+        <div class="error-text">Сектор не найден</div>
+        <p class="error-desc">Похоже, вы забрели в неизвестную часть киберпространства.<br>Запрошенная страница удалена или никогда не существовала.</p>
+        <a href="/" class="btn btn-primary" style="background: transparent; border-color: #ff0055; color: #ff0055; box-shadow: 0 0 10px rgba(255, 0, 85, 0.4);">Вернуться на Базу</a>
+    </div>
+
+    <!-- Scripts -->
+    <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
+    <script>
+        particlesJS.load('particles-js', '/static/particles.json');
+    </script>
+</body>
+</html>

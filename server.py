@@ -59,8 +59,9 @@ def update_user_avatar(email, avatar_base64):
         print("Supabase PATCH error:", e)
         return False
 
-# Temporary store for verification codes
+# In-memory storage for verification codes
 verification_codes = {}
+reset_codes = {}
 
 def send_email(to_email, code):
     service_id = os.getenv("EMAILJS_SERVICE_ID", "service_ib5so3b")
@@ -98,6 +99,10 @@ def send_email(to_email, code):
 @app.route('/')
 def index():
     return render_template('index.html')
+
+@app.errorhandler(404)
+def page_not_found(e):
+    return render_template('404.html'), 404
 
 @app.route('/api/register', methods=['POST'])
 def register():
@@ -215,6 +220,59 @@ def google_login():
         
     except Exception as e:
         return jsonify({"success": False, "message": "Ошибка базы данных."})
+
+# --- PASSWORD RESET ---
+@app.route('/api/forgot-password', methods=['POST'])
+def forgot_password():
+    data = request.json
+    email = data.get('email')
+    
+    if not email:
+        return jsonify({"success": False, "message": "Введите email."})
+        
+    user = get_user_by_email(email)
+    if not user:
+        return jsonify({"success": False, "message": "Пользователь не найден."})
+        
+    code = generate_verification_code()
+    reset_codes[email] = code
+    
+    if send_verification_email(email, code):
+        return jsonify({"success": True, "message": "Код отправлен на вашу почту."})
+    else:
+        return jsonify({"success": False, "message": "Ошибка отправки письма."})
+
+@app.route('/api/verify-reset-code', methods=['POST'])
+def verify_reset_code():
+    data = request.json
+    email = data.get('email')
+    code = data.get('code')
+    
+    if reset_codes.get(email) == code:
+        return jsonify({"success": True})
+    return jsonify({"success": False, "message": "Неверный код."})
+
+@app.route('/api/reset-password', methods=['POST'])
+def reset_password():
+    data = request.json
+    email = data.get('email')
+    code = data.get('code')
+    new_password = data.get('password')
+    
+    if reset_codes.get(email) != code:
+        return jsonify({"success": False, "message": "Неверный код."})
+        
+    if len(new_password) < 6:
+        return jsonify({"success": False, "message": "Пароль слишком короткий."})
+        
+    url = f"{SUPABASE_URL}/rest/v1/users?email=eq.{email}"
+    payload = {"password": hash_password(new_password)}
+    res = requests.patch(url, json=payload, headers=get_supabase_headers())
+    
+    if res.status_code in [200, 204]:
+        reset_codes.pop(email, None) # Clear the code
+        return jsonify({"success": True})
+    return jsonify({"success": False, "message": "Ошибка сохранения нового пароля."})
 
 @app.route('/api/update-profile', methods=['POST'])
 def update_profile():

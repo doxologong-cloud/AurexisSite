@@ -243,6 +243,116 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
+    // --- FORGOT PASSWORD LOGIC ---
+    const forgotLink = document.getElementById('forgot-password-link');
+    const forgotForm = document.getElementById('forgot-password-form');
+    const verifyResetForm = document.getElementById('verify-reset-form');
+    const newPasswordForm = document.getElementById('new-password-form');
+    const backToLoginBtn = document.getElementById('back-to-login');
+    let resetEmail = '';
+    
+    if (forgotLink && forgotForm && verifyResetForm && newPasswordForm) {
+        // Show forgot form
+        forgotLink.addEventListener('click', (e) => {
+            e.preventDefault();
+            loginForm.style.display = 'none';
+            document.querySelector('.auth-tabs').style.display = 'none';
+            authSocialWrap.style.display = 'none';
+            forgotForm.style.display = 'flex';
+        });
+
+        // Back to login
+        backToLoginBtn.addEventListener('click', () => {
+            forgotForm.style.display = 'none';
+            document.querySelector('.auth-tabs').style.display = 'flex';
+            loginForm.style.display = 'flex';
+            authSocialWrap.style.display = 'block';
+        });
+
+        // Send reset code
+        forgotForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const email = document.getElementById('forgot-email').value;
+            const err = document.getElementById('forgot-error');
+            err.textContent = 'Отправка кода...';
+            
+            try {
+                const res = await fetch('/api/forgot-password', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ email })
+                });
+                const data = await res.json();
+                if (data.success) {
+                    resetEmail = email;
+                    forgotForm.style.display = 'none';
+                    verifyResetForm.style.display = 'flex';
+                    document.getElementById('reset-email-display').textContent = email;
+                } else {
+                    err.textContent = data.message;
+                }
+            } catch (error) {
+                err.textContent = 'Ошибка сети.';
+            }
+        });
+
+        // Verify reset code
+        verifyResetForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const code = document.getElementById('reset-code').value;
+            const err = document.getElementById('reset-verify-error');
+            err.textContent = 'Проверка...';
+            
+            try {
+                const res = await fetch('/api/verify-reset-code', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ email: resetEmail, code })
+                });
+                const data = await res.json();
+                if (data.success) {
+                    verifyResetForm.style.display = 'none';
+                    newPasswordForm.style.display = 'flex';
+                } else {
+                    err.textContent = data.message;
+                }
+            } catch (error) {
+                err.textContent = 'Ошибка сети.';
+            }
+        });
+
+        // Save new password
+        newPasswordForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const password = document.getElementById('new-password-input').value;
+            const code = document.getElementById('reset-code').value; // from previous form
+            const err = document.getElementById('new-password-error');
+            err.textContent = 'Сохранение...';
+            
+            try {
+                const res = await fetch('/api/reset-password', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ email: resetEmail, code, password })
+                });
+                const data = await res.json();
+                if (data.success) {
+                    alert('Пароль успешно изменён! Теперь вы можете войти.');
+                    // Reset modal state to login
+                    newPasswordForm.style.display = 'none';
+                    document.querySelector('.auth-tabs').style.display = 'flex';
+                    loginForm.style.display = 'flex';
+                    authSocialWrap.style.display = 'block';
+                    closeModal(authModal);
+                } else {
+                    err.textContent = data.message;
+                }
+            } catch (error) {
+                err.textContent = 'Ошибка сети.';
+            }
+        });
+    }
+
     // Google / Guest Buttons
     const guestBtn = document.querySelector('.guest-btn');
     if(guestBtn) {

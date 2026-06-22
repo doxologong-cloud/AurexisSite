@@ -267,6 +267,9 @@
                 </div>
                 <div id="login-error" class="auth-error"></div>
                 <button type="submit" class="btn btn-primary auth-submit-btn" style="width: 100%; margin-top: 10px;">Войти</button>
+                <div style="text-align: center; margin-top: 15px;">
+                    <a href="#" id="forgot-password-link" style="color: var(--neon-purple); font-size: 0.9rem; text-decoration: none;">Забыли пароль?</a>
+                </div>
             </form>
             
             <!-- Register Form -->
@@ -298,6 +301,39 @@
                 <div id="verify-error" class="auth-error"></div>
                 <button type="submit" class="btn btn-primary auth-submit-btn" style="width: 100%; margin-top: 10px;">Подтвердить и Войти</button>
                 <button type="button" id="back-to-reg" class="btn" style="background: transparent; color: var(--text-muted); margin-top: 5px; width: 100%;">Назад</button>
+            </form>
+
+            <!-- Forgot Password Form -->
+            <form id="forgot-password-form" class="auth-form" style="display: none;">
+                <h3 style="text-align: center; margin-bottom: 20px; color: var(--neon-primary);">Восстановление пароля</h3>
+                <p style="text-align: center; color: var(--text-muted); font-size: 0.9rem; margin-bottom: 15px;">Введите почту, привязанную к аккаунту.</p>
+                <div class="input-group">
+                    <input type="email" id="forgot-email" placeholder="example@mail.com" required>
+                </div>
+                <div id="forgot-error" class="auth-error"></div>
+                <button type="submit" class="btn btn-primary auth-submit-btn" style="width: 100%; margin-top: 10px;">Отправить код</button>
+                <button type="button" id="back-to-login" class="btn" style="background: transparent; color: var(--text-muted); margin-top: 5px; width: 100%;">Назад ко входу</button>
+            </form>
+
+            <!-- Verify Reset Code Form -->
+            <form id="verify-reset-form" class="auth-form" style="display: none;">
+                <h3 style="text-align: center; margin-bottom: 20px; color: var(--neon-primary);">Подтверждение</h3>
+                <p style="text-align: center; color: var(--text-muted); font-size: 0.9rem; margin-bottom: 15px;">Мы отправили код на: <br><strong id="reset-email-display" style="color: white;"></strong></p>
+                <div class="input-group">
+                    <input type="text" id="reset-code" placeholder="123456" required autocomplete="off">
+                </div>
+                <div id="reset-verify-error" class="auth-error"></div>
+                <button type="submit" class="btn btn-primary auth-submit-btn" style="width: 100%; margin-top: 10px;">Проверить код</button>
+            </form>
+
+            <!-- New Password Form -->
+            <form id="new-password-form" class="auth-form" style="display: none;">
+                <h3 style="text-align: center; margin-bottom: 20px; color: var(--neon-primary);">Новый пароль</h3>
+                <div class="input-group">
+                    <input type="password" id="new-password-input" placeholder="Минимум 6 символов" required minlength="6">
+                </div>
+                <div id="new-password-error" class="auth-error"></div>
+                <button type="submit" class="btn btn-primary auth-submit-btn" style="width: 100%; margin-top: 10px;">Сохранить пароль</button>
             </form>
 
             <div style="margin-top: 20px; text-align: center;">
