@@ -2829,30 +2829,54 @@ function enableHackerMode() {
     }
     document.body.classList.add('hacked-theme');
     
-    // Start generating fake bugs
+    // Start generating falling code and occasional errors
     hackerModeInterval = setInterval(() => {
-        const bug = document.createElement('div');
-        bug.className = 'fake-bug';
-        bug.style.position = 'fixed';
-        bug.style.top = Math.random() * window.innerHeight + 'px';
-        bug.style.left = Math.random() * window.innerWidth + 'px';
-        bug.style.color = 'red';
-        bug.style.fontFamily = 'monospace';
-        bug.style.fontSize = (Math.random() * 20 + 10) + 'px';
-        bug.style.pointerEvents = 'none';
-        bug.style.zIndex = '999999';
-        bug.style.textShadow = '0 0 10px red';
-        bug.style.opacity = '0.8';
+        // Falling code line
+        const codeLine = document.createElement('div');
+        codeLine.className = 'falling-code-line';
+        codeLine.style.left = Math.random() * window.innerWidth + 'px';
+        codeLine.style.top = '-100px';
         
-        const msgs = ['[ERROR] MEMORY LEAK', 'SYSTEM CORRUPTED', 'NULL POINTER', 'FATAL EXCEPTION', 'STACK OVERFLOW'];
-        bug.textContent = msgs[Math.floor(Math.random() * msgs.length)];
+        let chars = '0123456789ABCDEF!@#$%^&*()';
+        let length = Math.floor(Math.random() * 20) + 10;
+        let str = '';
+        for(let i=0; i<length; i++) {
+            str += chars.charAt(Math.floor(Math.random() * chars.length)) + '
+';
+        }
+        codeLine.textContent = str;
         
-        document.body.appendChild(bug);
+        // Random duration between 2s and 6s
+        let dur = 2 + Math.random() * 4;
+        codeLine.style.animationDuration = dur + 's';
         
-        setTimeout(() => {
-            if (bug.parentNode) bug.parentNode.removeChild(bug);
-        }, 2000 + Math.random() * 3000);
-    }, 1000);
+        // Z-index so it's in background
+        codeLine.style.zIndex = '-1';
+        
+        document.body.appendChild(codeLine);
+        setTimeout(() => { if (codeLine.parentNode) codeLine.remove(); }, dur * 1000);
+        
+        // Occasional red bug (10% chance)
+        if (Math.random() < 0.1) {
+            const bug = document.createElement('div');
+            bug.className = 'fake-bug';
+            bug.style.position = 'fixed';
+            bug.style.top = Math.random() * window.innerHeight + 'px';
+            bug.style.left = Math.random() * window.innerWidth + 'px';
+            bug.style.color = 'red';
+            bug.style.fontFamily = 'monospace';
+            bug.style.fontSize = (Math.random() * 30 + 15) + 'px';
+            bug.style.pointerEvents = 'none';
+            bug.style.zIndex = '999999';
+            bug.style.textShadow = '0 0 10px red';
+            
+            const msgs = ['[ERROR] SYSTEM CORRUPTED', 'NULL POINTER', 'FATAL EXCEPTION', 'STACK OVERFLOW', 'ACCESS VIOLATION'];
+            bug.textContent = msgs[Math.floor(Math.random() * msgs.length)];
+            
+            document.body.appendChild(bug);
+            setTimeout(() => { if (bug.parentNode) bug.remove(); }, 1500);
+        }
+    }, 100); // Generate a lot of code lines quickly
 }
 
 function disableHackerMode() {

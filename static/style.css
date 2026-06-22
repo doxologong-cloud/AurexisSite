@@ -1993,7 +1993,7 @@ a, button, input, textarea, select, .theme-card, .msgr-tab, .dropdown-item {
 
 /* Hacked Theme Effects */
 .hacked-theme {
-    animation: screen-glitch 0.2s linear infinite;
+    /* animation removed */
     overflow-x: hidden;
 }
 
@@ -2024,4 +2024,23 @@ a, button, input, textarea, select, .theme-card, .msgr-tab, .dropdown-item {
 body.no-animations *, body.no-animations {
     animation: none !important;
     transition: none !important;
+}
+
+@keyframes falling-code {
+    0% { transform: translateY(-10vh); opacity: 1; }
+    80% { opacity: 0.8; }
+    100% { transform: translateY(110vh); opacity: 0; }
+}
+.falling-code-line {
+    position: fixed;
+    color: #ff0000;
+    font-family: monospace;
+    font-size: 14px;
+    pointer-events: none;
+    z-index: 0;
+    text-shadow: 0 0 5px red;
+    white-space: pre;
+    writing-mode: vertical-rl;
+    text-orientation: upright;
+    animation: falling-code linear forwards;
 }
