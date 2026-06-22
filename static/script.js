@@ -142,6 +142,12 @@ document.addEventListener('DOMContentLoaded', () => {
                 portView.classList.remove('hidden-view');
                 portView.classList.add('active');
             }
+        } else if (hash === '#editor') {
+            const edView = document.getElementById('view-editor');
+            if(edView) {
+                edView.classList.remove('hidden-view');
+                edView.classList.add('active');
+            }
         } else {
             const homeView = document.getElementById('view-home');
             if(homeView) {

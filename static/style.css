@@ -1886,3 +1886,5 @@ body.apocalypse-mode .btn {
     background: var(--glow-color);
     color: var(--neon-color);
 }
+
+#view-editor.active { display: flex !important; }
