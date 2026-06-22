@@ -1701,15 +1701,18 @@ body.apocalypse-mode .btn {
 }
 
 .chat-item-avatar {
-    width: 40px;
-    height: 40px;
+    width: 45px;
+    height: 45px;
     border-radius: 50%;
-    background: linear-gradient(45deg, var(--neon-primary), var(--neon-secondary));
+    background: linear-gradient(135deg, var(--neon-primary), var(--neon-purple));
     display: flex;
     align-items: center;
     justify-content: center;
-    font-weight: bold;
-    color: black;
+    font-weight: 800;
+    font-size: 1.3rem;
+    color: #000;
+    box-shadow: 0 0 10px rgba(229, 179, 34, 0.4);
+    text-transform: uppercase;
 }
 
 .chat-item-info {
@@ -1770,26 +1773,37 @@ body.apocalypse-mode .btn {
 }
 
 .chat-msg {
-    max-width: 70%;
-    padding: 10px 15px;
-    border-radius: 15px;
+    max-width: 75%;
+    padding: 10px 16px;
+    border-radius: 18px;
     font-size: 0.95rem;
-    line-height: 1.4;
+    line-height: 1.45;
     word-break: break-word;
+    position: relative;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.2);
 }
 
 .chat-msg.sent {
     align-self: flex-end;
-    background: rgba(0, 255, 136, 0.2);
-    border-bottom-right-radius: 5px;
-    border: 1px solid rgba(0, 255, 136, 0.3);
+    background: var(--neon-primary);
+    color: #000;
+    border-bottom-right-radius: 4px;
 }
 
 .chat-msg.received {
     align-self: flex-start;
-    background: rgba(255, 255, 255, 0.05);
-    border-bottom-left-radius: 5px;
-    border: 1px solid rgba(255, 255, 255, 0.1);
+    background: rgba(255, 255, 255, 0.1);
+    color: #fff;
+    border-bottom-left-radius: 4px;
+}
+
+.chat-msg.sent .chat-msg-sender,
+.chat-msg.sent .chat-msg-time {
+    color: rgba(0,0,0,0.6);
+}
+
+.chat-msg.received .chat-msg-time {
+    color: rgba(255,255,255,0.5);
 }
 
 .chat-msg-sender {

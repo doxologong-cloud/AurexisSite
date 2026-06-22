@@ -602,6 +602,14 @@ def admin_tickets():
         return jsonify({"success": True, "tickets": res.json()})
     return jsonify({"success": False})
 
+@app.route('/api/admin/tickets/<int:ticket_id>', methods=['DELETE'])
+def admin_delete_ticket(ticket_id):
+    if 'user' not in session or not session['user'].get('is_admin'):
+        return jsonify({"success": False})
+    url = f"{SUPABASE_URL}/rest/v1/tickets?id=eq.{ticket_id}"
+    res = requests.delete(url, headers=get_supabase_headers())
+    return jsonify({"success": res.status_code in [200, 204]})
+
 @app.route('/api/admin/tickets/<int:ticket_id>/status', methods=['PATCH'])
 def admin_ticket_status(ticket_id):
     if 'user' not in session or not session['user'].get('is_admin'):

@@ -530,6 +530,7 @@ document.addEventListener('DOMContentLoaded', () => {
         } catch(e) {}
 
         window.currentUser = null;
+        localStorage.removeItem('currentUser');
         document.getElementById('nav-account').style.display = 'none';
         document.getElementById('open-auth').style.display = 'inline-block';
         window.location.hash = '#home'; // Go back to home
@@ -2067,7 +2068,7 @@ document.addEventListener('DOMContentLoaded', () => {
                             div.style.padding = '10px';
                             div.style.cursor = 'pointer';
                             div.style.borderBottom = '1px solid rgba(255,255,255,0.05)';
-                            div.innerHTML = `<span style="color: white; font-weight: bold;">${u.username}</span> <br><span style="color: gray; font-size: 0.8rem;">${u.email}</span>`;
+                            div.innerHTML = `<span style="color: white; font-weight: bold;">${u.username}</span>`;
                             
                             // On click, start chat
                             div.addEventListener('click', async () => {
