@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Aurexis Studio | ╨Э╨░╤И╨╕ ╨С╨╛╤В╤Л</title>
+    <title>Aurexis Studio | Наши Боты</title>
     <!-- Favicon -->
     <link rel="icon" type="image/png" href="{{ url_for('static', filename='assets/logo.png') }}">
     <!-- Fonts -->
@@ -22,7 +22,7 @@
         <div class="glitch-wrapper">
             <h1 class="glitch" data-text="AUREXIS STUDIO">AUREXIS STUDIO</h1>
         </div>
-        <p class="welcome-text">╨Ч╨░╨│╤А╤Г╨╖╨║╨░ ╤Б╨╕╤Б╤В╨╡╨╝╤Л...</p>
+        <p class="welcome-text">Загрузка системы...</p>
         <div class="progress-bar-container">
             <div class="progress-bar"></div>
         </div>
@@ -41,20 +41,20 @@
             <span>Aurexis Studio</span>
         </div>
         <div class="nav-links">
-            <a href="#home">╨У╨╗╨░╨▓╨╜╨░╤П</a>
-            <a href="#about">╨Ю ╨╜╨░╤Б</a>
-            <a href="#" id="open-auth" class="nav-auth-link" style="color: var(--neon-primary); font-weight: 600;">╨Т╤Е╨╛╨┤ / ╨а╨╡╨│╨╕╤Б╤В╤А╨░╤Ж╨╕╤П</a>
+            <a href="#home">Главная</a>
+            <a href="#about">О нас</a>
+            <a href="#" id="open-auth" class="nav-auth-link" style="color: var(--neon-primary); font-weight: 600;">Вход / Регистрация</a>
             <div class="nav-account" id="nav-account" style="display: none; position: relative; cursor: pointer;">
                 <div class="user-profile" id="user-profile">
                     <img src="{{ url_for('static', filename='assets/default-avatar.png') }}" alt="User" class="nav-avatar" id="nav-avatar-img">
                     <span id="nav-username">User</span>
                 </div>
                 <div class="dropdown-menu" id="account-dropdown">
-                    <a href="#account" class="dropdown-item" id="go-profile-btn" style="text-decoration: none; display: block; padding: 8px 10px; color: white;">╨Ь╨╛╨╣ ╨┐╤А╨╛╤Д╨╕╨╗╤М</a>
-                    <a href="#settings" class="dropdown-item" id="go-settings-btn" style="text-decoration: none; display: block; padding: 8px 10px; color: white;">╨Э╨░╤Б╤В╤А╨╛╨╣╨║╨╕</a>
-                    <a href="/admin" id="nav-admin-link" style="display: none; padding: 8px 10px; color: #ff0055; text-decoration: none; border-bottom: 1px solid rgba(255,255,255,0.1); margin-bottom: 5px; font-weight: bold;">╨Я╨░╨╜╨╡╨╗╤М</a>
-                    <div class="dropdown-item" id="change-avatar-btn">╨б╨╝╨╡╨╜╨╕╤В╤М ╨░╨▓╨░╤В╨░╤А</div>
-                    <div class="dropdown-item" id="logout-btn" style="color: #ff4444;">╨Т╤Л╨╣╤В╨╕</div>
+                    <a href="#account" class="dropdown-item" id="go-profile-btn" style="text-decoration: none; display: block; padding: 8px 10px; color: white;">Мой профиль</a>
+                    <a href="#settings" class="dropdown-item" id="go-settings-btn" style="text-decoration: none; display: block; padding: 8px 10px; color: white;">Настройки</a>
+                    <a href="/admin" id="nav-admin-link" style="display: none; padding: 8px 10px; color: #ff0055; text-decoration: none; border-bottom: 1px solid rgba(255,255,255,0.1); margin-bottom: 5px; font-weight: bold;">Панель</a>
+                    <div class="dropdown-item" id="change-avatar-btn">Сменить аватар</div>
+                    <div class="dropdown-item" id="logout-btn" style="color: #ff4444;">Выйти</div>
                 </div>
             </div>
         </div>
@@ -62,7 +62,7 @@
             <svg viewBox="0 0 24 24" fill="currentColor" width="20" height="20">
                 <path d="M20.317 4.3698a19.7913 19.7913 0 00-4.8851-1.5152.0741.0741 0 00-.0785.0371c-.211.3753-.4447.8648-.6083 1.2495-1.8447-.2762-3.68-.2762-5.4868 0-.1636-.3933-.4058-.8742-.6177-1.2495a.077.077 0 00-.0785-.037 19.7363 19.7363 0 00-4.8852 1.515.0699.0699 0 00-.0321.0277C.5334 9.0458-.319 13.5799.0992 18.0578a.0824.0824 0 00.0312.0561c2.0528 1.5076 4.0413 2.4228 5.9929 3.0294a.0777.0777 0 00.0842-.0276c.4616-.6304.8731-1.2952 1.226-1.9942a.076.076 0 00-.0416-.1057c-.6528-.2476-1.2743-.5495-1.8722-.8923a.077.077 0 01-.0076-.1277c.1258-.0943.2517-.1923.3718-.2914a.0743.0743 0 01.0776-.0105c3.9278 1.7933 8.18 1.7933 12.0614 0a.0739.0739 0 01.0785.0095c.1202.099.246.1981.3728.2924a.077.077 0 01-.0066.1276 12.2986 12.2986 0 01-1.873.8914.0766.0766 0 00-.0407.1067c.3604.698.7719 1.3628 1.225 1.9932a.076.076 0 00.0842.0286c1.961-.6067 3.9495-1.5219 6.0023-3.0294a.077.077 0 00.0313-.0552c.5004-5.177-.8382-9.6739-3.5485-13.6604a.061.061 0 00-.0312-.0286zM8.02 15.3312c-1.1825 0-2.1569-1.0857-2.1569-2.419 0-1.3332.9555-2.4189 2.157-2.4189 1.2108 0 2.1757 1.0952 2.1568 2.419 0 1.3332-.9555 2.4189-2.1569 2.4189zm7.9748 0c-1.1825 0-2.1569-1.0857-2.1569-2.419 0-1.3332.9554-2.4189 2.1569-2.4189 1.2108 0 2.1757 1.0952 2.1568 2.419 0 1.3332-.946 2.4189-2.1568 2.4189Z"/>
             </svg>
-            ╨Э╨░╤И Discord
+            Наш Discord
         </a>
     </nav>
 
@@ -73,17 +73,17 @@
         <div id="view-home" class="view active">
             <!-- Hero Section -->
             <section class="hero">
-                <h1 class="hero-title">╨С╤Г╨┤╤Г╤Й╨╡╨╡ <span class="neon-text-primary">╨░╨▓╤В╨╛╨╝╨░╤В╨╕╨╖╨░╤Ж╨╕╨╕</span> ╤Г╨╢╨╡ ╨╖╨┤╨╡╤Б╤М</h1>
-                <p class="hero-subtitle">╨Т╤Б╤В╤А╨╡╤З╨░╨╣╤В╨╡ ╨╜╨░╤И╤Г ╤Н╨║╨╛╤Б╨╕╤Б╤В╨╡╨╝╤Г ╤Г╨╝╨╜╤Л╤Е ╨▒╨╛╤В╨╛╨▓ ╨┤╨╗╤П ╨╗╤О╨▒╤Л╤Е ╨╖╨░╨┤╨░╤З. ╨Ь╨╛╤Й╨╜╤Л╨╡, ╨▒╤Л╤Б╤В╤А╤Л╨╡ ╨╕ ╨▒╨╡╨╖╤Г╨┐╤А╨╡╤З╨╜╨╛ ╤Б╤В╨╕╨╗╤М╨╜╤Л╨╡ ╨╕╨╜╤Б╤В╤А╤Г╨╝╨╡╨╜╤В╤Л ╨╛╤В Aurexis Studio.</p>
+                <h1 class="hero-title">Будущее <span class="neon-text-primary">автоматизации</span> уже здесь</h1>
+                <p class="hero-subtitle">Встречайте нашу экосистему умных ботов для любых задач. Мощные, быстрые и безупречно стильные инструменты от Aurexis Studio.</p>
                 <div class="hero-buttons">
-                    <a href="#bots" class="btn btn-primary">╨Я╨╛╤Б╨╝╨╛╤В╤А╨╡╤В╤М ╨С╨╛╤В╨╛╨▓</a>
-                    <a href="https://discord.gg/k9CGaGGtCx" target="_blank" class="btn btn-secondary">╨Т╤Б╤В╤Г╨┐╨╕╤В╤М ╨▓ Discord</a>
+                    <a href="#bots" class="btn btn-primary">Посмотреть Ботов</a>
+                    <a href="https://discord.gg/k9CGaGGtCx" target="_blank" class="btn btn-secondary">Вступить в Discord</a>
                 </div>
             </section>
 
             <!-- Bots Grid Section -->
             <section id="bots" class="bots-section">
-                <h2 class="section-title">╨Э╨░╤И ╨Р╤А╤Б╨╡╨╜╨░╨╗</h2>
+                <h2 class="section-title">Наш Арсенал</h2>
                 
                 <div class="bots-grid">
                     <!-- Bot 1 -->
@@ -92,7 +92,7 @@
                             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path></svg>
                         </div>
                         <h3 class="bot-name">AUREXIS SUPPORT</h3>
-                        <p class="bot-desc">╨Я╤А╨╛╤Д╨╡╤Б╤Б╨╕╨╛╨╜╨░╨╗╤М╨╜╤Л╨╣ ╨▒╨╛╤В ╨┤╨╗╤П ╤В╨╡╤Е╨╜╨╕╤З╨╡╤Б╨║╨╛╨╣ ╨┐╨╛╨┤╨┤╨╡╤А╨╢╨║╨╕. ╨Ю╤А╨│╨░╨╜╨╕╨╖╤Г╨╡╤В ╤В╨╕╨║╨╡╤В╤Л, ╨░╨▓╤В╨╛╨╝╨░╤В╨╕╨╖╨╕╤А╤Г╨╡╤В ╨╛╤В╨▓╨╡╤В╤Л ╨╕ ╨┐╨╛╨╝╨╛╨│╨░╨╡╤В ╨╛╨▒╤Й╨░╤В╤М╤Б╤П ╤Б ╨▓╨░╤И╨╡╨╣ ╨░╤Г╨┤╨╕╤В╨╛╤А╨╕╨╡╨╣ 24/7.</p>
+                        <p class="bot-desc">Профессиональный бот для технической поддержки. Организует тикеты, автоматизирует ответы и помогает общаться с вашей аудиторией 24/7.</p>
                         <div class="bot-status" id="status-aurexis_support"><span class="status-dot"></span> Online</div>
                     </div>
 
@@ -102,7 +102,7 @@
                             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><path d="M12 8v4l3 3"></path></svg>
                         </div>
                         <h3 class="bot-name">AUREXIS ECONOMY</h3>
-                        <p class="bot-desc">╨б╨╛╨╖╨┤╨░╨╣╤В╨╡ ╤Г╨╜╨╕╨║╨░╨╗╤М╨╜╤Г╤О ╤Н╨║╨╛╨╜╨╛╨╝╨╕╨║╤Г ╨╜╨░ ╨▓╨░╤И╨╡╨╝ ╤Б╨╡╤А╨▓╨╡╤А╨╡! ╨Ш╨│╤А╤Л, ╨║╨░╨╖╨╕╨╜╨╛, ╨▓╨░╨╗╤О╤В╨░, ╨╝╨░╨│╨░╨╖╨╕╨╜╤Л ╨╕ ╤Г╤А╨╛╨▓╨╜╨╕. ╨Т╨╛╨▓╨╗╨╡╤З╨╡╨╜╨╜╨╛╤Б╤В╤М ╤Г╤З╨░╤Б╤В╨╜╨╕╨║╨╛╨▓ ╨│╨░╤А╨░╨╜╤В╨╕╤А╨╛╨▓╨░╨╜╨░.</p>
+                        <p class="bot-desc">Создайте уникальную экономику на вашем сервере! Игры, казино, валюта, магазины и уровни. Вовлеченность участников гарантирована.</p>
                         <div class="bot-status" id="status-aurexis_economy"><span class="status-dot"></span> Online</div>
                     </div>
 
@@ -112,7 +112,7 @@
                             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg>
                         </div>
                         <h3 class="bot-name">AUREXIS MAFIA</h3>
-                        <p class="bot-desc">╨Ы╨╡╨│╨╡╨╜╨┤╨░╤А╨╜╨░╤П ╨╕╨│╤А╨░ ╨┐╤А╤П╨╝╨╛ ╨▓ ╤З╨░╤В╨╡. ╨Я╨╛╨╗╨╜╨╛╤Б╤В╤М╤О ╨░╨▓╤В╨╛╨╝╨░╤В╨╕╨╖╨╕╤А╨╛╨▓╨░╨╜╨╜╤Л╨╣ ╨┐╤А╨╛╤Ж╨╡╤Б╤Б ╨╕╨│╤А╤Л ╨▓ ╨Ь╨░╤Д╨╕╤О ╤Б ╤А╨╛╨╗╤П╨╝╨╕, ╨│╨╛╨╗╨╛╤Б╨╛╨▓╨░╨╜╨╕╤П╨╝╨╕ ╨╕ ╨╜╨╛╤З╨╜╤Л╨╝╨╕ ╤Д╨░╨╖╨░╨╝╨╕.</p>
+                        <p class="bot-desc">Легендарная игра прямо в чате. Полностью автоматизированный процесс игры в Мафию с ролями, голосованиями и ночными фазами.</p>
                         <div class="bot-status" id="status-aurexis_mafia"><span class="status-dot"></span> Online</div>
                     </div>
 
@@ -123,7 +123,7 @@
                         </div>
                         <div class="badge">NEW</div>
                         <h3 class="bot-name neon-text-green">FLORA</h3>
-                        <p class="bot-desc">╨Э╨╛╨▓╨╡╨╣╤И╨░╤П ╤А╨░╨╖╤А╨░╨▒╨╛╤В╨║╨░ Aurexis Studio. ╨Ь╨╛╤Й╨╜╤Л╨╣ .exe ╨▒╨╛╤В ╤Б ╤Г╨╜╨╕╨║╨░╨╗╤М╨╜╤Л╨╝ ╤Д╤Г╨╜╨║╤Ж╨╕╨╛╨╜╨░╨╗╨╛╨╝ ╨╕ ╤Б╨║╤А╤Л╤В╨╛╨╣ ╤А╨░╨▒╨╛╤В╨╛╨╣ ╨▓ ╤Б╨╕╤Б╤В╨╡╨╝╨╡.</p>
+                        <p class="bot-desc">Новейшая разработка Aurexis Studio. Мощный .exe бот с уникальным функционалом и скрытой работой в системе.</p>
                         <div class="bot-status status-green" id="status-aurexis_flora"><span class="status-dot"></span> Active</div>
                     </div>
                 </div>
@@ -131,18 +131,18 @@
 
             <!-- News Section -->
             <section class="about-section scroll-reveal" style="padding-top: 40px;">
-                <h2 class="section-title">╨Э╨╛╨▓╨╛╤Б╤В╨╕ ╨╕ ╨Ю╨▒╨╜╨╛╨▓╨╗╨╡╨╜╨╕╤П</h2>
+                <h2 class="section-title">Новости и Обновления</h2>
                 <div id="news-container" style="display: flex; flex-direction: column; gap: 20px; max-width: 800px; margin: 0 auto; text-align: left;">
-                    <div style="text-align: center; width: 100%; color: var(--text-muted);">╨Ч╨░╨│╤А╤Г╨╖╨║╨░ ╨╜╨╛╨▓╨╛╤Б╤В╨╡╨╣...</div>
+                    <div style="text-align: center; width: 100%; color: var(--text-muted);">Загрузка новостей...</div>
                 </div>
             </section>
             
             <!-- Reviews Section -->
             <section class="about-section scroll-reveal" style="padding-top: 40px; margin-bottom: 50px;">
-                <h2 class="section-title">╨Ю╤В╨╖╤Л╨▓╤Л ╨╛ ╤Б╨░╨╣╤В╨╡</h2>
+                <h2 class="section-title">Отзывы о сайте</h2>
                 <div class="bots-grid" id="reviews-container" style="gap: 20px;">
                     <!-- Reviews will be loaded dynamically here -->
-                    <div style="text-align: center; width: 100%; color: var(--text-muted);">╨Ч╨░╨│╤А╤Г╨╖╨║╨░ ╨╛╤В╨╖╤Л╨▓╨╛╨▓...</div>
+                    <div style="text-align: center; width: 100%; color: var(--text-muted);">Загрузка отзывов...</div>
                 </div>
             </section>
         </div>
@@ -151,32 +151,32 @@
         <div id="view-about" class="view hidden-view">
             <!-- About Section -->
             <section class="about-section scroll-reveal" style="padding-top: 40px;">
-                <h2 class="section-title">╨Ю ╨╜╨░╤Б</h2>
+                <h2 class="section-title">О нас</h2>
                 <div class="about-content">
                     <p style="font-size: 1.1rem; line-height: 1.8; color: var(--text-muted); margin-bottom: 40px; text-align: center; max-width: 800px; margin-left: auto; margin-right: auto;">
-                        <strong>Aurexis Studio</strong> тАФ ╤Н╨╗╨╕╤В╨╜╨░╤П ╨║╨╛╨╝╨░╨╜╨┤╨░ ╤А╨░╨╖╤А╨░╨▒╨╛╤В╤З╨╕╨║╨╛╨▓, ╤Б╨┐╨╡╤Ж╨╕╨░╨╗╨╕╨╖╨╕╤А╤Г╤О╤Й╨░╤П╤Б╤П ╨╜╨░ ╤Б╨╛╨╖╨┤╨░╨╜╨╕╨╕ ╨╝╨╜╨╛╨│╨╛╤Д╤Г╨╜╨║╤Ж╨╕╨╛╨╜╨░╨╗╤М╨╜╤Л╤Е ╤А╨╡╤И╨╡╨╜╨╕╨╣ ╨┤╨╗╤П Discord. ╨Ь╤Л ╨╜╨╡ ╨┐╤А╨╛╤Б╤В╨╛ ╨┤╨╡╨╗╨░╨╡╨╝ ╨▒╨╛╤В╨╛╨▓, ╨╝╤Л ╤Б╨╛╨╖╨┤╨░╨╡╨╝ ╨┐╨╛╨╗╨╜╨╛╤Ж╨╡╨╜╨╜╤Л╨╡ ╤Ж╨╕╤Д╤А╨╛╨▓╤Л╨╡ ╤Н╨║╨╛╤Б╨╕╤Б╤В╨╡╨╝╤Л. ╨Э╨░╤И╨░ ╨│╨╗╨░╨▓╨╜╨░╤П ╤Ж╨╡╨╗╤М тАФ ╨┤╨░╤В╤М ╨░╨┤╨╝╨╕╨╜╨╕╤Б╤В╤А╨░╤В╨╛╤А╨░╨╝ ╤Г╨╗╤М╤В╨╕╨╝╨░╤В╨╕╨▓╨╜╤Л╨╡ ╨╕╨╜╤Б╤В╤А╤Г╨╝╨╡╨╜╤В╤Л ╨┤╨╗╤П ╤Г╨┐╤А╨░╨▓╨╗╨╡╨╜╨╕╤П, ╤А╨░╨╖╨▓╨╗╨╡╤З╨╡╨╜╨╕╤П ╨░╤Г╨┤╨╕╤В╨╛╤А╨╕╨╕ ╨╕ ╨╝╨╛╨╜╨╡╤В╨╕╨╖╨░╤Ж╨╕╨╕ ╤Б╨╡╤А╨▓╨╡╤А╨╛╨▓.
+                        <strong>Aurexis Studio</strong> — элитная команда разработчиков, специализирующаяся на создании многофункциональных решений для Discord. Мы не просто делаем ботов, мы создаем полноценные цифровые экосистемы. Наша главная цель — дать администраторам ультимативные инструменты для управления, развлечения аудитории и монетизации серверов.
                     </p>
                     <div class="features">
                         <div class="feature-item">
                             <div class="feature-icon">
                                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 12h-4l-3 9L9 3l-3 9H2"></path></svg>
                             </div>
-                            <h3 style="color: var(--neon-primary);">╨Т╤Л╤Б╨╛╨║╨░╤П ╨┐╤А╨╛╨╕╨╖╨▓╨╛╨┤╨╕╤В╨╡╨╗╤М╨╜╨╛╤Б╤В╤М</h3>
-                            <p>╨Ъ╨░╨╢╨┤╨░╤П ╤Б╤В╤А╨╛╤З╨║╨░ ╨╜╨░╤И╨╡╨│╨╛ ╨║╨╛╨┤╨░ ╨▓╤Л╨▓╨╡╤А╨╡╨╜╨░ ╨┤╨╛ ╨╕╨┤╨╡╨░╨╗╨░. ╨Э╨░╤И╨╕ ╨░╨╗╨│╨╛╤А╨╕╤В╨╝╤Л ╨╛╨▒╨╡╤Б╨┐╨╡╤З╨╕╨▓╨░╤О╤В ╨▒╨╡╤Б╨┐╨╡╤А╨╡╨▒╨╛╨╣╨╜╤Г╤О ╤А╨░╨▒╨╛╤В╤Г ╨┐╤А╨╛╨╡╨║╤В╨╛╨▓ ╨┤╨░╨╢╨╡ ╨┐╤А╨╕ ╨┐╨╕╨║╨╛╨▓╤Л╤Е ╨╜╨░╨│╤А╤Г╨╖╨║╨░╤Е.</p>
+                            <h3 style="color: var(--neon-primary);">Высокая производительность</h3>
+                            <p>Каждая строчка нашего кода выверена до идеала. Наши алгоритмы обеспечивают бесперебойную работу проектов даже при пиковых нагрузках.</p>
                         </div>
                         <div class="feature-item">
                             <div class="feature-icon">
                                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg>
                             </div>
-                            <h3 style="color: var(--neon-purple);">╨Р╨▒╤Б╨╛╨╗╤О╤В╨╜╨░╤П ╨▒╨╡╨╖╨╛╨┐╨░╤Б╨╜╨╛╤Б╤В╤М</h3>
-                            <p>╨Ъ╨╛╨╜╤Д╨╕╨┤╨╡╨╜╤Ж╨╕╨░╨╗╤М╨╜╨╛╤Б╤В╤М тАФ ╨╜╨░╤И ╨┐╤А╨╕╨╛╤А╨╕╤В╨╡╤В. ╨Ф╨░╨╜╨╜╤Л╨╡ ╨▓╨░╤И╨╕╤Е ╤Б╨╡╤А╨▓╨╡╤А╨╛╨▓ ╨╕ ╨┐╨╛╨╗╤М╨╖╨╛╨▓╨░╤В╨╡╨╗╨╡╨╣ ╨╜╨░╤Е╨╛╨┤╤П╤В╤Б╤П ╨┐╨╛╨┤ ╨╖╨░╤Й╨╕╤В╨╛╨╣ ╤Б╨░╨╝╤Л╤Е ╤Б╤В╤А╨╛╨│╨╕╤Е ╤Б╤В╨░╨╜╨┤╨░╤А╤В╨╛╨▓ ╨▒╨╡╨╖╨╛╨┐╨░╤Б╨╜╨╛╤Б╤В╨╕.</p>
+                            <h3 style="color: var(--neon-purple);">Абсолютная безопасность</h3>
+                            <p>Конфиденциальность — наш приоритет. Данные ваших серверов и пользователей находятся под защитой самых строгих стандартов безопасности.</p>
                         </div>
                         <div class="feature-item">
                             <div class="feature-icon">
                                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>
                             </div>
-                            <h3 style="color: #ff0055;">╨н╨║╤Б╨║╨╗╤О╨╖╨╕╨▓╨╜╤Л╨╣ ╤Д╤Г╨╜╨║╤Ж╨╕╨╛╨╜╨░╨╗</h3>
-                            <p>╨Ю╤В ╨┐╤А╨╛╨┤╨▓╨╕╨╜╤Г╤В╨╛╨╣ ╤Н╨║╨╛╨╜╨╛╨╝╨╕╨║╨╕ ╨┤╨╛ ╤Б╨╡╨║╤А╨╡╤В╨╜╤Л╤Е ╤А╨░╨╖╤А╨░╨▒╨╛╤В╨╛╨║ ╨▓╤А╨╛╨┤╨╡ ╨┐╨╛╨┤╨┐╨╕╤Б╨╛╨║ FLORA. ╨Ь╤Л ╤Б╨╛╨╖╨┤╨░╨╡╨╝ ╤Д╨╕╤И╨║╨╕, ╨║╨╛╤В╨╛╤А╤Л╤Е ╨╜╨╡╤В ╨╜╨╕ ╤Г ╨╛╨┤╨╜╨╛╨│╨╛ ╨┤╤А╤Г╨│╨╛╨│╨╛ ╨▒╨╛╤В╨░ ╨╜╨░ ╤А╤Л╨╜╨║╨╡.</p>
+                            <h3 style="color: #ff0055;">Эксклюзивный функционал</h3>
+                            <p>От продвинутой экономики до секретных разработок вроде подписок FLORA. Мы создаем фишки, которых нет ни у одного другого бота на рынке.</p>
                         </div>
                     </div>
                 </div>
@@ -186,7 +186,7 @@
         <!-- Account View -->
         <div id="view-account" class="view hidden-view">
             <section class="about-section" style="padding-top: 40px;">
-                <h2 class="section-title">╨Ь╨╛╨╣ ╨░╨║╨║╨░╤Г╨╜╤В</h2>
+                <h2 class="section-title">Мой аккаунт</h2>
                 <div class="about-content" style="text-align: left;">
                     
                     <!-- Profile Info Display -->
@@ -195,22 +195,22 @@
                         <div id="acc-banner" style="width: 100%; height: 150px; background: url('/static/assets/default-banner.png') center/cover no-repeat; border-bottom: 2px solid var(--neon-purple);"></div>
                         
                         <div style="padding: 0 20px 20px 20px; display: flex; align-items: flex-start; gap: 20px;">
-                            <img src="{{ url_for('static', filename='assets/default-avatar.png') }}" alt="User" id="acc-avatar-img" style="width: 100px; height: 100px; border-radius: 50%; object-fit: cover; border: 4px solid var(--bg-color); background: var(--bg-dark); cursor: pointer; z-index: 2; margin-top: -50px;" title="╨б╨╝╨╡╨╜╨╕╤В╤М ╨░╨▓╨░╤В╨░╤А">
+                            <img src="{{ url_for('static', filename='assets/default-avatar.png') }}" alt="User" id="acc-avatar-img" style="width: 100px; height: 100px; border-radius: 50%; object-fit: cover; border: 4px solid var(--bg-color); background: var(--bg-dark); cursor: pointer; z-index: 2; margin-top: -50px;" title="Сменить аватар">
                             <div style="flex-grow: 1; z-index: 2; padding-top: 15px;">
                                 <h3 style="font-size: 1.8rem; margin-bottom: 5px; display: flex; align-items: center; gap: 10px;">
-                                    <span id="acc-nickname">╨Я╨╛╨╗╤М╨╖╨╛╨▓╨░╤В╨╡╨╗╤М</span>
+                                    <span id="acc-nickname">Пользователь</span>
                                     <span id="acc-owner-badge" style="display: none; font-size: 0.9rem; background: var(--neon-primary); color: #000; padding: 2px 8px; border-radius: 12px; font-weight: bold; align-items: center; gap: 4px;">
-                                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg> ╨Т╨╗╨░╨┤╨╡╨╗╨╡╤Ж
+                                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg> Владелец
                                     </span>
                                 </h3>
                                 <div style="display: flex; gap: 15px; align-items: center;">
                                     <p id="acc-username" style="color: var(--neon-purple); font-weight: 600; margin-bottom: 0;">@username</p>
                                     <span style="color: var(--text-muted);">|</span>
-                                    <p id="acc-status-text" style="color: var(--text-muted); font-style: italic; margin-bottom: 0; font-size: 0.9rem;">╨г╤Б╤В╨░╨╜╨╛╨▓╨╕╤В╨╡ ╤Б╤В╨░╤В╤Г╤Б...</p>
+                                    <p id="acc-status-text" style="color: var(--text-muted); font-style: italic; margin-bottom: 0; font-size: 0.9rem;">Установите статус...</p>
                                 </div>
                             </div>
                             <div style="padding-top: 15px;">
-                                <button id="edit-profile-btn" class="btn" style="background: rgba(0,0,0,0.5); color: white; border: 1px solid rgba(255,255,255,0.2); padding: 8px 20px; backdrop-filter: blur(5px); z-index: 2;">╨а╨╡╨┤╨░╨║╤В╨╕╤А╨╛╨▓╨░╤В╤М</button>
+                                <button id="edit-profile-btn" class="btn" style="background: rgba(0,0,0,0.5); color: white; border: 1px solid rgba(255,255,255,0.2); padding: 8px 20px; backdrop-filter: blur(5px); z-index: 2;">Редактировать</button>
                             </div>
                         </div>
                     </div>
@@ -221,61 +221,61 @@
                     <!-- Profile Edit Form -->
                     <div id="profile-edit-form" style="display: none; margin-bottom: 30px; background: rgba(0,0,0,0.3); padding: 20px; border-radius: 10px; border: 1px solid rgba(255,255,255,0.1);">
                         <div class="input-group">
-                            <label>╨Э╨╕╨║╨╜╨╡╨╣╨╝</label>
+                            <label>Никнейм</label>
                             <input type="text" id="edit-nickname" required>
                         </div>
                         <div class="input-group">
-                            <label>@Username (╤Г╨╜╨╕╨║╨░╨╗╤М╨╜╤Л╨╣)</label>
+                            <label>@Username (уникальный)</label>
                             <input type="text" id="edit-username" required>
                         </div>
                         <div class="input-group">
-                            <label>╨Ю╨▒╨╛ ╨╝╨╜╨╡ (╤Б╤В╨░╤В╤Г╤Б)</label>
-                            <input type="text" id="edit-status" placeholder="╨Ъ╤А╨░╤В╨║╨╛ ╨╛ ╤Б╨╡╨▒╨╡...">
+                            <label>Обо мне (статус)</label>
+                            <input type="text" id="edit-status" placeholder="Кратко о себе...">
                         </div>
                         <div style="margin-top: 15px; margin-bottom: 15px;">
-                            <button id="change-banner-btn" class="btn" style="width: 100%; background: transparent; border: 1px dashed var(--neon-purple); color: var(--neon-purple);">╨Ш╨╖╨╝╨╡╨╜╨╕╤В╤М ╤Д╨╛╨╜ ╨┐╤А╨╛╤Д╨╕╨╗╤П (╨С╨░╨╜╨╜╨╡╤А)</button>
+                            <button id="change-banner-btn" class="btn" style="width: 100%; background: transparent; border: 1px dashed var(--neon-purple); color: var(--neon-purple);">Изменить фон профиля (Баннер)</button>
                         </div>
                         <div id="edit-profile-error" class="auth-error"></div>
                         <div style="display: flex; gap: 10px; margin-top: 15px;">
-                            <button id="save-profile-btn" class="btn btn-primary" style="flex: 1;">╨б╨╛╤Е╤А╨░╨╜╨╕╤В╤М</button>
-                            <button id="cancel-edit-btn" class="btn" style="background: transparent; border: 1px solid rgba(255,255,255,0.2); color: white;">╨Ю╤В╨╝╨╡╨╜╨░</button>
+                            <button id="save-profile-btn" class="btn btn-primary" style="flex: 1;">Сохранить</button>
+                            <button id="cancel-edit-btn" class="btn" style="background: transparent; border: 1px solid rgba(255,255,255,0.2); color: white;">Отмена</button>
                         </div>
                     </div>
                     
-                    <h3 style="color: var(--neon-primary); margin-bottom: 15px;">╨г╨┐╤А╨░╨▓╨╗╨╡╨╜╨╕╨╡ ╨┐╨╛╨┤╨┐╨╕╤Б╨║╨░╨╝╨╕</h3>
+                    <h3 style="color: var(--neon-primary); margin-bottom: 15px;">Управление подписками</h3>
                     <div class="features" style="margin-bottom: 30px;">
                         <div class="feature-item">
                             <h4 style="margin-bottom: 10px;">AUREXIS FLORA</h4>
-                            <p style="font-size: 0.9rem; color: var(--text-muted); margin-bottom: 15px;">╨б╤В╨░╤В╤Г╤Б: <span id="acc-flora-status" style="color: #ff4444;">╨Э╨╡ ╨░╨║╤В╨╕╨▓╨╜╨░</span></p>
-                            <button class="btn btn-primary" style="padding: 8px 15px; font-size: 0.9rem;">╨Я╤А╨╕╨╛╨▒╤А╨╡╤Б╤В╨╕</button>
+                            <p style="font-size: 0.9rem; color: var(--text-muted); margin-bottom: 15px;">Статус: <span id="acc-flora-status" style="color: #ff4444;">Не активна</span></p>
+                            <button class="btn btn-primary" style="padding: 8px 15px; font-size: 0.9rem;">Приобрести</button>
                         </div>
                     </div>
 
                     <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
-                        <h3 style="color: var(--neon-primary); margin: 0;">╨Ю╤Б╤В╨░╨▓╨╕╤В╤М ╨╛╤В╨╖╤Л╨▓</h3>
-                        <button id="toggle-review-btn" class="btn" style="background: transparent; color: var(--neon-primary); border: 1px solid var(--neon-primary); padding: 5px 15px; border-radius: 5px; cursor: pointer;">╨а╨░╨╖╨▓╨╡╤А╨╜╤Г╤В╤М</button>
+                        <h3 style="color: var(--neon-primary); margin: 0;">Оставить отзыв</h3>
+                        <button id="toggle-review-btn" class="btn" style="background: transparent; color: var(--neon-primary); border: 1px solid var(--neon-primary); padding: 5px 15px; border-radius: 5px; cursor: pointer;">Развернуть</button>
                     </div>
                     
                     <div id="review-form-container" style="display: none; background: rgba(0,0,0,0.3); padding: 20px; border-radius: 10px; border: 1px solid rgba(255,255,255,0.1); margin-bottom: 30px;">
                         <div style="background: rgba(255,255,255,0.05); padding: 15px; border-radius: 8px; margin-bottom: 20px; border-left: 3px solid var(--neon-purple);">
-                            <h4 style="margin-top: 0; color: var(--neon-purple); margin-bottom: 5px;">ЁЯУЭ ╨Я╤А╨░╨▓╨╕╨╗╨░ ╨┐╤Г╨▒╨╗╨╕╨║╨░╤Ж╨╕╨╕ ╨╛╤В╨╖╤Л╨▓╨░</h4>
+                            <h4 style="margin-top: 0; color: var(--neon-purple); margin-bottom: 5px;">📝 Правила публикации отзыва</h4>
                             <ul style="color: var(--text-muted); font-size: 0.85rem; margin: 0; padding-left: 20px; line-height: 1.5;">
-                                <li>╨Я╨╛╨╢╨░╨╗╤Г╨╣╤Б╤В╨░, ╨┐╨╕╤И╨╕╤В╨╡ ╨║╨╛╨╜╤Б╤В╤А╤Г╨║╤В╨╕╨▓╨╜╨╛ ╨╕ ╨┐╨╛ ╨┤╨╡╨╗╤Г.</li>
-                                <li>╨Ч╨░╨┐╤А╨╡╤Й╨╡╨╜╨╛ ╨╕╤Б╨┐╨╛╨╗╤М╨╖╨╛╨▓╨░╨╜╨╕╨╡ ╨╜╨╡╤Ж╨╡╨╜╨╖╤Г╤А╨╜╨╛╨╣ ╨╗╨╡╨║╤Б╨╕╨║╨╕, ╨╛╤Б╨║╨╛╤А╨▒╨╗╨╡╨╜╨╕╨╣ ╨╕ 18+ ╨║╨╛╨╜╤В╨╡╨╜╤В╨░.</li>
-                                <li>╨Р╨┤╨╝╨╕╨╜╨╕╤Б╤В╤А╨░╤Ж╨╕╤П ╨╛╤Б╤В╨░╨▓╨╗╤П╨╡╤В ╨╖╨░ ╤Б╨╛╨▒╨╛╨╣ ╨┐╤А╨░╨▓╨╛ ╤Г╨┤╨░╨╗╨╕╤В╤М ╨╛╤В╨╖╤Л╨▓ ╨┐╤А╨╕ ╨╜╨░╤А╤Г╤И╨╡╨╜╨╕╨╕ ╨┐╤А╨░╨▓╨╕╨╗.</li>
+                                <li>Пожалуйста, пишите конструктивно и по делу.</li>
+                                <li>Запрещено использование нецензурной лексики, оскорблений и 18+ контента.</li>
+                                <li>Администрация оставляет за собой право удалить отзыв при нарушении правил.</li>
                             </ul>
                         </div>
                         
                         <div class="input-group">
-                            <label>╨Ю╤Ж╨╡╨╜╨║╨░ (1-5)</label>
+                            <label>Оценка (1-5)</label>
                             <input type="number" id="review-rating" min="1" max="5" value="5" required style="width: 100px;">
                         </div>
                         <div class="input-group">
-                            <label>╨Т╨░╤И ╨╛╤В╨╖╤Л╨▓</label>
-                            <textarea id="review-text" rows="3" required style="width: 100%; background: transparent; border: 1px solid rgba(255,255,255,0.2); color: white; border-radius: 5px; padding: 10px;" placeholder="╨Э╨░╨┐╨╕╤И╨╕╤В╨╡, ╤З╤В╨╛ ╨▓╤Л ╨┤╤Г╨╝╨░╨╡╤В╨╡ ╨╛ ╨╜╨░╤И╨╡╨╝ ╤Б╨░╨╣╤В╨╡..."></textarea>
+                            <label>Ваш отзыв</label>
+                            <textarea id="review-text" rows="3" required style="width: 100%; background: transparent; border: 1px solid rgba(255,255,255,0.2); color: white; border-radius: 5px; padding: 10px;" placeholder="Напишите, что вы думаете о нашем сайте..."></textarea>
                         </div>
                         <div id="review-error" class="auth-error"></div>
-                        <button id="submit-review-btn" class="btn btn-primary" style="width: 100%; margin-top: 10px;">╨Ю╤В╨┐╤А╨░╨▓╨╕╤В╤М ╨╛╤В╨╖╤Л╨▓</button>
+                        <button id="submit-review-btn" class="btn btn-primary" style="width: 100%; margin-top: 10px;">Отправить отзыв</button>
                     </div>
 
                     <script>
@@ -283,37 +283,37 @@
                             const container = document.getElementById('review-form-container');
                             if (container.style.display === 'none') {
                                 container.style.display = 'block';
-                                this.textContent = '╨б╨▓╨╡╤А╨╜╤Г╤В╤М';
+                                this.textContent = 'Свернуть';
                             } else {
                                 container.style.display = 'none';
-                                this.textContent = '╨а╨░╨╖╨▓╨╡╤А╨╜╤Г╤В╤М';
+                                this.textContent = 'Развернуть';
                             }
                         });
                     </script>
 
                     <!-- Tickets Section -->
                     <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; margin-top: 20px;">
-                        <h3 style="color: var(--neon-primary); margin: 0;">╨Я╨╛╨┤╨┤╨╡╤А╨╢╨║╨░ (╨в╨╕╨║╨╡╤В╤Л)</h3>
-                        <button id="toggle-ticket-btn" class="btn" style="background: transparent; color: var(--neon-primary); border: 1px solid var(--neon-primary); padding: 5px 15px; border-radius: 5px; cursor: pointer;">╨Э╨╛╨▓╤Л╨╣ ╤В╨╕╨║╨╡╤В</button>
+                        <h3 style="color: var(--neon-primary); margin: 0;">Поддержка (Тикеты)</h3>
+                        <button id="toggle-ticket-btn" class="btn" style="background: transparent; color: var(--neon-primary); border: 1px solid var(--neon-primary); padding: 5px 15px; border-radius: 5px; cursor: pointer;">Новый тикет</button>
                     </div>
 
                     <!-- Create Ticket Form -->
                     <div id="ticket-form-container" style="display: none; background: rgba(0,0,0,0.3); padding: 20px; border-radius: 10px; border: 1px solid rgba(255,255,255,0.1); margin-bottom: 30px;">
                         <div class="input-group">
-                            <label>╨в╨╡╨╝╨░ ╨╛╨▒╤А╨░╤Й╨╡╨╜╨╕╤П</label>
-                            <input type="text" id="ticket-topic" required placeholder="╨Э╨░╨┐╤А╨╕╨╝╨╡╤А: ╨Я╤А╨╛╨▒╨╗╨╡╨╝╨░ ╤Б ╨▒╨╛╤В╨╛╨╝ Economy">
+                            <label>Тема обращения</label>
+                            <input type="text" id="ticket-topic" required placeholder="Например: Проблема с ботом Economy">
                         </div>
                         <div class="input-group" style="margin-top: 15px;">
-                            <label>╨Ю╨┐╨╕╤И╨╕╤В╨╡ ╨┐╤А╨╛╨▒╨╗╨╡╨╝╤Г</label>
-                            <textarea id="ticket-message" rows="4" required style="width: 100%; background: transparent; border: 1px solid rgba(255,255,255,0.2); color: white; border-radius: 5px; padding: 10px;" placeholder="╨Ч╨┤╤А╨░╨▓╤Б╤В╨▓╤Г╨╣╤В╨╡, ╤Г ╨╝╨╡╨╜╤П ╨▓╨╛╨╖╨╜╨╕╨║╨╗╨░ ╨┐╤А╨╛╨▒╨╗╨╡╨╝╨░..."></textarea>
+                            <label>Опишите проблему</label>
+                            <textarea id="ticket-message" rows="4" required style="width: 100%; background: transparent; border: 1px solid rgba(255,255,255,0.2); color: white; border-radius: 5px; padding: 10px;" placeholder="Здравствуйте, у меня возникла проблема..."></textarea>
                         </div>
                         <div id="ticket-error" class="auth-error"></div>
-                        <button id="submit-ticket-btn" class="btn btn-primary" style="width: 100%; margin-top: 15px;">╨б╨╛╨╖╨┤╨░╤В╤М ╨╛╨▒╤А╨░╤Й╨╡╨╜╨╕╨╡</button>
+                        <button id="submit-ticket-btn" class="btn btn-primary" style="width: 100%; margin-top: 15px;">Создать обращение</button>
                     </div>
 
                     <!-- User Tickets List -->
                     <div id="user-tickets-container" style="display: flex; flex-direction: column; gap: 15px; margin-bottom: 30px;">
-                        <div style="color: var(--text-muted); text-align: center;">╨Ч╨░╨│╤А╤Г╨╖╨║╨░ ╤В╨╕╨║╨╡╤В╨╛╨▓...</div>
+                        <div style="color: var(--text-muted); text-align: center;">Загрузка тикетов...</div>
                     </div>
 
                     <script>
@@ -321,15 +321,15 @@
                             const container = document.getElementById('ticket-form-container');
                             if (container.style.display === 'none') {
                                 container.style.display = 'block';
-                                this.textContent = '╨б╨║╤А╤Л╤В╤М';
+                                this.textContent = 'Скрыть';
                             } else {
                                 container.style.display = 'none';
-                                this.textContent = '╨Э╨╛╨▓╤Л╨╣ ╤В╨╕╨║╨╡╤В';
+                                this.textContent = 'Новый тикет';
                             }
                         });
                     </script>
 
-                    <button class="btn btn-secondary" onclick="document.getElementById('logout-btn').click()" style="background: #ff3333; border-color: #ff3333; width: 100%;">╨Т╤Л╨╣╤В╨╕ ╨╕╨╖ ╨░╨║╨║╨░╤Г╨╜╤В╨░</button>
+                    <button class="btn btn-secondary" onclick="document.getElementById('logout-btn').click()" style="background: #ff3333; border-color: #ff3333; width: 100%;">Выйти из аккаунта</button>
                 </div>
             </section>
         </div>
@@ -338,12 +338,12 @@
         <!-- Settings View -->
         <div id="view-settings" class="view hidden-view">
             <section class="about-section" style="padding-top: 40px;">
-                <h2 class="section-title">╨Э╨░╤Б╤В╤А╨╛╨╣╨║╨╕ ╤Б╨░╨╣╤В╨░</h2>
+                <h2 class="section-title">Настройки сайта</h2>
                 <div style="background: rgba(20,20,25,0.7); border: 1px solid rgba(255,255,255,0.1); border-radius: 15px; padding: 30px; max-width: 800px; margin: 0 auto; text-align: left;">
                     <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 15px;">
                         <div>
-                            <h3 style="color: var(--neon-primary); margin-bottom: 5px;">╨Ш╨╜╤В╨╡╤А╨░╨║╤В╨╕╨▓╨╜╤Л╨╣ ╤Д╨╛╨╜ (╨з╨░╤Б╤В╨╕╤Ж╤Л)</h3>
-                            <p style="color: var(--text-muted); font-size: 0.9rem; margin-bottom: 0;">╨Т╨║╨╗╤О╤З╨░╨╡╤В ╨║╤А╨░╤Б╨╕╨▓╤Л╨╡ ╨╗╨╡╤В╨░╤О╤Й╨╕╨╡ ╤З╨░╤Б╤В╨╕╤Ж╤Л ╨╜╨░ ╤Д╨╛╨╜╨╡. ╨Ю╤В╨║╨╗╤О╤З╨╕╤В╨╡, ╨╡╤Б╨╗╨╕ ╤Б╨░╨╣╤В ╤В╨╛╤А╨╝╨╛╨╖╨╕╤В.</p>
+                            <h3 style="color: var(--neon-primary); margin-bottom: 5px;">Интерактивный фон (Частицы)</h3>
+                            <p style="color: var(--text-muted); font-size: 0.9rem; margin-bottom: 0;">Включает красивые летающие частицы на фоне. Отключите, если сайт тормозит.</p>
                         </div>
                         <label class="switch" style="position: relative; display: inline-block; width: 60px; height: 34px;">
                             <input type="checkbox" id="particles-toggle" checked style="opacity: 0; width: 0; height: 0;">
@@ -357,13 +357,13 @@
 
     <!-- Footer -->
     <footer>
-        <p>┬й 2026 Aurexis Studio. ╨Т╤Б╨╡ ╨┐╤А╨░╨▓╨░ ╨╖╨░╤Й╨╕╤Й╨╡╨╜╤Л.</p>
+        <p>© 2026 Aurexis Studio. Все права защищены.</p>
         <p class="footer-links">
-            <a href="https://discord.gg/k9CGaGGtCx" target="_blank">Discord ╨б╨╡╤А╨▓╨╡╤А</a>
+            <a href="https://discord.gg/k9CGaGGtCx" target="_blank">Discord Сервер</a>
             <span class="separator">|</span>
-            <a href="#" id="open-tos">╨Я╤А╨░╨▓╨╕╨╗╨░ ╨╕╤Б╨┐╨╛╨╗╤М╨╖╨╛╨▓╨░╨╜╨╕╤П</a>
+            <a href="#" id="open-tos">Правила использования</a>
             <span class="separator">|</span>
-            <a href="#" id="open-privacy">╨Я╨╛╨╗╨╕╤В╨╕╨║╨░ ╨║╨╛╨╜╤Д╨╕╨┤╨╡╨╜╤Ж╨╕╨░╨╗╤М╨╜╨╛╤Б╤В╨╕</a>
+            <a href="#" id="open-privacy">Политика конфиденциальности</a>
         </p>
     </footer>
 
@@ -373,16 +373,16 @@
     <div id="ticket-modal" class="modal">
         <div class="modal-content" style="max-width: 600px; padding: 20px;">
             <span class="close-btn" id="close-ticket-modal">&times;</span>
-            <h2 id="ticket-chat-title" style="margin-top: 0; color: var(--neon-primary); font-size: 1.5rem; margin-bottom: 5px;">╨в╨╕╨║╨╡╤В #123</h2>
-            <div id="ticket-chat-status" style="margin-bottom: 15px; font-size: 0.9rem;">╨б╤В╨░╤В╤Г╤Б: <span style="color: #00ffaa;">╨Ю╤В╨║╤А╤Л╤В</span></div>
+            <h2 id="ticket-chat-title" style="margin-top: 0; color: var(--neon-primary); font-size: 1.5rem; margin-bottom: 5px;">Тикет #123</h2>
+            <div id="ticket-chat-status" style="margin-bottom: 15px; font-size: 0.9rem;">Статус: <span style="color: #00ffaa;">Открыт</span></div>
             
             <div id="ticket-messages" style="background: rgba(0,0,0,0.5); border: 1px solid rgba(255,255,255,0.1); border-radius: 8px; height: 300px; overflow-y: auto; padding: 15px; display: flex; flex-direction: column; gap: 10px; margin-bottom: 15px;">
                 <!-- Messages go here -->
             </div>
             
             <div id="ticket-reply-container" style="display: flex; gap: 10px;">
-                <input type="text" id="ticket-reply-input" placeholder="╨Э╨░╨┐╨╕╤И╨╕╤В╨╡ ╨╛╤В╨▓╨╡╤В..." style="flex-grow: 1; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.2); border-radius: 5px; color: white; padding: 10px; outline: none;">
-                <button id="send-ticket-reply-btn" class="btn btn-primary" style="padding: 10px 20px;">╨Ю╤В╨┐╤А╨░╨▓╨╕╤В╤М</button>
+                <input type="text" id="ticket-reply-input" placeholder="Напишите ответ..." style="flex-grow: 1; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.2); border-radius: 5px; color: white; padding: 10px; outline: none;">
+                <button id="send-ticket-reply-btn" class="btn btn-primary" style="padding: 10px 20px;">Отправить</button>
             </div>
         </div>
     </div>
@@ -394,89 +394,89 @@
             <span class="close-btn">&times;</span>
             
             <div class="auth-tabs">
-                <button class="auth-tab active" data-tab="login">╨Т╤Е╨╛╨┤</button>
-                <button class="auth-tab" data-tab="register">╨а╨╡╨│╨╕╤Б╤В╤А╨░╤Ж╨╕╤П</button>
+                <button class="auth-tab active" data-tab="login">Вход</button>
+                <button class="auth-tab" data-tab="register">Регистрация</button>
             </div>
 
             <!-- Login Form -->
             <form id="login-form" class="auth-form">
                 <div class="input-group">
-                    <label for="login-email">╨Я╨╛╤З╤В╨░</label>
+                    <label for="login-email">Почта</label>
                     <input type="email" id="login-email" placeholder="example@mail.com" required>
                 </div>
                 <div class="input-group">
-                    <label for="login-password">╨Я╨░╤А╨╛╨╗╤М</label>
-                    <input type="password" id="login-password" placeholder="тАвтАвтАвтАвтАвтАвтАвтАв" required>
+                    <label for="login-password">Пароль</label>
+                    <input type="password" id="login-password" placeholder="••••••••" required>
                 </div>
                 <div id="login-error" class="auth-error"></div>
-                <button type="submit" class="btn btn-primary auth-submit-btn" style="width: 100%; margin-top: 10px;">╨Т╨╛╨╣╤В╨╕</button>
+                <button type="submit" class="btn btn-primary auth-submit-btn" style="width: 100%; margin-top: 10px;">Войти</button>
                 <div style="text-align: center; margin-top: 15px;">
-                    <a href="#" id="forgot-password-link" style="color: var(--neon-purple); font-size: 0.9rem; text-decoration: none;">╨Ч╨░╨▒╤Л╨╗╨╕ ╨┐╨░╤А╨╛╨╗╤М?</a>
+                    <a href="#" id="forgot-password-link" style="color: var(--neon-purple); font-size: 0.9rem; text-decoration: none;">Забыли пароль?</a>
                 </div>
             </form>
             
             <!-- Register Form -->
             <form id="register-form" class="auth-form" style="display: none;">
                 <div class="input-group">
-                    <label for="reg-nickname">╨Э╨╕╨║╨╜╨╡╨╣╨╝</label>
-                    <input type="text" id="reg-nickname" placeholder="╨Т╨░╤И ╨╜╨╕╨║╨╜╨╡╨╣╨╝" required>
+                    <label for="reg-nickname">Никнейм</label>
+                    <input type="text" id="reg-nickname" placeholder="Ваш никнейм" required>
                 </div>
                 <div class="input-group">
-                    <label for="reg-email">╨Я╨╛╤З╤В╨░</label>
+                    <label for="reg-email">Почта</label>
                     <input type="email" id="reg-email" placeholder="example@mail.com" required>
                 </div>
                 <div class="input-group">
-                    <label for="reg-password">╨Я╨░╤А╨╛╨╗╤М (╨╝╨╕╨╜╨╕╨╝╤Г╨╝ 8 ╤Б╨╕╨╝╨▓╨╛╨╗╨╛╨▓)</label>
-                    <input type="password" id="reg-password" minlength="8" placeholder="тАвтАвтАвтАвтАвтАвтАвтАв" required>
+                    <label for="reg-password">Пароль (минимум 8 символов)</label>
+                    <input type="password" id="reg-password" minlength="8" placeholder="••••••••" required>
                 </div>
                 <div id="reg-error" class="auth-error"></div>
-                <button type="submit" class="btn btn-primary auth-submit-btn" style="width: 100%; margin-top: 10px;">╨Я╤А╨╛╨┤╨╛╨╗╨╢╨╕╤В╤М</button>
+                <button type="submit" class="btn btn-primary auth-submit-btn" style="width: 100%; margin-top: 10px;">Продолжить</button>
             </form>
 
             <!-- Verification Form -->
             <form id="verify-form" class="auth-form" style="display: none;">
-                <h3 style="text-align: center; margin-bottom: 10px;">╨Я╨╛╨┤╤В╨▓╨╡╤А╨╢╨┤╨╡╨╜╨╕╨╡ ╨┐╨╛╤З╤В╤Л</h3>
-                <p style="text-align: center; font-size: 0.9rem; color: var(--text-muted); margin-bottom: 15px;">╨Ь╤Л ╨╛╤В╨┐╤А╨░╨▓╨╕╨╗╨╕ ╨║╨╛╨┤ ╨╜╨░ <span id="verify-email-display" style="color: var(--neon-primary);"></span></p>
+                <h3 style="text-align: center; margin-bottom: 10px;">Подтверждение почты</h3>
+                <p style="text-align: center; font-size: 0.9rem; color: var(--text-muted); margin-bottom: 15px;">Мы отправили код на <span id="verify-email-display" style="color: var(--neon-primary);"></span></p>
                 <div class="input-group">
-                    <label for="verify-code">╨Ъ╨╛╨┤ ╨┐╨╛╨┤╤В╨▓╨╡╤А╨╢╨┤╨╡╨╜╨╕╤П</label>
-                    <input type="text" id="verify-code" placeholder="╨Ъ╨╛╨┤ ╨╕╨╖ ╨┐╨╕╤Б╤М╨╝╨░" required>
+                    <label for="verify-code">Код подтверждения</label>
+                    <input type="text" id="verify-code" placeholder="Код из письма" required>
                 </div>
                 <div id="verify-error" class="auth-error"></div>
-                <button type="submit" class="btn btn-primary auth-submit-btn" style="width: 100%; margin-top: 10px;">╨Я╨╛╨┤╤В╨▓╨╡╤А╨┤╨╕╤В╤М ╨╕ ╨Т╨╛╨╣╤В╨╕</button>
-                <button type="button" id="back-to-reg" class="btn" style="background: transparent; color: var(--text-muted); margin-top: 5px; width: 100%;">╨Э╨░╨╖╨░╨┤</button>
+                <button type="submit" class="btn btn-primary auth-submit-btn" style="width: 100%; margin-top: 10px;">Подтвердить и Войти</button>
+                <button type="button" id="back-to-reg" class="btn" style="background: transparent; color: var(--text-muted); margin-top: 5px; width: 100%;">Назад</button>
             </form>
 
             <!-- Forgot Password Form -->
             <form id="forgot-password-form" class="auth-form" style="display: none;">
-                <h3 style="text-align: center; margin-bottom: 20px; color: var(--neon-primary);">╨Т╨╛╤Б╤Б╤В╨░╨╜╨╛╨▓╨╗╨╡╨╜╨╕╨╡ ╨┐╨░╤А╨╛╨╗╤П</h3>
-                <p style="text-align: center; color: var(--text-muted); font-size: 0.9rem; margin-bottom: 15px;">╨Т╨▓╨╡╨┤╨╕╤В╨╡ ╨┐╨╛╤З╤В╤Г, ╨┐╤А╨╕╨▓╤П╨╖╨░╨╜╨╜╤Г╤О ╨║ ╨░╨║╨║╨░╤Г╨╜╤В╤Г.</p>
+                <h3 style="text-align: center; margin-bottom: 20px; color: var(--neon-primary);">Восстановление пароля</h3>
+                <p style="text-align: center; color: var(--text-muted); font-size: 0.9rem; margin-bottom: 15px;">Введите почту, привязанную к аккаунту.</p>
                 <div class="input-group">
                     <input type="email" id="forgot-email" placeholder="example@mail.com" required>
                 </div>
                 <div id="forgot-error" class="auth-error"></div>
-                <button type="submit" class="btn btn-primary auth-submit-btn" style="width: 100%; margin-top: 10px;">╨Ю╤В╨┐╤А╨░╨▓╨╕╤В╤М ╨║╨╛╨┤</button>
-                <button type="button" id="back-to-login" class="btn" style="background: transparent; color: var(--text-muted); margin-top: 5px; width: 100%;">╨Э╨░╨╖╨░╨┤ ╨║╨╛ ╨▓╤Е╨╛╨┤╤Г</button>
+                <button type="submit" class="btn btn-primary auth-submit-btn" style="width: 100%; margin-top: 10px;">Отправить код</button>
+                <button type="button" id="back-to-login" class="btn" style="background: transparent; color: var(--text-muted); margin-top: 5px; width: 100%;">Назад ко входу</button>
             </form>
 
             <!-- Verify Reset Code Form -->
             <form id="verify-reset-form" class="auth-form" style="display: none;">
-                <h3 style="text-align: center; margin-bottom: 20px; color: var(--neon-primary);">╨Я╨╛╨┤╤В╨▓╨╡╤А╨╢╨┤╨╡╨╜╨╕╨╡</h3>
-                <p style="text-align: center; color: var(--text-muted); font-size: 0.9rem; margin-bottom: 15px;">╨Ь╤Л ╨╛╤В╨┐╤А╨░╨▓╨╕╨╗╨╕ ╨║╨╛╨┤ ╨╜╨░: <br><strong id="reset-email-display" style="color: white;"></strong></p>
+                <h3 style="text-align: center; margin-bottom: 20px; color: var(--neon-primary);">Подтверждение</h3>
+                <p style="text-align: center; color: var(--text-muted); font-size: 0.9rem; margin-bottom: 15px;">Мы отправили код на: <br><strong id="reset-email-display" style="color: white;"></strong></p>
                 <div class="input-group">
                     <input type="text" id="reset-code" placeholder="123456" required autocomplete="off">
                 </div>
                 <div id="reset-verify-error" class="auth-error"></div>
-                <button type="submit" class="btn btn-primary auth-submit-btn" style="width: 100%; margin-top: 10px;">╨Я╤А╨╛╨▓╨╡╤А╨╕╤В╤М ╨║╨╛╨┤</button>
+                <button type="submit" class="btn btn-primary auth-submit-btn" style="width: 100%; margin-top: 10px;">Проверить код</button>
             </form>
 
             <!-- New Password Form -->
             <form id="new-password-form" class="auth-form" style="display: none;">
-                <h3 style="text-align: center; margin-bottom: 20px; color: var(--neon-primary);">╨Э╨╛╨▓╤Л╨╣ ╨┐╨░╤А╨╛╨╗╤М</h3>
+                <h3 style="text-align: center; margin-bottom: 20px; color: var(--neon-primary);">Новый пароль</h3>
                 <div class="input-group">
-                    <input type="password" id="new-password-input" placeholder="╨Ь╨╕╨╜╨╕╨╝╤Г╨╝ 6 ╤Б╨╕╨╝╨▓╨╛╨╗╨╛╨▓" required minlength="6">
+                    <input type="password" id="new-password-input" placeholder="Минимум 6 символов" required minlength="6">
                 </div>
                 <div id="new-password-error" class="auth-error"></div>
-                <button type="submit" class="btn btn-primary auth-submit-btn" style="width: 100%; margin-top: 10px;">╨б╨╛╤Е╤А╨░╨╜╨╕╤В╤М ╨┐╨░╤А╨╛╨╗╤М</button>
+                <button type="submit" class="btn btn-primary auth-submit-btn" style="width: 100%; margin-top: 10px;">Сохранить пароль</button>
             </form>
 
             <div style="margin-top: 20px; text-align: center;">
@@ -503,27 +503,27 @@
     <div id="modal-tos" class="modal">
         <div class="modal-content" style="max-height: 80vh; overflow-y: auto;">
             <span class="close-btn">&times;</span>
-            <h2 style="color: var(--neon-primary); margin-bottom: 20px;">╨Я╤А╨░╨▓╨╕╨╗╨░ ╨╕╤Б╨┐╨╛╨╗╤М╨╖╨╛╨▓╨░╨╜╨╕╤П (Terms of Service)</h2>
+            <h2 style="color: var(--neon-primary); margin-bottom: 20px;">Правила использования (Terms of Service)</h2>
             <div style="color: var(--text-muted); line-height: 1.6; text-align: left;">
-                <p><strong>1. ╨Ю╨▒╤Й╨╕╨╡ ╨┐╨╛╨╗╨╛╨╢╨╡╨╜╨╕╤П</strong></p>
-                <p style="margin-bottom: 15px;">╨Ф╨╛╨▒╤А╨╛ ╨┐╨╛╨╢╨░╨╗╨╛╨▓╨░╤В╤М ╨▓ Aurexis Studio. ╨Ш╤Б╨┐╨╛╨╗╤М╨╖╤Г╤П ╨╜╨░╤И ╤Б╨░╨╣╤В, ╨▒╨╛╤В╨╛╨▓ ╨╕╨╗╨╕ ╨╕╨╜╤Л╨╡ ╤Г╤Б╨╗╤Г╨│╨╕ (╨┤╨░╨╗╨╡╨╡ тАФ "╨б╨╡╤А╨▓╨╕╤Б╤Л"), ╨▓╤Л ╤Б╨╛╨│╨╗╨░╤И╨░╨╡╤В╨╡╤Б╤М ╤Б ╨╜╨░╤Б╤В╨╛╤П╤Й╨╕╨╝╨╕ ╨Я╤А╨░╨▓╨╕╨╗╨░╨╝╨╕. ╨Х╤Б╨╗╨╕ ╨▓╤Л ╨╜╨╡ ╤Б╨╛╨│╨╗╨░╤Б╨╜╤Л ╤Е╨╛╤В╤П ╨▒╤Л ╤Б ╨╛╨┤╨╜╨╕╨╝ ╨╕╨╖ ╨┐╤Г╨╜╨║╤В╨╛╨▓, ╨┐╨╛╨╢╨░╨╗╤Г╨╣╤Б╤В╨░, ╨┐╤А╨╡╨║╤А╨░╤В╨╕╤В╨╡ ╨╕╤Б╨┐╨╛╨╗╤М╨╖╨╛╨▓╨░╨╜╨╕╨╡ ╨╜╨░╤И╨╕╤Е ╨б╨╡╤А╨▓╨╕╤Б╨╛╨▓.</p>
+                <p><strong>1. Общие положения</strong></p>
+                <p style="margin-bottom: 15px;">Добро пожаловать в Aurexis Studio. Используя наш сайт, ботов или иные услуги (далее — "Сервисы"), вы соглашаетесь с настоящими Правилами. Если вы не согласны хотя бы с одним из пунктов, пожалуйста, прекратите использование наших Сервисов.</p>
                 
-                <p><strong>2. ╨Ш╤Б╨┐╨╛╨╗╤М╨╖╨╛╨▓╨░╨╜╨╕╨╡ ╤Б╨╡╤А╨▓╨╕╤Б╨╛╨▓</strong></p>
-                <p style="margin-bottom: 15px;">2.1. ╨Ч╨░╨┐╤А╨╡╤Й╨╡╨╜╨╛ ╨╕╤Б╨┐╨╛╨╗╤М╨╖╨╛╨▓╨░╤В╤М ╨б╨╡╤А╨▓╨╕╤Б╤Л ╨┤╨╗╤П ╤Б╨┐╨░╨╝╨░, ╤Д╨╕╤И╨╕╨╜╨│╨░, DDoS-╨░╤В╨░╨║, ╤А╨░╤Б╨┐╤А╨╛╤Б╤В╤А╨░╨╜╨╡╨╜╨╕╤П ╨▓╤А╨╡╨┤╨╛╨╜╨╛╤Б╨╜╨╛╨│╨╛ ╨Я╨Ю ╨╕ ╨╗╤О╨▒╤Л╤Е ╨┤╨╡╨╣╤Б╤В╨▓╨╕╨╣, ╨╜╨░╤А╤Г╤И╨░╤О╤Й╨╕╤Е ╨╖╨░╨║╨╛╨╜╨╛╨┤╨░╤В╨╡╨╗╤М╤Б╤В╨▓╨╛ ╨а╨д ╨╕╨╗╨╕ ╨┐╤А╨░╨▓╨╕╨╗╨░ ╨┐╨╗╨░╤В╤Д╨╛╤А╨╝ (╨╜╨░╨┐╤А╨╕╨╝╨╡╤А, Discord TOS).<br>
-                2.2. ╨Ч╨░╨┐╤А╨╡╤Й╨╡╨╜╨░ ╨╗╤О╨▒╨░╤П ╨┐╨╛╨┐╤Л╤В╨║╨░ ╨▓╨╖╨╗╨╛╨╝╨░, ╤А╨╡╨▓╨╡╤А╤Б-╨╕╨╜╨╢╨╕╨╜╨╕╤А╨╕╨╜╨│╨░ ╨╕╨╗╨╕ ╨╜╨░╨╝╨╡╤А╨╡╨╜╨╜╨╛╨│╨╛ ╤Б╨╛╨╖╨┤╨░╨╜╨╕╤П ╤З╤А╨╡╨╖╨╝╨╡╤А╨╜╨╛╨╣ ╨╜╨░╨│╤А╤Г╨╖╨║╨╕ ╨╜╨░ ╨╕╨╜╤Д╤А╨░╤Б╤В╤А╤Г╨║╤В╤Г╤А╤Г Aurexis Studio.<br>
-                2.3. ╨Я╨╛╨╗╤М╨╖╨╛╨▓╨░╤В╨╡╨╗╤М ╨╛╨▒╤П╨╖╤Г╨╡╤В╤Б╤П ╨╜╨╡ ╨╕╤Б╨┐╨╛╨╗╤М╨╖╨╛╨▓╨░╤В╤М ╨▒╨╛╤В╨╛╨▓ ╨┤╨╗╤П ╨╝╨╛╤И╨╡╨╜╨╜╨╕╤З╨╡╤Б╤В╨▓╨░ ╨╕╨╗╨╕ ╨╛╨▒╨╝╨░╨╜╨░ ╨┤╤А╤Г╨│╨╕╤Е ╨┐╨╛╨╗╤М╨╖╨╛╨▓╨░╤В╨╡╨╗╨╡╨╣.</p>
+                <p><strong>2. Использование сервисов</strong></p>
+                <p style="margin-bottom: 15px;">2.1. Запрещено использовать Сервисы для спама, фишинга, DDoS-атак, распространения вредоносного ПО и любых действий, нарушающих законодательство РФ или правила платформ (например, Discord TOS).<br>
+                2.2. Запрещена любая попытка взлома, реверс-инжиниринга или намеренного создания чрезмерной нагрузки на инфраструктуру Aurexis Studio.<br>
+                2.3. Пользователь обязуется не использовать ботов для мошенничества или обмана других пользователей.</p>
                 
-                <p><strong>3. ╨Р╨║╨║╨░╤Г╨╜╤В╤Л ╨╕ ╨┐╨╛╨┤╨┐╨╕╤Б╨║╨╕ (AUREXIS FLORA)</strong></p>
-                <p style="margin-bottom: 15px;">3.1. ╨Т╤Л ╨╜╨╡╤Б╨╡╤В╨╡ ╨╛╤В╨▓╨╡╤В╤Б╤В╨▓╨╡╨╜╨╜╨╛╤Б╤В╤М ╨╖╨░ ╨▒╨╡╨╖╨╛╨┐╨░╤Б╨╜╨╛╤Б╤В╤М ╨▓╨░╤И╨╡╨│╨╛ ╨░╨║╨║╨░╤Г╨╜╤В╨░ (╨╗╨╛╨│╨╕╨╜/╨┐╨░╤А╨╛╨╗╤М).<br>
-                3.2. ╨Ф╨╛╤Б╤В╤Г╨┐ ╨║ ╨┐╤А╨╡╨╝╨╕╤Г╨╝-╤Г╤Б╨╗╤Г╨│╨░╨╝ (╨╜╨░╨┐╤А╨╕╨╝╨╡╤А, AUREXIS FLORA) ╨┐╤А╨╡╨┤╨╛╤Б╤В╨░╨▓╨╗╤П╨╡╤В╤Б╤П "╨║╨░╨║ ╨╡╤Б╤В╤М". ╨Р╨┤╨╝╨╕╨╜╨╕╤Б╤В╤А╨░╤Ж╨╕╤П ╨╕╨╝╨╡╨╡╤В ╨┐╤А╨░╨▓╨╛ ╨░╨╜╨╜╤Г╨╗╨╕╤А╨╛╨▓╨░╤В╤М ╨┐╨╛╨┤╨┐╨╕╤Б╨║╤Г ╨▒╨╡╨╖ ╨▓╨╛╨╖╨▓╤А╨░╤В╨░ ╤Б╤А╨╡╨┤╤Б╤В╨▓ ╨▓ ╤Б╨╗╤Г╤З╨░╨╡ ╨│╤А╤Г╨▒╨╛╨│╨╛ ╨╜╨░╤А╤Г╤И╨╡╨╜╨╕╤П ╨╜╨░╤Б╤В╨╛╤П╤Й╨╕╤Е ╨┐╤А╨░╨▓╨╕╨╗.<br>
-                3.3. ╨Я╨╡╤А╨╡╨┤╨░╤З╨░, ╨┐╤А╨╛╨┤╨░╨╢╨░ ╨╕╨╗╨╕ ╨╛╨▒╨╝╨╡╨╜ ╨┐╤А╨╡╨╝╨╕╤Г╨╝-╨░╨║╨║╨░╤Г╨╜╤В╨░╨╝╨╕ ╨╕╨╗╨╕ ╨┐╨╛╨┤╨┐╨╕╤Б╨║╨░╨╝╨╕ ╨╖╨░╨┐╤А╨╡╤Й╨╡╨╜╤Л ╨▒╨╡╨╖ ╨┐╨╕╤Б╤М╨╝╨╡╨╜╨╜╨╛╨│╨╛ ╤А╨░╨╖╤А╨╡╤И╨╡╨╜╨╕╤П ╨Р╨┤╨╝╨╕╨╜╨╕╤Б╤В╤А╨░╤Ж╨╕╨╕.</p>
+                <p><strong>3. Аккаунты и подписки (AUREXIS FLORA)</strong></p>
+                <p style="margin-bottom: 15px;">3.1. Вы несете ответственность за безопасность вашего аккаунта (логин/пароль).<br>
+                3.2. Доступ к премиум-услугам (например, AUREXIS FLORA) предоставляется "как есть". Администрация имеет право аннулировать подписку без возврата средств в случае грубого нарушения настоящих правил.<br>
+                3.3. Передача, продажа или обмен премиум-аккаунтами или подписками запрещены без письменного разрешения Администрации.</p>
                 
-                <p><strong>4. ╨Ю╨│╤А╨░╨╜╨╕╤З╨╡╨╜╨╕╨╡ ╨╛╤В╨▓╨╡╤В╤Б╤В╨▓╨╡╨╜╨╜╨╛╤Б╤В╨╕</strong></p>
-                <p style="margin-bottom: 15px;">4.1. ╨б╨╡╤А╨▓╨╕╤Б╤Л ╨┐╤А╨╡╨┤╨╛╤Б╤В╨░╨▓╨╗╤П╤О╤В╤Б╤П "╨║╨░╨║ ╨╡╤Б╤В╤М" (AS IS). Aurexis Studio ╨╜╨╡ ╨│╨░╤А╨░╨╜╤В╨╕╤А╤Г╨╡╤В 100% ╨░╨┐╤В╨░╨╣╨╝ (╨▒╨╡╤Б╨┐╨╡╤А╨╡╨▒╨╛╨╣╨╜╤Г╤О ╤А╨░╨▒╨╛╤В╤Г) ╨╕ ╨╜╨╡ ╨╜╨╡╤Б╨╡╤В ╨╛╤В╨▓╨╡╤В╤Б╤В╨▓╨╡╨╜╨╜╨╛╤Б╤В╨╕ ╨╖╨░ ╨▓╨╛╨╖╨╝╨╛╨╢╨╜╤Л╨╡ ╤Б╨▒╨╛╨╕, ╨┐╨╛╤В╨╡╤А╤О ╨┤╨░╨╜╨╜╤Л╤Е ╨╕╨╗╨╕ ╤Г╨┐╤Г╤Й╨╡╨╜╨╜╤Г╤О ╨▓╤Л╨│╨╛╨┤╤Г.<br>
-                4.2. ╨Р╨┤╨╝╨╕╨╜╨╕╤Б╤В╤А╨░╤Ж╨╕╤П ╨╛╤Б╤В╨░╨▓╨╗╤П╨╡╤В ╨╖╨░ ╤Б╨╛╨▒╨╛╨╣ ╨┐╤А╨░╨▓╨╛ ╨╕╨╖╨╝╨╡╨╜╤П╤В╤М ╤Д╤Г╨╜╨║╤Ж╨╕╨╛╨╜╨░╨╗ ╨▒╨╛╤В╨╛╨▓ ╨╕ ╤Б╨░╨╣╤В╨░ ╨▒╨╡╨╖ ╨┐╤А╨╡╨┤╨▓╨░╤А╨╕╤В╨╡╨╗╤М╨╜╨╛╨│╨╛ ╤Г╨▓╨╡╨┤╨╛╨╝╨╗╨╡╨╜╨╕╤П.</p>
+                <p><strong>4. Ограничение ответственности</strong></p>
+                <p style="margin-bottom: 15px;">4.1. Сервисы предоставляются "как есть" (AS IS). Aurexis Studio не гарантирует 100% аптайм (бесперебойную работу) и не несет ответственности за возможные сбои, потерю данных или упущенную выгоду.<br>
+                4.2. Администрация оставляет за собой право изменять функционал ботов и сайта без предварительного уведомления.</p>
                 
-                <p><strong>5. ╨Ш╨╖╨╝╨╡╨╜╨╡╨╜╨╕╨╡ ╨┐╤А╨░╨▓╨╕╨╗</strong></p>
-                <p>╨Р╨┤╨╝╨╕╨╜╨╕╤Б╤В╤А╨░╤Ж╨╕╤П ╨╛╤Б╤В╨░╨▓╨╗╤П╨╡╤В ╨╖╨░ ╤Б╨╛╨▒╨╛╨╣ ╨┐╤А╨░╨▓╨╛ ╨╕╨╖╨╝╨╡╨╜╤П╤В╤М ╨┤╨░╨╜╨╜╤Л╨╡ ╨Я╤А╨░╨▓╨╕╨╗╨░. ╨Я╤А╨╛╨┤╨╛╨╗╨╢╨╡╨╜╨╕╨╡ ╨╕╤Б╨┐╨╛╨╗╤М╨╖╨╛╨▓╨░╨╜╨╕╤П ╨б╨╡╤А╨▓╨╕╤Б╨╛╨▓ ╨┐╨╛╤Б╨╗╨╡ ╨▓╨╜╨╡╤Б╨╡╨╜╨╕╤П ╨╕╨╖╨╝╨╡╨╜╨╡╨╜╨╕╨╣ ╨╛╨╖╨╜╨░╤З╨░╨╡╤В ╨▓╨░╤И╨╡ ╤Б╨╛╨│╨╗╨░╤Б╨╕╨╡ ╤Б ╨╜╨╛╨▓╨╛╨╣ ╤А╨╡╨┤╨░╨║╤Ж╨╕╨╡╨╣.</p>
+                <p><strong>5. Изменение правил</strong></p>
+                <p>Администрация оставляет за собой право изменять данные Правила. Продолжение использования Сервисов после внесения изменений означает ваше согласие с новой редакцией.</p>
             </div>
         </div>
     </div>
@@ -531,33 +531,33 @@
     <div id="modal-privacy" class="modal">
         <div class="modal-content" style="max-height: 80vh; overflow-y: auto;">
             <span class="close-btn">&times;</span>
-            <h2 style="color: var(--neon-primary); margin-bottom: 20px;">╨Я╨╛╨╗╨╕╤В╨╕╨║╨░ ╨║╨╛╨╜╤Д╨╕╨┤╨╡╨╜╤Ж╨╕╨░╨╗╤М╨╜╨╛╤Б╤В╨╕ (Privacy Policy)</h2>
+            <h2 style="color: var(--neon-primary); margin-bottom: 20px;">Политика конфиденциальности (Privacy Policy)</h2>
             <div style="color: var(--text-muted); line-height: 1.6; text-align: left;">
-                <p><strong>1. ╨б╨▒╨╛╤А ╨╕╨╜╤Д╨╛╤А╨╝╨░╤Ж╨╕╨╕</strong></p>
-                <p style="margin-bottom: 15px;">╨Ь╤Л ╤Б╨╛╨▒╨╕╤А╨░╨╡╨╝ ╤В╨╛╨╗╤М╨║╨╛ ╤В╤Г ╨╕╨╜╤Д╨╛╤А╨╝╨░╤Ж╨╕╤О, ╨║╨╛╤В╨╛╤А╨░╤П ╨╜╨╡╨╛╨▒╤Е╨╛╨┤╨╕╨╝╨░ ╨┤╨╗╤П ╤Б╤В╨░╨▒╨╕╨╗╤М╨╜╨╛╨╣ ╤А╨░╨▒╨╛╤В╤Л ╨╜╨░╤И╨╕╤Е ╤Б╨╡╤А╨▓╨╕╤Б╨╛╨▓. ╨б╤О╨┤╨░ ╨▓╤Е╨╛╨┤╤П╤В:<br>
-                - ╨Ф╨░╨╜╨╜╤Л╨╡, ╨┐╤А╨╡╨┤╨╛╤Б╤В╨░╨▓╨╗╨╡╨╜╨╜╤Л╨╡ ╨┐╤А╨╕ ╤А╨╡╨│╨╕╤Б╤В╤А╨░╤Ж╨╕╨╕ (email, ╨╜╨╕╨║╨╜╨╡╨╣╨╝).<br>
-                - ╨Я╤Г╨▒╨╗╨╕╤З╨╜╤Л╨╡ ╨┤╨░╨╜╨╜╤Л╨╡ ╨┐╤А╨╛╤Д╨╕╨╗╤П (╨░╨▓╨░╤В╨░╤А, ╤О╨╖╨╡╤А╨╜╨╡╨╣╨╝).<br>
-                - ╨в╨╡╤Е╨╜╨╕╤З╨╡╤Б╨║╨╕╨╡ ╨┤╨░╨╜╨╜╤Л╨╡ ╨╛╤В ╨▒╨╛╤В╨╛╨▓ (ID Discord-╤Б╨╡╤А╨▓╨╡╤А╨░, ID ╨┐╨╛╨╗╤М╨╖╨╛╨▓╨░╤В╨╡╨╗╤П), ╨╡╤Б╨╗╨╕ ╨▓╤Л ╨╕╤Б╨┐╨╛╨╗╤М╨╖╤Г╨╡╤В╨╡ ╨╜╨░╤И╨╕╤Е ╨▒╨╛╤В╨╛╨▓.</p>
+                <p><strong>1. Сбор информации</strong></p>
+                <p style="margin-bottom: 15px;">Мы собираем только ту информацию, которая необходима для стабильной работы наших сервисов. Сюда входят:<br>
+                - Данные, предоставленные при регистрации (email, никнейм).<br>
+                - Публичные данные профиля (аватар, юзернейм).<br>
+                - Технические данные от ботов (ID Discord-сервера, ID пользователя), если вы используете наших ботов.</p>
 
-                <p><strong>2. ╨Ш╤Б╨┐╨╛╨╗╤М╨╖╨╛╨▓╨░╨╜╨╕╨╡ ╨╕╨╜╤Д╨╛╤А╨╝╨░╤Ж╨╕╨╕</strong></p>
-                <p style="margin-bottom: 15px;">╨Ь╤Л ╨╕╤Б╨┐╨╛╨╗╤М╨╖╤Г╨╡╨╝ ╤Б╨╛╨▒╤А╨░╨╜╨╜╤Л╨╡ ╨┤╨░╨╜╨╜╤Л╨╡ ╨┤╨╗╤П:<br>
-                - ╨Р╤Г╤В╨╡╨╜╤В╨╕╤Д╨╕╨║╨░╤Ж╨╕╨╕ ╨╕ ╨┐╤А╨╡╨┤╨╛╤Б╤В╨░╨▓╨╗╨╡╨╜╨╕╤П ╨┤╨╛╤Б╤В╤Г╨┐╨░ ╨║ ╨╗╨╕╤З╨╜╨╛╨╝╤Г ╨║╨░╨▒╨╕╨╜╨╡╤В╤Г.<br>
-                - ╨Ю╨▒╤А╨░╨▒╨╛╤В╨║╨╕ ╨▓╨░╤И╨╕╤Е ╨╛╤В╨╖╤Л╨▓╨╛╨▓ ╨╕ ╨╛╤В╨╛╨▒╤А╨░╨╢╨╡╨╜╨╕╤П ╨╕╤Е ╨╜╨░ ╤Б╨░╨╣╤В╨╡.<br>
-                - ╨г╨╗╤Г╤З╤И╨╡╨╜╨╕╤П ╤А╨░╨▒╨╛╤В╤Л ╨▒╨╛╤В╨╛╨▓ ╨╕ ╤Г╤Б╤В╤А╨░╨╜╨╡╨╜╨╕╤П ╤В╨╡╤Е╨╜╨╕╤З╨╡╤Б╨║╨╕╤Е ╨╛╤И╨╕╨▒╨╛╨║.</p>
+                <p><strong>2. Использование информации</strong></p>
+                <p style="margin-bottom: 15px;">Мы используем собранные данные для:<br>
+                - Аутентификации и предоставления доступа к личному кабинету.<br>
+                - Обработки ваших отзывов и отображения их на сайте.<br>
+                - Улучшения работы ботов и устранения технических ошибок.</p>
 
-                <p><strong>3. ╨Ч╨░╤Й╨╕╤В╨░ ╨╕ ╤Е╤А╨░╨╜╨╡╨╜╨╕╨╡ ╨┤╨░╨╜╨╜╤Л╤Е</strong></p>
-                <p style="margin-bottom: 15px;">3.1. ╨Ь╤Л ╨╜╨╡ ╨┐╤А╨╛╨┤╨░╨╡╨╝, ╨╜╨╡ ╨╛╨▒╨╝╨╡╨╜╨╕╨▓╨░╨╡╨╝ ╨╕ ╨╜╨╡ ╨┐╨╡╤А╨╡╨┤╨░╨╡╨╝ ╨▓╨░╤И╨╕ ╨┐╨╡╤А╤Б╨╛╨╜╨░╨╗╤М╨╜╤Л╨╡ ╨┤╨░╨╜╨╜╤Л╨╡ ╤В╤А╨╡╤В╤М╨╕╨╝ ╨╗╨╕╤Ж╨░╨╝ ╨▒╨╡╨╖ ╨▓╨░╤И╨╡╨│╨╛ ╤Б╨╛╨│╨╗╨░╤Б╨╕╤П, ╨╖╨░ ╨╕╤Б╨║╨╗╤О╤З╨╡╨╜╨╕╨╡╨╝ ╤Б╨╗╤Г╤З╨░╨╡╨▓, ╨┐╤А╨╡╨┤╤Г╤Б╨╝╨╛╤В╤А╨╡╨╜╨╜╤Л╤Е ╨╖╨░╨║╨╛╨╜╨╛╨╝.<br>
-                3.2. ╨Я╨░╤А╨╛╨╗╨╕ ╨┐╨╛╨╗╤М╨╖╨╛╨▓╨░╤В╨╡╨╗╨╡╨╣ ╨╜╨╡ ╤Е╤А╨░╨╜╤П╤В╤Б╤П ╨▓ ╨╛╤В╨║╤А╤Л╤В╨╛╨╝ ╨▓╨╕╨┤╨╡ (╨╕╤Б╨┐╨╛╨╗╤М╨╖╤Г╨╡╤В╤Б╤П ╨╜╨╡╨╛╨▒╤А╨░╤В╨╕╨╝╨╛╨╡ ╤Е╨╡╤И╨╕╤А╨╛╨▓╨░╨╜╨╕╨╡).<br>
-                3.3. ╨Ф╨░╨╜╨╜╤Л╨╡ ╤Е╤А╨░╨╜╤П╤В╤Б╤П ╨╜╨░ ╨╖╨░╤Й╨╕╤Й╨╡╨╜╨╜╤Л╤Е ╤Б╨╡╤А╨▓╨╡╤А╨░╤Е ╤Б ╨╕╤Б╨┐╨╛╨╗╤М╨╖╨╛╨▓╨░╨╜╨╕╨╡╨╝ ╤Б╨╛╨▓╤А╨╡╨╝╨╡╨╜╨╜╤Л╤Е ╨┐╤А╨╛╤В╨╛╨║╨╛╨╗╨╛╨▓ ╤И╨╕╤Д╤А╨╛╨▓╨░╨╜╨╕╤П.</p>
+                <p><strong>3. Защита и хранение данных</strong></p>
+                <p style="margin-bottom: 15px;">3.1. Мы не продаем, не обмениваем и не передаем ваши персональные данные третьим лицам без вашего согласия, за исключением случаев, предусмотренных законом.<br>
+                3.2. Пароли пользователей не хранятся в открытом виде (используется необратимое хеширование).<br>
+                3.3. Данные хранятся на защищенных серверах с использованием современных протоколов шифрования.</p>
 
-                <p><strong>4. ╨Т╨░╤И╨╕ ╨┐╤А╨░╨▓╨░</strong></p>
-                <p style="margin-bottom: 15px;">╨Т╤Л ╨╕╨╝╨╡╨╡╤В╨╡ ╨┐╨╛╨╗╨╜╨╛╨╡ ╨┐╤А╨░╨▓╨╛:<br>
-                - ╨Ч╨░╨┐╤А╨╛╤Б╨╕╤В╤М ╨╕╨╜╤Д╨╛╤А╨╝╨░╤Ж╨╕╤О ╨╛ ╤В╨╛╨╝, ╨║╨░╨║╨╕╨╡ ╨▓╨░╤И╨╕ ╨┤╨░╨╜╨╜╤Л╨╡ ╨╝╤Л ╤Е╤А╨░╨╜╨╕╨╝.<br>
-                - ╨Т ╨╗╤О╨▒╨╛╨╣ ╨╝╨╛╨╝╨╡╨╜╤В ╨╕╨╖╨╝╨╡╨╜╨╕╤В╤М ╤Б╨▓╨╛╨╣ ╨╜╨╕╨║╨╜╨╡╨╣╨╝, ╤О╨╖╨╡╤А╨╜╨╡╨╣╨╝ ╨╕╨╗╨╕ ╨░╨▓╨░╤В╨░╤А ╤З╨╡╤А╨╡╨╖ ╨Ы╨╕╤З╨╜╤Л╨╣ ╨║╨░╨▒╨╕╨╜╨╡╤В.<br>
-                - ╨Ч╨░╨┐╤А╨╛╤Б╨╕╤В╤М ╨┐╨╛╨╗╨╜╨╛╨╡ ╤Г╨┤╨░╨╗╨╡╨╜╨╕╨╡ ╨▓╨░╤И╨╡╨│╨╛ ╨░╨║╨║╨░╤Г╨╜╤В╨░ ╨╕ ╨▓╤Б╨╡╤Е ╤Б╨▓╤П╨╖╨░╨╜╨╜╤Л╤Е ╨┤╨░╨╜╨╜╤Л╤Е ╨╕╨╖ ╨╜╨░╤И╨╡╨╣ ╨▒╨░╨╖╤Л.</p>
+                <p><strong>4. Ваши права</strong></p>
+                <p style="margin-bottom: 15px;">Вы имеете полное право:<br>
+                - Запросить информацию о том, какие ваши данные мы храним.<br>
+                - В любой момент изменить свой никнейм, юзернейм или аватар через Личный кабинет.<br>
+                - Запросить полное удаление вашего аккаунта и всех связанных данных из нашей базы.</p>
 
-                <p><strong>5. ╨Ш╤Б╨┐╨╛╨╗╤М╨╖╨╛╨▓╨░╨╜╨╕╨╡ Cookies</strong></p>
-                <p>╨Э╨░╤И ╤Б╨░╨╣╤В ╨╕╤Б╨┐╨╛╨╗╤М╨╖╤Г╨╡╤В ╤Б╨╡╤Б╤Б╨╕╨╛╨╜╨╜╤Л╨╡ cookies ╨╕╤Б╨║╨╗╤О╤З╨╕╤В╨╡╨╗╤М╨╜╨╛ ╨┤╨╗╤П ╨┐╨╛╨┤╨┤╨╡╤А╨╢╨░╨╜╨╕╤П ╨▓╨░╤И╨╡╨╣ ╨░╨▓╤В╨╛╤А╨╕╨╖╨░╤Ж╨╕╨╕ ╨╜╨░ ╤Б╨░╨╣╤В╨╡. ╨Ь╤Л ╨╜╨╡ ╨╕╤Б╨┐╨╛╨╗╤М╨╖╤Г╨╡╨╝ cookies ╨┤╨╗╤П ╤Б╨╗╨╡╨╢╨║╨╕ ╨╕╨╗╨╕ ╤В╨░╤А╨│╨╡╤В╨╕╤А╨╛╨▓╨░╨╜╨╜╨╛╨╣ ╤А╨╡╨║╨╗╨░╨╝╤Л.</p>
+                <p><strong>5. Использование Cookies</strong></p>
+                <p>Наш сайт использует сессионные cookies исключительно для поддержания вашей авторизации на сайте. Мы не используем cookies для слежки или таргетированной рекламы.</p>
             </div>
         </div>
     </div> <!-- Close main container -->
@@ -569,18 +569,18 @@
 
     <!-- Global Chat Widget -->
     <div id="global-chat-widget">
-        <button id="chat-toggle-btn" title="╨У╨╗╨╛╨▒╨░╨╗╤М╨╜╤Л╨╣ ╤З╨░╤В">ЁЯТм</button>
+        <button id="chat-toggle-btn" title="Глобальный чат">💬</button>
         <div id="chat-window">
             <div id="chat-header">
-                <span>╨У╨╗╨╛╨▒╨░╨╗╤М╨╜╤Л╨╣ ╤З╨░╤В</span>
+                <span>Глобальный чат</span>
                 <button id="chat-close-btn" style="background: none; border: none; color: white; cursor: pointer; font-size: 1.2rem;">&times;</button>
             </div>
             <div id="chat-messages">
                 <!-- Messages will load here -->
             </div>
             <div id="chat-input-area">
-                <input type="text" id="chat-input" placeholder="╨Э╨░╨┐╨╕╤И╨╕╤В╨╡ ╤Б╨╛╨╛╨▒╤Й╨╡╨╜╨╕╨╡...">
-                <button id="chat-send-btn">тЮд</button>
+                <input type="text" id="chat-input" placeholder="Напишите сообщение...">
+                <button id="chat-send-btn">➤</button>
             </div>
         </div>
     </div>
