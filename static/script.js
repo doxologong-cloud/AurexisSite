@@ -61,6 +61,12 @@ document.addEventListener('DOMContentLoaded', () => {
                 accView.classList.remove('hidden-view');
                 accView.classList.add('active');
             }
+        } else if (hash === '#settings') {
+            const settingsView = document.getElementById('view-settings');
+            if(settingsView) {
+                settingsView.classList.remove('hidden-view');
+                settingsView.classList.add('active');
+            }
         } else {
             const homeView = document.getElementById('view-home');
             if(homeView) {
@@ -991,5 +997,160 @@ document.addEventListener('DOMContentLoaded', () => {
             keySequence = '';
             window.removeEventListener('keydown', closeEasterEgg);
         }
+    }
+    }
+    
+    // --- PARTICLES.JS LOGIC ---
+    function initParticles() {
+        const particlesEnabled = localStorage.getItem('aurexis_particles') !== 'false';
+        const toggle = document.getElementById('particles-toggle');
+        if(toggle) toggle.checked = particlesEnabled;
+        
+        if (particlesEnabled && window.particlesJS) {
+            particlesJS('particles-js', {
+                'particles': {
+                    'number': { 'value': 50, 'density': { 'enable': true, 'value_area': 800 } },
+                    'color': { 'value': '#e5b322' },
+                    'shape': { 'type': 'circle' },
+                    'opacity': { 'value': 0.5, 'random': false },
+                    'size': { 'value': 3, 'random': true },
+                    'line_linked': { 'enable': true, 'distance': 150, 'color': '#e5b322', 'opacity': 0.4, 'width': 1 },
+                    'move': { 'enable': true, 'speed': 2, 'direction': 'none', 'random': false, 'straight': false, 'out_mode': 'out', 'bounce': false }
+                },
+                'interactivity': {
+                    'detect_on': 'canvas',
+                    'events': { 'onhover': { 'enable': true, 'mode': 'grab' }, 'onclick': { 'enable': true, 'mode': 'push' }, 'resize': true },
+                    'modes': { 'grab': { 'distance': 140, 'line_linked': { 'opacity': 1 } }, 'push': { 'particles_nb': 4 } }
+                },
+                'retina_detect': true
+            });
+            document.getElementById('particles-js').style.display = 'block';
+        } else {
+            document.getElementById('particles-js').style.display = 'none';
+        }
+    }
+
+    initParticles();
+    
+    const particlesToggle = document.getElementById('particles-toggle');
+    if(particlesToggle) {
+        particlesToggle.addEventListener('change', (e) => {
+            localStorage.setItem('aurexis_particles', e.target.checked);
+            if(e.target.checked) {
+                initParticles();
+            } else {
+                document.getElementById('particles-js').style.display = 'none';
+                if(window.pJSDom && window.pJSDom.length > 0) {
+                    window.pJSDom[0].pJS.fn.vendors.destroypJS();
+                    window.pJSDom = [];
+                }
+            }
+        });
+    }
+
+    // --- SCROLL REVEAL (IntersectionObserver) ---
+    const revealElements = document.querySelectorAll('.scroll-reveal');
+    if (revealElements.length > 0) {
+        const revealObserver = new IntersectionObserver((entries, observer) => {
+            entries.forEach(entry => {
+                if(entry.isIntersecting) {
+                    entry.target.classList.add('show-scroll');
+                }
+            });
+        }, { root: null, threshold: 0.1, rootMargin: '0px 0px -50px 0px' });
+
+        revealElements.forEach(el => revealObserver.observe(el));
+    }
+
+    // --- GLOBAL CHAT LOGIC ---
+    const chatToggleBtn = document.getElementById('chat-toggle-btn');
+    const chatCloseBtn = document.getElementById('chat-close-btn');
+    const chatWindow = document.getElementById('chat-window');
+    const chatMessages = document.getElementById('chat-messages');
+    const chatInput = document.getElementById('chat-input');
+    const chatSendBtn = document.getElementById('chat-send-btn');
+    let chatInterval = null;
+
+    if (chatToggleBtn) {
+        chatToggleBtn.addEventListener('click', () => {
+            chatWindow.classList.add('open');
+            chatToggleBtn.style.display = 'none';
+            loadGlobalChat();
+            chatInterval = setInterval(loadGlobalChat, 5000);
+        });
+    }
+
+    if (chatCloseBtn) {
+        chatCloseBtn.addEventListener('click', () => {
+            chatWindow.classList.remove('open');
+            chatToggleBtn.style.display = 'flex';
+            clearInterval(chatInterval);
+        });
+    }
+
+    async function loadGlobalChat() {
+        try {
+            const res = await fetch('/api/global-chat');
+            const data = await res.json();
+            if(data.success && data.messages) {
+                const wasAtBottom = (chatMessages.scrollHeight - chatMessages.scrollTop) <= (chatMessages.clientHeight + 20);
+                chatMessages.innerHTML = '';
+                data.messages.forEach(msg => {
+                    const isSelf = window.currentUser && window.currentUser.email === msg.user_email;
+                    const nickname = msg.users ? msg.users.nickname : 'Неизвестно';
+                    const avatar = msg.users && msg.users.avatar ? msg.users.avatar : '/static/assets/default-avatar.png';
+                    const isAdmin = msg.users && msg.users.is_admin;
+                    
+                    const div = document.createElement('div');
+                    div.className = 'chat-msg' + (isSelf ? ' self' : '');
+                    div.innerHTML = `
+                        <div class="chat-msg-header">
+                            <img src="${avatar}" class="chat-avatar">
+                            <span style="color: ${isAdmin ? 'var(--neon-purple)' : 'inherit'}">${nickname} ${isAdmin ? '👑' : ''}</span>
+                        </div>
+                        <div style="word-break: break-word;">${escapeHTML(msg.message)}</div>
+                    `;
+                    chatMessages.appendChild(div);
+                });
+                if(wasAtBottom) {
+                    chatMessages.scrollTop = chatMessages.scrollHeight;
+                }
+            }
+        } catch(e) { console.log(e); }
+    }
+
+    async function sendGlobalChat() {
+        if(!window.currentUser) {
+            alert('Пожалуйста, авторизуйтесь (вкладка Вход / Регистрация) чтобы писать в чат!');
+            return;
+        }
+        const text = chatInput.value.trim();
+        if(!text) return;
+        chatInput.value = '';
+        try {
+            const res = await fetch('/api/global-chat', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ message: text })
+            });
+            if(res.ok) {
+                loadGlobalChat();
+            }
+        } catch(e) { console.log(e); }
+    }
+
+    if (chatSendBtn) {
+        chatSendBtn.addEventListener('click', sendGlobalChat);
+    }
+    if (chatInput) {
+        chatInput.addEventListener('keypress', (e) => {
+            if(e.key === 'Enter') sendGlobalChat();
+        });
+    }
+
+    function escapeHTML(str) {
+        return str.replace(/[&<>"'`]/g, function(m) {
+            return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;", "`": "&#x60;" }[m];
+        });
     }
 });

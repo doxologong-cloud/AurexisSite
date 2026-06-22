@@ -10,7 +10,9 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;800&family=Space+Grotesk:wght@300;400;700&display=swap" rel="stylesheet">
+    <!-- Scripts -->
     <script src="https://accounts.google.com/gsi/client" async defer></script>
+    <script src="https://cdn.jsdelivr.net/npm/particles.js@2.0.0/particles.min.js"></script>
     <!-- Styles -->
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
@@ -27,6 +29,7 @@
     </div>
 
     <!-- Background Animation Elements -->
+    <div id="particles-js"></div>
     <div class="bg-glow bg-glow-1"></div>
     <div class="bg-glow bg-glow-2"></div>
     <div class="bg-glow bg-glow-3"></div>
@@ -48,6 +51,7 @@
                 </div>
                 <div class="dropdown-menu" id="account-dropdown">
                     <a href="#account" class="dropdown-item" id="go-profile-btn" style="text-decoration: none; display: block; padding: 8px 10px; color: white;">Мой профиль</a>
+                    <a href="#settings" class="dropdown-item" id="go-settings-btn" style="text-decoration: none; display: block; padding: 8px 10px; color: white;">Настройки</a>
                     <a href="/admin" id="nav-admin-link" style="display: none; padding: 8px 10px; color: #ff0055; text-decoration: none; border-bottom: 1px solid rgba(255,255,255,0.1); margin-bottom: 5px; font-weight: bold;">Панель</a>
                     <div class="dropdown-item" id="change-avatar-btn">Сменить аватар</div>
                     <div class="dropdown-item" id="logout-btn" style="color: #ff4444;">Выйти</div>
@@ -126,7 +130,7 @@
             </section>
 
             <!-- News Section -->
-            <section class="about-section" style="padding-top: 40px;">
+            <section class="about-section scroll-reveal" style="padding-top: 40px;">
                 <h2 class="section-title">Новости и Обновления</h2>
                 <div id="news-container" style="display: flex; flex-direction: column; gap: 20px; max-width: 800px; margin: 0 auto; text-align: left;">
                     <div style="text-align: center; width: 100%; color: var(--text-muted);">Загрузка новостей...</div>
@@ -134,7 +138,7 @@
             </section>
             
             <!-- Reviews Section -->
-            <section class="about-section" style="padding-top: 40px; margin-bottom: 50px;">
+            <section class="about-section scroll-reveal" style="padding-top: 40px; margin-bottom: 50px;">
                 <h2 class="section-title">Отзывы о сайте</h2>
                 <div class="bots-grid" id="reviews-container" style="gap: 20px;">
                     <!-- Reviews will be loaded dynamically here -->
@@ -146,7 +150,7 @@
         <!-- About View -->
         <div id="view-about" class="view hidden-view">
             <!-- About Section -->
-            <section class="about-section" style="padding-top: 40px;">
+            <section class="about-section scroll-reveal" style="padding-top: 40px;">
                 <h2 class="section-title">О нас</h2>
                 <div class="about-content">
                     <p style="font-size: 1.1rem; line-height: 1.8; color: var(--text-muted); margin-bottom: 40px; text-align: center; max-width: 800px; margin-left: auto; margin-right: auto;">
@@ -537,12 +541,59 @@
                 <p>Наш сайт использует сессионные cookies исключительно для поддержания вашей авторизации на сайте. Мы не используем cookies для слежки или таргетированной рекламы.</p>
             </div>
         </div>
-    </div>
+        <!-- Settings View -->
+        <div id="view-settings" class="view hidden-view">
+            <section class="about-section" style="padding-top: 40px;">
+                <h2 class="section-title">Настройки сайта</h2>
+                <div style="background: rgba(20,20,25,0.7); border: 1px solid rgba(255,255,255,0.1); border-radius: 15px; padding: 30px; max-width: 800px; margin: 0 auto; text-align: left;">
+                    <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 15px;">
+                        <div>
+                            <h3 style="color: var(--neon-primary); margin-bottom: 5px;">Интерактивный фон (Частицы)</h3>
+                            <p style="color: var(--text-muted); font-size: 0.9rem; margin-bottom: 0;">Включает красивые летающие частицы на фоне. Отключите, если сайт тормозит.</p>
+                        </div>
+                        <label class="switch" style="position: relative; display: inline-block; width: 60px; height: 34px;">
+                            <input type="checkbox" id="particles-toggle" checked style="opacity: 0; width: 0; height: 0;">
+                            <span class="slider round" style="position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background-color: #333; transition: .4s; border-radius: 34px;"></span>
+                        </label>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </div> <!-- Close main container -->
 
     <!-- Hidden file input for avatar -->
     <input type="file" id="avatar-upload-input" accept="image/*" style="display: none;">
 
     <!-- EASTER EGG TERMINAL -->
+
+    <!-- Global Chat Widget -->
+    <div id="global-chat-widget">
+        <button id="chat-toggle-btn" title="Глобальный чат">💬</button>
+        <div id="chat-window">
+            <div id="chat-header">
+                <span>Глобальный чат</span>
+                <button id="chat-close-btn" style="background: none; border: none; color: white; cursor: pointer; font-size: 1.2rem;">&times;</button>
+            </div>
+            <div id="chat-messages">
+                <!-- Messages will load here -->
+            </div>
+            <div id="chat-input-area">
+                <input type="text" id="chat-input" placeholder="Напишите сообщение...">
+                <button id="chat-send-btn">➤</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Styles for settings switch -->
+    <style>
+        .switch input:checked + .slider { background-color: var(--neon-primary); }
+        .switch input:checked + .slider:before { transform: translateX(26px); }
+        .slider:before {
+            position: absolute; content: ""; height: 26px; width: 26px; left: 4px; bottom: 4px;
+            background-color: white; transition: .4s; border-radius: 50%;
+        }
+    </style>
+
     <div id="easter-egg-terminal" style="display: none; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: black; z-index: 9999; color: #00ff00; font-family: 'Courier New', Courier, monospace; padding: 20px; box-sizing: border-box; overflow: hidden;">
         <div id="terminal-content" style="font-size: 1.2rem; line-height: 1.5; text-shadow: 0 0 5px #00ff00;"></div>
         <div id="terminal-cursor" style="display: inline-block; width: 10px; height: 1.2rem; background: #00ff00; animation: blink 1s infinite;"></div>

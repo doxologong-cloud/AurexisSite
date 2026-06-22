@@ -607,5 +607,31 @@ def admin_ticket_status(ticket_id):
     res = requests.patch(url, json=payload, headers=get_supabase_headers())
     return jsonify({"success": res.status_code in [200, 204]})
 
+# --- GLOBAL CHAT ---
+@app.route('/api/global-chat', methods=['GET'])
+def get_global_chat():
+    url = f"{SUPABASE_URL}/rest/v1/global_chat?select=*,users(nickname,avatar,is_admin)&order=created_at.desc&limit=50"
+    res = requests.get(url, headers=get_supabase_headers())
+    if res.status_code == 200:
+        messages = res.json()
+        messages.reverse() # Show oldest first in chat
+        return jsonify({"success": True, "messages": messages})
+    return jsonify({"success": False})
+
+@app.route('/api/global-chat', methods=['POST'])
+def post_global_chat():
+    if 'user' not in session:
+        return jsonify({"success": False, "message": "Авторизуйтесь для отправки сообщений."})
+    email = session['user']['email']
+    data = request.json
+    message = data.get("message", "").strip()
+    if not message:
+        return jsonify({"success": False})
+        
+    url = f"{SUPABASE_URL}/rest/v1/global_chat"
+    payload = {"user_email": email, "message": message}
+    res = requests.post(url, json=payload, headers=get_supabase_headers())
+    return jsonify({"success": res.status_code in [201, 200, 204]})
+
 if __name__ == '__main__':
     app.run(debug=True, port=5000)
