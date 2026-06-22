@@ -1237,10 +1237,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function addMessageToTerminal(role, text) {
         const msgDiv = document.createElement('div');
-        msgDiv.className = `ai-msg ${role === 'user' ? 'user-msg' : 'flora-msg'}`;
+        msgDiv.className = `ai-msg ${role === 'user' ? 'user-msg' : 'aurex-msg'}`;
         
         let avatarSrc = '/static/assets/logo.png';
-        let nameHTML = '<span class="flora-name">AUREXIS FLORA</span>';
+        let nameHTML = '<span class="flora-name">AUREX</span>';
         
         if (role === 'user') {
             avatarSrc = window.currentUser ? window.currentUser.avatar : '/static/assets/default-avatar.png';
