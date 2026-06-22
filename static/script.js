@@ -1979,9 +1979,15 @@ async function openChat(chat) {
     
     loadChatMessages();
     
-    // Setup polling
-    if(messagePollingInterval) clearInterval(messagePollingInterval);
-    messagePollingInterval = setInterval(loadChatMessages, 2000);
+    // Setup recursive polling
+    if(messagePollingTimeout) clearTimeout(messagePollingTimeout);
+    pollMessages();
+}
+
+let messagePollingTimeout;
+async function pollMessages() {
+    await loadChatMessages();
+    messagePollingTimeout = setTimeout(pollMessages, 2000);
 }
 
 async function loadChatMessages() {
@@ -1993,7 +1999,6 @@ async function loadChatMessages() {
         
         if(res.ok) {
             const container = document.getElementById('active-chat-messages');
-            container.innerHTML = '';
             
             let newHtml = '';
             data.messages.forEach(msg => {
@@ -2052,6 +2057,9 @@ async function sendMessengerMessage(forceMessage = null) {
     msgsContainer.appendChild(msgDiv);
     msgsContainer.scrollTop = msgsContainer.scrollHeight;
     
+    // Immediately force a fetch after send to avoid delay
+    if(messagePollingTimeout) clearTimeout(messagePollingTimeout);
+    
     try {
         await fetch('/api/send_chat_message', {
             method: 'POST',
@@ -2059,10 +2067,11 @@ async function sendMessengerMessage(forceMessage = null) {
             body: JSON.stringify({ chat_id: activeChatId, message })
         });
         msgDiv.style.opacity = '1';
-        loadChatMessages();
+        pollMessages();
     } catch(e) {
         console.error(e);
         msgDiv.style.color = 'red';
+        pollMessages();
     }
 }
 
