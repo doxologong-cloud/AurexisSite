@@ -2452,9 +2452,37 @@ document.addEventListener('keydown', (e) => {
     if (keysPressed.includes('hacker')) {
         keysPressed = ''; // reset
         switchView('view-hacker');
-        printHacker("AUREX OS ROOT ACCESS GRANTED.");
-        printHacker("Type 'help' for commands.");
-        setTimeout(() => document.getElementById('hacker-input').focus(), 100);
+        document.getElementById('hacker-output').innerHTML = '';
+        
+        const bootSequence = [
+            "Initializing AurexOS kernel...",
+            "Loading drivers... OK",
+            "Mounting virtual filesystems... OK",
+            "Bypassing firewall protocols [■■■■■■■■■■] 100%",
+            "Decrypting RSA-4096 keys... SUCCESS",
+            "Establishing secure tunneling to remote server...",
+            "WARNING: Intrusion countermeasures detected.",
+            "Deploying counter-countermeasures...",
+            "Injecting payload... [0x0F82A1B]",
+            "Extracting classified datablocks...",
+            "----------------------------------------",
+            "AUREX OS ROOT ACCESS GRANTED.",
+            "Type 'help' for commands."
+        ];
+        
+        let delay = 0;
+        bootSequence.forEach((line, index) => {
+            setTimeout(() => {
+                if (index < 10) {
+                    printHacker(line + " [" + Math.random().toString(16).substring(2, 10) + "]");
+                } else {
+                    printHacker(line);
+                }
+            }, delay);
+            delay += Math.floor(Math.random() * 200) + 50; // Random delay between 50 and 250ms
+        });
+        
+        setTimeout(() => document.getElementById('hacker-input').focus(), delay + 100);
     }
 });
 
@@ -2768,9 +2796,10 @@ function switchView(viewId) {
     const targetView = document.getElementById(viewId);
     if (targetView) {
         targetView.classList.add('active');
-        targetView.style.display = 'block'; // or flex if messenger, let's just let CSS handle it
-        // Actually, restore original behavior:
+        targetView.classList.remove('hidden-view'); // Fix for hidden-view override!
         if (viewId === 'view-messenger') {
+            targetView.style.display = 'flex';
+        } else if (viewId === 'view-editor') {
             targetView.style.display = 'flex';
         } else {
             targetView.style.display = 'block';
