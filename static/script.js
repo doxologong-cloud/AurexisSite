@@ -85,16 +85,24 @@ document.addEventListener('DOMContentLoaded', () => {
     // Preloader Logic
     const welcomeScreen = document.getElementById('welcome-screen');
     
-    // Simulate loading time (e.g. 2.5 seconds)
-    setTimeout(() => {
-        welcomeScreen.style.opacity = '0';
+    if (sessionStorage.getItem('aurex_welcomed')) {
+        // Skip preloader on reload
+        welcomeScreen.style.display = 'none';
+        document.querySelector('.hero') && document.querySelector('.hero').classList.add('show');
+        initScrollAnimations();
+    } else {
+        // Simulate loading time
         setTimeout(() => {
-            welcomeScreen.style.visibility = 'hidden';
-            // Show main elements after preloader finishes
-            document.querySelector('.hero').classList.add('show');
-            initScrollAnimations();
-        }, 1000); // Wait for fade out transition
-    }, 2500);
+            welcomeScreen.style.opacity = '0';
+            setTimeout(() => {
+                welcomeScreen.style.display = 'none';
+                sessionStorage.setItem('aurex_welcomed', 'true');
+                // Show main elements after preloader finishes
+                document.querySelector('.hero') && document.querySelector('.hero').classList.add('show');
+                initScrollAnimations();
+            }, 1000);
+        }, 2000);
+    }
 
     // Scroll Animations using Intersection Observer
     let observer;
