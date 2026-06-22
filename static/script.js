@@ -2475,7 +2475,7 @@ function handleHackerCommand(cmd) {
     } else if (c === 'matrix') {
         
         printHacker("Initializing matrix protocol...");
-        document.body.innerHTML += '<canvas id="matrix-canvas" style="position:fixed;top:0;left:0;width:100vw;height:100vh;z-index:9999;pointer-events:none;"></canvas>';
+        document.body.insertAdjacentHTML('beforeend', '<canvas id="matrix-canvas" style="position:fixed;top:0;left:0;width:100vw;height:100vh;z-index:9999;pointer-events:none;"></canvas>');
         const c = document.getElementById('matrix-canvas');
         const ctx = c.getContext('2d');
         c.width = window.innerWidth;
