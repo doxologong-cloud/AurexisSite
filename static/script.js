@@ -1169,7 +1169,8 @@ document.addEventListener('DOMContentLoaded', () => {
         } catch(e) { console.log(e); }
     }
 
-    async function sendGlobalChat() {
+    let lastGlobalChatTime = 0;
+async function sendGlobalChat() {
         if(!window.currentUser) {
             showToast('Вы не <a onclick="switchAuthTab(\'login\')">авторизованы</a> или не <a onclick="switchAuthTab(\'register\')">зарегистрированы</a>. Пожалуйста, войдите в аккаунт, чтобы писать в чат!', 'error');
             return;
@@ -1264,6 +1265,7 @@ document.addEventListener('DOMContentLoaded', () => {
     let aiChatHistory = [];
     let aiAbortController = null;
     let isGenerating = false;
+    let lastAIChatTime = 0;
     const aiStopBtn = document.getElementById('ai-stop-btn');
     if(aiStopBtn) {
         aiStopBtn.addEventListener('click', () => {
@@ -1276,6 +1278,15 @@ document.addEventListener('DOMContentLoaded', () => {
     async function sendToAI() {
         if(isGenerating) return;
         if(!aiInput || !aiInput.value.trim()) return;
+        
+        const now = Date.now();
+        if (now - lastAIChatTime < 5000) {
+            const timeLeft = Math.ceil((5000 - (now - lastAIChatTime)) / 1000);
+            showToast(`Подождите ${timeLeft} сек. перед следующим сообщением.`, 'error');
+            return;
+        }
+        lastAIChatTime = now;
+
         isGenerating = true;
         const text = aiInput.value.trim();
         aiInput.value = '';
