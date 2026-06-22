@@ -521,10 +521,10 @@ document.addEventListener('DOMContentLoaded', () => {
         
         if (floraStatus) {
             if (userData.flora_status) {
-                floraStatus.textContent = 'Активна';
+                floraStatus.textContent = __('Активна');
                 floraStatus.style.color = '#00ffaa';
             } else {
-                floraStatus.textContent = 'Не активна';
+                floraStatus.textContent = __('Не активна');
                 floraStatus.style.color = '#ff4444';
             }
         }
@@ -843,7 +843,7 @@ document.addEventListener('DOMContentLoaded', () => {
             if (data.success) {
                 container.innerHTML = '';
                 if (data.news.length === 0) {
-                    container.innerHTML = '<div style="text-align: center; width: 100%; color: var(--text-muted);">Пока нет новостей.</div>';
+                    container.innerHTML = `<div style="text-align: center; width: 100%; color: var(--text-muted);">${__('Пока нет новостей.')}</div>`;
                     return;
                 }
                 data.news.forEach(n => {
