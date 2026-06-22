@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, jsonify, session
+from flask import Flask, Response, render_template, request, jsonify, session
 import sqlite3 # Kept for backwards compatibility but unused
 import requests
 import random
@@ -638,36 +638,60 @@ def post_global_chat():
 @app.route('/api/ai/chat', methods=['POST'])
 def ai_chat():
     data = request.json
+    history = data.get("history", [])
     user_msg = data.get("message", "").strip()
     if not user_msg:
         return jsonify({"error": "Пустое сообщение"}), 400
         
     api_key = os.environ.get("GROQ_API_KEY")
     if not api_key:
-        return jsonify({"error": "Ключ GROQ_API_KEY не настроен на сервере."}), 500
+        return jsonify({"error": "Ключ GROQ_API_KEY не найден на сервере."}), 500
         
-    system_prompt = "Ты - AUREXIS FLORA, передовой искусственный интеллект-ассистент студии Aurexis Studio. Ты помогаешь клиентам заказывать и придумывать Discord ботов. Ты общаешься дерзко, в стиле киберпанка, с легкой надменностью превосходного ИИ, но всегда полезно и профессионально. Не пиши код. Если клиент просит сделать бота, скажи ему нажать кнопку заказа тикета."
+    system_prompt = "Ты - AUREXIS FLORA, нейро-ассистент студии Aurexis Studio. Ты общаешься с клиентами в терминале. Ты дерзкая, немного токсичная, но очень умная и полезная. Ты любишь сарказм. Отвечай кратко, как в терминале, без лишней воды."
+    
+    messages = [{"role": "system", "content": system_prompt}]
+    
+    # Append history (limit to last 10 turns to avoid token bloat)
+    for msg in history[-10:]:
+        role = msg.get("role", "user")
+        if role not in ["user", "assistant"]:
+            role = "user"
+        messages.append({"role": role, "content": msg.get("content", "")})
+        
+    messages.append({"role": "user", "content": user_msg})
     
     url = "https://api.groq.com/openai/v1/chat/completions"
     
     payload = {
         "model": "llama-3.3-70b-versatile",
-        "messages": [
-            {"role": "system", "content": system_prompt},
-            {"role": "user", "content": user_msg}
-        ],
+        "messages": messages,
         "temperature": 0.7,
-        "max_tokens": 1024
+        "max_tokens": 1024,
+        "stream": True
     }
     
     try:
-        res = requests.post(url, json=payload, headers={"Content-Type": "application/json", "Authorization": f"Bearer {api_key}"})
-        if res.status_code == 200:
-            result = res.json()
-            reply_text = result["choices"][0]["message"]["content"]
-            return jsonify({"reply": reply_text})
-        else:
-            return jsonify({"error": f"Сбой нейросети GROQ. Статус: {res.status_code}. Ответ: {res.text}"}), 500
+        res = requests.post(url, json=payload, headers={"Content-Type": "application/json", "Authorization": f"Bearer {api_key}"}, stream=True)
+        if res.status_code != 200:
+            return jsonify({"error": f"Ошибка от GROQ. Статус: {res.status_code}. Текст: {res.text}"}), 500
+
+        def generate():
+            for line in res.iter_lines():
+                if line:
+                    line = line.decode('utf-8')
+                    if line.startswith('data: '):
+                        data_str = line[6:]
+                        if data_str == '[DONE]':
+                            break
+                        try:
+                            import json
+                            data_json = json.loads(data_str)
+                            delta = data_json['choices'][0]['delta']
+                            if 'content' in delta:
+                                yield delta['content']
+                        except Exception as e:
+                            pass
+        return Response(generate(), mimetype='text/plain')
     except Exception as e:
         return jsonify({"error": str(e)}), 500
 

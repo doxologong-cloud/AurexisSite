@@ -1605,3 +1605,40 @@ body.apocalypse-mode .btn {
     from { transform: translateX(0); opacity: 1; }
     to { transform: translateX(100%); opacity: 0; }
 }
+
+/* CUSTOM SCROLLBARS */
+::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+}
+::-webkit-scrollbar-track {
+    background: rgba(0, 0, 0, 0.2);
+    border-radius: 4px;
+}
+::-webkit-scrollbar-thumb {
+    background: var(--neon-primary);
+    border-radius: 4px;
+}
+::-webkit-scrollbar-thumb:hover {
+    background: #e6b800; /* slightly darker gold */
+}
+
+/* Specific scrollbar for AI chat box to look like a terminal */
+#ai-chat-box::-webkit-scrollbar-thumb {
+    background: var(--neon-primary);
+}
+
+#ai-stop-btn {
+    background: transparent !important;
+    border: none;
+    color: #ff0033 !important;
+    cursor: pointer;
+    transition: 0.3s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+#ai-stop-btn:hover {
+    color: #ff4444 !important;
+    transform: scale(1.1);
+}
