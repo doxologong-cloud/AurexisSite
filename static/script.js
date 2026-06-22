@@ -934,7 +934,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     const statusColor = t.status === 'open' ? '#00ffaa' : '#ff4444';
                     const statusText = __(t.status === 'open' ? 'Открыт' : 'Закрыт');
                     container.innerHTML += `
-                        <div style="background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); border-radius: 8px; padding: 15px; display: flex; justify-content: space-between; align-items: center; cursor: pointer; transition: background 0.3s;" onclick="openTicketChat(${t.id}, '${t.topic}', '${t.status}')">
+                        <div style="background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); border-radius: 8px; padding: 15px; display: flex; justify-content: space-between; align-items: center; cursor: var(--cursor-pointer, pointer) !important; transition: background 0.3s;" onclick="openTicketChat(${t.id}, '${t.topic}', '${t.status}')">
                             <div>
                                 <h4 style="margin: 0; margin-bottom: 5px;">${t.topic}</h4>
                                 <span style="font-size: 0.85rem; color: var(--text-muted);">${__('Тикет #')}${t.id}</span>
@@ -2647,7 +2647,7 @@ document.addEventListener('DOMContentLoaded', () => {
                         data.users.forEach(u => {
                             const div = document.createElement('div');
                             div.style.padding = '10px';
-                            div.style.cursor = 'pointer';
+                            div.style.style.setProperty('cursor', 'var(--cursor-pointer, pointer)', 'important');
                             div.style.borderBottom = '1px solid rgba(255,255,255,0.05)';
                             div.innerHTML = `<span style="color: white; font-weight: bold;">${u.username}</span>`;
                             
@@ -3529,7 +3529,7 @@ async function startCall() {
         endBtn.style.border = 'none';
         endBtn.style.padding = '5px 15px';
         endBtn.style.borderRadius = '15px';
-        endBtn.style.cursor = 'pointer';
+        endBtn.style.style.setProperty('cursor', 'var(--cursor-pointer, pointer)', 'important');
         
         endBtn.onclick = () => {
             stream.getTracks().forEach(t => t.stop());
