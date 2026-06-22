@@ -2827,10 +2827,34 @@ function changeTheme(themeName) {
     if(activeCard) activeCard.classList.add('active');
 }
 
+function applyTranslations(lang) {
+    if (typeof translations === 'undefined') return;
+    const dict = translations[lang] || translations['ru'];
+    
+    document.querySelectorAll('[data-i18n]').forEach(el => {
+        const key = el.getAttribute('data-i18n');
+        if (dict[key]) el.textContent = dict[key];
+    });
+    
+    document.querySelectorAll('[data-i18n-placeholder]').forEach(el => {
+        const key = el.getAttribute('data-i18n-placeholder');
+        if (dict[key]) el.placeholder = dict[key];
+    });
+    
+    document.querySelectorAll('[data-i18n-title]').forEach(el => {
+        const key = el.getAttribute('data-i18n-title');
+        if (dict[key]) el.title = dict[key];
+    });
+    
+    document.querySelectorAll('[data-i18n-data-text]').forEach(el => {
+        const key = el.getAttribute('data-i18n-data-text');
+        if (dict[key]) el.setAttribute('data-text', dict[key]);
+    });
+}
+
 function changeLang(lang) {
-    // Simple alert for now, full localization requires mapping
-    alert('Язык изменен на: ' + lang + '. (Локализация будет добавлена в следующих фазах)');
     localStorage.setItem('aurex_lang', lang);
+    applyTranslations(lang);
 }
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -2840,11 +2864,10 @@ document.addEventListener('DOMContentLoaded', () => {
         const sel = document.getElementById('theme-selector');
         if (sel) sel.value = savedTheme;
     }
-    const savedLang = localStorage.getItem('aurex_lang');
-    if (savedLang) {
-        const sel = document.getElementById('lang-selector');
-        if (sel) sel.value = savedLang;
-    }
+    const savedLang = localStorage.getItem('aurex_lang') || 'ru';
+    const sel = document.getElementById('lang-selector');
+    if (sel) sel.value = savedLang;
+    applyTranslations(savedLang);
 });
 
 

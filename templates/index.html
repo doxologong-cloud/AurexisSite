@@ -2,21 +2,21 @@
 
 <html lang="ru">
 <head>
-<meta charset="utf-8"/>
-<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
-<title>Aurexis Studio | Наши Боты</title>
+<meta charset="utf-8"></meta>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"></meta>
+<title><span data-i18n="t_1">Aurexis Studio | Наши Боты</span></title>
 <!-- Favicon -->
-<link href="{{ url_for('static', filename='assets/logo.png') }}" rel="icon" type="image/png"/>
+<link href="{{ url_for('static', filename='assets/logo.png') }}" rel="icon" type="image/png"></link>
 <!-- Fonts -->
-<link href="https://fonts.googleapis.com" rel="preconnect"/>
-<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
-<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;800&amp;family=Space+Grotesk:wght@300;400;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com" rel="preconnect"></link>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"></link>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;800&family=Space+Grotesk:wght@300;400;700&display=swap" rel="stylesheet"></link>
 <!-- Scripts -->
 <script async="" defer="" src="https://accounts.google.com/gsi/client"></script>
 <script src="https://cdn.jsdelivr.net/npm/particles.js@2.0.0/particles.min.js"></script>
 <!-- Styles -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-<link href="{{ url_for('static', filename='style.css') }}?v=58" rel="stylesheet"/>
+<link href="{{ url_for('static', filename='style.css') }}?v=59" rel="stylesheet"></link>
 <script>
     (function() {
         const theme = localStorage.getItem('aurex_theme') || 'matrix';
@@ -39,6 +39,7 @@
         }
     })();
 </script>
+    <script src="/static/translations.js"></script>
 </head>
 <body>
 <!-- Preloader / Welcome Screen -->
@@ -46,7 +47,7 @@
 <div class="glitch-wrapper">
 <h1 class="glitch" data-text="AUREXIS STUDIO">AUREXIS STUDIO</h1>
 </div>
-<p class="welcome-text">Загрузка системы...</p>
+<p class="welcome-text"><span data-i18n="t_2">Загрузка системы...</span></p>
 <div class="progress-bar-container">
 <div class="progress-bar"></div>
 </div>
@@ -59,43 +60,43 @@
 <!-- Navbar -->
 <nav class="navbar">
 <div class="logo">
-<img alt="Aurexis Studio Logo" class="logo-img" src="{{ url_for('static', filename='assets/logo.png') }}"/>
+<img alt="Aurexis Studio Logo" class="logo-img" src="{{ url_for('static', filename='assets/logo.png') }}"></img>
 <span>Aurexis Studio</span>
 </div>
 <div class="nav-links">
-<a href="#home"><i class="fa-solid fa-house"></i> Главная</a>
-<a href="#about"><i class="fa-solid fa-circle-info"></i> О нас</a>
-<a href="#portfolio">Магазин Ботов</a>
-<a class="nav-ai-link" href="#builder">Нейро-Ассистент <i class="fa-solid fa-brain"></i></a>
+<a href="#home"><i class="fa-solid fa-house"></i> <span data-i18n="t_3">Главная</span></a>
+<a href="#about"><i class="fa-solid fa-circle-info"></i> <span data-i18n="t_4">О нас</span></a>
+<a href="#portfolio"><span data-i18n="t_5">Магазин Ботов</span></a>
+<a class="nav-ai-link" href="#builder"><span data-i18n="t_6">Нейро-Ассистент</span> <i class="fa-solid fa-brain"></i></a>
 
-<a class="nav-link" href="#editor"><i class="fa-solid fa-pen-nib"></i> Редактор</a></div>
+<a class="nav-link" href="#editor"><i class="fa-solid fa-pen-nib"></i> <span data-i18n="t_7">Редактор</span></a></div>
 <div class="nav-auth-section" style="display: flex; align-items: center; gap: 15px;">
-<a class="nav-auth-link" href="#" id="open-auth" style="color: var(--neon-primary); font-weight: 600;">Вход / Регистрация</a>
+<a class="nav-auth-link" href="#" id="open-auth" style="color: var(--neon-primary); font-weight: 600;"><span data-i18n="t_8">Вход / Регистрация</span></a>
 <div class="nav-account" id="nav-account" style="display: none; position: relative; cursor: pointer;">
 <div class="user-profile" id="user-profile">
-<img alt="User" class="nav-avatar" id="nav-avatar-img" src="{{ url_for('static', filename='assets/default-avatar.png') }}"/>
+<img alt="User" class="nav-avatar" id="nav-avatar-img" src="{{ url_for('static', filename='assets/default-avatar.png') }}"></img>
 <span id="nav-username">User</span>
 </div>
 <div class="dropdown-menu" id="account-dropdown" style="min-width: 200px;">
 <a class="dropdown-item" href="#account" id="go-profile-btn">
-    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
-    Мой профиль
+    <svg width="18" height="18" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
+    <span data-i18n="t_9">Мой профиль</span>
 </a>
 <a class="dropdown-item" href="#settings" id="go-settings-btn">
-    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path></svg>
-    Настройки
+    <svg width="18" height="18" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path></svg>
+    <span data-i18n="t_10">Настройки</span>
 </a>
 <a class="dropdown-item" href="/admin" id="nav-admin-link" style="display: none; color: #ff0055; font-weight: bold; border-top: 1px solid rgba(255,255,255,0.1); border-bottom: 1px solid rgba(255,255,255,0.1); margin: 5px 0;">
-    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg>
-    Панель
+    <svg width="18" height="18" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg>
+    <span data-i18n="t_11">Панель</span>
 </a>
 <div class="dropdown-item" id="change-avatar-btn">
-    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect><circle cx="8.5" cy="8.5" r="1.5"></circle><polyline points="21 15 16 10 5 21"></polyline></svg>
-    Сменить аватар
+    <svg width="18" height="18" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect><circle cx="8.5" cy="8.5" r="1.5"></circle><polyline points="21 15 16 10 5 21"></polyline></svg>
+    <span data-i18n="t_12">Сменить аватар</span>
 </div>
 <div class="dropdown-item" id="logout-btn" style="color: #ff4444; border-top: 1px solid rgba(255,255,255,0.1); margin-top: 5px;">
-    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path><polyline points="16 17 21 12 16 7"></polyline><line x1="21" y1="12" x2="9" y2="12"></line></svg>
-    Выйти
+    <svg width="18" height="18" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path><polyline points="16 17 21 12 16 7"></polyline><line x1="21" y1="12" x2="9" y2="12"></line></svg>
+    <span data-i18n="t_13">Выйти</span>
 </div>
 </div>
 </div>
@@ -107,69 +108,69 @@
 <div class="view active" id="view-home">
 <!-- Hero Section -->
 <section class="hero">
-<h1 class="hero-title">Будущее <span class="neon-text-primary">автоматизации</span> уже здесь</h1>
-<p class="hero-subtitle">Встречайте нашу экосистему умных ботов для любых задач. Мощные, быстрые и безупречно стильные инструменты от Aurexis Studio.</p>
+<h1 class="hero-title"><span data-i18n="t_14">Будущее</span> <span class="neon-text-primary"><span data-i18n="t_15">автоматизации</span></span> <span data-i18n="t_16">уже здесь</span></h1>
+<p class="hero-subtitle"><span data-i18n="t_17">Встречайте нашу экосистему умных ботов для любых задач. Мощные, быстрые и безупречно стильные инструменты от Aurexis Studio.</span></p>
 <div class="hero-buttons">
-<a class="btn btn-primary" href="#bots">Посмотреть Ботов</a>
-<a class="btn btn-secondary" href="https://discord.gg/k9CGaGGtCx" target="_blank">Вступить в Discord</a>
+<a class="btn btn-primary" href="#bots"><span data-i18n="t_18">Посмотреть Ботов</span></a>
+<a class="btn btn-secondary" href="https://discord.gg/k9CGaGGtCx" target="_blank"><span data-i18n="t_19">Вступить в Discord</span></a>
 </div>
 </section>
 <!-- Bots Grid Section -->
 <section class="bots-section" id="bots">
-<h2 class="section-title">Наш Арсенал</h2>
+<h2 class="section-title"><span data-i18n="t_20">Наш Арсенал</span></h2>
 <div class="bots-grid">
 <!-- Bot 1 -->
 <div class="bot-card">
 <div class="bot-icon support-icon" style="display:flex; justify-content:center; align-items:center; color: var(--neon-primary);">
-<svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="4" width="16" height="16" rx="2" ry="2"></rect><rect x="9" y="9" width="6" height="6"></rect><line x1="9" y1="1" x2="9" y2="4"></line><line x1="15" y1="1" x2="15" y2="4"></line><line x1="9" y1="20" x2="9" y2="23"></line><line x1="15" y1="20" x2="15" y2="23"></line><line x1="20" y1="9" x2="23" y2="9"></line><line x1="20" y1="14" x2="23" y2="14"></line><line x1="1" y1="9" x2="4" y2="9"></line><line x1="1" y1="14" x2="4" y2="14"></line></svg>
+<svg width="40" height="40" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="4" width="16" height="16" rx="2" ry="2"></rect><rect x="9" y="9" width="6" height="6"></rect><line x1="9" y1="1" x2="9" y2="4"></line><line x1="15" y1="1" x2="15" y2="4"></line><line x1="9" y1="20" x2="9" y2="23"></line><line x1="15" y1="20" x2="15" y2="23"></line><line x1="20" y1="9" x2="23" y2="9"></line><line x1="20" y1="14" x2="23" y2="14"></line><line x1="1" y1="9" x2="4" y2="9"></line><line x1="1" y1="14" x2="4" y2="14"></line></svg>
 </div>
 <h3 class="bot-name">AUREXIS SUPPORT</h3>
-<p class="bot-desc">Профессиональный бот для технической поддержки. Организует тикеты, автоматизирует ответы и помогает общаться с вашей аудиторией 24/7.</p>
+<p class="bot-desc"><span data-i18n="t_21">Профессиональный бот для технической поддержки. Организует тикеты, автоматизирует ответы и помогает общаться с вашей аудиторией 24/7.</span></p>
 <div class="bot-status" id="status-aurexis_support"><span class="status-dot"></span> Online</div>
 </div>
 <!-- Bot 2 -->
 <div class="bot-card">
 <div class="bot-icon games-icon" style="display:flex; justify-content:center; align-items:center; color: var(--neon-secondary);">
-<svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M6 3h12l4 6-10 13L2 9Z"></path><path d="M11 3 8 9l4 13"></path><path d="M12 15V3"></path></svg>
+<svg width="40" height="40" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M6 3h12l4 6-10 13L2 9Z"></path><path d="M11 3 8 9l4 13"></path><path d="M12 15V3"></path></svg>
 </div>
 <h3 class="bot-name">AUREXIS ECONOMY</h3>
-<p class="bot-desc">Создайте уникальную экономику на вашем сервере! Игры, казино, валюта, магазины и уровни. Вовлеченность участников гарантирована.</p>
+<p class="bot-desc"><span data-i18n="t_22">Создайте уникальную экономику на вашем сервере! Игры, казино, валюта, магазины и уровни. Вовлеченность участников гарантирована.</span></p>
 <div class="bot-status" id="status-aurexis_economy"><span class="status-dot"></span> Online</div>
 </div>
 <!-- Bot 3 -->
 <div class="bot-card">
 <div class="bot-icon mafia-icon" style="display:flex; justify-content:center; align-items:center; color: #ff4444;">
-<svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M9 10h.01"></path><path d="M15 10h.01"></path><path d="M12 2a8 8 0 0 0-8 8v12l3-3 2.5 2.5L12 19l2.5 2.5L17 19l3 3V10a8 8 0 0 0-8-8z"></path></svg>
+<svg width="40" height="40" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M9 10h.01"></path><path d="M15 10h.01"></path><path d="M12 2a8 8 0 0 0-8 8v12l3-3 2.5 2.5L12 19l2.5 2.5L17 19l3 3V10a8 8 0 0 0-8-8z"></path></svg>
 </div>
 <h3 class="bot-name">AUREXIS MAFIA</h3>
-<p class="bot-desc">Легендарная игра прямо в чате. Полностью автоматизированный процесс игры в Мафию с ролями, голосованиями и ночными фазами.</p>
+<p class="bot-desc"><span data-i18n="t_23">Легендарная игра прямо в чате. Полностью автоматизированный процесс игры в Мафию с ролями, голосованиями и ночными фазами.</span></p>
 <div class="bot-status" id="status-aurexis_mafia"><span class="status-dot"></span> Online</div>
 </div>
 <!-- Bot 4 -->
 <div class="bot-card special-bot">
 <div class="bot-icon flora-icon" style="display:flex; justify-content:center; align-items:center; color: var(--neon-green);">
-<svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M8.5 14.5A2.5 2.5 0 0 0 11 12c0-1.38-.5-2-1-3-1.072-2.143-.224-4.054 2-6 .5 2.5 2 4.9 4 6.5 2 1.6 3 3.5 3 5.5a7 7 0 1 1-14 0c0-1.153.433-2.294 1-3a2.5 2.5 0 0 0 2.5 2.5z"></path></svg>
+<svg width="40" height="40" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M8.5 14.5A2.5 2.5 0 0 0 11 12c0-1.38-.5-2-1-3-1.072-2.143-.224-4.054 2-6 .5 2.5 2 4.9 4 6.5 2 1.6 3 3.5 3 5.5a7 7 0 1 1-14 0c0-1.153.433-2.294 1-3a2.5 2.5 0 0 0 2.5 2.5z"></path></svg>
 </div>
 <div class="badge">NEW</div>
 <h3 class="bot-name neon-text-green">Aurex</h3>
-<p class="bot-desc">Новейшая разработка Aurexis Studio. Мощный .exe бот с уникальным функционалом и скрытой работой в системе.</p>
+<p class="bot-desc"><span data-i18n="t_24">Новейшая разработка Aurexis Studio. Мощный .exe бот с уникальным функционалом и скрытой работой в системе.</span></p>
 <div class="bot-status status-green" id="status-aurexis_flora"><span class="status-dot"></span> Active</div>
 </div>
 </div>
 </section>
 <!-- News Section -->
 <section class="about-section scroll-reveal" style="padding-top: 40px;">
-<h2 class="section-title">Новости и Обновления</h2>
+<h2 class="section-title"><span data-i18n="t_25">Новости и Обновления</span></h2>
 <div id="news-container" style="display: flex; flex-direction: column; gap: 20px; max-width: 800px; margin: 0 auto; text-align: left;">
-<div style="text-align: center; width: 100%; color: var(--text-muted);">Загрузка новостей...</div>
+<div style="text-align: center; width: 100%; color: var(--text-muted);"><span data-i18n="t_26">Загрузка новостей...</span></div>
 </div>
 </section>
 <!-- Reviews Section -->
 <section class="about-section scroll-reveal" style="padding-top: 40px; margin-bottom: 50px;">
-<h2 class="section-title">Отзывы о сайте</h2>
+<h2 class="section-title"><span data-i18n="t_27">Отзывы о сайте</span></h2>
 <div class="bots-grid" id="reviews-container" style="gap: 20px;">
 <!-- Reviews will be loaded dynamically here -->
-<div style="text-align: center; width: 100%; color: var(--text-muted);">Загрузка отзывов...</div>
+<div style="text-align: center; width: 100%; color: var(--text-muted);"><span data-i18n="t_28">Загрузка отзывов...</span></div>
 </div>
 </section>
 </div>
@@ -177,32 +178,32 @@
 <div class="view hidden-view" id="view-about">
 <!-- About Section -->
 <section class="about-section scroll-reveal" style="padding-top: 40px;">
-<h2 class="section-title">О нас</h2>
+<h2 class="section-title"><span data-i18n="t_29">О нас</span></h2>
 <div class="about-content">
 <p style="font-size: 1.1rem; line-height: 1.8; color: var(--text-muted); margin-bottom: 40px; text-align: center; max-width: 800px; margin-left: auto; margin-right: auto;">
-<strong>Aurexis Studio</strong> — элитная команда разработчиков, специализирующаяся на создании многофункциональных решений для Discord. Мы не просто делаем ботов, мы создаем полноценные цифровые экосистемы. Наша главная цель — дать администраторам ультимативные инструменты для управления, развлечения аудитории и монетизации серверов.
+<strong>Aurexis Studio</strong> <span data-i18n="t_30">— элитная команда разработчиков, специализирующаяся на создании многофункциональных решений для Discord. Мы не просто делаем ботов, мы создаем полноценные цифровые экосистемы. Наша главная цель — дать администраторам ультимативные инструменты для управления, развлечения аудитории и монетизации серверов.</span>
                     </p>
 <div class="features">
 <div class="feature-item">
 <div class="feature-icon">
 <svg fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24"><path d="M22 12h-4l-3 9L9 3l-3 9H2"></path></svg>
 </div>
-<h3 style="color: var(--neon-primary); word-break: break-word; hyphens: auto;">Высокая производительность</h3>
-<p>Каждая строчка нашего кода выверена до идеала. Наши алгоритмы обеспечивают бесперебойную работу проектов даже при пиковых нагрузках.</p>
+<h3 style="color: var(--neon-primary); word-break: break-word; hyphens: auto;"><span data-i18n="t_31">Высокая производительность</span></h3>
+<p><span data-i18n="t_32">Каждая строчка нашего кода выверена до идеала. Наши алгоритмы обеспечивают бесперебойную работу проектов даже при пиковых нагрузках.</span></p>
 </div>
 <div class="feature-item">
 <div class="feature-icon">
 <svg fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg>
 </div>
-<h3 style="color: var(--neon-purple);">Абсолютная безопасность</h3>
-<p>Конфиденциальность — наш приоритет. Данные ваших серверов и пользователей находятся под защитой самых строгих стандартов безопасности.</p>
+<h3 style="color: var(--neon-purple);"><span data-i18n="t_33">Абсолютная безопасность</span></h3>
+<p><span data-i18n="t_34">Конфиденциальность — наш приоритет. Данные ваших серверов и пользователей находятся под защитой самых строгих стандартов безопасности.</span></p>
 </div>
 <div class="feature-item">
 <div class="feature-icon">
 <svg fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>
 </div>
-<h3 style="color: #ff0055;">Эксклюзивный функционал</h3>
-<p>От продвинутой экономики до секретных разработок вроде подписок Aurex. Мы создаем фишки, которых нет ни у одного другого бота на рынке.</p>
+<h3 style="color: #ff0055;"><span data-i18n="t_35">Эксклюзивный функционал</span></h3>
+<p><span data-i18n="t_36">От продвинутой экономики до секретных разработок вроде подписок Aurex. Мы создаем фишки, которых нет ни у одного другого бота на рынке.</span></p>
 </div>
 </div>
 </div>
@@ -212,7 +213,7 @@
 <div class="view hidden-view" id="view-builder">
 <section class="about-section ai-section">
 <h2>AUREXIS <span class="highlight">Aurex</span></h2>
-<p class="subtitle">Нейро-ассистент студии. Задай любой вопрос о ботах или закажи разработку.</p>
+<p class="subtitle"><span data-i18n="t_37">Нейро-ассистент студии. Задай любой вопрос о ботах или закажи разработку.</span></p>
 <div class="ai-terminal-container">
 <div class="ai-terminal-header">
 <div class="terminal-dots">
@@ -222,15 +223,15 @@
 </div>
 <div class="ai-terminal-chat" id="ai-chat-box">
 <div class="ai-msg flora-msg">
-<img class="ai-avatar" src="/static/assets/logo.png"/>
+<img class="ai-avatar" src="/static/assets/logo.png"></img>
 <div class="ai-text">
 <span class="flora-name">AUREX</span>
-<p>Инициализация систем завершена. Приветствую. Я — искусственный интеллект студии Aurexis. Как я могу помочь тебе с ботами сегодня?</p>
+<p><span data-i18n="t_38">Инициализация систем завершена. Приветствую. Я — искусственный интеллект студии Aurexis. Как я могу помочь тебе с ботами сегодня?</span></p>
 </div>
 </div>
 </div>
 <div class="ai-terminal-input-area">
-<input autocomplete="off" id="ai-input" placeholder="Напиши сообщение Aurex..." type="text"/>
+<input autocomplete="off" id="ai-input" placeholder="Напиши сообщение Aurex..." data-i18n-placeholder="t_39" type="text"></input>
 <button id="ai-send-btn">
 <svg fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24"><line x1="22" x2="11" y1="2" y2="13"></line><polygon points="22 2 15 22 11 13 2 9 22 2"></polygon></svg>
 </button>
@@ -246,68 +247,68 @@
 <!-- Account View -->
 <div class="view hidden-view" id="view-account">
 <section class="about-section" style="padding-top: 40px;">
-<h2 class="section-title">Мой аккаунт</h2>
+<h2 class="section-title"><span data-i18n="t_40">Мой аккаунт</span></h2>
 <div class="about-content" style="text-align: left;">
 <!-- Profile Info Display -->
 <div id="profile-display" style="position: relative; margin-bottom: 30px; border-radius: 15px; overflow: hidden; background: rgba(0,0,0,0.3); border: 1px solid rgba(255,255,255,0.1);">
 <!-- Banner -->
 <div id="acc-banner" style="width: 100%; height: 150px; background: url('/static/assets/default-banner.png') center/cover no-repeat; border-bottom: 2px solid var(--neon-purple);"></div>
 <div style="padding: 0 20px 20px 20px; display: flex; align-items: flex-start; gap: 20px;">
-<img alt="User" id="acc-avatar-img" src="{{ url_for('static', filename='assets/default-avatar.png') }}" style="width: 100px; height: 100px; border-radius: 50%; object-fit: cover; border: 4px solid var(--bg-color); background: var(--bg-dark); cursor: pointer; z-index: 2; margin-top: -50px;" title="Сменить аватар"/>
+<img alt="User" id="acc-avatar-img" src="{{ url_for('static', filename='assets/default-avatar.png') }}" style="width: 100px; height: 100px; border-radius: 50%; object-fit: cover; border: 4px solid var(--bg-color); background: var(--bg-dark); cursor: pointer; z-index: 2; margin-top: -50px;" title="Сменить аватар" data-i18n-title="t_41"></img>
 <div style="flex-grow: 1; z-index: 2; padding-top: 15px;">
 <h3 style="font-size: 1.8rem; margin-bottom: 5px; display: flex; align-items: center; gap: 10px;">
-<span id="acc-nickname">Пользователь</span>
+<span id="acc-nickname"><span data-i18n="t_42">Пользователь</span></span>
 <span id="acc-owner-badge" style="display: none; font-size: 0.9rem; background: var(--neon-primary); color: #000; padding: 2px 8px; border-radius: 12px; font-weight: bold; align-items: center; gap: 4px;">
-<svg fill="none" height="14" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="3" viewbox="0 0 24 24" width="14"><polyline points="20 6 9 17 4 12"></polyline></svg> Владелец
+<svg fill="none" height="14" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="3" viewbox="0 0 24 24" width="14"><polyline points="20 6 9 17 4 12"></polyline></svg> <span data-i18n="t_43">Владелец</span>
                                     </span>
 </h3>
 <div style="display: flex; gap: 15px; align-items: center;">
 <p id="acc-username" style="color: var(--neon-purple); font-weight: 600; margin-bottom: 0;">@username</p>
 <span style="color: var(--text-muted);">|</span>
-<p id="acc-status-text" style="color: var(--text-muted); font-style: italic; margin-bottom: 0; font-size: 0.9rem;">Установите статус...</p>
+<p id="acc-status-text" style="color: var(--text-muted); font-style: italic; margin-bottom: 0; font-size: 0.9rem;"><span data-i18n="t_44">Установите статус...</span></p>
 </div>
 </div>
 <div style="padding-top: 15px;">
-<button class="btn" id="edit-profile-btn" style="background: rgba(0,0,0,0.5); color: white; border: 1px solid rgba(255,255,255,0.2); padding: 8px 20px; backdrop-filter: blur(5px); z-index: 2;">Редактировать</button>
+<button class="btn" id="edit-profile-btn" style="background: rgba(0,0,0,0.5); color: white; border: 1px solid rgba(255,255,255,0.2); padding: 8px 20px; backdrop-filter: blur(5px); z-index: 2;"><span data-i18n="t_45">Редактировать</span></button>
 </div>
 </div>
 </div>
 <!-- Hidden inputs for files -->
-<input accept="image/*" id="banner-upload-input" style="display: none;" type="file"/>
+<input accept="image/*" id="banner-upload-input" style="display: none;" type="file"></input>
 <!-- Profile Edit Form -->
 <div id="profile-edit-form" style="display: none; margin-bottom: 30px; background: rgba(0,0,0,0.3); padding: 20px; border-radius: 10px; border: 1px solid rgba(255,255,255,0.1);">
 <div class="input-group">
-<label>Никнейм</label>
-<input id="edit-nickname" required="" type="text"/>
+<label><span data-i18n="t_46">Никнейм</span></label>
+<input id="edit-nickname" required="" type="text"></input>
 </div>
 <div class="input-group">
-<label>@Username (уникальный)</label>
-<input id="edit-username" required="" type="text"/>
+<label><span data-i18n="t_47">@Username (уникальный)</span></label>
+<input id="edit-username" required="" type="text"></input>
 </div>
 <div class="input-group">
-<label>Обо мне (статус)</label>
-<input id="edit-status" placeholder="Кратко о себе..." type="text"/>
+<label><span data-i18n="t_48">Обо мне (статус)</span></label>
+<input id="edit-status" placeholder="Кратко о себе..." data-i18n-placeholder="t_49" type="text"></input>
 </div>
 <div style="margin-top: 15px; margin-bottom: 15px;">
-<button class="btn" id="change-banner-btn" style="width: 100%; background: transparent; border: 1px dashed var(--neon-purple); color: var(--neon-purple);">Изменить фон профиля (Баннер)</button>
+<button class="btn" id="change-banner-btn" style="width: 100%; background: transparent; border: 1px dashed var(--neon-purple); color: var(--neon-purple);"><span data-i18n="t_50">Изменить фон профиля (Баннер)</span></button>
 </div>
 <div class="auth-error" id="edit-profile-error"></div>
 <div style="display: flex; gap: 10px; margin-top: 15px;">
-<button class="btn btn-primary" id="save-profile-btn" style="flex: 1;">Сохранить</button>
-<button class="btn" id="cancel-edit-btn" style="background: transparent; border: 1px solid rgba(255,255,255,0.2); color: white;">Отмена</button>
+<button class="btn btn-primary" id="save-profile-btn" style="flex: 1;"><span data-i18n="t_51">Сохранить</span></button>
+<button class="btn" id="cancel-edit-btn" style="background: transparent; border: 1px solid rgba(255,255,255,0.2); color: white;"><span data-i18n="t_52">Отмена</span></button>
 </div>
 </div>
-<h3 style="color: var(--neon-primary); margin-bottom: 15px;">Управление подписками</h3>
+<h3 style="color: var(--neon-primary); margin-bottom: 15px;"><span data-i18n="t_53">Управление подписками</span></h3>
 <div class="features" style="margin-bottom: 30px;">
 <div class="feature-item">
 <h4 style="margin-bottom: 10px;">AUREX</h4>
-<p style="font-size: 0.9rem; color: var(--text-muted); margin-bottom: 15px;">Статус: <span id="acc-flora-status" style="color: #ff4444;">Не активна</span></p>
-<button class="btn btn-primary" style="padding: 8px 15px; font-size: 0.9rem;">Приобрести</button>
+<p style="font-size: 0.9rem; color: var(--text-muted); margin-bottom: 15px;"><span data-i18n="t_54">Статус:</span> <span id="acc-flora-status" style="color: #ff4444;"><span data-i18n="t_55">Не активна</span></span></p>
+<button class="btn btn-primary" style="padding: 8px 15px; font-size: 0.9rem;"><span data-i18n="t_56">Приобрести</span></button>
 </div>
 </div>
 <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
-<h3 style="color: var(--neon-primary); margin: 0;">Оставить отзыв</h3>
-<button class="btn" id="toggle-review-btn" style="background: transparent; color: var(--neon-primary); border: 1px solid var(--neon-primary); padding: 5px 15px; border-radius: 5px; cursor: pointer;">Развернуть</button>
+<h3 style="color: var(--neon-primary); margin: 0;"><span data-i18n="t_57">Оставить отзыв</span></h3>
+<button class="btn" id="toggle-review-btn" style="background: transparent; color: var(--neon-primary); border: 1px solid var(--neon-primary); padding: 5px 15px; border-radius: 5px; cursor: pointer;"><span data-i18n="t_58">Развернуть</span></button>
 <button id="ai-stop-btn" style="display: none; background: #ff0033;">
 <svg fill="currentColor" height="24" viewbox="0 0 24 24" width="24">
 <rect height="12" width="12" x="6" y="6"></rect>
@@ -316,23 +317,23 @@
 </div>
 <div id="review-form-container" style="display: none; background: rgba(0,0,0,0.3); padding: 20px; border-radius: 10px; border: 1px solid rgba(255,255,255,0.1); margin-bottom: 30px;">
 <div style="background: rgba(255,255,255,0.05); padding: 15px; border-radius: 8px; margin-bottom: 20px; border-left: 3px solid var(--neon-purple);">
-<h4 style="margin-top: 0; color: var(--neon-purple); margin-bottom: 5px;">📝 Правила публикации отзыва</h4>
+<h4 style="margin-top: 0; color: var(--neon-purple); margin-bottom: 5px;"><span data-i18n="t_59">📝 Правила публикации отзыва</span></h4>
 <ul style="color: var(--text-muted); font-size: 0.85rem; margin: 0; padding-left: 20px; line-height: 1.5;">
-<li>Пожалуйста, пишите конструктивно и по делу.</li>
-<li>Запрещено использование нецензурной лексики, оскорблений и 18+ контента.</li>
-<li>Администрация оставляет за собой право удалить отзыв при нарушении правил.</li>
+<li><span data-i18n="t_60">Пожалуйста, пишите конструктивно и по делу.</span></li>
+<li><span data-i18n="t_61">Запрещено использование нецензурной лексики, оскорблений и 18+ контента.</span></li>
+<li><span data-i18n="t_62">Администрация оставляет за собой право удалить отзыв при нарушении правил.</span></li>
 </ul>
 </div>
 <div class="input-group">
-<label>Оценка (1-5)</label>
-<input id="review-rating" max="5" min="1" required="" style="width: 100px;" type="number" value="5"/>
+<label><span data-i18n="t_63">Оценка (1-5)</span></label>
+<input id="review-rating" max="5" min="1" required="" style="width: 100px;" type="number" value="5"></input>
 </div>
 <div class="input-group">
-<label>Ваш отзыв</label>
-<textarea id="review-text" placeholder="Напишите, что вы думаете о нашем сайте..." required="" rows="3" style="width: 100%; background: transparent; border: 1px solid rgba(255,255,255,0.2); color: white; border-radius: 5px; padding: 10px;"></textarea>
+<label><span data-i18n="t_64">Ваш отзыв</span></label>
+<textarea id="review-text" placeholder="Напишите, что вы думаете о нашем сайте..." data-i18n-placeholder="t_65" required="" rows="3" style="width: 100%; background: transparent; border: 1px solid rgba(255,255,255,0.2); color: white; border-radius: 5px; padding: 10px;"></textarea>
 </div>
 <div class="auth-error" id="review-error"></div>
-<button class="btn btn-primary" id="submit-review-btn" style="width: 100%; margin-top: 10px;">Отправить отзыв</button>
+<button class="btn btn-primary" id="submit-review-btn" style="width: 100%; margin-top: 10px;"><span data-i18n="t_66">Отправить отзыв</span></button>
 <button id="ai-stop-btn" style="display: none; background: #ff0033;">
 <svg fill="currentColor" height="24" viewbox="0 0 24 24" width="24">
 <rect height="12" width="12" x="6" y="6"></rect>
@@ -340,7 +341,7 @@
 </button>
 </div>
 <script>
-                        document.getElementById('toggle-review-btn').addEventListener('click', function() {
+                        <span data-i18n="t_67">document.getElementById('toggle-review-btn').addEventListener('click', function() {
                             const container = document.getElementById('review-form-container');
                             if (container.style.display === 'none') {
                                 container.style.display = 'block';
@@ -349,12 +350,12 @@
                                 container.style.display = 'none';
                                 this.textContent = 'Развернуть';
                             }
-                        });
+                        });</span>
                     </script>
 <!-- Tickets Section -->
 <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; margin-top: 20px;">
-<h3 style="color: var(--neon-primary); margin: 0;">Поддержка (Тикеты)</h3>
-<button class="btn" id="toggle-ticket-btn" style="background: transparent; color: var(--neon-primary); border: 1px solid var(--neon-primary); padding: 5px 15px; border-radius: 5px; cursor: pointer;">Новый тикет</button>
+<h3 style="color: var(--neon-primary); margin: 0;"><span data-i18n="t_68">Поддержка (Тикеты)</span></h3>
+<button class="btn" id="toggle-ticket-btn" style="background: transparent; color: var(--neon-primary); border: 1px solid var(--neon-primary); padding: 5px 15px; border-radius: 5px; cursor: pointer;"><span data-i18n="t_69">Новый тикет</span></button>
 <button id="ai-stop-btn" style="display: none; background: #ff0033;">
 <svg fill="currentColor" height="24" viewbox="0 0 24 24" width="24">
 <rect height="12" width="12" x="6" y="6"></rect>
@@ -364,15 +365,15 @@
 <!-- Create Ticket Form -->
 <div id="ticket-form-container" style="display: none; background: rgba(0,0,0,0.3); padding: 20px; border-radius: 10px; border: 1px solid rgba(255,255,255,0.1); margin-bottom: 30px;">
 <div class="input-group">
-<label>Тема обращения</label>
-<input id="ticket-topic" placeholder="Например: Проблема с ботом Economy" required="" type="text"/>
+<label><span data-i18n="t_70">Тема обращения</span></label>
+<input id="ticket-topic" placeholder="Например: Проблема с ботом Economy" data-i18n-placeholder="t_71" required="" type="text"></input>
 </div>
 <div class="input-group" style="margin-top: 15px;">
-<label>Опишите проблему</label>
-<textarea id="ticket-message" placeholder="Здравствуйте, у меня возникла проблема..." required="" rows="4" style="width: 100%; background: transparent; border: 1px solid rgba(255,255,255,0.2); color: white; border-radius: 5px; padding: 10px;"></textarea>
+<label><span data-i18n="t_72">Опишите проблему</span></label>
+<textarea id="ticket-message" placeholder="Здравствуйте, у меня возникла проблема..." data-i18n-placeholder="t_73" required="" rows="4" style="width: 100%; background: transparent; border: 1px solid rgba(255,255,255,0.2); color: white; border-radius: 5px; padding: 10px;"></textarea>
 </div>
 <div class="auth-error" id="ticket-error"></div>
-<button class="btn btn-primary" id="submit-ticket-btn" style="width: 100%; margin-top: 15px;">Создать обращение</button>
+<button class="btn btn-primary" id="submit-ticket-btn" style="width: 100%; margin-top: 15px;"><span data-i18n="t_74">Создать обращение</span></button>
 <button id="ai-stop-btn" style="display: none; background: #ff0033;">
 <svg fill="currentColor" height="24" viewbox="0 0 24 24" width="24">
 <rect height="12" width="12" x="6" y="6"></rect>
@@ -381,10 +382,10 @@
 </div>
 <!-- User Tickets List -->
 <div id="user-tickets-container" style="display: flex; flex-direction: column; gap: 15px; margin-bottom: 30px;">
-<div style="color: var(--text-muted); text-align: center;">Загрузка тикетов...</div>
+<div style="color: var(--text-muted); text-align: center;"><span data-i18n="t_75">Загрузка тикетов...</span></div>
 </div>
 <script>
-                        document.getElementById('toggle-ticket-btn').addEventListener('click', function() {
+                        <span data-i18n="t_76">document.getElementById('toggle-ticket-btn').addEventListener('click', function() {
                             const container = document.getElementById('ticket-form-container');
                             if (container.style.display === 'none') {
                                 container.style.display = 'block';
@@ -393,42 +394,42 @@
                                 container.style.display = 'none';
                                 this.textContent = 'Новый тикет';
                             }
-                        });
+                        });</span>
                     </script>
-<button class="btn btn-secondary" onclick="document.getElementById('logout-btn').click()" style="background: #ff3333; border-color: #ff3333; width: 100%;"><i class="fa-solid fa-door-open"></i> Выйти из аккаунта</button>
+<button class="btn btn-secondary" onclick="document.getElementById('logout-btn').click()" style="background: #ff3333; border-color: #ff3333; width: 100%;"><i class="fa-solid fa-door-open"></i> <span data-i18n="t_77">Выйти из аккаунта</span></button>
 </div>
 </section>
 </div>
 <!-- Settings View -->
 <div class="view" id="view-settings">
 <div style="padding: 20px;">
-<h3 style="color: var(--neon-color); text-transform: uppercase; margin-bottom: 20px;">Внешний вид</h3>
+<h3 style="color: var(--neon-color); text-transform: uppercase; margin-bottom: 20px;"><span data-i18n="t_78">Внешний вид</span></h3>
 
-<label style="color: #fff; font-size: 1.1rem;">Выбор темы:</label>
+<label style="color: #fff; font-size: 1.1rem;"><span data-i18n="t_79">Выбор темы:</span></label>
 <div class="settings-theme-cards">
     <div class="theme-card active" id="card-matrix" onclick="changeTheme('matrix')">
         <div class="theme-card-color" style="background: linear-gradient(135deg, #e5b322, #b8860b); box-shadow: 0 0 10px #e5b322;"></div>
-        <div style="font-weight: bold; color: #e5b322;">Матрица</div>
-        <div style="font-size: 0.8rem; color: #888;">Неоновый Желтый</div>
+        <div style="font-weight: bold; color: #e5b322;"><span data-i18n="t_80">Матрица</span></div>
+        <div style="font-size: 0.8rem; color: #888;"><span data-i18n="t_81">Неоновый Желтый</span></div>
     </div>
     
     <div class="theme-card" id="card-synthwave" onclick="changeTheme('synthwave')">
         <div class="theme-card-color" style="background: linear-gradient(135deg, #b026ff, #ff0055); box-shadow: 0 0 10px #b026ff;"></div>
-        <div style="font-weight: bold; color: #b026ff;">Синтвейв</div>
-        <div style="font-size: 0.8rem; color: #888;">Розовый Неон</div>
+        <div style="font-weight: bold; color: #b026ff;"><span data-i18n="t_82">Синтвейв</span></div>
+        <div style="font-size: 0.8rem; color: #888;"><span data-i18n="t_83">Розовый Неон</span></div>
     </div>
     
     <div class="theme-card" id="card-cyberpunk" onclick="changeTheme('cyberpunk')">
         <div class="theme-card-color" style="background: linear-gradient(135deg, #00ff88, #00a8ff); box-shadow: 0 0 10px #00ff88;"></div>
-        <div style="font-weight: bold; color: #00ff88;">Киберпанк</div>
-        <div style="font-size: 0.8rem; color: #888;">Токсичный Неон</div>
+        <div style="font-weight: bold; color: #00ff88;"><span data-i18n="t_84">Киберпанк</span></div>
+        <div style="font-size: 0.8rem; color: #888;"><span data-i18n="t_85">Токсичный Неон</span></div>
     </div>
 </div>
 
 <div style="margin-top: 40px;">
-<label style="color: #fff; margin-right: 10px; font-size: 1.1rem;">Язык интерфейса:</label>
+<label style="color: #fff; margin-right: 10px; font-size: 1.1rem;"><span data-i18n="t_86">Язык интерфейса:</span></label>
 <select id="lang-selector" onchange="changeLang(this.value)" style="background: rgba(0,0,0,0.5); border: 1px solid rgba(255,255,255,0.2); color: white; padding: 10px; border-radius: 8px; cursor: pointer; font-size: 1rem; width: 200px;">
-<option value="ru">Русский (RU)</option>
+<option value="ru"><span data-i18n="t_87">Русский (RU)</span></option>
 <option value="en">English (EN)</option>
 </select>
 </div>
@@ -438,39 +439,39 @@
 <!-- Portfolio View -->
 <div class="view" id="view-portfolio">
 <div class="hero" style="min-height: 40vh; padding-top: 100px;">
-<h1 class="glitch" data-text="НАШИ БОТЫ" style="font-size: 3.5rem;">НАШИ БОТЫ</h1>
-<p>Лучшие Discord-боты для вашего сервера.</p>
+<h1 class="glitch" data-text="НАШИ БОТЫ" data-i18n-data-text="t_88" style="font-size: 3.5rem;"><span data-i18n="t_89">НАШИ БОТЫ</span></h1>
+<p><span data-i18n="t_90">Лучшие Discord-боты для вашего сервера.</span></p>
 </div>
 <div class="portfolio-grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 30px; padding: 50px;">
 <!-- Card 1 -->
 <div class="tilt-card" style="background: rgba(10,10,15,0.8); border: 1px solid var(--neon-primary); border-radius: 15px; padding: 30px; text-align: center; transition: transform 0.3s, box-shadow 0.3s; position: relative; overflow: hidden;">
 <div style="margin-bottom: 20px; color: var(--neon-primary);">
-    <svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="filter: drop-shadow(0 0 10px var(--neon-primary));"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg>
+    <svg width="64" height="64" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="filter: drop-shadow(0 0 10px var(--neon-primary));"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg>
 </div>
 <h3 style="color: var(--neon-primary); margin-bottom: 10px;">Aurex Protect</h3>
-<p style="color: #aaa; margin-bottom: 20px;">Продвинутая система модерации и анти-спама для крупных серверов.</p>
-<div style="font-weight: bold; font-size: 1.2rem; margin-bottom: 20px;">Бесплатно</div>
-<button class="glow-btn" style="width: 100%;">Добавить на сервер</button>
+<p style="color: #aaa; margin-bottom: 20px;"><span data-i18n="t_91">Продвинутая система модерации и анти-спама для крупных серверов.</span></p>
+<div style="font-weight: bold; font-size: 1.2rem; margin-bottom: 20px;"><span data-i18n="t_92">Бесплатно</span></div>
+<button class="glow-btn" style="width: 100%;"><span data-i18n="t_93">Добавить на сервер</span></button>
 </div>
 <!-- Card 2 -->
 <div class="tilt-card" style="background: rgba(10,10,15,0.8); border: 1px solid var(--neon-secondary); border-radius: 15px; padding: 30px; text-align: center; transition: transform 0.3s, box-shadow 0.3s; position: relative; overflow: hidden;">
 <div style="margin-bottom: 20px; color: var(--neon-secondary);">
-    <svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="filter: drop-shadow(0 0 10px var(--neon-secondary));"><path d="M9 18V5l12-2v13"></path><circle cx="6" cy="18" r="3"></circle><circle cx="18" cy="16" r="3"></circle></svg>
+    <svg width="64" height="64" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="filter: drop-shadow(0 0 10px var(--neon-secondary));"><path d="M9 18V5l12-2v13"></path><circle cx="6" cy="18" r="3"></circle><circle cx="18" cy="16" r="3"></circle></svg>
 </div>
 <h3 style="color: var(--neon-secondary); margin-bottom: 10px;">Aurex Music</h3>
-<p style="color: #aaa; margin-bottom: 20px;">Музыкальный бот с поддержкой Spotify, YouTube и фильтрами звука.</p>
-<div style="font-weight: bold; font-size: 1.2rem; margin-bottom: 20px;">$5 / месяц</div>
-<button class="glow-btn secondary" style="width: 100%;">Купить Premium</button>
+<p style="color: #aaa; margin-bottom: 20px;"><span data-i18n="t_94">Музыкальный бот с поддержкой Spotify, YouTube и фильтрами звука.</span></p>
+<div style="font-weight: bold; font-size: 1.2rem; margin-bottom: 20px;"><span data-i18n="t_95">$5 / месяц</span></div>
+<button class="glow-btn secondary" style="width: 100%;"><span data-i18n="t_96">Купить Premium</span></button>
 </div>
 <!-- Card 3 -->
 <div class="tilt-card" style="background: rgba(10,10,15,0.8); border: 1px solid #ff0055; border-radius: 15px; padding: 30px; text-align: center; transition: transform 0.3s, box-shadow 0.3s; position: relative; overflow: hidden;">
 <div style="margin-bottom: 20px; color: #ff0055;">
-    <svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="filter: drop-shadow(0 0 10px #ff0055);"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect><circle cx="8" cy="8" r="1.5"></circle><circle cx="16" cy="16" r="1.5"></circle><circle cx="8" cy="16" r="1.5"></circle><circle cx="16" cy="8" r="1.5"></circle><circle cx="12" cy="12" r="1.5"></circle></svg>
+    <svg width="64" height="64" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="filter: drop-shadow(0 0 10px #ff0055);"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect><circle cx="8" cy="8" r="1.5"></circle><circle cx="16" cy="16" r="1.5"></circle><circle cx="8" cy="16" r="1.5"></circle><circle cx="16" cy="8" r="1.5"></circle><circle cx="12" cy="12" r="1.5"></circle></svg>
 </div>
 <h3 style="color: #ff0055; margin-bottom: 10px;">Aurex Economy</h3>
-<p style="color: #aaa; margin-bottom: 20px;">Экономика, мини-игры, казино и уровни активности.</p>
-<div style="font-weight: bold; font-size: 1.2rem; margin-bottom: 20px;">Бесплатно</div>
-<button class="glow-btn" style="width: 100%; border-color: #ff0055; color: #ff0055; box-shadow: 0 0 10px rgba(255,0,85,0.2);">Добавить на сервер</button>
+<p style="color: #aaa; margin-bottom: 20px;"><span data-i18n="t_97">Экономика, мини-игры, казино и уровни активности.</span></p>
+<div style="font-weight: bold; font-size: 1.2rem; margin-bottom: 20px;"><span data-i18n="t_98">Бесплатно</span></div>
+<button class="glow-btn" style="width: 100%; border-color: #ff0055; color: #ff0055; box-shadow: 0 0 10px rgba(255,0,85,0.2);"><span data-i18n="t_99">Добавить на сервер</span></button>
 </div>
 </div>
 </div>
@@ -499,13 +500,13 @@
             100% { transform: translate(0) }
         }
     </style>
-<script src="{{ url_for('static', filename='script.js') }}?v=58"></script>
+<script src="{{ url_for('static', filename='script.js') }}?v=59"></script>
 <!-- Hacker Terminal -->
 <div class="view" id="view-hacker" style="background: #000; color: #0f0; font-family: monospace; padding: 20px; font-size: 16px; overflow-y: auto; height: 100vh; width: 100%; box-sizing: border-box;">
 <div id="hacker-output"></div>
 <div style="display: flex;">
 <span style="color: #0f0; margin-right: 5px;">root@aurexis:~#</span>
-<input id="hacker-input" style="background: transparent; border: none; color: #0f0; outline: none; flex: 1; font-family: monospace; font-size: 16px;" type="text"/>
+<input id="hacker-input" style="background: transparent; border: none; color: #0f0; outline: none; flex: 1; font-family: monospace; font-size: 16px;" type="text"></input>
 </div>
 </div>
 <!-- Code Editor Window -->
@@ -514,22 +515,22 @@
 <div style="background: #111; border: 1px solid #333; border-bottom: none; padding: 10px; border-top-left-radius: 5px; border-top-right-radius: 5px;">
 <button onclick="runCode()" style="background: #2ed573; color: #000; border: none; padding: 8px 20px; border-radius: 3px; cursor: pointer; font-weight: bold;">▶ Run Code</button>
 </div>
-<textarea id="code-textarea" spellcheck="false" style="flex: 1; background: #000; color: #00a8ff; font-family: monospace; font-size: 16px; border: 1px solid #333; padding: 15px; outline: none; resize: none;"># Пиши код бота здесь...
+<textarea id="code-textarea" spellcheck="false" style="flex: 1; background: #000; color: #00a8ff; font-family: monospace; font-size: 16px; border: 1px solid #333; padding: 15px; outline: none; resize: none;"><span data-i18n="t_100"># Пиши код бота здесь...
 def on_message(msg):
     if msg == 'ping':
-        return 'pong'</textarea>
+        return 'pong'</span></textarea>
 <div id="code-output" style="height: 150px; background: #111; color: #fff; padding: 15px; font-family: monospace; font-size: 14px; overflow-y: auto; border: 1px solid #333; border-top: none; border-bottom-left-radius: 5px; border-bottom-right-radius: 5px;">Output will appear here...</div>
 </div>
 </main>
 <!-- Footer -->
 <footer>
-<p>© 2026 Aurexis Studio. Все права защищены.</p>
+<p><span data-i18n="t_101">© 2026 Aurexis Studio. Все права защищены.</span></p>
 <p class="footer-links">
-<a href="https://discord.gg/k9CGaGGtCx" target="_blank">Discord Сервер</a>
+<a href="https://discord.gg/k9CGaGGtCx" target="_blank"><span data-i18n="t_102">Discord Сервер</span></a>
 <span class="separator">|</span>
-<a href="#" id="open-tos">Правила использования</a>
+<a href="#" id="open-tos"><span data-i18n="t_103">Правила использования</span></a>
 <span class="separator">|</span>
-<a href="#" id="open-privacy">Политика конфиденциальности</a>
+<a href="#" id="open-privacy"><span data-i18n="t_104">Политика конфиденциальности</span></a>
 </p>
 </footer>
 <!-- Modals -->
@@ -537,14 +538,14 @@ def on_message(msg):
 <div class="modal" id="ticket-modal">
 <div class="modal-content" style="max-width: 600px; padding: 20px;">
 <span class="close-btn" id="close-ticket-modal">×</span>
-<h2 id="ticket-chat-title" style="margin-top: 0; color: var(--neon-primary); font-size: 1.5rem; margin-bottom: 5px;">Тикет #123</h2>
-<div id="ticket-chat-status" style="margin-bottom: 15px; font-size: 0.9rem;">Статус: <span style="color: #00ffaa;">Открыт</span></div>
+<h2 id="ticket-chat-title" style="margin-top: 0; color: var(--neon-primary); font-size: 1.5rem; margin-bottom: 5px;"><span data-i18n="t_105">Тикет #123</span></h2>
+<div id="ticket-chat-status" style="margin-bottom: 15px; font-size: 0.9rem;"><span data-i18n="t_106">Статус:</span> <span style="color: #00ffaa;"><span data-i18n="t_107">Открыт</span></span></div>
 <div id="ticket-messages" style="background: rgba(0,0,0,0.5); border: 1px solid rgba(255,255,255,0.1); border-radius: 8px; height: 300px; overflow-y: auto; padding: 15px; display: flex; flex-direction: column; gap: 10px; margin-bottom: 15px;">
 <!-- Messages go here -->
 </div>
 <div id="ticket-reply-container" style="display: flex; gap: 10px;">
-<input id="ticket-reply-input" placeholder="Напишите ответ..." style="flex-grow: 1; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.2); border-radius: 5px; color: white; padding: 10px; outline: none;" type="text"/>
-<button class="btn btn-primary" id="send-ticket-reply-btn" style="padding: 10px 20px;">Отправить</button>
+<input id="ticket-reply-input" placeholder="Напишите ответ..." data-i18n-placeholder="t_108" style="flex-grow: 1; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.2); border-radius: 5px; color: white; padding: 10px; outline: none;" type="text"></input>
+<button class="btn btn-primary" id="send-ticket-reply-btn" style="padding: 10px 20px;"><span data-i18n="t_109">Отправить</span></button>
 </div>
 </div>
 </div>
@@ -554,83 +555,83 @@ def on_message(msg):
 <div class="modal-content auth-modal">
 <span class="close-btn">×</span>
 <div class="auth-tabs">
-<button class="auth-tab active" data-tab="login">Вход</button>
-<button class="auth-tab" data-tab="register">Регистрация</button>
+<button class="auth-tab active" data-tab="login"><span data-i18n="t_110">Вход</span></button>
+<button class="auth-tab" data-tab="register"><span data-i18n="t_111">Регистрация</span></button>
 </div>
 <!-- Login Form -->
 <form class="auth-form" id="login-form">
 <div class="input-group">
-<label for="login-email">Почта</label>
-<input id="login-email" placeholder="example@mail.com" required="" type="email"/>
+<label for="login-email"><span data-i18n="t_112">Почта</span></label>
+<input id="login-email" placeholder="example@mail.com" required="" type="email"></input>
 </div>
 <div class="input-group">
-<label for="login-password">Пароль</label>
-<input id="login-password" placeholder="••••••••" required="" type="password"/>
+<label for="login-password"><span data-i18n="t_113">Пароль</span></label>
+<input id="login-password" placeholder="••••••••" required="" type="password"></input>
 </div>
 <div class="auth-error" id="login-error"></div>
-<button class="btn btn-primary auth-submit-btn" style="width: 100%; margin-top: 10px;" type="submit">Войти</button>
+<button class="btn btn-primary auth-submit-btn" style="width: 100%; margin-top: 10px;" type="submit"><span data-i18n="t_114">Войти</span></button>
 <div style="text-align: center; margin-top: 15px;">
-<a href="#" id="forgot-password-link" style="color: var(--neon-purple); font-size: 0.9rem; text-decoration: none;">Забыли пароль?</a>
+<a href="#" id="forgot-password-link" style="color: var(--neon-purple); font-size: 0.9rem; text-decoration: none;"><span data-i18n="t_115">Забыли пароль?</span></a>
 </div>
 </form>
 <!-- Register Form -->
 <form class="auth-form" id="register-form" style="display: none;">
 <div class="input-group">
-<label for="reg-nickname">Никнейм</label>
-<input id="reg-nickname" placeholder="Ваш никнейм" required="" type="text"/>
+<label for="reg-nickname"><span data-i18n="t_116">Никнейм</span></label>
+<input id="reg-nickname" placeholder="Ваш никнейм" data-i18n-placeholder="t_117" required="" type="text"></input>
 </div>
 <div class="input-group">
-<label for="reg-email">Почта</label>
-<input id="reg-email" placeholder="example@mail.com" required="" type="email"/>
+<label for="reg-email"><span data-i18n="t_118">Почта</span></label>
+<input id="reg-email" placeholder="example@mail.com" required="" type="email"></input>
 </div>
 <div class="input-group">
-<label for="reg-password">Пароль (минимум 8 символов)</label>
-<input id="reg-password" minlength="8" placeholder="••••••••" required="" type="password"/>
+<label for="reg-password"><span data-i18n="t_119">Пароль (минимум 8 символов)</span></label>
+<input id="reg-password" minlength="8" placeholder="••••••••" required="" type="password"></input>
 </div>
 <div class="auth-error" id="reg-error"></div>
-<button class="btn btn-primary auth-submit-btn" style="width: 100%; margin-top: 10px;" type="submit">Продолжить</button>
+<button class="btn btn-primary auth-submit-btn" style="width: 100%; margin-top: 10px;" type="submit"><span data-i18n="t_120">Продолжить</span></button>
 </form>
 <!-- Verification Form -->
 <form class="auth-form" id="verify-form" style="display: none;">
-<h3 style="text-align: center; margin-bottom: 10px;">Подтверждение почты</h3>
-<p style="text-align: center; font-size: 0.9rem; color: var(--text-muted); margin-bottom: 15px;">Мы отправили код на <span id="verify-email-display" style="color: var(--neon-primary);"></span></p>
+<h3 style="text-align: center; margin-bottom: 10px;"><span data-i18n="t_121">Подтверждение почты</span></h3>
+<p style="text-align: center; font-size: 0.9rem; color: var(--text-muted); margin-bottom: 15px;"><span data-i18n="t_122">Мы отправили код на</span> <span id="verify-email-display" style="color: var(--neon-primary);"></span></p>
 <div class="input-group">
-<label for="verify-code">Код подтверждения</label>
-<input id="verify-code" placeholder="Код из письма" required="" type="text"/>
+<label for="verify-code"><span data-i18n="t_123">Код подтверждения</span></label>
+<input id="verify-code" placeholder="Код из письма" data-i18n-placeholder="t_124" required="" type="text"></input>
 </div>
 <div class="auth-error" id="verify-error"></div>
-<button class="btn btn-primary auth-submit-btn" style="width: 100%; margin-top: 10px;" type="submit">Подтвердить и Войти</button>
-<button class="btn" id="back-to-reg" style="background: transparent; color: var(--text-muted); margin-top: 5px; width: 100%;" type="button">Назад</button>
+<button class="btn btn-primary auth-submit-btn" style="width: 100%; margin-top: 10px;" type="submit"><span data-i18n="t_125">Подтвердить и Войти</span></button>
+<button class="btn" id="back-to-reg" style="background: transparent; color: var(--text-muted); margin-top: 5px; width: 100%;" type="button"><span data-i18n="t_126">Назад</span></button>
 </form>
 <!-- Forgot Password Form -->
 <form class="auth-form" id="forgot-password-form" style="display: none;">
-<h3 style="text-align: center; margin-bottom: 20px; color: var(--neon-primary);">Восстановление пароля</h3>
-<p style="text-align: center; color: var(--text-muted); font-size: 0.9rem; margin-bottom: 15px;">Введите почту, привязанную к аккаунту.</p>
+<h3 style="text-align: center; margin-bottom: 20px; color: var(--neon-primary);"><span data-i18n="t_127">Восстановление пароля</span></h3>
+<p style="text-align: center; color: var(--text-muted); font-size: 0.9rem; margin-bottom: 15px;"><span data-i18n="t_128">Введите почту, привязанную к аккаунту.</span></p>
 <div class="input-group">
-<input id="forgot-email" placeholder="example@mail.com" required="" type="email"/>
+<input id="forgot-email" placeholder="example@mail.com" required="" type="email"></input>
 </div>
 <div class="auth-error" id="forgot-error"></div>
-<button class="btn btn-primary auth-submit-btn" style="width: 100%; margin-top: 10px;" type="submit">Отправить код</button>
-<button class="btn" id="back-to-login" style="background: transparent; color: var(--text-muted); margin-top: 5px; width: 100%;" type="button">Назад ко входу</button>
+<button class="btn btn-primary auth-submit-btn" style="width: 100%; margin-top: 10px;" type="submit"><span data-i18n="t_129">Отправить код</span></button>
+<button class="btn" id="back-to-login" style="background: transparent; color: var(--text-muted); margin-top: 5px; width: 100%;" type="button"><span data-i18n="t_130">Назад ко входу</span></button>
 </form>
 <!-- Verify Reset Code Form -->
 <form class="auth-form" id="verify-reset-form" style="display: none;">
-<h3 style="text-align: center; margin-bottom: 20px; color: var(--neon-primary);">Подтверждение</h3>
-<p style="text-align: center; color: var(--text-muted); font-size: 0.9rem; margin-bottom: 15px;">Мы отправили код на: <br/><strong id="reset-email-display" style="color: white;"></strong></p>
+<h3 style="text-align: center; margin-bottom: 20px; color: var(--neon-primary);"><span data-i18n="t_131">Подтверждение</span></h3>
+<p style="text-align: center; color: var(--text-muted); font-size: 0.9rem; margin-bottom: 15px;"><span data-i18n="t_132">Мы отправили код на:</span> <br></br><strong id="reset-email-display" style="color: white;"></strong></p>
 <div class="input-group">
-<input autocomplete="off" id="reset-code" placeholder="123456" required="" type="text"/>
+<input autocomplete="off" id="reset-code" placeholder="123456" required="" type="text"></input>
 </div>
 <div class="auth-error" id="reset-verify-error"></div>
-<button class="btn btn-primary auth-submit-btn" style="width: 100%; margin-top: 10px;" type="submit">Проверить код</button>
+<button class="btn btn-primary auth-submit-btn" style="width: 100%; margin-top: 10px;" type="submit"><span data-i18n="t_133">Проверить код</span></button>
 </form>
 <!-- New Password Form -->
 <form class="auth-form" id="new-password-form" style="display: none;">
-<h3 style="text-align: center; margin-bottom: 20px; color: var(--neon-primary);">Новый пароль</h3>
+<h3 style="text-align: center; margin-bottom: 20px; color: var(--neon-primary);"><span data-i18n="t_134">Новый пароль</span></h3>
 <div class="input-group">
-<input id="new-password-input" minlength="6" placeholder="Минимум 6 символов" required="" type="password"/>
+<input id="new-password-input" minlength="6" placeholder="Минимум 6 символов" data-i18n-placeholder="t_135" required="" type="password"></input>
 </div>
 <div class="auth-error" id="new-password-error"></div>
-<button class="btn btn-primary auth-submit-btn" style="width: 100%; margin-top: 10px;" type="submit">Сохранить пароль</button>
+<button class="btn btn-primary auth-submit-btn" style="width: 100%; margin-top: 10px;" type="submit"><span data-i18n="t_136">Сохранить пароль</span></button>
 </form>
 <div id="google-auth-container" style="margin-top: 20px; text-align: center;">
 <div data-auto_prompt="false" data-callback="handleGoogleCredentialResponse" data-client_id="1084923076435-lm6o4m2r8himeooi1sbdcveiio7kelb5.apps.googleusercontent.com" data-context="signin" data-ux_mode="popup" id="g_id_onload">
@@ -643,57 +644,57 @@ def on_message(msg):
 <div class="modal" id="modal-tos">
 <div class="modal-content" style="max-height: 80vh; overflow-y: auto;">
 <span class="close-btn">×</span>
-<h2 style="color: var(--neon-primary); margin-bottom: 20px;">Правила использования (Terms of Service)</h2>
+<h2 style="color: var(--neon-primary); margin-bottom: 20px;"><span data-i18n="t_137">Правила использования (Terms of Service)</span></h2>
 <div style="color: var(--text-muted); line-height: 1.6; text-align: left;">
-<p><strong>1. Общие положения</strong></p>
-<p style="margin-bottom: 15px;">Добро пожаловать в Aurexis Studio. Используя наш сайт, ботов или иные услуги (далее — "Сервисы"), вы соглашаетесь с настоящими Правилами. Если вы не согласны хотя бы с одним из пунктов, пожалуйста, прекратите использование наших Сервисов.</p>
-<p><strong>2. Использование сервисов</strong></p>
-<p style="margin-bottom: 15px;">2.1. Запрещено использовать Сервисы для спама, фишинга, DDoS-атак, распространения вредоносного ПО и любых действий, нарушающих законодательство РФ или правила платформ (например, Discord TOS).<br/>
-                2.2. Запрещена любая попытка взлома, реверс-инжиниринга или намеренного создания чрезмерной нагрузки на инфраструктуру Aurexis Studio.<br/>
-                2.3. Пользователь обязуется не использовать ботов для мошенничества или обмана других пользователей.</p>
-<p><strong>3. Аккаунты и подписки (AUREX)</strong></p>
-<p style="margin-bottom: 15px;">3.1. Вы несете ответственность за безопасность вашего аккаунта (логин/пароль).<br/>
-                3.2. Доступ к премиум-услугам (например, AUREX) предоставляется "как есть". Администрация имеет право аннулировать подписку без возврата средств в случае грубого нарушения настоящих правил.<br/>
-                3.3. Передача, продажа или обмен премиум-аккаунтами или подписками запрещены без письменного разрешения Администрации.</p>
-<p><strong>4. Ограничение ответственности</strong></p>
-<p style="margin-bottom: 15px;">4.1. Сервисы предоставляются "как есть" (AS IS). Aurexis Studio не гарантирует 100% аптайм (бесперебойную работу) и не несет ответственности за возможные сбои, потерю данных или упущенную выгоду.<br/>
-                4.2. Администрация оставляет за собой право изменять функционал ботов и сайта без предварительного уведомления.</p>
-<p><strong>5. Изменение правил</strong></p>
-<p>Администрация оставляет за собой право изменять данные Правила. Продолжение использования Сервисов после внесения изменений означает ваше согласие с новой редакцией.</p>
+<p><strong><span data-i18n="t_138">1. Общие положения</span></strong></p>
+<p style="margin-bottom: 15px;"><span data-i18n="t_139">Добро пожаловать в Aurexis Studio. Используя наш сайт, ботов или иные услуги (далее — "Сервисы"), вы соглашаетесь с настоящими Правилами. Если вы не согласны хотя бы с одним из пунктов, пожалуйста, прекратите использование наших Сервисов.</span></p>
+<p><strong><span data-i18n="t_140">2. Использование сервисов</span></strong></p>
+<p style="margin-bottom: 15px;"><span data-i18n="t_141">2.1. Запрещено использовать Сервисы для спама, фишинга, DDoS-атак, распространения вредоносного ПО и любых действий, нарушающих законодательство РФ или правила платформ (например, Discord TOS).</span><br></br>
+                <span data-i18n="t_142">2.2. Запрещена любая попытка взлома, реверс-инжиниринга или намеренного создания чрезмерной нагрузки на инфраструктуру Aurexis Studio.</span><br></br>
+                <span data-i18n="t_143">2.3. Пользователь обязуется не использовать ботов для мошенничества или обмана других пользователей.</span></p>
+<p><strong><span data-i18n="t_144">3. Аккаунты и подписки (AUREX)</span></strong></p>
+<p style="margin-bottom: 15px;"><span data-i18n="t_145">3.1. Вы несете ответственность за безопасность вашего аккаунта (логин/пароль).</span><br></br>
+                <span data-i18n="t_146">3.2. Доступ к премиум-услугам (например, AUREX) предоставляется "как есть". Администрация имеет право аннулировать подписку без возврата средств в случае грубого нарушения настоящих правил.</span><br></br>
+                <span data-i18n="t_147">3.3. Передача, продажа или обмен премиум-аккаунтами или подписками запрещены без письменного разрешения Администрации.</span></p>
+<p><strong><span data-i18n="t_148">4. Ограничение ответственности</span></strong></p>
+<p style="margin-bottom: 15px;"><span data-i18n="t_149">4.1. Сервисы предоставляются "как есть" (AS IS). Aurexis Studio не гарантирует 100% аптайм (бесперебойную работу) и не несет ответственности за возможные сбои, потерю данных или упущенную выгоду.</span><br></br>
+                <span data-i18n="t_150">4.2. Администрация оставляет за собой право изменять функционал ботов и сайта без предварительного уведомления.</span></p>
+<p><strong><span data-i18n="t_151">5. Изменение правил</span></strong></p>
+<p><span data-i18n="t_152">Администрация оставляет за собой право изменять данные Правила. Продолжение использования Сервисов после внесения изменений означает ваше согласие с новой редакцией.</span></p>
 </div>
 </div>
 </div>
 <div class="modal" id="modal-privacy">
 <div class="modal-content" style="max-height: 80vh; overflow-y: auto;">
 <span class="close-btn">×</span>
-<h2 style="color: var(--neon-primary); margin-bottom: 20px;">Политика конфиденциальности (Privacy Policy)</h2>
+<h2 style="color: var(--neon-primary); margin-bottom: 20px;"><span data-i18n="t_153">Политика конфиденциальности (Privacy Policy)</span></h2>
 <div style="color: var(--text-muted); line-height: 1.6; text-align: left;">
-<p><strong>1. Сбор информации</strong></p>
-<p style="margin-bottom: 15px;">Мы собираем только ту информацию, которая необходима для стабильной работы наших сервисов. Сюда входят:<br/>
-                - Данные, предоставленные при регистрации (email, никнейм).<br/>
-                - Публичные данные профиля (аватар, юзернейм).<br/>
-                - Технические данные от ботов (ID Discord-сервера, ID пользователя), если вы используете наших ботов.</p>
-<p><strong>2. Использование информации</strong></p>
-<p style="margin-bottom: 15px;">Мы используем собранные данные для:<br/>
-                - Аутентификации и предоставления доступа к личному кабинету.<br/>
-                - Обработки ваших отзывов и отображения их на сайте.<br/>
-                - Улучшения работы ботов и устранения технических ошибок.</p>
-<p><strong>3. Защита и хранение данных</strong></p>
-<p style="margin-bottom: 15px;">3.1. Мы не продаем, не обмениваем и не передаем ваши персональные данные третьим лицам без вашего согласия, за исключением случаев, предусмотренных законом.<br/>
-                3.2. Пароли пользователей не хранятся в открытом виде (используется необратимое хеширование).<br/>
-                3.3. Данные хранятся на защищенных серверах с использованием современных протоколов шифрования.</p>
-<p><strong>4. Ваши права</strong></p>
-<p style="margin-bottom: 15px;">Вы имеете полное право:<br/>
-                - Запросить информацию о том, какие ваши данные мы храним.<br/>
-                - В любой момент изменить свой никнейм, юзернейм или аватар через Личный кабинет.<br/>
-                - Запросить полное удаление вашего аккаунта и всех связанных данных из нашей базы.</p>
-<p><strong>5. Использование Cookies</strong></p>
-<p>Наш сайт использует сессионные cookies исключительно для поддержания вашей авторизации на сайте. Мы не используем cookies для слежки или таргетированной рекламы.</p>
+<p><strong><span data-i18n="t_154">1. Сбор информации</span></strong></p>
+<p style="margin-bottom: 15px;"><span data-i18n="t_155">Мы собираем только ту информацию, которая необходима для стабильной работы наших сервисов. Сюда входят:</span><br></br>
+                <span data-i18n="t_156">- Данные, предоставленные при регистрации (email, никнейм).</span><br></br>
+                <span data-i18n="t_157">- Публичные данные профиля (аватар, юзернейм).</span><br></br>
+                <span data-i18n="t_158">- Технические данные от ботов (ID Discord-сервера, ID пользователя), если вы используете наших ботов.</span></p>
+<p><strong><span data-i18n="t_159">2. Использование информации</span></strong></p>
+<p style="margin-bottom: 15px;"><span data-i18n="t_160">Мы используем собранные данные для:</span><br></br>
+                <span data-i18n="t_161">- Аутентификации и предоставления доступа к личному кабинету.</span><br></br>
+                <span data-i18n="t_162">- Обработки ваших отзывов и отображения их на сайте.</span><br></br>
+                <span data-i18n="t_163">- Улучшения работы ботов и устранения технических ошибок.</span></p>
+<p><strong><span data-i18n="t_164">3. Защита и хранение данных</span></strong></p>
+<p style="margin-bottom: 15px;"><span data-i18n="t_165">3.1. Мы не продаем, не обмениваем и не передаем ваши персональные данные третьим лицам без вашего согласия, за исключением случаев, предусмотренных законом.</span><br></br>
+                <span data-i18n="t_166">3.2. Пароли пользователей не хранятся в открытом виде (используется необратимое хеширование).</span><br></br>
+                <span data-i18n="t_167">3.3. Данные хранятся на защищенных серверах с использованием современных протоколов шифрования.</span></p>
+<p><strong><span data-i18n="t_168">4. Ваши права</span></strong></p>
+<p style="margin-bottom: 15px;"><span data-i18n="t_169">Вы имеете полное право:</span><br></br>
+                <span data-i18n="t_170">- Запросить информацию о том, какие ваши данные мы храним.</span><br></br>
+                <span data-i18n="t_171">- В любой момент изменить свой никнейм, юзернейм или аватар через Личный кабинет.</span><br></br>
+                <span data-i18n="t_172">- Запросить полное удаление вашего аккаунта и всех связанных данных из нашей базы.</span></p>
+<p><strong><span data-i18n="t_173">5. Использование Cookies</span></strong></p>
+<p><span data-i18n="t_174">Наш сайт использует сессионные cookies исключительно для поддержания вашей авторизации на сайте. Мы не используем cookies для слежки или таргетированной рекламы.</span></p>
 </div>
 </div>
 </div> <!-- Close main container -->
 <!-- Hidden file input for avatar -->
-<input accept="image/*" id="avatar-upload-input" style="display: none;" type="file"/>
+<input accept="image/*" id="avatar-upload-input" style="display: none;" type="file"></input>
 <!-- EASTER EGG TERMINAL -->
 </body>
 </html>
