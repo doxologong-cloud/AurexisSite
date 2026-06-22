@@ -419,8 +419,16 @@ def add_review():
     if not text or not rating:
         return jsonify({"success": False, "message": "Заполните все поля."})
         
+    email = session['user']['email']
+    
+    # Check if user already reviewed
+    check_url = f"{SUPABASE_URL}/rest/v1/reviews?email=eq.{email}&select=id"
+    check_res = requests.get(check_url, headers=get_supabase_headers())
+    if check_res.status_code == 200 and len(check_res.json()) > 0:
+        return jsonify({"success": False, "message": "Вы уже оставляли отзыв!"})
+        
     url = f"{SUPABASE_URL}/rest/v1/reviews"
-    payload = {"email": session['user']['email'], "rating": int(rating), "text": text}
+    payload = {"email": email, "rating": int(rating), "text": text}
     res = requests.post(url, json=payload, headers=get_supabase_headers())
     if res.status_code in [200, 201]:
         return jsonify({"success": True})
