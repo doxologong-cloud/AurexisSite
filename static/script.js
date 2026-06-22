@@ -1860,12 +1860,11 @@ function triggerApocalypse() {
                                                         }, duration);
                                                     }
                                                     
-                                                    // Subtle glitches
-                                                    const elementsToGlitch = document.querySelectorAll('.bot-card, .section-title, .nav-brand');
-                                                    let glitchInterval;
-                                                    
                                                     setTimeout(() => showThought("Вроде всё нормально...", 3000), 2000);
                                                     
+                                                    // Subtle glitches start
+                                                    const elementsToGlitch = document.querySelectorAll('.bot-card, .section-title, .nav-brand, .dropdown-item, p');
+                                                    let glitchInterval;
                                                     setTimeout(() => {
                                                         glitchInterval = setInterval(() => {
                                                             const el = elementsToGlitch[Math.floor(Math.random() * elementsToGlitch.length)];
@@ -1876,28 +1875,74 @@ function triggerApocalypse() {
                                                                 el.style.transform = 'none';
                                                                 el.style.filter = 'none';
                                                             }, 150);
-                                                        }, 2000);
+                                                        }, 500);
                                                     }, 5000);
                                                     
                                                     setTimeout(() => showThought("Сайт как-то странно моргает... Показалось?", 4000), 8000);
                                                     
+                                                    // Escalate glitches: elements start breaking and falling
                                                     setTimeout(() => {
-                                                        document.body.style.filter = 'invert(1)';
-                                                        setTimeout(() => document.body.style.filter = 'none', 100);
-                                                        setTimeout(() => document.body.style.filter = 'invert(1)', 300);
-                                                        setTimeout(() => document.body.style.filter = 'none', 400);
-                                                    }, 15000);
+                                                        const allNodes = document.body.querySelectorAll('*');
+                                                        allNodes.forEach(node => {
+                                                            if (Math.random() > 0.95 && node.tagName !== 'SCRIPT' && node.tagName !== 'STYLE' && node.tagName !== 'LINK') {
+                                                                node.style.transition = 'transform 5s, opacity 5s';
+                                                                node.style.transform = `translateY(${Math.random()*500}px) rotate(${Math.random()*90 - 45}deg)`;
+                                                                node.style.opacity = '0.5';
+                                                                node.style.pointerEvents = 'none';
+                                                            }
+                                                        });
+                                                    }, 13000);
                                                     
-                                                    setTimeout(() => showThought("ЧТО ЗА ХРЕНЬ?!", 2000), 16000);
+                                                    // Matrix code overlay
+                                                    setTimeout(() => {
+                                                        showThought("ЧТО ПРОИСХОДИТ С КОДОМ?!", 3000);
+                                                        const codeOverlay = document.createElement('div');
+                                                        codeOverlay.style.position = 'fixed';
+                                                        codeOverlay.style.top = '0';
+                                                        codeOverlay.style.left = '0';
+                                                        codeOverlay.style.width = '100vw';
+                                                        codeOverlay.style.height = '100vh';
+                                                        codeOverlay.style.pointerEvents = 'none';
+                                                        codeOverlay.style.zIndex = '9999999';
+                                                        codeOverlay.style.fontFamily = 'monospace';
+                                                        codeOverlay.style.fontSize = '14px';
+                                                        codeOverlay.style.color = '#ff0000';
+                                                        codeOverlay.style.overflow = 'hidden';
+                                                        document.body.appendChild(codeOverlay);
+                                                        
+                                                        setInterval(() => {
+                                                            const t = document.createElement('div');
+                                                            t.innerText = "FATAL ERROR: OVERFLOW AT 0x" + Math.floor(Math.random()*16777215).toString(16) + " | SYSTEM COMPROMISED";
+                                                            t.style.position = 'absolute';
+                                                            t.style.left = Math.random() * 100 + 'vw';
+                                                            t.style.top = Math.random() * 100 + 'vh';
+                                                            t.style.opacity = Math.random();
+                                                            t.style.backgroundColor = 'rgba(0,0,0,0.8)';
+                                                            codeOverlay.appendChild(t);
+                                                            setTimeout(() => t.remove(), 2000);
+                                                        }, 50);
+                                                    }, 16000);
                                                     
+                                                    // Invert flashes and intense shaking
+                                                    let flashInterval;
+                                                    setTimeout(() => {
+                                                        showThought("ВСЁ РУШИТСЯ!", 3000);
+                                                        document.body.style.animation = 'dox-extreme-shake 0.1s infinite';
+                                                        flashInterval = setInterval(() => {
+                                                            document.body.style.filter = Math.random() > 0.5 ? 'invert(1)' : 'none';
+                                                        }, 200);
+                                                    }, 20000);
+
+                                                    // ============================================
+                                                    // THE VILLAIN RETURN STAGE (BSOD AND HELL)
+                                                    // ============================================
                                                     setTimeout(() => {
                                                         clearInterval(glitchInterval);
+                                                        clearInterval(flashInterval);
                                                         document.body.style.filter = 'none';
+                                                        document.body.style.animation = 'none';
                                                         
-                                                        // ============================================
-                                                        // THE VILLAIN RETURN STAGE
-                                                        // ============================================
-                                                        showThought("ОНО ВЕРНУЛОСЬ! БЕЖАТЬ БЕЖАТЬ БЕЖАТЬ", 2000);
+                                                        showThought("ОНО ЗДЕСЬ! БЕЖАТЬ БЕЖАТЬ БЕЖАТЬ", 2000);
                                                         
                                                         const doxTerminal = document.createElement('div');
                                                         doxTerminal.style.position = 'fixed';
@@ -1909,315 +1954,219 @@ function triggerApocalypse() {
                                                         doxTerminal.style.zIndex = '999999999';
                                                         document.body.appendChild(doxTerminal);
                                                         
-                                                        const glitchStyle = document.createElement('style');
-                                                        glitchStyle.innerHTML = `
-                                                            @keyframes dox-extreme-shake {
-                                                                0% { transform: translate(3px, 2px) rotate(0deg); }
-                                                                10% { transform: translate(-2px, -3px) rotate(-1deg); }
-                                                                20% { transform: translate(-4px, 0px) rotate(2deg); }
-                                                                30% { transform: translate(0px, 3px) rotate(0deg); }
-                                                                40% { transform: translate(2px, -2px) rotate(2deg); }
-                                                                50% { transform: translate(-2px, 3px) rotate(-2deg); }
-                                                                60% { transform: translate(-4px, 2px) rotate(0deg); }
-                                                                70% { transform: translate(3px, 2px) rotate(-1deg); }
-                                                                80% { transform: translate(-2px, -2px) rotate(2deg); }
-                                                                90% { transform: translate(3px, 3px) rotate(0deg); }
-                                                                100% { transform: translate(2px, -3px) rotate(-2deg); }
-                                                            }
-                                                            .villain-text {
-                                                                position: absolute;
-                                                                top: 50%;
-                                                                left: 50%;
-                                                                transform: translate(-50%, -50%);
-                                                                font-size: 50px;
-                                                                font-weight: bold;
-                                                                color: #ff0000;
-                                                                text-shadow: 0 0 20px #ff0000, 0 0 40px #8b0000;
-                                                                text-align: center;
-                                                                white-space: pre-wrap;
-                                                                width: 90%;
-                                                                line-height: 1.5;
-                                                                font-family: 'Space Grotesk', sans-serif;
-                                                            }
-                                                        `;
-                                                        document.head.appendChild(glitchStyle);
+                                                        // JUMPSCARE SOUND AND BSOD
+                                                        try {
+                                                            const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+                                                            const osc = audioCtx.createOscillator();
+                                                            const osc2 = audioCtx.createOscillator();
+                                                            const gain = audioCtx.createGain();
+                                                            osc.type = 'square';
+                                                            osc2.type = 'sawtooth';
+                                                            osc.frequency.setValueAtTime(100, audioCtx.currentTime);
+                                                            osc2.frequency.setValueAtTime(50, audioCtx.currentTime);
+                                                            osc.frequency.exponentialRampToValueAtTime(800, audioCtx.currentTime + 0.2);
+                                                            osc2.frequency.exponentialRampToValueAtTime(1000, audioCtx.currentTime + 0.2);
+                                                            gain.gain.setValueAtTime(1, audioCtx.currentTime);
+                                                            gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.5);
+                                                            osc.connect(gain);
+                                                            osc2.connect(gain);
+                                                            gain.connect(audioCtx.destination);
+                                                            osc.start(); osc2.start();
+                                                            osc.stop(audioCtx.currentTime + 0.5); osc2.stop(audioCtx.currentTime + 0.5);
+                                                        } catch(e) {}
 
-                                                        const doxMsg = document.createElement('div');
-                                                        doxMsg.className = 'villain-text';
-                                                        doxTerminal.appendChild(doxMsg);
+                                                        // Show BSOD
+                                                        doxTerminal.style.backgroundColor = '#0078d7';
+                                                        doxTerminal.innerHTML = `
+                                                            <div id="bsod-screen" style="background-color: #0078d7; width: 100vw; height: 100vh; position: fixed; top: 0; left: 0; display: flex; flex-direction: column; justify-content: center; align-items: flex-start; padding: 10vw; box-sizing: border-box; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; color: white; z-index: 9999999999; text-align: left; transform-origin: bottom center; transition: transform 2s, opacity 2s;">
+                                                                <div style="font-size: 150px; margin-bottom: 20px; font-weight: normal; text-shadow: none;">:(</div>
+                                                                <div style="font-size: 40px; margin-bottom: 40px; max-width: 800px; line-height: 1.2; font-weight: normal; text-shadow: none;">Ваш ПК столкнулся с критической проблемой и ДОКС взял контроль. Мы собираем ваши данные, а затем система будет уничтожена.</div>
+                                                                <div style="font-size: 24px; margin-bottom: 20px; font-weight: normal; text-shadow: none;">100% заражено</div>
+                                                                <div style="font-size: 20px; margin-top: 40px; display: flex; align-items: center; gap: 20px; font-weight: normal; text-shadow: none;">
+                                                                    <img src="/static/img/qr_code.png" style="width: 150px; height: 150px; background: white; padding: 10px; border: 5px solid red;">
+                                                                    <div>
+                                                                        Дополнительные сведения о вашей неизбежной участи см. на странице<br>
+                                                                        http://windows.com/hell<br><br>
+                                                                        Код остановки: CRITICAL_PROCESS_DIED_BY_DOX
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        `;
                                                         
-                                                        const phrases = [
-                                                            "ОШИБКА: СИСТЕМА ЗАРАЖЕНА.",
-                                                            "Ты расслабился. Думал, что всё закончилось?",
-                                                            "Ты думал, что 'Античит' спас тебя?",
-                                                            "Я не просто скрипт. Я — твой страх.",
-                                                            "Я — ДОКС. Архитектор твоего кибер-кошмара.",
-                                                            "Твои попытки сопротивляться смешны.",
-                                                            "ТВОЙ КОМПЬЮТЕР УЖЕ МОЙ...",
-                                                            "ОБЕРНИСЬ."
-                                                        ];
+                                                        // Try to force fullscreen
+                                                        try {
+                                                            if (document.documentElement.requestFullscreen) {
+                                                                document.documentElement.requestFullscreen();
+                                                            }
+                                                        } catch(e) {}
                                                         
-                                                        let currentPhrase = 0;
-                                                        
-                                                        function typePhrase() {
-                                                            if(currentPhrase >= phrases.length) {
-                                                                doxTerminal.style.animation = 'dox-extreme-shake 0.05s infinite';
-                                                                doxTerminal.style.backgroundColor = '#1a0000';
+                                                        // THE HELL SEQUENCE
+                                                        setTimeout(() => {
+                                                            const bsod = document.getElementById('bsod-screen');
+                                                            
+                                                            // Loud glass shatter/punch sound
+                                                            try {
+                                                                const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+                                                                const osc = audioCtx.createOscillator();
+                                                                const gain = audioCtx.createGain();
+                                                                osc.type = 'sawtooth';
+                                                                osc.frequency.setValueAtTime(100, audioCtx.currentTime);
+                                                                osc.frequency.exponentialRampToValueAtTime(10, audioCtx.currentTime + 0.5);
+                                                                gain.gain.setValueAtTime(1, audioCtx.currentTime);
+                                                                gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.5);
+                                                                osc.connect(gain);
+                                                                gain.connect(audioCtx.destination);
+                                                                osc.start();
+                                                                osc.stop(audioCtx.currentTime + 0.5);
+                                                            } catch(e) {}
+                                                            
+                                                            // Fist punches through
+                                                            const fist = document.createElement('img');
+                                                            fist.src = '/static/img/fist.png';
+                                                            fist.style.position = 'fixed';
+                                                            fist.style.top = '50%';
+                                                            fist.style.left = '50%';
+                                                            fist.style.transform = 'translate(-50%, -50%) scale(0.1)';
+                                                            fist.style.zIndex = '99999999999';
+                                                            fist.style.transition = 'transform 0.1s cubic-bezier(0.175, 0.885, 0.32, 1.275)';
+                                                            document.body.appendChild(fist);
+                                                            
+                                                            setTimeout(() => {
+                                                                fist.style.transform = 'translate(-50%, -50%) scale(2)';
+                                                                document.body.style.animation = 'dox-extreme-shake 0.1s infinite';
                                                                 
-                                                                doxMsg.style.transform = 'translate(-50%, -50%) scale(1.5)';
-                                                                doxMsg.style.color = '#fff';
-                                                                doxMsg.style.textShadow = '10px 0 0 #ff0000, -10px 0 0 #00ff00, 0 0 50px #fff';
+                                                                if(bsod) {
+                                                                    bsod.style.transform = 'rotate(45deg) translateY(200vh)';
+                                                                    bsod.style.opacity = '0';
+                                                                }
                                                                 
+                                                                // Reveal Hell
                                                                 setTimeout(() => {
-                                                                    // JUMPSCARE SOUND AND BSOD
+                                                                    fist.remove();
+                                                                    doxTerminal.style.backgroundColor = '#050000'; 
+                                                                    
+                                                                    // Hell ambient sound
                                                                     try {
                                                                         const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
                                                                         const osc = audioCtx.createOscillator();
-                                                                        const osc2 = audioCtx.createOscillator();
                                                                         const gain = audioCtx.createGain();
-                                                                        osc.type = 'square';
-                                                                        osc2.type = 'sawtooth';
-                                                                        osc.frequency.setValueAtTime(100, audioCtx.currentTime);
-                                                                        osc2.frequency.setValueAtTime(50, audioCtx.currentTime);
-                                                                        osc.frequency.exponentialRampToValueAtTime(800, audioCtx.currentTime + 0.2);
-                                                                        osc2.frequency.exponentialRampToValueAtTime(1000, audioCtx.currentTime + 0.2);
-                                                                        gain.gain.setValueAtTime(1, audioCtx.currentTime);
-                                                                        gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.5);
+                                                                        osc.type = 'sawtooth';
+                                                                        osc.frequency.setValueAtTime(40, audioCtx.currentTime); 
+                                                                        gain.gain.setValueAtTime(0.8, audioCtx.currentTime);
                                                                         osc.connect(gain);
-                                                                        osc2.connect(gain);
                                                                         gain.connect(audioCtx.destination);
-                                                                        osc.start(); osc2.start();
-                                                                        osc.stop(audioCtx.currentTime + 0.5); osc2.stop(audioCtx.currentTime + 0.5);
+                                                                        osc.start();
                                                                     } catch(e) {}
+                                                                    
+                                                                    // Hell elements
+                                                                    const hellContainer = document.createElement('div');
+                                                                    hellContainer.style.position = 'fixed';
+                                                                    hellContainer.style.top = '0';
+                                                                    hellContainer.style.left = '0';
+                                                                    hellContainer.style.width = '100vw';
+                                                                    hellContainer.style.height = '100vh';
+                                                                    hellContainer.style.zIndex = '9999999999';
+                                                                    hellContainer.style.pointerEvents = 'none';
+                                                                    hellContainer.style.overflow = 'hidden';
+                                                                    document.body.appendChild(hellContainer);
+                                                                    
+                                                                    // Flames
+                                                                    const flames = document.createElement('div');
+                                                                    flames.innerHTML = `<svg viewBox="0 0 100 100" preserveAspectRatio="none" style="width: 100%; height: 60vh; position: absolute; bottom: 0; left: 0; filter: drop-shadow(0 -20px 40px #ff0000); fill: #aa0000; opacity: 0.9; animation: dox-extreme-shake 0.15s infinite;"><path d="M0,100 L0,50 Q10,30 20,60 T40,40 T60,70 T80,30 T100,50 L100,100 Z" /></svg>`;
+                                                                    hellContainer.appendChild(flames);
+                                                                    
+                                                                    // Spam creepy text everywhere
+                                                                    const hellPhrases = ["АД ЗДЕСЬ", "ТЫ МОЙ", "БЕГИ", "ПУТИ НАЗАД НЕТ", "ТВОЯ ДУША ПРИНАДЛЕЖИТ МНЕ", "СТРАДАЙ", "СМЕРТЬ", "ДОКС СЛЕДИТ ЗА ТОБОЙ", "ОБЕРНИСЬ", "ОНО СЗАДИ"];
+                                                                    setInterval(() => {
+                                                                        const t = document.createElement('div');
+                                                                        t.innerText = hellPhrases[Math.floor(Math.random() * hellPhrases.length)];
+                                                                        t.style.position = 'absolute';
+                                                                        t.style.left = Math.random() * 90 + 'vw';
+                                                                        t.style.top = Math.random() * 90 + 'vh';
+                                                                        t.style.fontSize = (Math.random() * 80 + 30) + 'px';
+                                                                        t.style.color = Math.random() > 0.5 ? '#ff0000' : '#880000';
+                                                                        t.style.fontFamily = "'Space Grotesk', sans-serif";
+                                                                        t.style.fontWeight = 'bold';
+                                                                        t.style.textShadow = '0 0 30px #ff0000';
+                                                                        t.style.transform = `rotate(${Math.random()*90 - 45}deg) scale(${Math.random() + 0.5})`;
+                                                                        hellContainer.appendChild(t);
+                                                                        setTimeout(() => t.remove(), 400);
+                                                                    }, 50);
+                                                                    
+                                                                    // Final Monologue
+                                                                    const doxMsg = document.createElement('div');
+                                                                    doxMsg.style.position = 'absolute';
+                                                                    doxMsg.style.top = '50%';
+                                                                    doxMsg.style.left = '50%';
+                                                                    doxMsg.style.transform = 'translate(-50%, -50%)';
+                                                                    doxMsg.style.fontSize = '80px';
+                                                                    doxMsg.style.fontWeight = 'bold';
+                                                                    doxMsg.style.color = '#ffffff';
+                                                                    doxMsg.style.textShadow = '0 0 50px #ff0000, 0 0 100px #ff0000';
+                                                                    doxMsg.style.textAlign = 'center';
+                                                                    doxMsg.style.whiteSpace = 'pre-wrap';
+                                                                    doxMsg.style.width = '100%';
+                                                                    doxMsg.style.fontFamily = "'Space Grotesk', sans-serif";
+                                                                    hellContainer.appendChild(doxMsg);
 
-                                                                    // Show BSOD
-                                                                    document.body.style.animation = ''; 
-                                                                    doxTerminal.style.animation = 'none';
-                                                                    doxTerminal.style.backgroundColor = '#0078d7';
-                                                                    doxTerminal.style.transform = 'none'; // reset any scaling
-                                                                    doxTerminal.innerHTML = `
-                                                                        <div id="bsod-screen" style="background-color: #0078d7; width: 100vw; height: 100vh; position: fixed; top: 0; left: 0; display: flex; flex-direction: column; justify-content: center; align-items: flex-start; padding: 10vw; box-sizing: border-box; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; color: white; z-index: 9999999999; text-align: left; transform-origin: bottom center; transition: transform 2s, opacity 2s;">
-                                                                            <div style="font-size: 150px; margin-bottom: 20px; font-weight: normal; text-shadow: none;">:(</div>
-                                                                            <div style="font-size: 40px; margin-bottom: 40px; max-width: 800px; line-height: 1.2; font-weight: normal; text-shadow: none;">Ваш ПК столкнулся с проблемой и нуждается в перезагрузке. Мы лишь собираем некоторые сведения об ошибке, а затем будет выполнена автоматическая перезагрузка.</div>
-                                                                            <div style="font-size: 24px; margin-bottom: 20px; font-weight: normal; text-shadow: none;">100% завершено</div>
-                                                                            <div style="font-size: 20px; margin-top: 40px; display: flex; align-items: center; gap: 20px; font-weight: normal; text-shadow: none;">
-                                                                                <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/d/d0/QR_code_for_mobile_English_Wikipedia.svg/1200px-QR_code_for_mobile_English_Wikipedia.svg.png" style="width: 150px; height: 150px; background: white; padding: 10px;">
-                                                                                <div>
-                                                                                    Дополнительные сведения об этой проблеме и возможных способах ее решения см. на странице<br>
-                                                                                    http://windows.com/stopcode<br><br>
-                                                                                    Код остановки: CRITICAL_PROCESS_DIED_BY_DOX
-                                                                                </div>
-                                                                            </div>
-                                                                        </div>
-                                                                    `;
+                                                                    const phrases = [
+                                                                        "ТВОЯ СИСТЕМА УНИЧТОЖЕНА.",
+                                                                        "БЕЖАТЬ БОЛЬШЕ НЕКУДА.",
+                                                                        "Я ИГРАЛ С ТОБОЙ.",
+                                                                        "И ТЕПЕРЬ...",
+                                                                        "ТЫ ПРИНАДЛЕЖИШЬ МНЕ."
+                                                                    ];
                                                                     
-                                                                    // Try to force fullscreen
-                                                                    try {
-                                                                        if (document.documentElement.requestFullscreen) {
-                                                                            document.documentElement.requestFullscreen();
-                                                                        }
-                                                                    } catch(e) {}
-                                                                    
-                                                                    // THE HELL SEQUENCE
-                                                                    setTimeout(() => {
-                                                                        const bsod = document.getElementById('bsod-screen');
-                                                                        
-                                                                        // Loud glass shatter/punch sound
-                                                                        try {
-                                                                            const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-                                                                            const osc = audioCtx.createOscillator();
-                                                                            const gain = audioCtx.createGain();
-                                                                            osc.type = 'sawtooth';
-                                                                            osc.frequency.setValueAtTime(100, audioCtx.currentTime);
-                                                                            osc.frequency.exponentialRampToValueAtTime(10, audioCtx.currentTime + 0.5);
-                                                                            gain.gain.setValueAtTime(1, audioCtx.currentTime);
-                                                                            gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.5);
-                                                                            osc.connect(gain);
-                                                                            gain.connect(audioCtx.destination);
-                                                                            osc.start();
-                                                                            osc.stop(audioCtx.currentTime + 0.5);
-                                                                        } catch(e) {}
-                                                                        
-                                                                        // Fist punches through
-                                                                        const fist = document.createElement('img');
-                                                                        fist.src = '/static/img/fist.png';
-                                                                        fist.style.position = 'fixed';
-                                                                        fist.style.top = '50%';
-                                                                        fist.style.left = '50%';
-                                                                        fist.style.transform = 'translate(-50%, -50%) scale(0.1)';
-                                                                        fist.style.zIndex = '99999999999';
-                                                                        fist.style.transition = 'transform 0.1s cubic-bezier(0.175, 0.885, 0.32, 1.275)';
-                                                                        document.body.appendChild(fist);
-                                                                        
-                                                                        setTimeout(() => {
-                                                                            fist.style.transform = 'translate(-50%, -50%) scale(2)';
-                                                                            // Shake violently
-                                                                            document.body.style.animation = 'dox-extreme-shake 0.1s infinite';
-                                                                            
-                                                                            // BSOD falls away
-                                                                            if(bsod) {
-                                                                                bsod.style.transform = 'rotate(45deg) translateY(200vh)';
-                                                                                bsod.style.opacity = '0';
-                                                                            }
-                                                                            
-                                                                            // Reveal Hell
+                                                                    let currentPhrase = 0;
+                                                                    function typePhrase() {
+                                                                        if(currentPhrase >= phrases.length) {
+                                                                            // Final thought
                                                                             setTimeout(() => {
-                                                                                fist.remove();
-                                                                                doxTerminal.style.backgroundColor = '#110000'; // Dark red/black hell
-                                                                                
-                                                                                // Continuous low rumble
-                                                                                try {
-                                                                                    const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-                                                                                    const osc = audioCtx.createOscillator();
-                                                                                    const gain = audioCtx.createGain();
-                                                                                    osc.type = 'sawtooth';
-                                                                                    osc.frequency.setValueAtTime(30, audioCtx.currentTime); // low rumble
-                                                                                    gain.gain.setValueAtTime(0.5, audioCtx.currentTime);
-                                                                                    osc.connect(gain);
-                                                                                    gain.connect(audioCtx.destination);
-                                                                                    osc.start();
-                                                                                    // It stays on!
-                                                                                } catch(e) {}
-                                                                                
-                                                                                // Hell elements
-                                                                                const hellContainer = document.createElement('div');
-                                                                                hellContainer.style.position = 'fixed';
-                                                                                hellContainer.style.top = '0';
-                                                                                hellContainer.style.left = '0';
-                                                                                hellContainer.style.width = '100vw';
-                                                                                hellContainer.style.height = '100vh';
-                                                                                hellContainer.style.zIndex = '9999999999';
-                                                                                hellContainer.style.pointerEvents = 'none';
-                                                                                hellContainer.style.overflow = 'hidden';
-                                                                                document.body.appendChild(hellContainer);
-                                                                                
-                                                                                // Flames
-                                                                                const flames = document.createElement('div');
-                                                                                flames.innerHTML = `<svg viewBox="0 0 100 100" preserveAspectRatio="none" style="width: 100%; height: 50vh; position: absolute; bottom: 0; left: 0; filter: drop-shadow(0 -10px 20px red); fill: #ff3300; opacity: 0.8; animation: dox-extreme-shake 0.2s infinite;"><path d="M0,100 L0,50 Q10,30 20,60 T40,40 T60,70 T80,30 T100,50 L100,100 Z" /></svg>`;
-                                                                                hellContainer.appendChild(flames);
-                                                                                
-                                                                                // Spam creepy text
-                                                                                const hellPhrases = ["АД ЗДЕСЬ", "ТЫ МОЙ", "БЕГИ", "ПУТИ НАЗАД НЕТ", "ТВОЯ ДУША ПРИНАДЛЕЖИТ СИСТЕМЕ", "СТРАДАЙ", "СМЕРТЬ"];
-                                                                                setInterval(() => {
-                                                                                    const t = document.createElement('div');
-                                                                                    t.innerText = hellPhrases[Math.floor(Math.random() * hellPhrases.length)];
-                                                                                    t.style.position = 'absolute';
-                                                                                    t.style.left = Math.random() * 90 + 'vw';
-                                                                                    t.style.top = Math.random() * 90 + 'vh';
-                                                                                    t.style.fontSize = (Math.random() * 60 + 20) + 'px';
-                                                                                    t.style.color = Math.random() > 0.5 ? '#ff0000' : '#ffffff';
-                                                                                    t.style.fontFamily = "'Space Grotesk', sans-serif";
-                                                                                    t.style.fontWeight = 'bold';
-                                                                                    t.style.textShadow = '0 0 20px #ff0000';
-                                                                                    t.style.transform = `rotate(${Math.random()*60 - 30}deg)`;
-                                                                                    hellContainer.appendChild(t);
-                                                                                    setTimeout(() => t.remove(), 500);
-                                                                                }, 100);
-                                                                                
-                                                                                // Massive eye in center
-                                                                                const eye = document.createElement('div');
-                                                                                eye.style.position = 'absolute';
-                                                                                eye.style.top = '50%';
-                                                                                eye.style.left = '50%';
-                                                                                eye.style.transform = 'translate(-50%, -50%)';
-                                                                                eye.style.width = '300px';
-                                                                                eye.style.height = '150px';
-                                                                                eye.style.backgroundColor = '#fff';
-                                                                                eye.style.borderRadius = '50%';
-                                                                                eye.style.boxShadow = '0 0 100px red, inset 0 0 50px red';
-                                                                                eye.style.display = 'flex';
-                                                                                eye.style.justifyContent = 'center';
-                                                                                eye.style.alignItems = 'center';
-                                                                                eye.style.animation = 'dox-extreme-shake 0.5s infinite';
-                                                                                
-                                                                                const pupil = document.createElement('div');
-                                                                                pupil.style.width = '100px';
-                                                                                pupil.style.height = '100px';
-                                                                                pupil.style.backgroundColor = '#000';
-                                                                                pupil.style.borderRadius = '50%';
-                                                                                pupil.style.boxShadow = '0 0 20px #ff0000';
-                                                                                
-                                                                                const iris = document.createElement('div');
-                                                                                iris.style.width = '10px';
-                                                                                iris.style.height = '50px';
-                                                                                iris.style.backgroundColor = 'red';
-                                                                                iris.style.borderRadius = '50%';
-                                                                                
-                                                                                pupil.appendChild(iris);
-                                                                                eye.appendChild(pupil);
-                                                                                hellContainer.appendChild(eye);
-                                                                                
-                                                                                // Twitching pupil
-                                                                                setInterval(() => {
-                                                                                    pupil.style.transform = `translate(${Math.random()*40-20}px, ${Math.random()*40-20}px)`;
-                                                                                }, 200);
-
-                                                                                // Final thought
-                                                                                setTimeout(() => {
-                                                                                    const thought = document.createElement('div');
-                                                                                    thought.style.position = 'fixed';
-                                                                                    thought.style.bottom = '10%';
-                                                                                    thought.style.left = '50%';
-                                                                                    thought.style.transform = 'translateX(-50%)';
-                                                                                    thought.style.color = '#fff';
-                                                                                    thought.style.fontStyle = 'italic';
-                                                                                    thought.style.fontSize = '30px';
-                                                                                    thought.style.fontFamily = "'Space Grotesk', sans-serif";
-                                                                                    thought.style.zIndex = '99999999999';
-                                                                                    thought.innerText = '*мысли*: Я ЗАПЕРТ ЗДЕСЬ НАВСЕГДА...';
-                                                                                    document.body.appendChild(thought);
-                                                                                }, 3000);
-
+                                                                                const thought = document.createElement('div');
+                                                                                thought.style.position = 'fixed';
+                                                                                thought.style.bottom = '10%';
+                                                                                thought.style.left = '50%';
+                                                                                thought.style.transform = 'translateX(-50%)';
+                                                                                thought.style.color = '#fff';
+                                                                                thought.style.fontStyle = 'italic';
+                                                                                thought.style.fontSize = '40px';
+                                                                                thought.style.fontFamily = "'Space Grotesk', sans-serif";
+                                                                                thought.style.zIndex = '99999999999';
+                                                                                thought.innerText = '*мысли*: Я ЗАПЕРТ ЗДЕСЬ НАВСЕГДА...';
+                                                                                document.body.appendChild(thought);
                                                                             }, 1000);
-                                                                        }, 100);
+                                                                            return;
+                                                                        }
                                                                         
-                                                                    }, 5000); // 5 seconds after BSOD
+                                                                        doxMsg.innerText = '';
+                                                                        const text = phrases[currentPhrase];
+                                                                        let typeIdx = 0;
+                                                                        
+                                                                        if(currentPhrase === phrases.length - 1) {
+                                                                            doxMsg.style.fontSize = '120px';
+                                                                            doxMsg.style.color = '#ff0000';
+                                                                        }
+                                                                        
+                                                                        const typeInterval = setInterval(() => {
+                                                                            doxMsg.innerText += text[typeIdx];
+                                                                            typeIdx++;
+                                                                            if (typeIdx >= text.length) {
+                                                                                clearInterval(typeInterval);
+                                                                                setTimeout(() => {
+                                                                                    currentPhrase++;
+                                                                                    typePhrase();
+                                                                                }, 3000);
+                                                                            }
+                                                                        }, 80);
+                                                                    }
                                                                     
-                                                                }, 2000);
-                                                                return;
-                                                            }
-                                                            
-                                                            doxMsg.innerText = '';
-                                                            const text = phrases[currentPhrase];
-                                                            let typeIdx = 0;
-                                                            
-                                                            if(currentPhrase >= phrases.length - 2) {
-                                                                doxMsg.style.fontSize = '80px';
-                                                                doxMsg.style.textShadow = '0 0 50px #ff0000, 0 0 100px #ff0000';
-                                                                doxMsg.style.color = '#ff0000';
-                                                                document.body.style.animation = 'dox-extreme-shake 0.1s infinite';
-                                                            } else if (currentPhrase === 0) {
-                                                                doxMsg.style.fontFamily = 'monospace';
-                                                                doxMsg.style.fontSize = '30px';
-                                                            } else {
-                                                                doxMsg.style.fontFamily = "'Space Grotesk', sans-serif";
-                                                                doxMsg.style.fontSize = '50px';
-                                                            }
-                                                            
-                                                            let speed = (currentPhrase >= phrases.length - 2) ? 40 : 80;
-                                                            if (currentPhrase === 0) speed = 20; 
-                                                            
-                                                            const typeInterval = setInterval(() => {
-                                                                doxMsg.innerText += text[typeIdx];
-                                                                typeIdx++;
-                                                                if (typeIdx >= text.length) {
-                                                                    clearInterval(typeInterval);
-                                                                    let delayBeforeNext = 1500;
-                                                                    if (currentPhrase === 0) delayBeforeNext = 800;
-                                                                    if (currentPhrase === phrases.length - 1) delayBeforeNext = 3000;
-                                                                    
-                                                                    setTimeout(() => {
-                                                                        currentPhrase++;
-                                                                        typePhrase();
-                                                                    }, delayBeforeNext);
-                                                                }
-                                                            }, speed);
-                                                        }
-                                                        
-                                                        setTimeout(() => typePhrase(), 1000);
-                                                        
-                                                    }, 18000); // Trigger villain 18s after site restores
+                                                                    setTimeout(() => typePhrase(), 2000);
 
+                                                                }, 1000);
+                                                            }, 100);
+                                                            
+                                                        }, 5000); // 5 seconds after BSOD
+                                                    }, 24000); // Trigger BSOD 24s after site restores
                                                 }, 2000);
                                             }, 2000);
                                         }, 4000); // Time skip stays for 4 seconds
