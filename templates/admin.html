@@ -90,25 +90,61 @@
             <tbody id="bots-tbody">
                 <tr>
                     <td>aurexis_support</td>
-                    <td><input type="text" id="status-aurexis_support-text" value="Online" style="padding:5px; background: transparent; color: white; border: 1px solid var(--neon-primary);"></td>
+                    <td><select id="status-aurexis_support-text" style="padding:5px; background: #111; color: white; border: 1px solid var(--neon-primary);" onchange="
+        const c = document.getElementById('status-aurexis_support-color');
+        if(this.value === 'Online') c.value = '#00ffaa';
+        else if(this.value === 'Active') c.value = '#ff0055';
+        else if(this.value === 'Offline') c.value = '#555555';
+    ">
+        <option value="Online">Online</option>
+        <option value="Active">Active</option>
+        <option value="Offline">Offline</option>
+    </select></td>
                     <td><input type="color" id="status-aurexis_support-color" value="#00ffaa"></td>
                     <td><button class="flora-toggle active" onclick="saveBotStatus('aurexis_support')">Сохранить</button></td>
                 </tr>
                 <tr>
                     <td>aurexis_economy</td>
-                    <td><input type="text" id="status-aurexis_economy-text" value="Online" style="padding:5px; background: transparent; color: white; border: 1px solid var(--neon-primary);"></td>
+                    <td><select id="status-aurexis_economy-text" style="padding:5px; background: #111; color: white; border: 1px solid var(--neon-primary);" onchange="
+        const c = document.getElementById('status-aurexis_economy-color');
+        if(this.value === 'Online') c.value = '#00ffaa';
+        else if(this.value === 'Active') c.value = '#ff0055';
+        else if(this.value === 'Offline') c.value = '#555555';
+    ">
+        <option value="Online">Online</option>
+        <option value="Active">Active</option>
+        <option value="Offline">Offline</option>
+    </select></td>
                     <td><input type="color" id="status-aurexis_economy-color" value="#00ffaa"></td>
                     <td><button class="flora-toggle active" onclick="saveBotStatus('aurexis_economy')">Сохранить</button></td>
                 </tr>
                 <tr>
                     <td>aurexis_mafia</td>
-                    <td><input type="text" id="status-aurexis_mafia-text" value="Online" style="padding:5px; background: transparent; color: white; border: 1px solid var(--neon-primary);"></td>
+                    <td><select id="status-aurexis_mafia-text" style="padding:5px; background: #111; color: white; border: 1px solid var(--neon-primary);" onchange="
+        const c = document.getElementById('status-aurexis_mafia-color');
+        if(this.value === 'Online') c.value = '#00ffaa';
+        else if(this.value === 'Active') c.value = '#ff0055';
+        else if(this.value === 'Offline') c.value = '#555555';
+    ">
+        <option value="Online">Online</option>
+        <option value="Active">Active</option>
+        <option value="Offline">Offline</option>
+    </select></td>
                     <td><input type="color" id="status-aurexis_mafia-color" value="#00ffaa"></td>
                     <td><button class="flora-toggle active" onclick="saveBotStatus('aurexis_mafia')">Сохранить</button></td>
                 </tr>
                 <tr>
                     <td>aurexis_flora</td>
-                    <td><input type="text" id="status-aurexis_flora-text" value="Active" style="padding:5px; background: transparent; color: white; border: 1px solid var(--neon-primary);"></td>
+                    <td><select id="status-aurexis_flora-text" style="padding:5px; background: #111; color: white; border: 1px solid var(--neon-primary);" onchange="
+        const c = document.getElementById('status-aurexis_flora-color');
+        if(this.value === 'Online') c.value = '#00ffaa';
+        else if(this.value === 'Active') c.value = '#ff0055';
+        else if(this.value === 'Offline') c.value = '#555555';
+    ">
+        <option value="Online">Online</option>
+        <option value="Active">Active</option>
+        <option value="Offline">Offline</option>
+    </select></td>
                     <td><input type="color" id="status-aurexis_flora-color" value="#ff0055"></td>
                     <td><button class="flora-toggle active" onclick="saveBotStatus('aurexis_flora')">Сохранить</button></td>
                 </tr>
@@ -200,7 +236,16 @@
                 });
                 const data = await res.json();
                 if (data.success) {
-                    loadUsers(); // reload table
+                    
+        window.deleteAdminTicket = async function(id) {
+            if(!confirm('Удалить тикет?')) return;
+            try {
+                const res = await fetch(`/api/admin/tickets/${id}`, {method: 'DELETE'});
+                if(res.ok) loadAdminTickets();
+            } catch(e) {}
+        }
+        
+        loadUsers(); // reload table
                 } else {
                     alert('Ошибка: ' + data.message);
                 }
@@ -316,7 +361,7 @@
                             </td>
                             <td>${t.topic}</td>
                             <td>${statusStr}</td>
-                            <td><button class="flora-toggle" onclick="openAdminTicket(${t.id}, '${t.topic}', '${t.status}')">Открыть чат</button></td>
+                            <td><button class="flora-toggle" onclick="openAdminTicket(${t.id}, '${t.topic}', '${t.status}')">Открыть чат</button> <button class="flora-toggle" style="color: #ff4444; border-color: #ff4444; margin-left: 5px;" onclick="deleteAdminTicket(${t.id})">Удалить</button></td>
                         </tr>`;
                     });
                 }
@@ -402,6 +447,15 @@
             document.getElementById('admin-ticket-modal').style.display = 'none';
         }
 
+        
+        window.deleteAdminTicket = async function(id) {
+            if(!confirm('Удалить тикет?')) return;
+            try {
+                const res = await fetch(`/api/admin/tickets/${id}`, {method: 'DELETE'});
+                if(res.ok) loadAdminTickets();
+            } catch(e) {}
+        }
+        
         loadUsers();
         loadBotStatuses();
         loadAdminNews();

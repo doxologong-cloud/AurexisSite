@@ -2032,15 +2032,18 @@ async function sendMessengerMessage(forceMessage = null) {
     input.value = '';
     
     // Optimistic UI
-    const msgsContainer = document.getElementById('messenger-messages');
+    const msgsContainer = document.getElementById('active-chat-messages');
+    if (!msgsContainer) return;
     const msgDiv = document.createElement('div');
-    msgDiv.className = 'msg-bubble msg-out';
+    msgDiv.className = 'chat-msg sent';
     msgDiv.style.opacity = '0.7';
+    const time = new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
     if(message.startsWith('STICKER:')) {
+        msgDiv.classList.add('chat-msg-sticker');
         const url = message.split('STICKER:')[1];
-        msgDiv.innerHTML = `<img src="${url}" class="msg-sticker" style="max-width: 150px; border-radius: 10px;">`;
+        msgDiv.innerHTML = `<img src="${url}" alt="sticker"><span class="chat-msg-time">${time}</span>`;
     } else {
-        msgDiv.textContent = message;
+        msgDiv.innerHTML = `${escapeHTML(message)}<span class="chat-msg-time">${time}</span>`;
     }
     msgsContainer.appendChild(msgDiv);
     msgsContainer.scrollTop = msgsContainer.scrollHeight;
