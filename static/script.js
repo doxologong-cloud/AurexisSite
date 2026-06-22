@@ -2998,20 +2998,20 @@ function changeTheme(themeName) {
     }
 
     
-    const svgDefault = `data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 32 32"><defs><linearGradient id="theme-grad" x1="0" y1="0" x2="0" y2="1"><stop offset="0%25" stop-color="%23${color1}"/><stop offset="100%25" stop-color="%23${color2}"/></linearGradient><filter id="shadow"><feDropShadow dx="1" dy="2" stdDeviation="1" flood-color="%23000" flood-opacity="0.6"/></filter></defs><g filter="url(%23shadow)" transform="translate(12, 6) rotate(-25)"><polygon points="-1,0 -9,18 -4,18 -1,12" fill="url(%23theme-grad)"/><polygon points="1,0 9,18 4,18 1,12" fill="url(%23theme-grad)"/></g></svg>`;
-    const svgPointer = `data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 32 32"><defs><linearGradient id="theme-grad-ptr" x1="0" y1="0" x2="0" y2="1"><stop offset="0%25" stop-color="%23${ptrColor1}"/><stop offset="100%25" stop-color="%23${ptrColor2}"/></linearGradient><filter id="shadow"><feDropShadow dx="1" dy="2" stdDeviation="1" flood-color="%23000" flood-opacity="0.6"/></filter></defs><g filter="url(%23shadow)" transform="translate(12, 6) rotate(-25)"><polygon points="-1,0 -9,18 -4,18 -1,12" fill="url(%23theme-grad-ptr)"/><polygon points="1,0 9,18 4,18 1,12" fill="url(%23theme-grad-ptr)"/></g></svg>`;
-    
-    let finalCursorDefault = `url('${svgDefault}') 12 6, auto`;
-    let finalCursorPointer = `url('${svgPointer}') 12 6, pointer`;
+    const svgDefaultStr = `<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 32 32"><defs><linearGradient id="theme-grad" x1="0" y1="0" x2="0" y2="1"><stop offset="0%25" stop-color="%23${color1}"/><stop offset="100%25" stop-color="%23${color2}"/></linearGradient><filter id="shadow"><feDropShadow dx="1" dy="2" stdDeviation="1" flood-color="%23000" flood-opacity="0.6"/></filter></defs><g filter="url(%23shadow)" transform="translate(12, 6) rotate(-25)"><polygon points="-1,0 -9,18 -4,18 -1,12" fill="url(%23theme-grad)"/><polygon points="1,0 9,18 4,18 1,12" fill="url(%23theme-grad)"/></g></svg>`;
+        const svgPointerStr = `<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 32 32"><defs><linearGradient id="theme-grad-ptr" x1="0" y1="0" x2="0" y2="1"><stop offset="0%25" stop-color="%23${ptrColor1}"/><stop offset="100%25" stop-color="%23${ptrColor2}"/></linearGradient><filter id="shadow"><feDropShadow dx="1" dy="2" stdDeviation="1" flood-color="%23000" flood-opacity="0.6"/></filter></defs><g filter="url(%23shadow)" transform="translate(12, 6) rotate(-25)"><polygon points="-1,0 -9,18 -4,18 -1,12" fill="url(%23theme-grad-ptr)"/><polygon points="1,0 9,18 4,18 1,12" fill="url(%23theme-grad-ptr)"/></g></svg>`;
+        
+        let finalCursorDefault = `url('data:image/svg+xml;base64,${btoa(svgDefaultStr)}') 12 6, auto`;
+        let finalCursorPointer = `url('data:image/svg+xml;base64,${btoa(svgPointerStr)}') 12 6, pointer`;
 
-    if (themeName === 'hacked') {
-        const hackerCursor = `data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 32 32"><defs><filter id="glow"><feDropShadow dx="0" dy="0" stdDeviation="2" flood-color="%23ff0000" flood-opacity="1"/></filter></defs><path d="M 4 4 L 12 28 L 16 16 L 28 12 Z" fill="%23ff0000" filter="url(%23glow)"/></svg>`;
-        finalCursorDefault = `url('${hackerCursor}') 16 16, crosshair`;
-        finalCursorPointer = `url('${hackerCursor}') 16 16, crosshair`;
-    }
-    
-    root.style.setProperty('--cursor-default', finalCursorDefault);
-    root.style.setProperty('--cursor-pointer', finalCursorPointer);
+        if (themeName === 'hacked') {
+            const hackerCursorStr = `<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 32 32"><defs><filter id="glow"><feDropShadow dx="0" dy="0" stdDeviation="2" flood-color="#ff0000" flood-opacity="1"/></filter></defs><path d="M 4 4 L 12 28 L 16 16 L 28 12 Z" fill="#ff0000" filter="url(#glow)"/></svg>`;
+            finalCursorDefault = `url('data:image/svg+xml;base64,${btoa(hackerCursorStr)}') 16 16, crosshair`;
+            finalCursorPointer = `url('data:image/svg+xml;base64,${btoa(hackerCursorStr)}') 16 16, crosshair`;
+        }
+
+        root.style.setProperty('--cursor-default', finalCursorDefault);
+        root.style.setProperty('--cursor-pointer', finalCursorPointer);
     
     localStorage.setItem('aurex_theme', themeName);
     
