@@ -409,6 +409,16 @@ const translations = {
 
 
 window.dynamicTranslations = {
+    "Активен": "Active",
+    "Активна": "Active",
+    "Выключен": "Offline",
+    "Оффлайн": "Offline",
+    "Перезагрузка": "Rebooting",
+    "Тех. работы": "Maintenance",
+    "Тех работы": "Maintenance",
+    "В разработке": "In Development",
+    "Открыт": "Open",
+    "Закрыт": "Closed",
     "Изменить фон профиля (Баннер)": "Change profile background (Banner)",
     "БЕГИ": "RUN",
     "Голосовое сообщение отправлено! (интеграция в след. фазе)": "Voice message sent! (DB integration in next phase)",
