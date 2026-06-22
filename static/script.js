@@ -912,12 +912,12 @@ document.addEventListener('DOMContentLoaded', () => {
                 }
                 data.tickets.forEach(t => {
                     const statusColor = t.status === 'open' ? '#00ffaa' : '#ff4444';
-                    const statusText = t.status === 'open' ? 'Открыт' : 'Закрыт';
+                    const statusText = __(t.status === 'open' ? 'Открыт' : 'Закрыт');
                     container.innerHTML += `
                         <div style="background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); border-radius: 8px; padding: 15px; display: flex; justify-content: space-between; align-items: center; cursor: pointer; transition: background 0.3s;" onclick="openTicketChat(${t.id}, '${t.topic}', '${t.status}')">
                             <div>
                                 <h4 style="margin: 0; margin-bottom: 5px;">${t.topic}</h4>
-                                <span style="font-size: 0.85rem; color: var(--text-muted);">Тикет #${t.id}</span>
+                                <span style="font-size: 0.85rem; color: var(--text-muted);">${__('Тикет #')}${t.id}</span>
                             </div>
                             <div style="color: ${statusColor}; font-weight: bold; font-size: 0.9rem;">${statusText}</div>
                         </div>
@@ -936,10 +936,10 @@ document.addEventListener('DOMContentLoaded', () => {
         document.getElementById('ticket-chat-title').textContent = topic;
         const statusEl = document.getElementById('ticket-chat-status');
         if (status === 'open') {
-            statusEl.innerHTML = 'Статус: <span style="color: #00ffaa;">Открыт</span>';
+            statusEl.innerHTML = __(\'Статус:\') + \' <span style="color: #00ffaa;">\' + __(\'Открыт\') + \'</span>\';
             document.getElementById('ticket-reply-container').style.display = 'flex';
         } else {
-            statusEl.innerHTML = 'Статус: <span style="color: #ff4444;">Закрыт</span>';
+            statusEl.innerHTML = __(\'Статус:\') + \' <span style="color: #ff4444;">\' + __(\'Закрыт\') + \'</span>\';
             document.getElementById('ticket-reply-container').style.display = 'none';
         }
         
