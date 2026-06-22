@@ -1277,6 +1277,7 @@ document.addEventListener('DOMContentLoaded', () => {
 let typedKeys = '';
 const doxCode = 'dox';
 document.addEventListener('keydown', (e) => {
+    if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
     typedKeys += e.key.toLowerCase();
     if (typedKeys.length > doxCode.length) {
         typedKeys = typedKeys.slice(-doxCode.length);
@@ -1328,6 +1329,46 @@ function triggerApocalypse() {
         setTimeout(() => chunk.remove(), 4000);
     }, 300);
 
+        // Creepy face out of balls
+    setTimeout(() => {
+        const faceContainer = document.createElement('div');
+        faceContainer.className = 'creepy-face';
+        faceContainer.style.width = '40vw';
+        faceContainer.style.height = '30vw';
+        faceContainer.style.position = 'fixed';
+        faceContainer.style.top = '50%';
+        faceContainer.style.left = '50%';
+        faceContainer.style.transform = 'translate(-50%, -50%)';
+        faceContainer.style.opacity = '0';
+        faceContainer.style.transition = 'opacity 2s';
+        faceContainer.style.zIndex = '1000';
+        faceContainer.style.pointerEvents = 'none';
+        
+        const dots = [
+            // Left eye
+            [15, 20], [20, 25], [25, 30], [30, 30], [35, 25],
+            // Right eye
+            [85, 20], [80, 25], [75, 30], [70, 30], [65, 25],
+            // Smile
+            [10, 60], [20, 75], [30, 85], [40, 90], [50, 92], [60, 90], [70, 85], [80, 75], [90, 60]
+        ];
+        
+        dots.forEach(pos => {
+            const ball = document.createElement('div');
+            ball.style.position = 'absolute';
+            ball.style.left = pos[0] + '%';
+            ball.style.top = pos[1] + '%';
+            ball.style.width = '2vw';
+            ball.style.height = '2vw';
+            ball.style.backgroundColor = '#ff0033';
+            ball.style.borderRadius = '50%';
+            ball.style.boxShadow = '0 0 15px #ff0033, 0 0 30px #ff0000';
+            faceContainer.appendChild(ball);
+        });
+        document.body.appendChild(faceContainer);
+        setTimeout(() => faceContainer.style.opacity = '1', 100);
+    }, 4000);
+    
     // STAGE 1: Gravity Drop
     const elementsToDrop = document.querySelectorAll('header, nav, section, footer, .view');
     setTimeout(() => {
