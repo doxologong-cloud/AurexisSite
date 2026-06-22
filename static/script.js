@@ -405,6 +405,9 @@ document.addEventListener('DOMContentLoaded', () => {
         if (accUsername) accUsername.textContent = userData.username || '@user';
         if (accAvatar) accAvatar.src = avatarUrl;
         
+        const ownerBadge = document.getElementById('acc-owner-badge');
+        if (ownerBadge) ownerBadge.style.display = userData.is_admin ? 'inline-flex' : 'none';
+        
         if (adminLink) {
             adminLink.style.display = userData.is_admin ? 'block' : 'none';
         }
