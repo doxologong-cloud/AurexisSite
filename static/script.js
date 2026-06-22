@@ -112,6 +112,11 @@ document.addEventListener('DOMContentLoaded', () => {
                 aboutView.classList.add('active');
             }
         } else if (hash === '#account') {
+            if (!window.currentUser) {
+                showToast('Нет доступа, вы не зарегистрированы', 'error');
+                window.location.hash = '#home';
+                return;
+            }
             const accView = document.getElementById('view-account');
             if(accView) {
                 accView.classList.remove('hidden-view');
@@ -220,9 +225,14 @@ document.addEventListener('DOMContentLoaded', () => {
     // Handle Login Submit
     loginForm.addEventListener('submit', async (e) => {
         e.preventDefault();
-        const email = document.getElementById('login-email').value;
+        const email = document.getElementById('login-email').value.trim();
         const pass = document.getElementById('login-password').value;
         const err = document.getElementById('login-error');
+        
+        if (!email || !pass) {
+            err.textContent = 'Заполните все поля!';
+            return;
+        }
         err.textContent = 'Вход...';
         
         try {
@@ -246,10 +256,15 @@ document.addEventListener('DOMContentLoaded', () => {
     // Handle Register Submit
     registerForm.addEventListener('submit', async (e) => {
         e.preventDefault();
-        const nickname = document.getElementById('reg-nickname').value;
-        const email = document.getElementById('reg-email').value;
+        const nickname = document.getElementById('reg-nickname').value.trim();
+        const email = document.getElementById('reg-email').value.trim();
         const pass = document.getElementById('reg-password').value;
         const err = document.getElementById('reg-error');
+        
+        if (!nickname || !email || !pass) {
+            err.textContent = 'Заполните все поля!';
+            return;
+        }
         
         if (pass.length < 8) {
             err.textContent = 'Пароль должен содержать минимум 8 символов.';

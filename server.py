@@ -107,8 +107,13 @@ def page_not_found(e):
 @app.route('/api/register', methods=['POST'])
 def register():
     data = request.json
-    email = data.get('email')
+    email = data.get('email', '').strip()
+    nickname = data.get('nickname', '').strip()
+    password = data.get('password', '')
     
+    if not email or not nickname or not password:
+        return jsonify({"success": False, "message": "Заполните все поля."})
+        
     # Check if user already exists
     if get_user_by_email(email):
         return jsonify({"success": False, "message": "Эта почта уже зарегистрирована."})
