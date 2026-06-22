@@ -1,4 +1,13 @@
 
+window.__ = function(ruText) {
+    const lang = localStorage.getItem('aurex_lang') || 'ru';
+    if (lang === 'ru') return ruText;
+    if (window.dynamicTranslations && window.dynamicTranslations[ruText]) {
+        return window.dynamicTranslations[ruText];
+    }
+    return ruText;
+};
+
 // CUSTOM TOAST SYSTEM
 function showToast(htmlMsg, type='info') {
     let container = document.getElementById('custom-toast-container');
@@ -68,7 +77,7 @@ window.handleGoogleCredentialResponse = async (response) => {
             alert('Ошибка входа через Google: ' + data.message);
         }
     } catch (e) {
-        alert('Ошибка соединения с сервером.');
+        alert(__('Ошибка соединения с сервером.'));
     }
 };
 
@@ -112,7 +121,7 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         } else if (hash === '#account') {
             if (!window.currentUser) {
-                showToast('Нет доступа, вы не зарегистрированы', 'error');
+                showToast(__('Нет доступа, вы не зарегистрированы'), 'error');
                 window.location.hash = '#home';
                 return;
             }
@@ -424,7 +433,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 });
                 const data = await res.json();
                 if (data.success) {
-                    alert('Пароль успешно изменён! Теперь вы можете войти.');
+                    alert(__('Пароль успешно изменён! Теперь вы можете войти.'));
                     // Reset modal state to login
                     newPasswordForm.style.display = 'none';
                     document.querySelector('.auth-tabs').style.display = 'flex';
@@ -534,7 +543,7 @@ document.addEventListener('DOMContentLoaded', () => {
         document.getElementById('nav-account').style.display = 'none';
         document.getElementById('open-auth').style.display = 'inline-block';
         window.location.hash = '#home'; // Go back to home
-        // alert('Вы вышли из аккаунта.');
+        // alert(__('Вы вышли из аккаунта.'));
 
         // Reset auth modal to Registration form
         verifyForm.style.display = 'none';
@@ -605,7 +614,7 @@ document.addEventListener('DOMContentLoaded', () => {
                             alert("Ошибка обновления аватарки: " + data.message);
                         }
                     } catch (e) {
-                        alert("Ошибка соединения при загрузке аватарки.");
+                        alert(__("Ошибка соединения при загрузке аватарки."));
                     }
                 };
                 img.src = event.target.result;
@@ -790,7 +799,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
                     const user = r.users || {};
                     const avatar = user.avatar || '/static/assets/default-avatar.png';
-                    const nickname = user.nickname || 'Неизвестно';
+                    const nickname = user.nickname || __('Неизвестно');
                     
                     container.innerHTML += `
                         <div class="bot-card" style="display: flex; flex-direction: column; align-items: center; text-align: center;">
@@ -1345,7 +1354,7 @@ function triggerEasterEgg() {
                 chatMessages.innerHTML = '';
                 data.messages.forEach(msg => {
                     const isSelf = window.currentUser && window.currentUser.email === msg.user_email;
-                    const nickname = msg.users ? msg.users.nickname : 'Неизвестно';
+                    const nickname = msg.users ? msg.users.nickname : __('Неизвестно');
                     const avatar = msg.users && msg.users.avatar ? msg.users.avatar : '/static/assets/default-avatar.png';
                     const isAdmin = msg.users && msg.users.is_admin;
                     
@@ -1475,7 +1484,7 @@ async function sendGlobalChat() {
 
     async function sendToAI() {
         if(!window.currentUser) {
-            showToast('⚠️ Войдите в аккаунт или зарегистрируйтесь (в Панели Управления), чтобы общаться с нейросетью.', 'error');
+            showToast(__('⚠️ Войдите в аккаунт или зарегистрируйтесь (в Панели Управления), чтобы общаться с нейросетью.'), 'error');
             return;
         }
         if(isGenerating) return;
@@ -2211,7 +2220,7 @@ document.addEventListener('DOMContentLoaded', () => {
     document.querySelector('.nav-feed-link')?.addEventListener('click', (e) => {
         if(!window.currentUser) {
             e.preventDefault();
-            showToast('Войдите, чтобы открыть Ленту', 'error');
+            showToast(__('Войдите, чтобы открыть Ленту'), 'error');
             return;
         }
         // Let the default link click change the hash
@@ -2259,7 +2268,7 @@ document.addEventListener('DOMContentLoaded', () => {
             payload.group_name = document.getElementById('group-name').value.trim();
         }
 
-        if(!payload.target_email) return showToast('Введите email', 'error');
+        if(!payload.target_email) return showToast(__('Введите email'), 'error');
 
         try {
             const res = await fetch('/api/create_chat', {
@@ -2269,7 +2278,7 @@ document.addEventListener('DOMContentLoaded', () => {
             });
             const data = await res.json();
             if(res.ok) {
-                showToast('Чат создан!', 'success');
+                showToast(__('Чат создан!'), 'success');
                 newChatModal.style.display = 'none';
                 loadChats();
             } else {
@@ -2756,7 +2765,7 @@ async function addContact(email) {
             headers: {'Content-Type': 'application/json'},
             body: JSON.stringify({email: email})
         });
-        showToast('Добавлен в контакты', 'success');
+        showToast(__('Добавлен в контакты'), 'success');
     } catch(e) {}
 }
 
@@ -2980,7 +2989,7 @@ function replyToMessage(text) {
 
 function deleteMessage(btn) {
     // Optimistic delete for now
-    alert("Сообщение визуально удалено! (БД интеграция в след. фазе)");
+    alert(__("Сообщение визуально удалено! (БД интеграция в след. фазе)"));
 }
 
 function addReaction(btn, emoji) {
@@ -3190,10 +3199,10 @@ async function toggleVoiceRecord() {
                 const audioBlob = new Blob(audioChunks, { type: 'audio/wav' });
                 audioChunks = [];
                 // Simulate sending audio
-                showToast("Голосовое сообщение отправлено! (интеграция в след. фазе)", "success");
+                showToast(__("Голосовое сообщение отправлено! (интеграция в след. фазе)"), "success");
             };
         } catch(e) {
-            showToast("Нет доступа к микрофону. Нажмите на значок замка в адресной строке и разрешите доступ!", "error");
+            showToast(__("Нет доступа к микрофону. Нажмите на значок замка в адресной строке и разрешите доступ!"), "error");
         }
     } else {
         mediaRecorder.stop();
@@ -3222,7 +3231,7 @@ async function captureScreen() {
             
             const dataUrl = canvas.toDataURL('image/jpeg', 0.8);
             // Simulate sending image
-            alert("Скриншот сделан! (Интеграция с БД в след. фазе)");
+            alert(__("Скриншот сделан! (Интеграция с БД в след. фазе)"));
         };
     } catch(e) {
         console.error("Окно захвата закрыто или отклонено.");
@@ -3360,7 +3369,7 @@ async function startCall() {
         if(messenger) messenger.appendChild(container);
         
     } catch(e) {
-        alert("Нет доступа к камере или микрофону для WebRTC!");
+        alert(__("Нет доступа к камере или микрофону для WebRTC!"));
     }
 }
 

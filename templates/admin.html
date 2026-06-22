@@ -315,22 +315,22 @@
             <!-- USERS PANEL -->
             <div class="admin-panel active" id="panel-users">
                 <div class="panel-header">
-                    <h1>Пользователи</h1>
-                    <p>Управление подписками Flora и пользователями платформы</p>
+                    <h1><span data-i18n="t_admin_18991308658928346"><span data-i18n="t_admin_7930448714661025234">Пользователи</span></span></h1>
+                    <p><span data-i18n="t_admin_3097703492024076435"><span data-i18n="t_admin_-4710021274582938521">Управление подписками Flora и пользователями платформы</span></span></p>
                 </div>
                 <div class="glass-card">
                     <table class="admin-table">
                         <thead>
                             <tr>
-                                <th>Юзернейм</th>
-                                <th>Никнейм</th>
-                                <th>Почта</th>
+                                <th><span data-i18n="t_admin_7969959529142453053"><span data-i18n="t_admin_389715634145388847">Юзернейм</span></span></th>
+                                <th><span data-i18n="t_admin_-3577587135322438902"><span data-i18n="t_admin_8322426778452878039">Никнейм</span></span></th>
+                                <th><span data-i18n="t_admin_-2456830609701580680"><span data-i18n="t_admin_-4890184245777286384">Почта</span></span></th>
                                 <th>Flora Status</th>
-                                <th>Действия</th>
+                                <th><span data-i18n="t_admin_-4968380242939719757"><span data-i18n="t_admin_1002976452045123699">Действия</span></span></th>
                             </tr>
                         </thead>
                         <tbody id="users-tbody">
-                            <tr><td colspan="5" style="text-align:center;">Загрузка...</td></tr>
+                            <tr><td colspan="5" style="text-align:center;"><span data-i18n="t_admin_2507707473533536822"><span data-i18n="t_admin_6560504033741508906">Загрузка...</span></span></td></tr>
                         </tbody>
                     </table>
                 </div>
@@ -339,17 +339,17 @@
             <!-- BOTS PANEL -->
             <div class="admin-panel" id="panel-bots">
                 <div class="panel-header">
-                    <h1>Статусы ботов</h1>
-                    <p>Мониторинг и управление статусами проектов</p>
+                    <h1><span data-i18n="t_admin_-3534862275021402611"><span data-i18n="t_admin_1193786875220234033">Статусы ботов</span></span></h1>
+                    <p><span data-i18n="t_admin_-8703651675717140972"><span data-i18n="t_admin_-660802220731622292">Мониторинг и управление статусами проектов</span></span></p>
                 </div>
                 <div class="glass-card">
                     <table class="admin-table">
                         <thead>
                             <tr>
-                                <th>Бот ID</th>
-                                <th>Текст Статуса</th>
-                                <th>Цвет (HEX)</th>
-                                <th>Действие</th>
+                                <th><span data-i18n="t_admin_2128844729774125847"><span data-i18n="t_admin_6949443947332124994">Бот ID</span></span></th>
+                                <th><span data-i18n="t_admin_4668991317950106244"><span data-i18n="t_admin_2794337244884629305">Текст Статуса</span></span></th>
+                                <th><span data-i18n="t_admin_2746046414353095199"><span data-i18n="t_admin_1802702022292722417">Цвет (HEX)</span></span></th>
+                                <th><span data-i18n="t_admin_2533512037929352245"><span data-i18n="t_admin_6076319907915778982">Действие</span></span></th>
                             </tr>
                         </thead>
                         <tbody id="bots-tbody">
@@ -429,21 +429,21 @@
             <!-- NEWS PANEL -->
             <div class="admin-panel" id="panel-news">
                 <div class="panel-header">
-                    <h1>Новости</h1>
-                    <p>Публикация обновлений на сайте</p>
+                    <h1><span data-i18n="t_admin_4085832439489319510"><span data-i18n="t_admin_-6265480845934116236">Новости</span></span></h1>
+                    <p><span data-i18n="t_admin_1383126338977069478"><span data-i18n="t_admin_-3679252123661461318">Публикация обновлений на сайте</span></span></p>
                 </div>
                 
                 <div class="glass-card">
-                    <h3 style="margin-top:0; color:var(--neon-primary);">Написать новость</h3>
-                    <input type="text" id="news-title-input" class="admin-input" placeholder="Заголовок новости">
-                    <textarea id="news-content-input" class="admin-input" placeholder="Текст новости" rows="4"></textarea>
-                    <button class="flora-toggle active" style="width: 100%; padding: 12px; font-size: 1.1rem;" onclick="publishNews()">Опубликовать новость</button>
+                    <h3 style="margin-top:0; color:var(--neon-primary);"><span data-i18n="t_admin_1809995927555489580"><span data-i18n="t_admin_-4235946427778258839">Написать новость</span></span></h3>
+                    <input type="text" id="news-title-input" class="admin-input" placeholder="Заголовок новости" data-i18n-placeholder="t_admin_-6729684597980692800" data-i18n-placeholder="t_admin_-163793448024092006">
+                    <textarea id="news-content-input" class="admin-input" placeholder="Текст новости" data-i18n-placeholder="t_admin_-4585550095156527503" data-i18n-placeholder="t_admin_1573036847307861232" rows="4"></textarea>
+                    <button class="flora-toggle active" style="width: 100%; padding: 12px; font-size: 1.1rem;" onclick="publishNews()"><span data-i18n="t_admin_4324014101495518809"><span data-i18n="t_admin_-3837530376825337792">Опубликовать новость</span></span></button>
                 </div>
 
                 <div class="glass-card">
                     <table class="admin-table">
-                        <thead><tr><th>ID</th><th>Дата</th><th>Заголовок</th><th>Действие</th></tr></thead>
-                        <tbody id="news-tbody"><tr><td colspan="4" style="text-align:center;">Загрузка...</td></tr></tbody>
+                        <thead><tr><th>ID</th><th><span data-i18n="t_admin_-7269847879400215709"><span data-i18n="t_admin_8019030521330646715">Дата</span></span></th><th><span data-i18n="t_admin_-1710360490794933649"><span data-i18n="t_admin_-2073954284462410343">Заголовок</span></span></th><th><span data-i18n="t_admin_2533512037929352245"><span data-i18n="t_admin_6076319907915778982">Действие</span></span></th></tr></thead>
+                        <tbody id="news-tbody"><tr><td colspan="4" style="text-align:center;"><span data-i18n="t_admin_2507707473533536822"><span data-i18n="t_admin_6560504033741508906">Загрузка...</span></span></td></tr></tbody>
                     </table>
                 </div>
             </div>
@@ -452,12 +452,12 @@
             <div class="admin-panel" id="panel-tickets">
                 <div class="panel-header">
                     <h1>Тикеты пользователей</h1>
-                    <p>Ответы на вопросы и техническая поддержка</p>
+                    <p><span data-i18n="t_admin_7147528354983308327"><span data-i18n="t_admin_-124152213371787334">Ответы на вопросы и техническая поддержка</span></span></p>
                 </div>
                 <div class="glass-card">
                     <table class="admin-table">
-                        <thead><tr><th>Пользователь</th><th>Тема</th><th>Статус</th><th>Действия</th></tr></thead>
-                        <tbody id="tickets-tbody"><tr><td colspan="4" style="text-align:center;">Загрузка...</td></tr></tbody>
+                        <thead><tr><th><span data-i18n="t_admin_9126155717556979012"><span data-i18n="t_admin_6835182823780559012">Пользователь</span></span></th><th><span data-i18n="t_admin_1768632155396726430"><span data-i18n="t_admin_1576311083048205399">Тема</span></span></th><th><span data-i18n="t_admin_8464699362816377219"><span data-i18n="t_admin_-3966083385021887261">Статус</span></span></th><th><span data-i18n="t_admin_-4968380242939719757"><span data-i18n="t_admin_1002976452045123699">Действия</span></span></th></tr></thead>
+                        <tbody id="tickets-tbody"><tr><td colspan="4" style="text-align:center;"><span data-i18n="t_admin_2507707473533536822"><span data-i18n="t_admin_6560504033741508906">Загрузка...</span></span></td></tr></tbody>
                     </table>
                 </div>
             </div>
@@ -475,20 +475,20 @@
             <div id="admin-ticket-messages" style="background: rgba(0,0,0,0.3); border: 1px solid rgba(255,255,255,0.05); border-radius: 12px; height: 350px; overflow-y: auto; padding: 20px; display: flex; flex-direction: column; gap: 15px; margin-bottom: 20px;"></div>
             
             <div id="admin-ticket-reply-box" style="display: flex; gap: 10px; margin-bottom: 15px;">
-                <input type="text" id="admin-ticket-input" class="admin-input" placeholder="Ответить пользователю..." style="margin-bottom: 0;">
-                <button onclick="sendAdminTicketReply()" class="flora-toggle active" style="padding: 0 25px;">Отправить</button>
+                <input type="text" id="admin-ticket-input" class="admin-input" placeholder="Ответить пользователю..." data-i18n-placeholder="t_admin_7381554463135804724" data-i18n-placeholder="t_admin_-6076637539001830213" style="margin-bottom: 0;">
+                <button onclick="sendAdminTicketReply()" class="flora-toggle active" style="padding: 0 25px;"><span data-i18n="t_admin_5210492348438589740"><span data-i18n="t_admin_-6984209414856194534">Отправить</span></span></button>
             </div>
-            <button id="admin-close-ticket-btn" onclick="closeTicketIssue()" class="flora-toggle btn-danger" style="width: 100%;">Пометить как Решенный (Закрыть)</button>
+            <button id="admin-close-ticket-btn" onclick="closeTicketIssue()" class="flora-toggle btn-danger" style="width: 100%;"><span data-i18n="t_admin_-3199460927318301947"><span data-i18n="t_admin_-5612491225875065811">Пометить как Решенный (Закрыть)</span></span></button>
         </div>
     </div>
 
     <!-- Custom Confirm Modal -->
     <div id="custom-confirm-modal" style="display: none; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(0,0,0,0.8); z-index: 10000; justify-content: center; align-items: center; backdrop-filter: blur(8px);">
         <div style="background: var(--bg-color); border: 1px solid var(--neon-primary); border-radius: 16px; padding: 40px; width: 400px; max-width: 90%; text-align: center; box-shadow: 0 0 50px rgba(0,0,0,0.8);">
-            <h3 id="confirm-msg" style="color: white; margin-bottom: 30px; margin-top: 0; font-size: 1.3rem;">Вы уверены?</h3>
+            <h3 id="confirm-msg" style="color: white; margin-bottom: 30px; margin-top: 0; font-size: 1.3rem;"><span data-i18n="t_admin_-2863671644833562371"><span data-i18n="t_admin_-4721385585934707464">Вы уверены?</span></span></h3>
             <div style="display: flex; gap: 15px; justify-content: center;">
-                <button id="confirm-yes" class="flora-toggle btn-danger" style="flex: 1;">Да, уверен</button>
-                <button id="confirm-no" class="flora-toggle" style="flex: 1;">Отмена</button>
+                <button id="confirm-yes" class="flora-toggle btn-danger" style="flex: 1;"><span data-i18n="t_admin_-726352746686329385"><span data-i18n="t_admin_-1435915067942721666">Да, уверен</span></span></button>
+                <button id="confirm-no" class="flora-toggle" style="flex: 1;"><span data-i18n="t_admin_90636451333905539"><span data-i18n="t_admin_8532731709837033328">Отмена</span></span></button>
             </div>
         </div>
     </div>
@@ -542,7 +542,7 @@
 
         async function loadUsers() {
             const tbody = document.getElementById('users-tbody');
-            tbody.innerHTML = '<tr><td colspan="5" style="text-align:center;">Загрузка...</td></tr>';
+            tbody.innerHTML = '<tr><td colspan="5" style="text-align:center;"><span data-i18n="t_admin_2507707473533536822"><span data-i18n="t_admin_6560504033741508906">Загрузка...</span></span></td></tr>';
             try {
                 const res = await fetch('/api/admin/users');
                 const data = await res.json();
@@ -555,7 +555,7 @@
                             <td><a href="/u/${u.username}" target="_blank" style="color: var(--neon-purple); text-decoration: none; font-weight: 500;">@${u.username || '---'}</a></td>
                             <td>${u.nickname}</td>
                             <td style="color: #ccc;">${u.email}</td>
-                            <td id="flora-status-${u.email}">${isFlora ? '<span style="color:#00ffaa; font-weight:bold; text-shadow: 0 0 5px #00ffaa;">Активна</span>' : '<span style="color:#ff4444;">Нет</span>'}</td>
+                            <td id="flora-status-${u.email}">${isFlora ? '<span style="color:#00ffaa; font-weight:bold; text-shadow: 0 0 5px #00ffaa;"><span data-i18n="t_admin_-8424368922692389238"><span data-i18n="t_admin_3119541225569114296">Активна</span></span></span>' : '<span style="color:#ff4444;"><span data-i18n="t_admin_-4683539563076748077"><span data-i18n="t_admin_7214731304717275427">Нет</span></span></span>'}</td>
                             <td>
                                 <button class="flora-toggle ${isFlora ? 'active' : ''}" onclick="toggleFlora('${u.email}', ${!isFlora})">
                                     ${isFlora ? '❌ Забрать Flora' : '✨ Выдать Flora'}
@@ -566,7 +566,7 @@
                     });
                 } else tbody.innerHTML = `<tr><td colspan="5" style="text-align:center; color:#ff4444;">${data.message}</td></tr>`;
             } catch (e) {
-                tbody.innerHTML = '<tr><td colspan="5" style="text-align:center; color:#ff4444;">Ошибка соединения</td></tr>';
+                tbody.innerHTML = '<tr><td colspan="5" style="text-align:center; color:#ff4444;"><span data-i18n="t_admin_-8152363793543067486"><span data-i18n="t_admin_-1364682259577728734">Ошибка соединения</span></span></td></tr>';
             }
         }
 
@@ -620,14 +620,14 @@
                 const data = await res.json();
                 if (data.success) {
                     tbody.innerHTML = '';
-                    if(data.news.length === 0) { tbody.innerHTML = '<tr><td colspan="4" style="text-align:center;">Нет новостей</td></tr>'; return; }
+                    if(data.news.length === 0) { tbody.innerHTML = '<tr><td colspan="4" style="text-align:center;"><span data-i18n="t_admin_2036484018711220120"><span data-i18n="t_admin_-7385565570755025343">Нет новостей</span></span></td></tr>'; return; }
                     data.news.forEach(n => {
                         const date = new Date(n.created_at).toLocaleDateString('ru-RU');
                         tbody.innerHTML += `<tr>
                             <td style="color:#888;">#${n.id}</td>
                             <td style="color:#aaa;">${date}</td>
                             <td style="font-weight:500;">${n.title}</td>
-                            <td><button class="flora-toggle btn-danger" onclick="deleteNews(${n.id})">Удалить</button></td>
+                            <td><button class="flora-toggle btn-danger" onclick="deleteNews(${n.id})"><span data-i18n="t_admin_5161119487187545122"><span data-i18n="t_admin_-2300644196175027254">Удалить</span></span></button></td>
                         </tr>`;
                     });
                 }
@@ -667,11 +667,11 @@
                 const data = await res.json();
                 if (data.success) {
                     tbody.innerHTML = '';
-                    if(data.tickets.length === 0) { tbody.innerHTML = '<tr><td colspan="4" style="text-align:center;">Нет тикетов</td></tr>'; return; }
+                    if(data.tickets.length === 0) { tbody.innerHTML = '<tr><td colspan="4" style="text-align:center;"><span data-i18n="t_admin_7641769235423722811"><span data-i18n="t_admin_-657183342100839263">Нет тикетов</span></span></td></tr>'; return; }
                     data.tickets.forEach(t => {
                         const avatar = t.user_avatar || '/static/assets/default-avatar.png';
                         const nickname = t.user_email;
-                        const statusStr = t.status === 'open' ? '<span style="color:#00ffaa; font-weight:bold;">Открыт</span>' : '<span style="color:#ff4444;">Закрыт</span>';
+                        const statusStr = t.status === 'open' ? '<span style="color:#00ffaa; font-weight:bold;"><span data-i18n="t_admin_-8816885345268839548"><span data-i18n="t_admin_159528359647245937">Открыт</span></span></span>' : '<span style="color:#ff4444;"><span data-i18n="t_admin_-7209342663355232443"><span data-i18n="t_admin_3883713920184178567">Закрыт</span></span></span>';
                         tbody.innerHTML += `<tr id="ticket-row-${t.id}">
                             <td>
                                 <div style="display:flex; align-items:center; gap:12px;">
@@ -700,11 +700,11 @@
             document.getElementById('admin-ticket-title').textContent = 'Тикет #' + id + ': ' + topic;
             
             if(status === 'open') {
-                document.getElementById('admin-ticket-status').innerHTML = 'Статус: <span style="color:#00ffaa; text-shadow: 0 0 5px #00ffaa;">Открыт</span>';
+                document.getElementById('admin-ticket-status').innerHTML = 'Статус: <span style="color:#00ffaa; text-shadow: 0 0 5px #00ffaa;"><span data-i18n="t_admin_-8816885345268839548"><span data-i18n="t_admin_159528359647245937">Открыт</span></span></span>';
                 document.getElementById('admin-ticket-reply-box').style.display = 'flex';
                 document.getElementById('admin-close-ticket-btn').style.display = 'block';
             } else {
-                document.getElementById('admin-ticket-status').innerHTML = 'Статус: <span style="color:#ff4444;">Закрыт</span>';
+                document.getElementById('admin-ticket-status').innerHTML = 'Статус: <span style="color:#ff4444;"><span data-i18n="t_admin_-7209342663355232443"><span data-i18n="t_admin_3883713920184178567">Закрыт</span></span></span>';
                 document.getElementById('admin-ticket-reply-box').style.display = 'none';
                 document.getElementById('admin-close-ticket-btn').style.display = 'none';
             }
