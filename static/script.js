@@ -26,7 +26,6 @@ function showToast(htmlMsg, type='info') {
 
 // Function to switch tab manually from links
 window.switchAuthTab = function(tabName) {
-    window.location.hash = '#account';
     setTimeout(() => {
         const authTabs = document.querySelectorAll('.auth-tab');
         authTabs.forEach(t => t.classList.remove('active'));
