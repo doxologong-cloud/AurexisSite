@@ -1466,3 +1466,60 @@ body.apocalypse-mode .btn {
     0% { transform: translateY(-100px) rotate(0deg); opacity: 1; }
     100% { transform: translateY(110vh) rotate(20deg); opacity: 0; }
 }
+
+/* --- STAGE 2: CREEPY FACE & GRAVITY FALL --- */
+.creepy-face {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 15vw;
+    color: #ff0000;
+    font-weight: bold;
+    font-family: monospace;
+    opacity: 0;
+    z-index: 1000;
+    pointer-events: none;
+    text-shadow: 0 0 30px #ff0000;
+    transition: opacity 4s ease-in;
+    white-space: nowrap;
+}
+
+.gravity-fall {
+    animation: gravity-drop 4s cubic-bezier(0.55, 0.085, 0.68, 0.53) forwards !important;
+}
+
+@keyframes gravity-drop {
+    0% { transform: translateY(0) rotate(0); }
+    100% { transform: translateY(150vh) rotate(45deg); opacity: 0; }
+}
+
+.anticheat-overlay {
+    position: fixed;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background: rgba(0, 5, 0, 0.95);
+    color: #0f0;
+    font-family: 'Courier New', Courier, monospace;
+    font-size: 2vw;
+    z-index: 9999999;
+    padding: 50px;
+    opacity: 0;
+    transition: opacity 1s;
+    pointer-events: none;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    text-shadow: 0 0 5px #0f0;
+}
+
+.anticheat-line {
+    opacity: 0;
+    margin: 10px 0;
+    transform: translateY(20px);
+    transition: all 0.5s;
+}
+
+.anticheat-line.visible {
+    opacity: 1;
+    transform: translateY(0);
+}
