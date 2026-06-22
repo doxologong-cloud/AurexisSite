@@ -240,8 +240,11 @@
         window.deleteAdminTicket = async function(id) {
             if(!confirm('Удалить тикет?')) return;
             try {
+                const row = document.getElementById('ticket-row-' + id);
+                if(row) row.remove(); // optimistic delete
+                
                 const res = await fetch(`/api/admin/tickets/${id}`, {method: 'DELETE'});
-                if(res.ok) loadAdminTickets();
+                if(!res.ok) loadAdminTickets(); // fallback if failed
             } catch(e) {}
         }
         
@@ -348,11 +351,10 @@
                     tbody.innerHTML = '';
                     if(data.tickets.length === 0) { tbody.innerHTML = '<tr><td colspan="4" style="text-align:center;">Нет тикетов</td></tr>'; return; }
                     data.tickets.forEach(t => {
-                        const user = t.users || {};
-                        const avatar = user.avatar || '/static/assets/default-avatar.png';
-                        const nickname = user.nickname || t.user_email;
+                        const avatar = t.user_avatar || '/static/assets/default-avatar.png';
+                        const nickname = t.user_email;
                         const statusStr = t.status === 'open' ? '<span style="color:#00ffaa;">Открыт</span>' : '<span style="color:#ff4444;">Закрыт</span>';
-                        tbody.innerHTML += `<tr>
+                        tbody.innerHTML += `<tr id="ticket-row-${t.id}">
                             <td>
                                 <div style="display:flex; align-items:center; gap:10px;">
                                     <img src="${avatar}" style="width:30px; height:30px; border-radius:50%; object-fit:cover;">
@@ -451,8 +453,11 @@
         window.deleteAdminTicket = async function(id) {
             if(!confirm('Удалить тикет?')) return;
             try {
+                const row = document.getElementById('ticket-row-' + id);
+                if(row) row.remove(); // optimistic delete
+                
                 const res = await fetch(`/api/admin/tickets/${id}`, {method: 'DELETE'});
-                if(res.ok) loadAdminTickets();
+                if(!res.ok) loadAdminTickets(); // fallback if failed
             } catch(e) {}
         }
         

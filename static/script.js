@@ -807,7 +807,8 @@ document.addEventListener('DOMContentLoaded', () => {
                 for (const [botId, botData] of Object.entries(data.bots)) {
                     const el = document.getElementById('status-' + botId);
                     if (el) {
-                        el.innerHTML = `<span class="status-dot" style="background: ${botData.color}; box-shadow: 0 0 10px ${botData.color}"></span> <span style="color: ${botData.color}">${botData.status}</span>`;
+                        const anim = botData.status === 'Offline' ? 'none' : (botData.status === 'Active' ? 'blink 5s infinite' : 'blink 0.5s infinite');
+                        el.innerHTML = `<span class="status-dot" style="background: ${botData.color}; box-shadow: ${botData.status === 'Offline' ? 'none' : `0 0 10px ${botData.color}`}; animation: ${anim}"></span> <span style="color: ${botData.color}">${botData.status}</span>`;
                     }
                 }
             }
@@ -1994,28 +1995,31 @@ async function loadChatMessages() {
             const container = document.getElementById('active-chat-messages');
             container.innerHTML = '';
             
+            let newHtml = '';
             data.messages.forEach(msg => {
                 const isSentByMe = msg.sender_email === window.currentUser.email;
-                const el = document.createElement('div');
-                el.className = `chat-msg ${isSentByMe ? 'sent' : 'received'}`;
-                
                 let contentHTML = escapeHTML(msg.message);
+                let extraClass = '';
                 if(msg.message.startsWith('STICKER:')) {
-                    el.classList.add('chat-msg-sticker');
+                    extraClass = 'chat-msg-sticker';
                     contentHTML = `<img src="${escapeHTML(msg.message.replace('STICKER:', ''))}" alt="sticker">`;
                 }
-                
                 const time = new Date(msg.created_at).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
                 
-                el.innerHTML = `
+                newHtml += `
+                <div class="chat-msg ${isSentByMe ? 'sent' : 'received'} ${extraClass}">
                     ${!isSentByMe ? `<span class="chat-msg-sender">${escapeHTML(msg.sender_email.split('@')[0])}</span>` : ''}
                     ${contentHTML}
                     <span class="chat-msg-time">${time}</span>
+                </div>
                 `;
-                container.appendChild(el);
             });
             
-            container.scrollTop = container.scrollHeight;
+            if (container.getAttribute('data-last-html') !== newHtml) {
+                container.innerHTML = newHtml;
+                container.setAttribute('data-last-html', newHtml);
+                container.scrollTop = container.scrollHeight;
+            }
         }
     } catch(e) {
         console.error(e);
