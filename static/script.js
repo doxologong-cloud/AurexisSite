@@ -1276,46 +1276,73 @@ document.addEventListener('DOMContentLoaded', () => {
         return msgDiv.querySelector('.msg-content');
     }
 
+    let aiChatHistory = [];
+    let aiAbortController = null;
+    const aiStopBtn = document.getElementById('ai-stop-btn');
+    if(aiStopBtn) {
+        aiStopBtn.addEventListener('click', () => {
+            if(aiAbortController) {
+                aiAbortController.abort();
+            }
+        });
+    }
+
     async function sendToAI() {
         if(!aiInput || !aiInput.value.trim()) return;
         const text = aiInput.value.trim();
         aiInput.value = '';
         
-        // Add user msg
+        // Add to history
+        aiChatHistory.push({role: 'user', content: text});
         addMessageToTerminal('user', text);
         
-        // Add typing indicator
         const contentBox = addMessageToTerminal('ai', '<div class="typing-indicator"></div><div class="typing-indicator" style="animation-delay:0.2s"></div><div class="typing-indicator" style="animation-delay:0.4s"></div>');
+        
+        if(aiSendBtn) aiSendBtn.style.display = 'none';
+        if(aiStopBtn) aiStopBtn.style.display = 'block';
+        
+        aiAbortController = new AbortController();
         
         try {
             const res = await fetch('/api/ai/chat', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ message: text })
+                body: JSON.stringify({ message: text, history: aiChatHistory }),
+                signal: aiAbortController.signal
             });
             
-            const data = await res.json();
-            if (res.ok) {
-                // Smooth typewriter effect
-                contentBox.innerHTML = '';
-                const reply = data.reply;
-                let i = 0;
-                const interval = setInterval(() => {
-                    contentBox.innerHTML += reply.charAt(i);
-                    i++;
+            contentBox.innerHTML = '';
+            
+            if (res.ok && res.body) {
+                const reader = res.body.getReader();
+                const decoder = new TextDecoder('utf-8');
+                let fullReply = '';
+                
+                while (true) {
+                    const { value, done } = await reader.read();
+                    if (done) break;
+                    
+                    const chunk = decoder.decode(value, {stream: true});
+                    fullReply += chunk;
+                    contentBox.textContent = fullReply;
                     aiChatBox.scrollTop = aiChatBox.scrollHeight;
-                    if (i >= reply.length) {
-                        clearInterval(interval);
-                        // Optional formatting of bold text
-                        contentBox.innerHTML = contentBox.innerHTML.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
-                        contentBox.innerHTML = contentBox.innerHTML.replace(/\n/g, '<br>');
-                    }
-                }, 15);
+                }
+                aiChatHistory.push({role: 'assistant', content: fullReply});
             } else {
-                contentBox.innerHTML = `<span style="color:#ff4444">Ошибка связи с ИИ: ${data.error || 'Неизвестная ошибка'}</span>`;
+                contentBox.textContent = 'Ошибка подключения к серверу.';
             }
-        } catch(e) {
-            contentBox.innerHTML = '<span style="color:#ff4444">Ошибка сети при связи с ИИ-ядром.</span>';
+        } catch (e) {
+            if(e.name === 'AbortError') {
+                // If user aborted, we just save what was generated so far
+                const partialReply = contentBox.textContent;
+                aiChatHistory.push({role: 'assistant', content: partialReply});
+            } else {
+                contentBox.textContent = 'Ошибка сети.';
+            }
+        } finally {
+            if(aiSendBtn) aiSendBtn.style.display = 'block';
+            if(aiStopBtn) aiStopBtn.style.display = 'none';
+            aiAbortController = null;
         }
     }
 
