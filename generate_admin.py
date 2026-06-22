@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+html_content = """<!DOCTYPE html>
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
@@ -684,7 +684,7 @@
                 if(data.success) {
                     container.innerHTML = '';
                     data.messages.forEach(m => {
-                        const isMe = m.sender_email === 'admin@aurexis.com'; // Admin sends as admin email
+                        const isMe = m.sender_email === window.currentUser?.email || m.sender_email === 'admin@aurexis.com';
                         container.innerHTML += `
                             <div style="background: rgba(255,255,255,0.05); padding: 12px; border-radius: 8px; border-left: 3px solid ${isMe ? 'var(--neon-primary)' : 'var(--neon-purple)'}">
                                 <div style="font-size: 0.8rem; color: ${isMe ? 'var(--neon-primary)' : 'var(--neon-purple)'}; margin-bottom: 5px; font-weight: bold;">${m.sender_email}</div>
@@ -751,3 +751,6 @@
     </script>
 </body>
 </html>
+
+with open('templates/admin.html', 'w', encoding='utf-8') as out:
+    out.write(html_content)
