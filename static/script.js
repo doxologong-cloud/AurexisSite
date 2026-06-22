@@ -390,6 +390,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Login Function
     window.loginUser = function(userData, showAlert = true) {
+        window.currentUser = userData;
         document.getElementById('modal-auth').style.display = 'none';
         
         // Update Navbar
@@ -447,6 +448,7 @@ document.addEventListener('DOMContentLoaded', () => {
             await fetch('/api/logout', { method: 'POST' });
         } catch(e) {}
 
+        window.currentUser = null;
         document.getElementById('nav-account').style.display = 'none';
         document.getElementById('open-auth').style.display = 'inline-block';
         window.location.hash = '#home'; // Go back to home
