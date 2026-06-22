@@ -1969,13 +1969,55 @@ function triggerApocalypse() {
                                                                 doxMsg.style.textShadow = '10px 0 0 #ff0000, -10px 0 0 #00ff00, 0 0 50px #fff';
                                                                 
                                                                 setTimeout(() => {
-                                                                    doxTerminal.style.transition = 'opacity 0.5s';
-                                                                    doxTerminal.style.opacity = '0';
+                                                                    // JUMPSCARE SOUND AND BSOD
+                                                                    try {
+                                                                        const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+                                                                        const osc = audioCtx.createOscillator();
+                                                                        const osc2 = audioCtx.createOscillator();
+                                                                        const gain = audioCtx.createGain();
+                                                                        osc.type = 'square';
+                                                                        osc2.type = 'sawtooth';
+                                                                        osc.frequency.setValueAtTime(100, audioCtx.currentTime);
+                                                                        osc2.frequency.setValueAtTime(50, audioCtx.currentTime);
+                                                                        osc.frequency.exponentialRampToValueAtTime(800, audioCtx.currentTime + 0.2);
+                                                                        osc2.frequency.exponentialRampToValueAtTime(1000, audioCtx.currentTime + 0.2);
+                                                                        gain.gain.setValueAtTime(1, audioCtx.currentTime);
+                                                                        gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.5);
+                                                                        osc.connect(gain);
+                                                                        osc2.connect(gain);
+                                                                        gain.connect(audioCtx.destination);
+                                                                        osc.start(); osc2.start();
+                                                                        osc.stop(audioCtx.currentTime + 0.5); osc2.stop(audioCtx.currentTime + 0.5);
+                                                                    } catch(e) {}
+
+                                                                    // Show BSOD
                                                                     document.body.style.animation = ''; 
-                                                                    setTimeout(() => {
-                                                                        doxTerminal.remove();
-                                                                    }, 500);
-                                                                }, 4000);
+                                                                    doxTerminal.style.animation = 'none';
+                                                                    doxTerminal.style.backgroundColor = '#0078d7';
+                                                                    doxTerminal.innerHTML = `
+                                                                        <div style="background-color: #0078d7; width: 100vw; height: 100vh; position: fixed; top: 0; left: 0; display: flex; flex-direction: column; justify-content: center; align-items: flex-start; padding: 10vw; box-sizing: border-box; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; color: white; z-index: 9999999999; text-align: left;">
+                                                                            <div style="font-size: 150px; margin-bottom: 20px; font-weight: normal; text-shadow: none;">:(</div>
+                                                                            <div style="font-size: 40px; margin-bottom: 40px; max-width: 800px; line-height: 1.2; font-weight: normal; text-shadow: none;">Ваш ПК столкнулся с проблемой и нуждается в перезагрузке. Мы лишь собираем некоторые сведения об ошибке, а затем будет выполнена автоматическая перезагрузка.</div>
+                                                                            <div style="font-size: 24px; margin-bottom: 20px; font-weight: normal; text-shadow: none;">100% завершено</div>
+                                                                            <div style="font-size: 20px; margin-top: 40px; display: flex; align-items: center; gap: 20px; font-weight: normal; text-shadow: none;">
+                                                                                <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/d/d0/QR_code_for_mobile_English_Wikipedia.svg/1200px-QR_code_for_mobile_English_Wikipedia.svg.png" style="width: 150px; height: 150px; background: white; padding: 10px;">
+                                                                                <div>
+                                                                                    Дополнительные сведения об этой проблеме и возможных способах ее решения см. на странице<br>
+                                                                                    http://windows.com/stopcode<br><br>
+                                                                                    Код остановки: CRITICAL_PROCESS_DIED_BY_DOX
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+                                                                    `;
+                                                                    
+                                                                    // Try to force fullscreen
+                                                                    try {
+                                                                        if (document.documentElement.requestFullscreen) {
+                                                                            document.documentElement.requestFullscreen();
+                                                                        }
+                                                                    } catch(e) {}
+                                                                    
+                                                                }, 2000);
                                                                 return;
                                                             }
                                                             
