@@ -2841,8 +2841,7 @@ function enableHackerMode() {
         let length = Math.floor(Math.random() * 20) + 10;
         let str = '';
         for(let i=0; i<length; i++) {
-            str += chars.charAt(Math.floor(Math.random() * chars.length)) + '
-';
+            str += chars.charAt(Math.floor(Math.random() * chars.length)) + '\\n';
         }
         codeLine.textContent = str;
         
