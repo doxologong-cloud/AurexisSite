@@ -629,9 +629,19 @@
         <div id="view-messenger" class="view hidden-view">
             <div class="messenger-container">
                 <div class="messenger-sidebar">
-                    <div class="messenger-header">
-                        <h2>Лента</h2>
-                        <button id="new-chat-btn" class="glow-btn small-btn">Новый чат</button>
+                    <div class="messenger-header" style="flex-direction: column; gap: 10px; align-items: stretch; padding: 15px;">
+                        <div style="display: flex; justify-content: space-between; align-items: center;">
+                            <h2 style="margin: 0;">Лента</h2>
+                        </div>
+                        <div style="position: relative;">
+                            <input type="text" id="user-search-input" placeholder="Поиск юзернейма..." style="width: 100%; padding: 8px 12px; border-radius: 20px; border: 1px solid rgba(255,255,255,0.1); background: rgba(0,0,0,0.3); color: white; box-sizing: border-box;">
+                            <div id="search-results-container" style="display: none; position: absolute; top: 100%; left: 0; right: 0; background: rgba(15,15,20,0.95); border: 1px solid var(--neon-primary); border-radius: 10px; margin-top: 5px; max-height: 200px; overflow-y: auto; z-index: 100;">
+                            </div>
+                        </div>
+                        <div class="messenger-tabs" style="display: flex; gap: 10px; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 5px;">
+                            <span class="msgr-tab active" id="tab-chats" style="cursor: pointer; font-size: 0.9rem; color: var(--neon-primary);">Чаты</span>
+                            <span class="msgr-tab" id="tab-contacts" style="cursor: pointer; font-size: 0.9rem; color: #888;">Контакты</span>
+                        </div>
                     </div>
                     <div class="chats-list" id="chats-list">
                         <!-- Chats will be populated here -->
@@ -645,9 +655,12 @@
                     </div>
                     
                     <div class="active-chat" id="active-chat" style="display: none;">
-                        <div class="chat-header">
-                            <h3 id="active-chat-name">Имя Чата</h3>
-                            <span id="active-chat-status">В сети</span>
+                        <div class="chat-header" style="display: flex; justify-content: space-between; align-items: center;">
+                            <div>
+                                <h3 id="active-chat-name" style="margin: 0;">Имя Чата</h3>
+                                <span id="active-chat-status" style="font-size: 0.8rem; color: var(--neon-primary);">В сети</span>
+                            </div>
+                            <button id="add-to-contacts-btn" class="glow-btn small-btn" style="display: none;">+ В контакты</button>
                         </div>
                         <div class="chat-messages" id="active-chat-messages">
                             <!-- Messages -->
