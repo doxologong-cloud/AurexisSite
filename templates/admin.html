@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Админ-панель | Aurexis Studio</title>
     <link rel="icon" type="image/x-icon" href="{{ url_for('static', filename='assets/favicon.ico') }}">
-    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}?v=95">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}?v=96">
     <style>
         body {
             margin: 0;
@@ -303,12 +303,34 @@
 
         if (theme === 'hacked') {
             const hackerCursorStr = `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path d="M 2 2 L 10 22 L 13 13 L 22 10 Z" fill="#ff0000" stroke="#ff0000" stroke-width="2" stroke-linejoin="round" stroke-opacity="0.4"/></svg>`;
-            finalCursorDefault = `url(\'data:image/svg+xml,${encodeURIComponent(hackerCursorStr)}\') 16 16, crosshair`;
-            finalCursorPointer = `url(\'data:image/svg+xml,${encodeURIComponent(hackerCursorStr)}\') 16 16, crosshair`;
+            finalCursorDefault = `url("data:image/svg+xml,${encodeURIComponent(hackerCursorStr)}") 2 2, crosshair`;
+            finalCursorPointer = `url("data:image/svg+xml,${encodeURIComponent(hackerCursorStr)}") 2 2, crosshair`;
         }
 
         
         
+
+        let cursorStyleEl = document.getElementById('dynamic-cursor-style');
+        if (!cursorStyleEl) {
+            cursorStyleEl = document.createElement('style');
+            cursorStyleEl.id = 'dynamic-cursor-style';
+            document.head.appendChild(cursorStyleEl);
+        }
+        cursorStyleEl.innerHTML = `
+            html, body, div, p, span, h1, h2, h3, h4, h5, h6, section, article, nav, header, footer, main, ul, li, label,
+            #cursor-lock, .view, .view * {
+                cursor: ${finalCursorDefault} !important;
+            }
+            a, a:hover, a:active, a:focus,
+            button, button:hover, button:active, button:focus,
+            input, select, textarea, .theme-card, .msgr-tab, .dropdown-item,
+            [onclick], [onclick] * {
+                cursor: ${finalCursorPointer} !important;
+            }
+            #cursor-lock {
+                cursor: ${finalCursorDefault} !important;
+            }
+        `;
     })();
 </script>
 </head>

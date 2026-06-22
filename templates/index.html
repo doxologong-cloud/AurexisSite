@@ -16,7 +16,7 @@
 <script src="https://cdn.jsdelivr.net/npm/particles.js@2.0.0/particles.min.js"></script>
 <!-- Styles -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-<link href="{{ url_for('static', filename='style.css') }}?v=95" rel="stylesheet"></link>
+<link href="{{ url_for('static', filename='style.css') }}?v=96" rel="stylesheet"></link>
 <script>
     (function() {
         const theme = localStorage.getItem('aurex_theme') || 'matrix';
@@ -70,12 +70,34 @@
 
         if (theme === 'hacked') {
             const hackerCursorStr = `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path d="M 2 2 L 10 22 L 13 13 L 22 10 Z" fill="#ff0000" stroke="#ff0000" stroke-width="2" stroke-linejoin="round" stroke-opacity="0.4"/></svg>`;
-            finalCursorDefault = `url(\'data:image/svg+xml,${encodeURIComponent(hackerCursorStr)}\') 16 16, crosshair`;
-            finalCursorPointer = `url(\'data:image/svg+xml,${encodeURIComponent(hackerCursorStr)}\') 16 16, crosshair`;
+            finalCursorDefault = `url("data:image/svg+xml,${encodeURIComponent(hackerCursorStr)}") 2 2, crosshair`;
+            finalCursorPointer = `url("data:image/svg+xml,${encodeURIComponent(hackerCursorStr)}") 2 2, crosshair`;
         }
 
         
         
+
+        let cursorStyleEl = document.getElementById('dynamic-cursor-style');
+        if (!cursorStyleEl) {
+            cursorStyleEl = document.createElement('style');
+            cursorStyleEl.id = 'dynamic-cursor-style';
+            document.head.appendChild(cursorStyleEl);
+        }
+        cursorStyleEl.innerHTML = `
+            html, body, div, p, span, h1, h2, h3, h4, h5, h6, section, article, nav, header, footer, main, ul, li, label,
+            #cursor-lock, .view, .view * {
+                cursor: ${finalCursorDefault} !important;
+            }
+            a, a:hover, a:active, a:focus,
+            button, button:hover, button:active, button:focus,
+            input, select, textarea, .theme-card, .msgr-tab, .dropdown-item,
+            [onclick], [onclick] * {
+                cursor: ${finalCursorPointer} !important;
+            }
+            #cursor-lock {
+                cursor: ${finalCursorDefault} !important;
+            }
+        `;
     })();
 </script>
     <script src="/static/translations.js"></script>
@@ -569,7 +591,7 @@
             100% { transform: translate(0) }
         }
     </style>
-<script src="{{ url_for('static', filename='script.js') }}?v=95"></script>
+<script src="{{ url_for('static', filename='script.js') }}?v=96"></script>
 <!-- Hacker Terminal -->
 <div class="view" id="view-hacker" style="background: #000; color: #0f0; font-family: monospace; padding: 20px; font-size: 16px; overflow-y: auto; height: 100vh; width: 100%; box-sizing: border-box;">
 <div id="hacker-output"></div>
