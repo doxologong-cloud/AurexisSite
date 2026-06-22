@@ -1906,9 +1906,13 @@ async function loadChats() {
                 el.onclick = () => openChat(chat);
                 
                 const initial = chat.name.charAt(0).toUpperCase();
+                let avatarHtml = `<div class="chat-item-avatar">${initial}</div>`;
+                if(chat.avatar) {
+                    avatarHtml = `<img src="${chat.avatar}" class="chat-item-avatar" style="object-fit:cover;">`;
+                }
                 
                 el.innerHTML = `
-                    <div class="chat-item-avatar">${initial}</div>
+                    ${avatarHtml}
                     <div class="chat-item-info">
                         <span class="chat-item-name">${chat.name}</span>
                         <span class="chat-item-type">${chat.type === 'chat_group' ? 'Группа' : 'Личный'}</span>
@@ -1931,7 +1935,7 @@ async function openChat(chat) {
     // Highlight in list
     document.querySelectorAll('.chat-item').forEach(el => el.classList.remove('active'));
     // Since we re-render chats often, precise highlighting might require loadChats re-run or DOM traversal
-    loadChats();
+    // loadChats(); removed to prevent reload glitch
     
     loadChatMessages();
     

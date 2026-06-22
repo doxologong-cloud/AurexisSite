@@ -597,9 +597,19 @@ def admin_tickets():
     if 'user' not in session or not session['user'].get('is_admin'):
         return jsonify({"success": False})
     url = f"{SUPABASE_URL}/rest/v1/tickets?select=*&order=created_at.desc"
-    res = requests.get(url, headers=get_supabase_headers())
+    headers = get_supabase_headers()
+    res = requests.get(url, headers=headers)
+    
+    users_res = requests.get(f'{SUPABASE_URL}/rest/v1/users?select=email,username,avatar', headers=headers)
+    avatars_map = {}
+    if users_res.status_code == 200:
+        avatars_map = {u['email']: u.get('avatar') for u in users_res.json()}
+        
     if res.status_code == 200:
-        return jsonify({"success": True, "tickets": res.json()})
+        tickets = res.json()
+        for t in tickets:
+            t['user_avatar'] = avatars_map.get(t.get('user_email'))
+        return jsonify({"success": True, "tickets": tickets})
     return jsonify({"success": False})
 
 @app.route('/api/admin/tickets/<int:ticket_id>', methods=['DELETE'])
@@ -853,9 +863,14 @@ def get_chats():
     }
     
     try:
-        # Get user profiles map to show usernames instead of emails
-        profiles_res = requests.get(f'{SUPABASE_URL}/rest/v1/tickets?status=eq.user_profile', headers=headers)
-        profiles_map = {p['user_email']: p['topic'] for p in profiles_res.json()} if profiles_res.status_code == 200 else {}
+        # Get true users from DB for avatars and usernames
+        users_res = requests.get(f'{SUPABASE_URL}/rest/v1/users?select=email,username,avatar', headers=headers)
+        profiles_map = {}
+        avatars_map = {}
+        if users_res.status_code == 200:
+            for u in users_res.json():
+                profiles_map[u['email']] = u.get('username') or u['email']
+                avatars_map[u['email']] = u.get('avatar')
         
         res = requests.get(f'{SUPABASE_URL}/rest/v1/tickets?status=in.(chat_dm,chat_group)', headers=headers)
         if res.status_code == 200:
@@ -873,6 +888,7 @@ def get_chats():
                         'id': c.get('id'),
                         'type': c.get('status'),
                         'name': chat_name,
+                        'avatar': avatars_map.get(other_email) if c.get('status') == 'chat_dm' else None,
                         'participants': emails
                     })
             return jsonify({'chats': user_chats}), 200
