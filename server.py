@@ -312,11 +312,24 @@ def update_profile():
         if res.status_code in [200, 204]:
             session['user']['nickname'] = new_nickname
             session['user']['username'] = new_username
-            if new_banner is not None:
-                session['user']['banner'] = new_banner
             if new_status_text is not None:
                 session['user']['status_text'] = new_status_text
             session.modified = True
+            
+            # Fetch fresh user data to return, including large base64 strings
+            db_user = get_user_by_email(email)
+            if db_user:
+                full_user = {
+                    "nickname": db_user.get('nickname'),
+                    "email": email,
+                    "avatar": db_user.get('avatar'),
+                    "username": db_user.get('username'),
+                    "is_admin": db_user.get('is_admin', False),
+                    "flora_status": db_user.get('flora_status', False),
+                    "banner": db_user.get('banner'),
+                    "status_text": db_user.get('status_text')
+                }
+                return jsonify({"success": True, "user": full_user})
             return jsonify({"success": True, "user": session['user']})
             
         return jsonify({"success": False, "message": "Ошибка сохранения профиля."})
@@ -364,7 +377,9 @@ def me():
                 "avatar": db_user.get('avatar'),
                 "username": db_user.get('username'),
                 "is_admin": db_user.get('is_admin', False),
-                "flora_status": db_user.get('flora_status', False)
+                "flora_status": db_user.get('flora_status', False),
+                "banner": db_user.get('banner'),
+                "status_text": db_user.get('status_text')
             }
             return jsonify({"success": True, "user": full_user})
         else:
