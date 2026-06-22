@@ -16,7 +16,7 @@
 <script src="https://cdn.jsdelivr.net/npm/particles.js@2.0.0/particles.min.js"></script>
 <!-- Styles -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-<link href="{{ url_for('static', filename='style.css') }}?v=97" rel="stylesheet"></link>
+<link href="{{ url_for('static', filename='style.css') }}?v=99" rel="stylesheet"></link>
 <script>
     (function() {
         const theme = localStorage.getItem('aurex_theme') || 'matrix';
@@ -98,6 +98,46 @@
                 cursor: ${finalCursorDefault} !important;
             }
         `;
+
+        // SVG to PNG Rasterization to fix Chromium hardware cursor SVG cache eviction
+        function rasterizeSVGToPNG(svgStr, hotspotX, hotspotY, callback) {
+            const img = new Image();
+            img.onload = function() {
+                const canvas = document.createElement('canvas');
+                canvas.width = img.width || 32;
+                canvas.height = img.height || 32;
+                const ctx = canvas.getContext('2d');
+                ctx.drawImage(img, 0, 0);
+                const pngDataUrl = canvas.toDataURL('image/png');
+                callback(`url("${pngDataUrl}") ${hotspotX} ${hotspotY}`);
+            };
+            img.src = 'data:image/svg+xml,' + encodeURIComponent(svgStr);
+        }
+
+        // Apply PNG cursors asynchronously to prevent render blocking
+        rasterizeSVGToPNG(theme === 'hacked' ? hackerCursorStr : svgDefaultStr, theme === 'hacked' ? 2 : 12, theme === 'hacked' ? 2 : 6, function(pngUrlDefault) {
+            rasterizeSVGToPNG(theme === 'hacked' ? hackerCursorStr : svgPointerStr, theme === 'hacked' ? 2 : 12, theme === 'hacked' ? 2 : 6, function(pngUrlPointer) {
+                let cursorStyleEl = document.getElementById('dynamic-cursor-style');
+                if (cursorStyleEl) {
+                    cursorStyleEl.innerHTML = `
+                        html, body, div, p, span, h1, h2, h3, h4, h5, h6, section, article, nav, header, footer, main, ul, li, label,
+                        #cursor-lock, .view, .view * {
+                            cursor: ${pngUrlDefault}, auto !important;
+                        }
+                        a, a:hover, a:active, a:focus,
+                        button, button:hover, button:active, button:focus,
+                        input, select, textarea, .theme-card, .msgr-tab, .dropdown-item,
+                        [onclick], [onclick] * {
+                            cursor: ${pngUrlPointer}, pointer !important;
+                        }
+                        #cursor-lock {
+                            cursor: ${pngUrlDefault}, auto !important;
+                        }
+                    `;
+                }
+            });
+        });
+        
     })();
 </script>
     <script src="/static/translations.js"></script>
@@ -591,7 +631,7 @@
             100% { transform: translate(0) }
         }
     </style>
-<script src="{{ url_for('static', filename='script.js') }}?v=97"></script>
+<script src="{{ url_for('static', filename='script.js') }}?v=99"></script>
 <!-- Hacker Terminal -->
 <div class="view" id="view-hacker" style="background: #000; color: #0f0; font-family: monospace; padding: 20px; font-size: 16px; overflow-y: auto; height: 100vh; width: 100%; box-sizing: border-box;">
 <div id="hacker-output"></div>
