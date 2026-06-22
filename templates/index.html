@@ -532,6 +532,23 @@
         }
     </style>
 <script src="{{ url_for('static', filename='script.js') }}"></script>
+
+<!-- Hacker Terminal -->
+<div class="window" id="view-hacker" style="border-color: #0f0; box-shadow: 0 0 20px rgba(0,255,0,0.3);">
+<div class="window-header" onmousedown="startDrag(event, 'view-hacker')" style="background: rgba(0,255,0,0.1); border-bottom: 1px solid #0f0;">
+<div class="window-title" style="color: #0f0;">AUREX_ROOT_TERMINAL</div>
+<div class="window-controls">
+<button class="window-btn btn-close" onclick="closeWindow('view-hacker')"></button>
+</div>
+</div>
+<div class="window-content" style="background: #000; color: #0f0; font-family: monospace; padding: 10px; font-size: 14px; overflow-y: auto;">
+<div id="hacker-output"></div>
+<div style="display: flex;">
+<span style="color: #0f0; margin-right: 5px;">root@aurexis:~#</span>
+<input id="hacker-input" style="background: transparent; border: none; color: #0f0; outline: none; flex: 1; font-family: monospace;" type="text"/>
+</div>
+</div>
+</div>
 </main>
 <!-- Footer -->
 <footer>
