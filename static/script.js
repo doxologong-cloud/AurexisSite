@@ -1540,11 +1540,18 @@ function triggerApocalypse() {
                             if (typeIdx >= textToType.length) {
                                 clearInterval(typeInterval);
                                 // Fade out to normal site
-                                setTimeout(() => {
+                                                                setTimeout(() => {
                                     finalTerminal.style.transition = 'opacity 2s';
                                     finalTerminal.style.opacity = '0';
+                                    const face = document.querySelector('.creepy-face');
+                                    if(face) {
+                                        face.style.transition = 'opacity 2s';
+                                        face.style.opacity = '0';
+                                    }
                                     setTimeout(() => {
                                         finalTerminal.remove();
+                                        if(face) face.remove();
+                                        document.body.classList.remove('apocalypse-mode'); // Clean up any remaining classes
                                     }, 2000);
                                 }, 3000);
                             }
