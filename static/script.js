@@ -126,8 +126,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // SPA Routing Logic
     function handleRoute() {
-        // === CURSOR LOCK OVERLAY ===
-        // Prevents browser cursor flashing during DOM reflows and CSS animations
+        // === ADVANCED CURSOR LOCK OVERLAY ===
         let cursorLock = document.getElementById('cursor-lock');
         if (!cursorLock) {
             cursorLock = document.createElement('div');
@@ -138,15 +137,32 @@ document.addEventListener('DOMContentLoaded', () => {
             cursorLock.style.width = '100vw';
             cursorLock.style.height = '100vh';
             cursorLock.style.zIndex = '9999999';
+            
+            // Hardware Acceleration + Persistent Render Tree
+            cursorLock.style.transform = 'translateZ(0)';
+            cursorLock.style.willChange = 'visibility';
+            cursorLock.style.visibility = 'hidden';
+            
             document.body.appendChild(cursorLock);
         }
-        cursorLock.style.display = 'block';
+        
+        // Show shield without remounting DOM
+        cursorLock.style.visibility = 'visible';
 
+        // Shield lifetime
         setTimeout(() => {
-            cursorLock.style.display = 'none';
-        }, 400); // 0.3s transition + 100ms buffer
-        // ============================
+            cursorLock.style.visibility = 'hidden';
+        }, 400);
 
+        // Yield main thread to guarantee shield paint BEFORE heavy DOM swap
+        requestAnimationFrame(() => {
+            requestAnimationFrame(() => {
+                _executeRouteDOMSwap();
+            });
+        });
+    }
+
+    function _executeRouteDOMSwap() {
         const hash = window.location.hash || '#home';
         
         document.querySelectorAll('.view').forEach(v => {
