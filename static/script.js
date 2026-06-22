@@ -336,7 +336,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 img.onload = async () => {
                     // Compress via Canvas
                     const canvas = document.createElement('canvas');
-                    const MAX_SIZE = 150;
+                    const MAX_SIZE = 400; // Высокое разрешение
                     let width = img.width;
                     let height = img.height;
 
@@ -355,7 +355,8 @@ document.addEventListener('DOMContentLoaded', () => {
                     canvas.height = height;
                     const ctx = canvas.getContext('2d');
                     ctx.drawImage(img, 0, 0, width, height);
-                    const base64Avatar = canvas.toDataURL('image/jpeg', 0.8);
+                    // Используем PNG чтобы сохранить прозрачность, если она есть
+                    const base64Avatar = canvas.toDataURL('image/png');
 
                     // Send to Server
                     try {
