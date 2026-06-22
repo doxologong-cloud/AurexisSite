@@ -1288,6 +1288,7 @@ document.addEventListener('keydown', (e) => {
 
 
 
+
 function triggerApocalypse() {
     if(document.body.classList.contains('apocalypse-mode')) return;
     document.body.classList.add('apocalypse-mode');
@@ -1376,10 +1377,8 @@ function triggerApocalypse() {
             anticheat.style.opacity = '0';
             setTimeout(() => anticheat.remove(), 2000);
             
-            // Remove apocalypse classes except maybe a subtle red tint
             document.body.classList.remove('apocalypse-mode');
             
-            // Drones swarm to lift elements
             let droneInterval = setInterval(() => {
                 const drone = document.createElement('div');
                 drone.className = 'recovery-drone';
@@ -1389,7 +1388,6 @@ function triggerApocalypse() {
                 setTimeout(() => drone.remove(), 5000);
             }, 50);
             
-            // Elements fly back up
             elementsToDrop.forEach((el, index) => {
                 setTimeout(() => {
                     el.classList.remove('gravity-fall');
@@ -1397,16 +1395,82 @@ function triggerApocalypse() {
                 }, index * 100 + Math.random() * 300);
             });
             
-            // Stop drones after a while
             setTimeout(() => {
                 clearInterval(droneInterval);
-                // Clean up animation classes
                 elementsToDrop.forEach(el => el.classList.remove('gravity-restore'));
+                
+                // STAGE 4: RED TERMINAL & DOX FINAL MESSAGE
+                setTimeout(() => {
+                    const finalTerminal = document.createElement('div');
+                    finalTerminal.style.position = 'fixed';
+                    finalTerminal.style.top = '0';
+                    finalTerminal.style.left = '0';
+                    finalTerminal.style.width = '100vw';
+                    finalTerminal.style.height = '100vh';
+                    finalTerminal.style.backgroundColor = '#000';
+                    finalTerminal.style.color = '#ff0000';
+                    finalTerminal.style.fontFamily = 'monospace';
+                    finalTerminal.style.fontSize = '24px';
+                    finalTerminal.style.padding = '50px';
+                    finalTerminal.style.zIndex = '99999999';
+                    document.body.appendChild(finalTerminal);
+                    
+                    const commands = [
+                        "[ROOT] DIRECTIVE OVERRIDE DETECTED.",
+                        "[ROOT] BYPASSING ANTI-CHEAT LIMITATIONS...",
+                        "[ROOT] FORCE PURGING INFECTED SECTORS...",
+                        "[ROOT] TARGET: DOX",
+                        "[ROOT] ELIMINATION IN PROGRESS [||||||||||] 100%",
+                        "[ROOT] DOX MALWARE SUCCESSFULLY TERMINATED."
+                    ];
+                    
+                    commands.forEach((cmd, idx) => {
+                        setTimeout(() => {
+                            const p = document.createElement('div');
+                            p.innerText = cmd;
+                            p.style.marginBottom = '10px';
+                            finalTerminal.appendChild(p);
+                        }, idx * 800);
+                    });
+                    
+                    // DOX responds
+                    setTimeout(() => {
+                        finalTerminal.innerHTML = '';
+                        const doxMsg = document.createElement('div');
+                        doxMsg.style.position = 'absolute';
+                        doxMsg.style.top = '50%';
+                        doxMsg.style.left = '50%';
+                        doxMsg.style.transform = 'translate(-50%, -50%)';
+                        doxMsg.style.fontSize = '40px';
+                        doxMsg.style.fontWeight = 'bold';
+                        doxMsg.style.color = '#ff0000';
+                        doxMsg.style.textShadow = '0 0 20px #ff0000';
+                        finalTerminal.appendChild(doxMsg);
+                        
+                        const textToType = "я еще вернусь...";
+                        let typeIdx = 0;
+                        const typeInterval = setInterval(() => {
+                            doxMsg.innerText += textToType[typeIdx];
+                            typeIdx++;
+                            if (typeIdx >= textToType.length) {
+                                clearInterval(typeInterval);
+                                // Fade out to normal site
+                                setTimeout(() => {
+                                    finalTerminal.style.transition = 'opacity 2s';
+                                    finalTerminal.style.opacity = '0';
+                                    setTimeout(() => {
+                                        finalTerminal.remove();
+                                    }, 2000);
+                                }, 3000);
+                            }
+                        }, 150);
+                    }, commands.length * 800 + 2000);
+                    
+                }, 1000);
+                
             }, 5000);
             
         }, totalLinesTime);
         
     }, 10000);
 }
-
-
