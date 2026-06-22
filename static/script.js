@@ -3044,8 +3044,31 @@ function changeTheme(themeName) {
             finalCursorPointer = `url("data:image/svg+xml,${encodeURIComponent(hackerCursorStr)}") 2 2, crosshair`;
         }
 
-        root.style.setProperty('--cursor-default', finalCursorDefault);
-        root.style.setProperty('--cursor-pointer', finalCursorPointer);
+        let cursorStyleEl = document.getElementById('dynamic-cursor-style');
+        if (!cursorStyleEl) {
+            cursorStyleEl = document.createElement('style');
+            cursorStyleEl.id = 'dynamic-cursor-style';
+            document.head.appendChild(cursorStyleEl);
+        }
+        cursorStyleEl.innerHTML = `
+            html, body, div, p, span, h1, h2, h3, h4, h5, h6, section, article, nav, header, footer, main, ul, li, label,
+            #cursor-lock, .view, .view * {
+                cursor: ${finalCursorDefault} !important;
+            }
+            a, a:hover, a:active, a:focus,
+            button, button:hover, button:active, button:focus,
+            input, select, textarea, .theme-card, .msgr-tab, .dropdown-item,
+            [onclick], [onclick] * {
+                cursor: ${finalCursorPointer} !important;
+            }
+            #cursor-lock {
+                cursor: ${finalCursorDefault} !important;
+            }
+        `;
+        
+
+        
+        
     
     localStorage.setItem('aurex_theme', themeName);
     

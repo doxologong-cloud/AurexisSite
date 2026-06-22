@@ -1,6 +1,4 @@
-html, body, div, p, span, h1, h2, h3, h4, h5, h6, section, article, nav, header, footer, main, ul, li, label {
-    cursor: var(--cursor-default, auto) !important;
-}
+
 /* Reset and Base Styles */
 * {
     margin: 0;
