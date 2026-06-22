@@ -778,7 +778,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 }
                 
                 data.reviews.forEach(r => {
-                    const stars = '⭐'.repeat(r.rating);
+                    const stars = '<i class="fa-solid fa-star" style="color: #ffc107;"></i>'.repeat(r.rating);
                     const user = r.users || {};
                     const avatar = user.avatar || '/static/assets/default-avatar.png';
                     const nickname = user.nickname || 'Неизвестно';

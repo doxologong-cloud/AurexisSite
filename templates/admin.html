@@ -187,9 +187,45 @@
         </div>
     </div>
 
+    
+    <!-- Custom Confirm Modal -->
+    <div id="custom-confirm-modal" style="display: none; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(0,0,0,0.8); z-index: 10000; justify-content: center; align-items: center; backdrop-filter: blur(5px);">
+        <div style="background: var(--bg-color); border: 1px solid var(--neon-primary); border-radius: 16px; padding: 30px; width: 400px; max-width: 90%; text-align: center;">
+            <h3 id="confirm-msg" style="color: white; margin-bottom: 25px; margin-top: 0;">Вы уверены?</h3>
+            <div style="display: flex; gap: 15px; justify-content: center;">
+                <button id="confirm-yes" class="flora-toggle" style="background: rgba(255, 68, 68, 0.2); border-color: #ff4444; color: #ff4444; flex: 1;">Да, уверен</button>
+                <button id="confirm-no" class="flora-toggle" style="flex: 1; border-color: rgba(255,255,255,0.2); color: white;">Отмена</button>
+            </div>
+        </div>
+    </div>
+
     <!-- Scripts -->
     <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
     <script>
+
+        function customConfirm(msg) {
+            return new Promise(resolve => {
+                const modal = document.getElementById('custom-confirm-modal');
+                document.getElementById('confirm-msg').textContent = msg;
+                modal.style.display = 'flex';
+                
+                const yesBtn = document.getElementById('confirm-yes');
+                const noBtn = document.getElementById('confirm-no');
+                
+                const cleanup = () => {
+                    modal.style.display = 'none';
+                    yesBtn.removeEventListener('click', onYes);
+                    noBtn.removeEventListener('click', onNo);
+                };
+                
+                const onYes = () => { cleanup(); resolve(true); };
+                const onNo = () => { cleanup(); resolve(false); };
+                
+                yesBtn.addEventListener('click', onYes);
+                noBtn.addEventListener('click', onNo);
+            });
+        }
+
         particlesJS.load('particles-js', '/static/particles.json');
 
         async function loadUsers() {
@@ -238,7 +274,7 @@
                 if (data.success) {
                     
         window.deleteAdminTicket = async function(id) {
-            if(!confirm('Удалить тикет?')) return;
+            if(!(await customConfirm('Удалить тикет?'))) return;
             try {
                 const row = document.getElementById('ticket-row-' + id);
                 if(row) row.remove(); // optimistic delete
@@ -334,7 +370,7 @@
         }
 
         async function deleteNews(id) {
-            if(!confirm('Точно удалить новость?')) return;
+            if(!(await customConfirm('Точно удалить новость?'))) return;
             try {
                 const res = await fetch(`/api/admin/news/${id}`, {method: 'DELETE'});
                 if(res.ok) loadAdminNews();
@@ -431,7 +467,7 @@
         }
 
         window.closeTicketIssue = async function() {
-            if(!confirm('Закрыть тикет?')) return;
+            if(!(await customConfirm('Закрыть тикет?'))) return;
             try {
                 const res = await fetch(`/api/admin/tickets/${currentAdminTicketId}/status`, {
                     method: 'PATCH',
@@ -451,7 +487,7 @@
 
         
         window.deleteAdminTicket = async function(id) {
-            if(!confirm('Удалить тикет?')) return;
+            if(!(await customConfirm('Удалить тикет?'))) return;
             try {
                 const row = document.getElementById('ticket-row-' + id);
                 if(row) row.remove(); // optimistic delete
