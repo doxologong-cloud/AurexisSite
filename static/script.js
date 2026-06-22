@@ -593,7 +593,7 @@ document.addEventListener('DOMContentLoaded', () => {
         });
 
         cancelEditBtn.addEventListener('click', () => {
-            profileDisplay.style.display = 'flex';
+            profileDisplay.style.display = 'block';
             profileEditForm.style.display = 'none';
         });
 
