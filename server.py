@@ -34,15 +34,19 @@ def get_user_by_email(email):
         print("Supabase GET error:", e)
     return None
 
-def create_user(nickname, email, password):
+def create_user(nickname, email, password, username=None):
+    if not username:
+        username = "@user" + str(random.randint(100000, 999999))
     try:
         url = f"{SUPABASE_URL}/rest/v1/users"
-        payload = {"nickname": nickname, "email": email, "password": password}
+        payload = {"nickname": nickname, "email": email, "password": password, "username": username}
         res = requests.post(url, json=payload, headers=get_supabase_headers())
-        return res.status_code in [200, 201]
+        if res.status_code in [200, 201]:
+            return True, username
+        return False, None
     except Exception as e:
         print("Supabase POST error:", e)
-        return False
+        return False, None
 
 def update_user_avatar(email, avatar_base64):
     try:
@@ -126,12 +130,12 @@ def verify():
         user_data = verification_codes[email]
         
         # Save to DB
-        success = create_user(user_data['nickname'], email, user_data['password'])
+        success, username = create_user(user_data['nickname'], email, user_data['password'])
         if not success:
             return jsonify({"success": False, "message": "Ошибка сохранения в облако."})
         
         del verification_codes[email]
-        session['user'] = {"nickname": user_data['nickname'], "email": email, "avatar": None}
+        session['user'] = {"nickname": user_data['nickname'], "email": email, "avatar": None, "username": username}
         return jsonify({"success": True, "user": session['user']})
     
     return jsonify({"success": False, "message": "Неверный код."})
@@ -145,7 +149,12 @@ def login():
     user = get_user_by_email(email)
     
     if user and user.get('password') == password:
-        session['user'] = {"nickname": user.get('nickname'), "email": email, "avatar": user.get('avatar')}
+        session['user'] = {
+            "nickname": user.get('nickname'), 
+            "email": email, 
+            "avatar": user.get('avatar'),
+            "username": user.get('username')
+        }
         return jsonify({"success": True, "user": session['user']})
     return jsonify({"success": False, "message": "Неверная почта или пароль."})
 
@@ -171,7 +180,7 @@ def google_login():
         
         if not user:
             # Create new user via Google
-            success = create_user(nickname, email, "google-oauth")
+            success, username = create_user(nickname, email, "google-oauth")
             if not success:
                 return jsonify({"success": False, "message": "Ошибка регистрации через Google."})
             if picture:
@@ -180,14 +189,54 @@ def google_login():
             # Existing user
             nickname = user.get('nickname')
             avatar_url = user.get('avatar')
+            username = user.get('username')
             if not avatar_url and picture:
                 update_user_avatar(email, picture)
                 avatar_url = picture
                 
-        session['user'] = {"nickname": nickname, "email": email, "avatar": avatar_url}
+        session['user'] = {"nickname": nickname, "email": email, "avatar": avatar_url, "username": username}
         return jsonify({"success": True, "user": session['user']})
         
     except Exception as e:
+        return jsonify({"success": False, "message": "Ошибка базы данных."})
+
+@app.route('/api/update-profile', methods=['POST'])
+def update_profile():
+    if 'user' not in session:
+        return jsonify({"success": False, "message": "Не авторизован."})
+    
+    data = request.json
+    new_nickname = data.get('nickname')
+    new_username = data.get('username')
+    email = session['user']['email']
+    
+    if not new_nickname or not new_username:
+        return jsonify({"success": False, "message": "Заполните все поля."})
+        
+    if not new_username.startswith('@'):
+        new_username = '@' + new_username
+
+    try:
+        # Check if username is taken by someone else
+        check_url = f"{SUPABASE_URL}/rest/v1/users?username=eq.{new_username}&email=neq.{email}&select=*"
+        check_res = requests.get(check_url, headers=get_supabase_headers())
+        if check_res.status_code == 200 and len(check_res.json()) > 0:
+            return jsonify({"success": False, "message": "Этот @username уже занят!"})
+            
+        # Update user
+        url = f"{SUPABASE_URL}/rest/v1/users?email=eq.{email}"
+        payload = {"nickname": new_nickname, "username": new_username}
+        res = requests.patch(url, json=payload, headers=get_supabase_headers())
+        
+        if res.status_code in [200, 204]:
+            session['user']['nickname'] = new_nickname
+            session['user']['username'] = new_username
+            session.modified = True
+            return jsonify({"success": True, "user": session['user']})
+            
+        return jsonify({"success": False, "message": "Ошибка сохранения профиля."})
+    except Exception as e:
+        print("Profile update error:", e)
         return jsonify({"success": False, "message": "Ошибка сервера."})
 
 @app.route('/api/update-avatar', methods=['POST'])

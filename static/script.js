@@ -286,11 +286,11 @@ document.addEventListener('DOMContentLoaded', () => {
         
         // Populate Account Data (Profile View)
         const accNick = document.getElementById('acc-nickname');
-        const accEmail = document.getElementById('acc-email');
+        const accUsername = document.getElementById('acc-username');
         const accAvatar = document.getElementById('acc-avatar-img');
         
         if (accNick) accNick.textContent = userData.nickname;
-        if (accEmail) accEmail.textContent = userData.email;
+        if (accUsername) accUsername.textContent = userData.username || '@user';
         if (accAvatar) accAvatar.src = avatarUrl;
     };
 
@@ -372,13 +372,78 @@ document.addEventListener('DOMContentLoaded', () => {
                         } else {
                             alert("Ошибка обновления аватарки: " + data.message);
                         }
-                    } catch(err) {
-                        alert("Ошибка сети");
+                    } catch (e) {
+                        alert("Ошибка соединения при загрузке аватарки.");
                     }
                 };
                 img.src = event.target.result;
             };
             reader.readAsDataURL(file);
+        });
+    }
+
+    // Edit Profile Logic
+    const editBtn = document.getElementById('edit-profile-btn');
+    const cancelEditBtn = document.getElementById('cancel-edit-btn');
+    const saveProfileBtn = document.getElementById('save-profile-btn');
+    const profileDisplay = document.getElementById('profile-display');
+    const profileEditForm = document.getElementById('profile-edit-form');
+    const editNickInput = document.getElementById('edit-nickname');
+    const editUserInput = document.getElementById('edit-username');
+    const editError = document.getElementById('edit-profile-error');
+
+    if(editBtn && cancelEditBtn && saveProfileBtn) {
+        editBtn.addEventListener('click', () => {
+            profileDisplay.style.display = 'none';
+            profileEditForm.style.display = 'block';
+            editNickInput.value = document.getElementById('acc-nickname').textContent;
+            editUserInput.value = document.getElementById('acc-username').textContent;
+            editError.textContent = '';
+        });
+
+        cancelEditBtn.addEventListener('click', () => {
+            profileDisplay.style.display = 'flex';
+            profileEditForm.style.display = 'none';
+        });
+
+        saveProfileBtn.addEventListener('click', async () => {
+            const newNick = editNickInput.value.trim();
+            const newUser = editUserInput.value.trim();
+            if(!newNick || !newUser) {
+                editError.textContent = 'Заполните все поля!';
+                return;
+            }
+
+            saveProfileBtn.disabled = true;
+            saveProfileBtn.textContent = 'Сохранение...';
+            
+            try {
+                const res = await fetch('/api/update-profile', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ nickname: newNick, username: newUser })
+                });
+                const data = await res.json();
+                if(data.success) {
+                    if(window.loginUser) window.loginUser(data.user);
+                    profileDisplay.style.display = 'flex';
+                    profileEditForm.style.display = 'none';
+                } else {
+                    editError.textContent = data.message;
+                }
+            } catch(e) {
+                editError.textContent = 'Ошибка соединения.';
+            }
+            saveProfileBtn.disabled = false;
+            saveProfileBtn.textContent = 'Сохранить';
+        });
+    }
+
+    // Allow clicking on big avatar to change it too
+    const accAvatarImg = document.getElementById('acc-avatar-img');
+    if(accAvatarImg) {
+        accAvatarImg.addEventListener('click', () => {
+            avatarUploadInput.click();
         });
     }
 });
