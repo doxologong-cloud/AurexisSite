@@ -66,7 +66,7 @@
 <!-- Main Content -->
 <main class="container">
 <!-- Home View -->
-<div class="window" id="view-home"><div class="window-header" onmousedown="startDrag(event, 'view-home')"><div class="window-title">Главная</div><div class="window-controls"><button class="window-btn btn-min" onclick="minimizeWindow('view-home')"></button><button class="window-btn btn-max" onclick="maximizeWindow('view-home')"></button><button class="window-btn btn-close" onclick="closeWindow('view-home')"></button></div></div><div class="window-content">
+<div class="view" id="view-home">
 <!-- Hero Section -->
 <section class="hero">
 <h1 class="hero-title">Будущее <span class="neon-text-primary">автоматизации</span> уже здесь</h1>
@@ -134,7 +134,7 @@
 <div style="text-align: center; width: 100%; color: var(--text-muted);">Загрузка отзывов...</div>
 </div>
 </section>
-</div></div>
+</div>
 <!-- About View -->
 <div class="view hidden-view" id="view-about">
 <!-- About Section -->
@@ -362,7 +362,7 @@
 </section>
 </div>
 <!-- Settings View -->
-<div class="window" id="view-settings"><div class="window-header" onmousedown="startDrag(event, 'view-settings')"><div class="window-title">Настройки</div><div class="window-controls"><button class="window-btn btn-min" onclick="minimizeWindow('view-settings')"></button><button class="window-btn btn-max" onclick="maximizeWindow('view-settings')"></button><button class="window-btn btn-close" onclick="closeWindow('view-settings')"></button></div></div><div class="window-content">
+<div class="view" id="view-settings">
 <div style="padding: 20px;">
 <h3 style="color: var(--neon-color); text-transform: uppercase;">Внешний вид</h3>
 <div style="margin-top: 15px;">
@@ -381,9 +381,9 @@
 </select>
 </div>
 </div>
-</div></div>
+</div>
 <!-- Messenger View -->
-<div class="window" id="view-messenger"><div class="window-header" onmousedown="startDrag(event, 'view-messenger')"><div class="window-title">Лента</div><div class="window-controls"><button class="window-btn btn-min" onclick="minimizeWindow('view-messenger')"></button><button class="window-btn btn-max" onclick="maximizeWindow('view-messenger')"></button><button class="window-btn btn-close" onclick="closeWindow('view-messenger')"></button></div></div><div class="window-content">
+<div class="view" id="view-messenger">
 <div class="messenger-container">
 <div class="messenger-sidebar">
 <div class="messenger-header" style="flex-direction: column; gap: 10px; align-items: stretch; padding: 15px;">
@@ -455,9 +455,9 @@
 <button class="glow-btn" id="close-chat-modal" style="width:100%; margin-top:10px; background:rgba(255,0,0,0.2);">Отмена</button>
 </div>
 </div>
-</div></div>
+</div>
 <!-- Portfolio View -->
-<div class="window" id="view-portfolio"><div class="window-header" onmousedown="startDrag(event, 'view-portfolio')"><div class="window-title">Портфолио</div><div class="window-controls"><button class="window-btn btn-min" onclick="minimizeWindow('view-portfolio')"></button><button class="window-btn btn-max" onclick="maximizeWindow('view-portfolio')"></button><button class="window-btn btn-close" onclick="closeWindow('view-portfolio')"></button></div></div><div class="window-content">
+<div class="view" id="view-portfolio">
 <div class="hero" style="min-height: 40vh; padding-top: 100px;">
 <h1 class="glitch" data-text="НАШИ БОТЫ" style="font-size: 3.5rem;">НАШИ БОТЫ</h1>
 <p>Лучшие Discord-боты для вашего сервера.</p>
@@ -488,7 +488,7 @@
 <button class="glow-btn" style="width: 100%; border-color: #ff0055; color: #ff0055; box-shadow: 0 0 10px rgba(255,0,85,0.2);">Добавить на сервер</button>
 </div>
 </div>
-</div></div>
+</div>
 <!-- Global Chat Widget -->
 <div id="global-chat-widget">
 <button id="chat-toggle-btn" title="Глобальный чат">💬</button>
@@ -533,33 +533,20 @@
     </style>
 <script src="{{ url_for('static', filename='script.js') }}"></script>
 <!-- Hacker Terminal -->
-<div class="window" id="view-hacker" style="border-color: #0f0; box-shadow: 0 0 20px rgba(0,255,0,0.3);">
-<div class="window-header" onmousedown="startDrag(event, 'view-hacker')" style="background: rgba(0,255,0,0.1); border-bottom: 1px solid #0f0;">
-<div class="window-title" style="color: #0f0;">AUREX_ROOT_TERMINAL</div>
-<div class="window-controls">
-<button class="window-btn btn-close" onclick="closeWindow('view-hacker')"></button>
-</div>
-</div>
-<div class="window-content" style="background: #000; color: #0f0; font-family: monospace; padding: 10px; font-size: 14px; overflow-y: auto;">
+<div class="view" id="view-hacker" style="border-color: #0f0; box-shadow: 0 0 20px rgba(0,255,0,0.3);">
+
+
 <div id="hacker-output"></div>
 <div style="display: flex;">
 <span style="color: #0f0; margin-right: 5px;">root@aurexis:~#</span>
 <input id="hacker-input" style="background: transparent; border: none; color: #0f0; outline: none; flex: 1; font-family: monospace;" type="text"/>
 </div>
-</div>
-</div>
 
+</div>
 <!-- Code Editor Window -->
-<div class="window" id="view-editor" style="width: 600px; height: 400px; border-color: #00a8ff; box-shadow: 0 0 20px rgba(0, 168, 255, 0.3);">
-<div class="window-header" onmousedown="startDrag(event, 'view-editor')" style="background: rgba(0, 168, 255, 0.1); border-bottom: 1px solid #00a8ff;">
-<div class="window-title" style="color: #00a8ff;">Live-Code Editor</div>
-<div class="window-controls">
-<button class="window-btn btn-min" onclick="minimizeWindow('view-editor')"></button>
-<button class="window-btn btn-max" onclick="maximizeWindow('view-editor')"></button>
-<button class="window-btn btn-close" onclick="closeWindow('view-editor')"></button>
-</div>
-</div>
-<div class="window-content" style="display: flex; flex-direction: column;">
+<div class="view" id="view-editor" style="width: 600px; height: 400px; border-color: #00a8ff; box-shadow: 0 0 20px rgba(0, 168, 255, 0.3);">
+
+
 <div style="background: #111; border-bottom: 1px solid #333; padding: 5px;">
 <button onclick="runCode()" style="background: #2ed573; color: #000; border: none; padding: 5px 15px; border-radius: 3px; cursor: pointer; font-weight: bold;">▶ Run</button>
 </div>
@@ -568,7 +555,7 @@ def on_message(msg):
     if msg == 'ping':
         return 'pong'</textarea>
 <div id="code-output" style="height: 100px; background: #111; color: #fff; padding: 10px; font-family: monospace; overflow-y: auto; border-top: 1px solid #333;">Output will appear here...</div>
-</div>
+
 </div>
 </main>
 <!-- Footer -->
