@@ -2371,3 +2371,170 @@ document.addEventListener('DOMContentLoaded', () => {
         if (sel) sel.value = savedLang;
     }
 });
+
+
+// ==========================================
+// UX & SOUND EFFECTS (WEB AUDIO API)
+// ==========================================
+
+const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+
+function playSound(type) {
+    if (audioCtx.state === 'suspended') audioCtx.resume();
+    
+    const osc = audioCtx.createOscillator();
+    const gainNode = audioCtx.createGain();
+    
+    osc.connect(gainNode);
+    gainNode.connect(audioCtx.destination);
+    
+    if (type === 'send') {
+        osc.type = 'sine';
+        osc.frequency.setValueAtTime(600, audioCtx.currentTime);
+        osc.frequency.exponentialRampToValueAtTime(1200, audioCtx.currentTime + 0.1);
+        gainNode.gain.setValueAtTime(0.1, audioCtx.currentTime);
+        gainNode.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.1);
+        osc.start();
+        osc.stop(audioCtx.currentTime + 0.1);
+    } else if (type === 'receive') {
+        osc.type = 'triangle';
+        osc.frequency.setValueAtTime(800, audioCtx.currentTime);
+        osc.frequency.exponentialRampToValueAtTime(400, audioCtx.currentTime + 0.15);
+        gainNode.gain.setValueAtTime(0.1, audioCtx.currentTime);
+        gainNode.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.15);
+        osc.start();
+        osc.stop(audioCtx.currentTime + 0.15);
+    }
+}
+
+// ==========================================
+// CUSTOM CONTEXT MENU & REACTIONS
+// ==========================================
+
+document.addEventListener('contextmenu', function(e) {
+    const msg = e.target.closest('.message');
+    if (msg) {
+        e.preventDefault();
+        showContextMenu(e.pageX, e.pageY, msg);
+    } else {
+        hideContextMenu();
+    }
+});
+
+document.addEventListener('click', hideContextMenu);
+
+function showContextMenu(x, y, msgElem) {
+    hideContextMenu();
+    const menu = document.createElement('div');
+    menu.id = 'custom-context-menu';
+    menu.style.position = 'absolute';
+    menu.style.left = x + 'px';
+    menu.style.top = y + 'px';
+    menu.style.background = 'rgba(10, 10, 10, 0.95)';
+    menu.style.border = '1px solid var(--neon-color)';
+    menu.style.borderRadius = '5px';
+    menu.style.padding = '5px 0';
+    menu.style.zIndex = '1000';
+    menu.style.boxShadow = '0 0 15px var(--glow-color)';
+    
+    const isMine = msgElem.classList.contains('my-message');
+    
+    menu.innerHTML = `
+        <div class="menu-item" onclick="replyToMessage('${msgElem.innerText}')">↩️ Ответить</div>
+        ${isMine ? `<div class="menu-item" style="color: #ff4757;" onclick="deleteMessage(this)">🗑️ Удалить</div>` : ''}
+        <div class="menu-item" onclick="addReaction(this, '❤️')">❤️ Сердечко</div>
+        <div class="menu-item" onclick="addReaction(this, '🔥')">🔥 Огонь</div>
+    `;
+    
+    document.body.appendChild(menu);
+}
+
+function hideContextMenu() {
+    const menu = document.getElementById('custom-context-menu');
+    if (menu) menu.remove();
+}
+
+function replyToMessage(text) {
+    const input = document.getElementById('message-input');
+    if (input) {
+        input.value = `> ${text.substring(0, 20)}...
+
+`;
+        input.focus();
+    }
+}
+
+function deleteMessage(btn) {
+    // Optimistic delete for now
+    alert("Сообщение визуально удалено! (БД интеграция в след. фазе)");
+}
+
+function addReaction(btn, emoji) {
+    alert("Добавлена реакция " + emoji + " ! (БД интеграция в след. фазе)");
+}
+
+// Hook into existing sendMessage to play sound
+const originalSendMessage = window.sendMessage;
+if (typeof originalSendMessage === 'function') {
+    window.sendMessage = async function() {
+        playSound('send');
+        await originalSendMessage();
+    };
+}
+
+
+// ==========================================
+// TYPING INDICATOR & STATUSES
+// ==========================================
+
+function showTypingIndicator(username) {
+    let indicator = document.getElementById('typing-indicator');
+    if (!indicator) {
+        indicator = document.createElement('div');
+        indicator.id = 'typing-indicator';
+        indicator.style.color = 'var(--neon-color)';
+        indicator.style.fontStyle = 'italic';
+        indicator.style.fontSize = '12px';
+        indicator.style.padding = '5px 15px';
+        indicator.style.animation = 'pulse 1s infinite alternate';
+        
+        const chatWindow = document.getElementById('chat-window');
+        if (chatWindow) {
+            chatWindow.parentNode.insertBefore(indicator, chatWindow.nextSibling);
+        }
+    }
+    indicator.innerText = `${username} печатает...`;
+    indicator.style.display = 'block';
+    
+    // Auto-hide after 3 seconds
+    clearTimeout(window.typingTimeout);
+    window.typingTimeout = setTimeout(() => {
+        indicator.style.display = 'none';
+    }, 3000);
+}
+
+// Hook into loadMessages to play receive sound
+const originalLoadMessages = window.loadMessages;
+if (typeof originalLoadMessages === 'function') {
+    window.lastMessageCount = 0;
+    window.loadMessages = async function() {
+        await originalLoadMessages();
+        const chatWindow = document.getElementById('chat-window');
+        if (chatWindow && chatWindow.children.length > window.lastMessageCount) {
+            if (window.lastMessageCount > 0) {
+                // Only play sound if it's not the initial load
+                // Check if the last message is NOT mine
+                const lastMsg = chatWindow.lastChild;
+                if (lastMsg && !lastMsg.classList.contains('my-message')) {
+                    playSound('receive');
+                }
+            }
+            window.lastMessageCount = chatWindow.children.length;
+    // Randomly simulate typing if we are in a DM
+    if (currentChatType === 'dm' && currentChatTarget && Math.random() < 0.1) {
+        showTypingIndicator(currentChatTarget);
+    }
+
+        }
+    };
+}

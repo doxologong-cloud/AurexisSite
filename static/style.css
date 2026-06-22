@@ -1951,3 +1951,15 @@ body.apocalypse-mode .btn {
     display: none; /* override existing display styles */
     animation: none;
 }
+
+.menu-item {
+    padding: 8px 15px;
+    cursor: pointer;
+    color: #fff;
+    transition: background 0.2s, color 0.2s;
+    font-size: 14px;
+}
+.menu-item:hover {
+    background: var(--glow-color);
+    color: var(--neon-color);
+}
