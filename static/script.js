@@ -33,11 +33,23 @@ window.switchAuthTab = function(tabName) {
         const targetTab = document.querySelector(`.auth-tab[data-tab="${tabName}"]`);
         if(targetTab) targetTab.classList.add('active');
         
-        // Hide/show forms
+        // Hide/show forms properly using style.display
         const authForms = document.querySelectorAll('.auth-form');
-        authForms.forEach(f => f.classList.remove('active'));
+        authForms.forEach(f => f.style.display = 'none');
         const targetForm = document.getElementById(`${tabName}-form`);
-        if(targetForm) targetForm.classList.add('active');
+        if(targetForm) {
+            targetForm.style.display = 'flex';
+        }
+        
+        // Hide google button for verification forms
+        const googleBtn = document.getElementById('google-auth-container');
+        if(googleBtn) {
+            if(tabName === 'login' || tabName === 'register') {
+                googleBtn.style.display = 'block';
+            } else {
+                googleBtn.style.display = 'none';
+            }
+        }
     }, 100);
 };
 
