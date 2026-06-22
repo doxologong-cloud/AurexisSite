@@ -765,3 +765,74 @@ footer {
     .nav-discord-btn span { display: none; }
     .nav-links { display: none; }
 }
+/* Account Dropdown Styles */
+.nav-account {
+    position: relative;
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+}
+
+.user-profile {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 5px 10px;
+    border-radius: 20px;
+    background: rgba(255, 215, 0, 0.05);
+    border: 1px solid rgba(255, 215, 0, 0.2);
+    transition: all 0.3s ease;
+}
+
+.user-profile:hover {
+    background: rgba(255, 215, 0, 0.1);
+    border-color: rgba(255, 215, 0, 0.5);
+}
+
+.nav-avatar {
+    width: 35px;
+    height: 35px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 1px solid var(--neon-primary);
+}
+
+#nav-username {
+    font-weight: 600;
+    color: var(--text-main);
+}
+
+.dropdown-menu {
+    position: absolute;
+    top: 120%;
+    right: 0;
+    background: var(--bg-card);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 10px;
+    padding: 10px 0;
+    min-width: 150px;
+    display: flex;
+    flex-direction: column;
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(-10px);
+    transition: all 0.3s ease;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+    z-index: 100;
+}
+
+.nav-account:hover .dropdown-menu {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+}
+
+.dropdown-item {
+    padding: 10px 20px;
+    color: var(--text-main);
+    transition: background 0.2s;
+}
+
+.dropdown-item:hover {
+    background: rgba(255, 255, 255, 0.05);
+}
