@@ -1006,6 +1006,7 @@ document.addEventListener('DOMContentLoaded', () => {
         if(toggle) toggle.checked = particlesEnabled;
         
         if (particlesEnabled && window.particlesJS) {
+            document.getElementById('particles-js').style.display = 'block';
             particlesJS('particles-js', {
                 'particles': {
                     'number': { 'value': 50, 'density': { 'enable': true, 'value_area': 800 } },
