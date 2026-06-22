@@ -186,7 +186,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const loginForm = document.getElementById('login-form');
     const registerForm = document.getElementById('register-form');
     const verifyForm = document.getElementById('verify-form');
-    const authSocialWrap = document.getElementById('auth-social-wrap');
+    const googleAuthContainer = document.getElementById('google-auth-container');
     
     // Switch between Login and Register tabs
     authTabs.forEach(tab => {
@@ -207,6 +207,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 loginForm.style.display = 'none';
                 registerForm.style.display = 'flex';
             }
+            if (googleAuthContainer) googleAuthContainer.style.display = 'block';
         });
     });
 
@@ -266,7 +267,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 
                 // Move to Verification Step
                 registerForm.style.display = 'none';
-                authSocialWrap.style.display = 'none';
+                googleAuthContainer.style.display = 'none';
                 document.querySelector('.auth-tabs').style.display = 'none';
                 verifyForm.style.display = 'flex';
                 document.getElementById('verify-email-display').textContent = email;
@@ -283,7 +284,7 @@ document.addEventListener('DOMContentLoaded', () => {
         verifyForm.style.display = 'none';
         document.querySelector('.auth-tabs').style.display = 'flex';
         registerForm.style.display = 'flex';
-        authSocialWrap.style.display = 'block';
+        googleAuthContainer.style.display = 'block';
     });
 
     // Handle Verification Submit
@@ -325,7 +326,7 @@ document.addEventListener('DOMContentLoaded', () => {
             e.preventDefault();
             loginForm.style.display = 'none';
             document.querySelector('.auth-tabs').style.display = 'none';
-            authSocialWrap.style.display = 'none';
+            googleAuthContainer.style.display = 'none';
             forgotForm.style.display = 'flex';
         });
 
@@ -334,7 +335,7 @@ document.addEventListener('DOMContentLoaded', () => {
             forgotForm.style.display = 'none';
             document.querySelector('.auth-tabs').style.display = 'flex';
             loginForm.style.display = 'flex';
-            authSocialWrap.style.display = 'block';
+            googleAuthContainer.style.display = 'block';
         });
 
         // Send reset code
@@ -410,7 +411,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     newPasswordForm.style.display = 'none';
                     document.querySelector('.auth-tabs').style.display = 'flex';
                     loginForm.style.display = 'flex';
-                    authSocialWrap.style.display = 'block';
+                    googleAuthContainer.style.display = 'block';
                     closeModal(authModal);
                 } else {
                     err.textContent = data.message;
