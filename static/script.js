@@ -129,6 +129,19 @@ document.addEventListener('DOMContentLoaded', () => {
                 settingsView.classList.remove('hidden-view');
                 settingsView.classList.add('active');
             }
+        } else if (hash === '#messenger') {
+            const msgrView = document.getElementById('view-messenger');
+            if(msgrView) {
+                msgrView.classList.remove('hidden-view');
+                msgrView.classList.add('active');
+                if (typeof loadChats === 'function') loadChats();
+            }
+        } else if (hash === '#portfolio') {
+            const portView = document.getElementById('view-portfolio');
+            if(portView) {
+                portView.classList.remove('hidden-view');
+                portView.classList.add('active');
+            }
         } else {
             const homeView = document.getElementById('view-home');
             if(homeView) {
