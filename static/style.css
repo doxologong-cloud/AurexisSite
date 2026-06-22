@@ -1984,9 +1984,9 @@ body.apocalypse-mode .btn {
 
 
 body {
-    cursor: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 32 32"><defs><linearGradient id="gold" x1="0" y1="0" x2="0" y2="1"><stop offset="0%25" stop-color="%23FFE373"/><stop offset="100%25" stop-color="%23D4AF37"/></linearGradient><filter id="shadow"><feDropShadow dx="1" dy="2" stdDeviation="1" flood-color="%23000" flood-opacity="0.6"/></filter></defs><g filter="url(%23shadow)" transform="translate(12, 6) rotate(-25)"><polygon points="-1,0 -9,18 -4,18 -1,12" fill="url(%23gold)"/><polygon points="1,0 9,18 4,18 1,12" fill="url(%23gold)"/></g></svg>') 12 6, auto !important;
+    cursor: var(--cursor-default, auto) !important;
 }
 
 a, button, input, textarea, select, .theme-card, .msgr-tab, .dropdown-item {
-    cursor: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 32 32"><defs><linearGradient id="gold" x1="0" y1="0" x2="0" y2="1"><stop offset="0%25" stop-color="%23ffffff"/><stop offset="100%25" stop-color="%23FFE373"/></linearGradient><filter id="shadow"><feDropShadow dx="1" dy="2" stdDeviation="1" flood-color="%23000" flood-opacity="0.6"/></filter></defs><g filter="url(%23shadow)" transform="translate(12, 6) rotate(-25)"><polygon points="-1,0 -9,18 -4,18 -1,12" fill="url(%23gold)"/><polygon points="1,0 9,18 4,18 1,12" fill="url(%23gold)"/></g></svg>') 12 6, pointer !important;
+    cursor: var(--cursor-pointer, pointer) !important;
 }
