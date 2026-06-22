@@ -511,6 +511,7 @@ footer {
 /* Nav Links */
 .nav-links {
     display: flex;
+    align-items: center;
     gap: 30px;
     font-size: 1.1rem;
     font-weight: 600;
