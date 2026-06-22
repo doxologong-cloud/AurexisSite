@@ -778,7 +778,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 }
                 
                 data.reviews.forEach(r => {
-                    const stars = '<i class="fa-solid fa-star" style="color: #ffc107;"></i>'.repeat(r.rating);
+                    const stars = '<svg style="vertical-align: text-bottom; margin-right: 2px;" width="16" height="16" viewBox="0 0 24 24" fill="#ffc107" stroke="#ffc107" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>'.repeat(r.rating);
                     const user = r.users || {};
                     const avatar = user.avatar || '/static/assets/default-avatar.png';
                     const nickname = user.nickname || 'Неизвестно';
