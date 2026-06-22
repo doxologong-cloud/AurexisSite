@@ -114,7 +114,41 @@
                 </tr>
             </tbody>
         </table>
+    <!-- NEWS MANAGEMENT -->
+        <h2 class="section-title" style="margin-top: 50px; font-size: 1.8rem;">Управление новостями</h2>
+        <div style="background: rgba(0,0,0,0.3); padding: 20px; border-radius: 10px; border: 1px solid rgba(255,255,255,0.1); margin-bottom: 20px;">
+            <input type="text" id="news-title-input" placeholder="Заголовок новости" style="width: 100%; padding: 10px; margin-bottom: 10px; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.2); color: white; border-radius: 5px;">
+            <textarea id="news-content-input" placeholder="Текст новости" rows="4" style="width: 100%; padding: 10px; margin-bottom: 10px; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.2); color: white; border-radius: 5px;"></textarea>
+            <button class="flora-toggle active" onclick="publishNews()" style="width: 100%;">Опубликовать новость</button>
+        </div>
+        <table class="admin-table">
+            <thead><tr><th>ID</th><th>Дата</th><th>Заголовок</th><th>Действие</th></tr></thead>
+            <tbody id="news-tbody"><tr><td colspan="4" style="text-align:center;">Загрузка...</td></tr></tbody>
+        </table>
 
+        <!-- TICKETS MANAGEMENT -->
+        <h2 class="section-title" style="margin-top: 50px; font-size: 1.8rem;">Тикеты пользователей</h2>
+        <table class="admin-table">
+            <thead><tr><th>Пользователь</th><th>Тема</th><th>Статус</th><th>Действие</th></tr></thead>
+            <tbody id="tickets-tbody"><tr><td colspan="4" style="text-align:center;">Загрузка...</td></tr></tbody>
+        </table>
+
+    </div>
+
+    <!-- Ticket Chat Modal -->
+    <div id="admin-ticket-modal" style="display: none; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(0,0,0,0.8); z-index: 1000; justify-content: center; align-items: center; backdrop-filter: blur(5px);">
+        <div style="background: var(--bg-color); border: 1px solid var(--neon-primary); border-radius: 16px; padding: 30px; width: 600px; max-width: 90%; position: relative;">
+            <span onclick="closeAdminTicket()" style="position: absolute; right: 20px; top: 15px; font-size: 24px; cursor: pointer;">&times;</span>
+            <h2 id="admin-ticket-title" style="color: var(--neon-primary); margin-top: 0;">Тикет</h2>
+            <div id="admin-ticket-status" style="margin-bottom: 15px;"></div>
+            <div id="admin-ticket-messages" style="background: rgba(0,0,0,0.5); border: 1px solid rgba(255,255,255,0.1); border-radius: 8px; height: 300px; overflow-y: auto; padding: 15px; display: flex; flex-direction: column; gap: 10px; margin-bottom: 15px;"></div>
+            
+            <div id="admin-ticket-reply-box" style="display: flex; gap: 10px; margin-bottom: 10px;">
+                <input type="text" id="admin-ticket-input" placeholder="Ответить пользователю..." style="flex-grow: 1; padding: 10px; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.2); color: white; border-radius: 5px;">
+                <button onclick="sendAdminTicketReply()" class="flora-toggle active">Отправить</button>
+            </div>
+            <button id="admin-close-ticket-btn" onclick="closeTicketIssue()" class="flora-toggle" style="width: 100%; border-color: #ff4444; color: #ff4444;">Пометить как Решенный (Закрыть)</button>
+        </div>
     </div>
 
     <!-- Scripts -->
@@ -211,8 +245,167 @@
             }
         }
 
+        // --- NEWS LOGIC ---
+        async function loadAdminNews() {
+            const tbody = document.getElementById('news-tbody');
+            try {
+                const res = await fetch('/api/news');
+                const data = await res.json();
+                if (data.success) {
+                    tbody.innerHTML = '';
+                    if(data.news.length === 0) { tbody.innerHTML = '<tr><td colspan="4" style="text-align:center;">Нет новостей</td></tr>'; return; }
+                    data.news.forEach(n => {
+                        const date = new Date(n.created_at).toLocaleDateString('ru-RU');
+                        tbody.innerHTML += `<tr>
+                            <td>${n.id}</td>
+                            <td>${date}</td>
+                            <td>${n.title}</td>
+                            <td><button class="flora-toggle" style="color: #ff4444; border-color: #ff4444;" onclick="deleteNews(${n.id})">Удалить</button></td>
+                        </tr>`;
+                    });
+                }
+            } catch(e) {}
+        }
+
+        async function publishNews() {
+            const title = document.getElementById('news-title-input').value;
+            const content = document.getElementById('news-content-input').value;
+            if(!title || !content) return alert('Заполните все поля');
+            try {
+                const res = await fetch('/api/admin/news', {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({title, content})
+                });
+                if(res.ok) {
+                    document.getElementById('news-title-input').value = '';
+                    document.getElementById('news-content-input').value = '';
+                    loadAdminNews();
+                } else alert('Ошибка публикации');
+            } catch(e) {}
+        }
+
+        async function deleteNews(id) {
+            if(!confirm('Точно удалить новость?')) return;
+            try {
+                const res = await fetch(`/api/admin/news/${id}`, {method: 'DELETE'});
+                if(res.ok) loadAdminNews();
+            } catch(e) {}
+        }
+
+        // --- TICKETS LOGIC ---
+        async function loadAdminTickets() {
+            const tbody = document.getElementById('tickets-tbody');
+            try {
+                const res = await fetch('/api/admin/tickets');
+                const data = await res.json();
+                if (data.success) {
+                    tbody.innerHTML = '';
+                    if(data.tickets.length === 0) { tbody.innerHTML = '<tr><td colspan="4" style="text-align:center;">Нет тикетов</td></tr>'; return; }
+                    data.tickets.forEach(t => {
+                        const user = t.users || {};
+                        const avatar = user.avatar || '/static/assets/default-avatar.png';
+                        const nickname = user.nickname || t.user_email;
+                        const statusStr = t.status === 'open' ? '<span style="color:#00ffaa;">Открыт</span>' : '<span style="color:#ff4444;">Закрыт</span>';
+                        tbody.innerHTML += `<tr>
+                            <td>
+                                <div style="display:flex; align-items:center; gap:10px;">
+                                    <img src="${avatar}" style="width:30px; height:30px; border-radius:50%; object-fit:cover;">
+                                    <span>${nickname}</span>
+                                </div>
+                            </td>
+                            <td>${t.topic}</td>
+                            <td>${statusStr}</td>
+                            <td><button class="flora-toggle" onclick="openAdminTicket(${t.id}, '${t.topic}', '${t.status}')">Открыть чат</button></td>
+                        </tr>`;
+                    });
+                }
+            } catch(e) {}
+        }
+
+        let currentAdminTicketId = null;
+        let currentAdminTicketStatus = null;
+
+        window.openAdminTicket = async function(id, topic, status) {
+            currentAdminTicketId = id;
+            currentAdminTicketStatus = status;
+            document.getElementById('admin-ticket-title').textContent = 'Тикет #' + id + ': ' + topic;
+            
+            if(status === 'open') {
+                document.getElementById('admin-ticket-status').innerHTML = 'Статус: <span style="color:#00ffaa;">Открыт</span>';
+                document.getElementById('admin-ticket-reply-box').style.display = 'flex';
+                document.getElementById('admin-close-ticket-btn').style.display = 'block';
+            } else {
+                document.getElementById('admin-ticket-status').innerHTML = 'Статус: <span style="color:#ff4444;">Закрыт</span>';
+                document.getElementById('admin-ticket-reply-box').style.display = 'none';
+                document.getElementById('admin-close-ticket-btn').style.display = 'none';
+            }
+            
+            document.getElementById('admin-ticket-modal').style.display = 'flex';
+            await loadAdminTicketMessages(id);
+        }
+
+        async function loadAdminTicketMessages(id) {
+            const container = document.getElementById('admin-ticket-messages');
+            container.innerHTML = 'Загрузка...';
+            try {
+                const res = await fetch(`/api/tickets/${id}/messages`);
+                const data = await res.json();
+                if(data.success) {
+                    container.innerHTML = '';
+                    data.messages.forEach(m => {
+                        container.innerHTML += `
+                            <div style="background: rgba(255,255,255,0.05); padding: 10px; border-radius: 8px;">
+                                <div style="font-size: 0.8rem; color: var(--neon-primary); margin-bottom: 5px;">${m.sender_email}</div>
+                                <div>${m.message}</div>
+                            </div>
+                        `;
+                    });
+                    container.scrollTop = container.scrollHeight;
+                }
+            } catch(e) {}
+        }
+
+        window.sendAdminTicketReply = async function() {
+            const input = document.getElementById('admin-ticket-input');
+            const msg = input.value.trim();
+            if(!msg || !currentAdminTicketId) return;
+            try {
+                const res = await fetch(`/api/tickets/${currentAdminTicketId}/reply`, {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({message: msg})
+                });
+                if(res.ok) {
+                    input.value = '';
+                    await loadAdminTicketMessages(currentAdminTicketId);
+                }
+            } catch(e) {}
+        }
+
+        window.closeTicketIssue = async function() {
+            if(!confirm('Закрыть тикет?')) return;
+            try {
+                const res = await fetch(`/api/admin/tickets/${currentAdminTicketId}/status`, {
+                    method: 'PATCH',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({status: 'closed'})
+                });
+                if(res.ok) {
+                    closeAdminTicket();
+                    loadAdminTickets();
+                }
+            } catch(e) {}
+        }
+
+        window.closeAdminTicket = function() {
+            document.getElementById('admin-ticket-modal').style.display = 'none';
+        }
+
         loadUsers();
         loadBotStatuses();
+        loadAdminNews();
+        loadAdminTickets();
     </script>
 </body>
 </html>

@@ -479,5 +479,107 @@ def admin_update_bot_status():
     except Exception as e:
         return jsonify({"success": False, "message": "Ошибка сохранения"})
 
+# --- NEWS ---
+@app.route('/api/news', methods=['GET'])
+def get_news():
+    url = f"{SUPABASE_URL}/rest/v1/news?select=*&order=created_at.desc"
+    res = requests.get(url, headers=get_supabase_headers())
+    if res.status_code == 200:
+        return jsonify({"success": True, "news": res.json()})
+    return jsonify({"success": False, "news": []})
+
+@app.route('/api/admin/news', methods=['POST'])
+def add_news():
+    if 'user' not in session or not session['user'].get('is_admin'):
+        return jsonify({"success": False})
+    data = request.json
+    payload = {"title": data.get("title"), "content": data.get("content")}
+    url = f"{SUPABASE_URL}/rest/v1/news"
+    res = requests.post(url, json=payload, headers=get_supabase_headers())
+    return jsonify({"success": res.status_code in [201, 204]})
+
+@app.route('/api/admin/news/<int:news_id>', methods=['DELETE'])
+def delete_news(news_id):
+    if 'user' not in session or not session['user'].get('is_admin'):
+        return jsonify({"success": False})
+    url = f"{SUPABASE_URL}/rest/v1/news?id=eq.{news_id}"
+    res = requests.delete(url, headers=get_supabase_headers())
+    return jsonify({"success": res.status_code in [200, 204]})
+
+# --- TICKETS ---
+@app.route('/api/tickets', methods=['POST'])
+def create_ticket():
+    if 'user' not in session:
+        return jsonify({"success": False})
+    email = session['user']['email']
+    data = request.json
+    topic = data.get("topic")
+    message = data.get("message")
+    
+    url = f"{SUPABASE_URL}/rest/v1/tickets"
+    payload = {"user_email": email, "topic": topic, "status": "open"}
+    headers = get_supabase_headers()
+    headers["Prefer"] = "return=representation"
+    res = requests.post(url, json=payload, headers=headers)
+    if res.status_code in [201, 200]:
+        ticket = res.json()[0]
+        msg_url = f"{SUPABASE_URL}/rest/v1/ticket_messages"
+        msg_payload = {"ticket_id": ticket['id'], "sender_email": email, "message": message}
+        requests.post(msg_url, json=msg_payload, headers=get_supabase_headers())
+        return jsonify({"success": True})
+    return jsonify({"success": False})
+
+@app.route('/api/tickets/my', methods=['GET'])
+def my_tickets():
+    if 'user' not in session:
+        return jsonify({"success": False})
+    email = session['user']['email']
+    url = f"{SUPABASE_URL}/rest/v1/tickets?user_email=eq.{email}&select=*&order=created_at.desc"
+    res = requests.get(url, headers=get_supabase_headers())
+    if res.status_code == 200:
+        return jsonify({"success": True, "tickets": res.json()})
+    return jsonify({"success": False, "tickets": []})
+
+@app.route('/api/tickets/<int:ticket_id>/messages', methods=['GET'])
+def get_ticket_messages(ticket_id):
+    if 'user' not in session:
+        return jsonify({"success": False})
+    url = f"{SUPABASE_URL}/rest/v1/ticket_messages?ticket_id=eq.{ticket_id}&select=*&order=created_at.asc"
+    res = requests.get(url, headers=get_supabase_headers())
+    if res.status_code == 200:
+        return jsonify({"success": True, "messages": res.json()})
+    return jsonify({"success": False})
+
+@app.route('/api/tickets/<int:ticket_id>/reply', methods=['POST'])
+def reply_ticket(ticket_id):
+    if 'user' not in session:
+        return jsonify({"success": False})
+    email = session['user']['email']
+    data = request.json
+    msg_url = f"{SUPABASE_URL}/rest/v1/ticket_messages"
+    msg_payload = {"ticket_id": ticket_id, "sender_email": email, "message": data.get("message")}
+    res = requests.post(msg_url, json=msg_payload, headers=get_supabase_headers())
+    return jsonify({"success": res.status_code in [201, 200, 204]})
+
+@app.route('/api/admin/tickets', methods=['GET'])
+def admin_tickets():
+    if 'user' not in session or not session['user'].get('is_admin'):
+        return jsonify({"success": False})
+    url = f"{SUPABASE_URL}/rest/v1/tickets?select=*,users(nickname,avatar)&order=created_at.desc"
+    res = requests.get(url, headers=get_supabase_headers())
+    if res.status_code == 200:
+        return jsonify({"success": True, "tickets": res.json()})
+    return jsonify({"success": False})
+
+@app.route('/api/admin/tickets/<int:ticket_id>/status', methods=['PATCH'])
+def admin_ticket_status(ticket_id):
+    if 'user' not in session or not session['user'].get('is_admin'):
+        return jsonify({"success": False})
+    data = request.json
+    url = f"{SUPABASE_URL}/rest/v1/tickets?id=eq.{ticket_id}"
+    payload = {"status": data.get("status")}
+    res = requests.patch(url, json=payload, headers=get_supabase_headers())
+    return jsonify({"success": res.status_code in [200, 204]})
+
 if __name__ == '__main__':
     app.run(debug=True, port=5000)

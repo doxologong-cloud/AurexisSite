@@ -421,6 +421,8 @@ document.addEventListener('DOMContentLoaded', () => {
                 floraStatus.style.color = '#ff4444';
             }
         }
+        
+        if (window.loadUserTickets) window.loadUserTickets();
     };
 
     // Logout
@@ -669,6 +671,178 @@ document.addEventListener('DOMContentLoaded', () => {
         } catch (e) {}
     }
 
+    // --- NEWS LOGIC ---
+    async function loadNews() {
+        const container = document.getElementById('news-container');
+        if (!container) return;
+        try {
+            const res = await fetch('/api/news');
+            const data = await res.json();
+            if (data.success) {
+                container.innerHTML = '';
+                if (data.news.length === 0) {
+                    container.innerHTML = '<div style="text-align: center; width: 100%; color: var(--text-muted);">Пока нет новостей.</div>';
+                    return;
+                }
+                data.news.forEach(n => {
+                    const date = new Date(n.created_at).toLocaleDateString('ru-RU', {day: 'numeric', month: 'long', year: 'numeric'});
+                    container.innerHTML += `
+                        <div style="background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.1); border-radius: 10px; padding: 20px;">
+                            <div style="color: var(--neon-primary); font-size: 0.85rem; margin-bottom: 5px;">${date}</div>
+                            <h3 style="margin-bottom: 15px; font-size: 1.4rem;">${n.title}</h3>
+                            <p style="color: var(--text-muted); line-height: 1.6; white-space: pre-wrap;">${n.content}</p>
+                        </div>
+                    `;
+                });
+            }
+        } catch (e) {
+            container.innerHTML = '<div style="text-align: center; color: #ff4444;">Ошибка загрузки новостей</div>';
+        }
+    }
+
+    // --- TICKETS LOGIC ---
+    const submitTicketBtn = document.getElementById('submit-ticket-btn');
+    if (submitTicketBtn) {
+        submitTicketBtn.addEventListener('click', async () => {
+            const topic = document.getElementById('ticket-topic').value;
+            const msg = document.getElementById('ticket-message').value;
+            const err = document.getElementById('ticket-error');
+            if (!topic || !msg) { err.textContent = 'Заполните все поля'; return; }
+            
+            submitTicketBtn.disabled = true;
+            submitTicketBtn.textContent = 'Отправка...';
+            try {
+                const res = await fetch('/api/tickets', {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({topic: topic, message: msg})
+                });
+                const data = await res.json();
+                if (data.success) {
+                    err.style.color = '#00ffaa';
+                    err.textContent = 'Обращение создано!';
+                    document.getElementById('ticket-topic').value = '';
+                    document.getElementById('ticket-message').value = '';
+                    document.getElementById('ticket-form-container').style.display = 'none';
+                    document.getElementById('toggle-ticket-btn').textContent = 'Новый тикет';
+                    loadUserTickets();
+                } else {
+                    err.style.color = '#ff4444';
+                    err.textContent = 'Ошибка создания';
+                }
+            } catch(e) { err.textContent = 'Ошибка сети'; }
+            submitTicketBtn.disabled = false;
+            submitTicketBtn.textContent = 'Создать обращение';
+        });
+    }
+
+    window.loadUserTickets = async function() {
+        const container = document.getElementById('user-tickets-container');
+        if (!container) return;
+        try {
+            const res = await fetch('/api/tickets/my');
+            const data = await res.json();
+            if (data.success) {
+                container.innerHTML = '';
+                if (data.tickets.length === 0) {
+                    container.innerHTML = '<div style="text-align: center; color: var(--text-muted);">У вас нет активных обращений.</div>';
+                    return;
+                }
+                data.tickets.forEach(t => {
+                    const statusColor = t.status === 'open' ? '#00ffaa' : '#ff4444';
+                    const statusText = t.status === 'open' ? 'Открыт' : 'Закрыт';
+                    container.innerHTML += `
+                        <div style="background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); border-radius: 8px; padding: 15px; display: flex; justify-content: space-between; align-items: center; cursor: pointer; transition: background 0.3s;" onclick="openTicketChat(${t.id}, '${t.topic}', '${t.status}')">
+                            <div>
+                                <h4 style="margin: 0; margin-bottom: 5px;">${t.topic}</h4>
+                                <span style="font-size: 0.85rem; color: var(--text-muted);">Тикет #${t.id}</span>
+                            </div>
+                            <div style="color: ${statusColor}; font-weight: bold; font-size: 0.9rem;">${statusText}</div>
+                        </div>
+                    `;
+                });
+            }
+        } catch(e) {}
+    }
+
+    let currentTicketId = null;
+    let currentTicketStatus = null;
+    
+    window.openTicketChat = async function(id, topic, status) {
+        currentTicketId = id;
+        currentTicketStatus = status;
+        document.getElementById('ticket-chat-title').textContent = topic;
+        const statusEl = document.getElementById('ticket-chat-status');
+        if (status === 'open') {
+            statusEl.innerHTML = 'Статус: <span style="color: #00ffaa;">Открыт</span>';
+            document.getElementById('ticket-reply-container').style.display = 'flex';
+        } else {
+            statusEl.innerHTML = 'Статус: <span style="color: #ff4444;">Закрыт</span>';
+            document.getElementById('ticket-reply-container').style.display = 'none';
+        }
+        
+        document.getElementById('ticket-modal').classList.add('show-modal');
+        await loadTicketMessages(id);
+    }
+
+    async function loadTicketMessages(id) {
+        const container = document.getElementById('ticket-messages');
+        container.innerHTML = '<div style="text-align:center; color:gray;">Загрузка...</div>';
+        try {
+            const res = await fetch(`/api/tickets/${id}/messages`);
+            const data = await res.json();
+            if (data.success) {
+                container.innerHTML = '';
+                const myEmail = document.getElementById('acc-username') ? document.getElementById('acc-username').textContent : '';
+                data.messages.forEach(m => {
+                    // Check if message is from user or admin. In this case, comparing sender_email with something.
+                    // But wait, the admin could be someone else. We'll just style based on if sender_email matches session user?
+                    // Actually, let's just make messages from current user appear on the right.
+                    // Since we don't have session email easily here, let's assume if it's the user's ticket and it's their msg, or just style them all simply.
+                    container.innerHTML += `
+                        <div style="background: rgba(255,255,255,0.05); padding: 10px 15px; border-radius: 8px;">
+                            <div style="font-size: 0.8rem; color: var(--neon-primary); margin-bottom: 5px;">${m.sender_email}</div>
+                            <div style="color: white; line-height: 1.4;">${m.message}</div>
+                        </div>
+                    `;
+                });
+                container.scrollTop = container.scrollHeight;
+            }
+        } catch(e) {}
+    }
+
+    const sendReplyBtn = document.getElementById('send-ticket-reply-btn');
+    if (sendReplyBtn) {
+        sendReplyBtn.addEventListener('click', async () => {
+            const input = document.getElementById('ticket-reply-input');
+            const msg = input.value.trim();
+            if (!msg || !currentTicketId) return;
+            
+            sendReplyBtn.disabled = true;
+            try {
+                const res = await fetch(`/api/tickets/${currentTicketId}/reply`, {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({message: msg})
+                });
+                if (res.ok) {
+                    input.value = '';
+                    await loadTicketMessages(currentTicketId);
+                }
+            } catch(e) {}
+            sendReplyBtn.disabled = false;
+        });
+    }
+
+    const closeTicketModal = document.getElementById('close-ticket-modal');
+    if (closeTicketModal) {
+        closeTicketModal.addEventListener('click', () => {
+            document.getElementById('ticket-modal').classList.remove('show-modal');
+        });
+    }
+
+    // Call loaders
+    loadNews();
     loadReviews();
     loadBotStatus();
 
