@@ -192,22 +192,7 @@ document.addEventListener('DOMContentLoaded', () => {
     authTabs.forEach(tab => {
         tab.addEventListener('click', () => {
             if (tab.classList.contains('active')) return;
-            
-            authTabs.forEach(t => t.classList.remove('active'));
-            tab.classList.add('active');
-            
-            // Reset forms and errors
-            document.querySelectorAll('.auth-error').forEach(el => el.textContent = '');
-            verifyForm.style.display = 'none';
-
-            if (tab.dataset.tab === 'login') {
-                loginForm.style.display = 'flex';
-                registerForm.style.display = 'none';
-            } else {
-                loginForm.style.display = 'none';
-                registerForm.style.display = 'flex';
-            }
-            if (googleAuthContainer) googleAuthContainer.style.display = 'block';
+            switchAuthTab(tab.dataset.tab);
         });
     });
 
