@@ -541,16 +541,19 @@
 </div>
 </div>
 <!-- Code Editor Window -->
-<div class="view" id="view-editor" style="width: 600px; height: 400px; border-color: #00a8ff; box-shadow: 0 0 20px rgba(0, 168, 255, 0.3);">
-<div style="background: #111; border-bottom: 1px solid #333; padding: 5px;">
-<button onclick="runCode()" style="background: #2ed573; color: #000; border: none; padding: 5px 15px; border-radius: 3px; cursor: pointer; font-weight: bold;">▶ Run</button>
-</div>
-<textarea id="code-textarea" spellcheck="false" style="flex: 1; background: #000; color: #00a8ff; font-family: monospace; border: none; padding: 10px; outline: none; resize: none;"># Пиши код бота здесь...
+
+    <div id="view-editor" class="view" style="display: none; flex-direction: column; height: calc(100vh - 60px); width: 100%; box-sizing: border-box; background: #0a0a0a; padding: 20px;">
+        <h2 style="color: #00a8ff; margin-bottom: 10px;">Live-Code Editor</h2>
+        <div style="background: #111; border: 1px solid #333; border-bottom: none; padding: 10px; border-top-left-radius: 5px; border-top-right-radius: 5px;">
+            <button onclick="runCode()" style="background: #2ed573; color: #000; border: none; padding: 8px 20px; border-radius: 3px; cursor: pointer; font-weight: bold;">▶ Run Code</button>
+        </div>
+        <textarea id="code-textarea" style="flex: 1; background: #000; color: #00a8ff; font-family: monospace; font-size: 16px; border: 1px solid #333; padding: 15px; outline: none; resize: none;" spellcheck="false"># Пиши код бота здесь...
 def on_message(msg):
     if msg == 'ping':
         return 'pong'</textarea>
-<div id="code-output" style="height: 100px; background: #111; color: #fff; padding: 10px; font-family: monospace; overflow-y: auto; border-top: 1px solid #333;">Output will appear here...</div>
-</div>
+        <div id="code-output" style="height: 150px; background: #111; color: #fff; padding: 15px; font-family: monospace; font-size: 14px; overflow-y: auto; border: 1px solid #333; border-top: none; border-bottom-left-radius: 5px; border-bottom-right-radius: 5px;">Output will appear here...</div>
+    </div>
+    
 </main>
 <!-- Footer -->
 <footer>
