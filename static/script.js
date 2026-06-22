@@ -1287,36 +1287,32 @@ document.addEventListener('keydown', (e) => {
 });
 
 
+
 function triggerApocalypse() {
     if(document.body.classList.contains('apocalypse-mode')) return;
-    
     document.body.classList.add('apocalypse-mode');
     
-    // Play a low ominous drone or glitch sound
+    // Low drone sound
     try {
         const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
         const osc = audioCtx.createOscillator();
         const gain = audioCtx.createGain();
         osc.type = 'sawtooth';
-        osc.frequency.setValueAtTime(50, audioCtx.currentTime);
-        osc.frequency.exponentialRampToValueAtTime(10, audioCtx.currentTime + 2);
+        osc.frequency.setValueAtTime(40, audioCtx.currentTime);
+        osc.frequency.exponentialRampToValueAtTime(10, audioCtx.currentTime + 3);
         gain.gain.setValueAtTime(0.5, audioCtx.currentTime);
-        gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 2);
+        gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 3);
         osc.connect(gain);
         gain.connect(audioCtx.destination);
         osc.start();
-        osc.stop(audioCtx.currentTime + 2);
+        osc.stop(audioCtx.currentTime + 3);
     } catch(e) {}
     
+    // Falling code chunks
     const snippets = [
-        "Uncaught TypeError: Cannot read properties of undefined (reading 'soul')",
-        "Error 404: Website integrity not found",
-        "FATAL ERROR: DOX HAS BREACHED THE MAINFRAME",
-        "<div style='border:1px solid red'>System failing...</div>",
+        "DOX HAS BREACHED THE MAINFRAME",
         "rm -rf /var/www/aurexis",
         "SQL INJECTION SUCCESSFUL",
-        "[DOX_PAYLOAD] Executing...",
-        "MEMORY LEAK DETECTED",
         "AUREXIS_CORE_CORRUPTED = true;"
     ];
     
@@ -1328,32 +1324,22 @@ function triggerApocalypse() {
         chunk.style.top = '-100px';
         chunk.style.fontSize = (Math.random() * 10 + 14) + 'px';
         document.body.appendChild(chunk);
-        
         setTimeout(() => chunk.remove(), 4000);
-    }, 400);
+    }, 300);
 
-    // STAGE 2: 12 seconds in - CREEPY FACE AND GRAVITY DROP
+    // STAGE 1: Gravity Drop
+    const elementsToDrop = document.querySelectorAll('header, nav, section, footer, .view');
     setTimeout(() => {
-        const face = document.createElement('div');
-        face.className = 'creepy-face';
-        face.innerHTML = '👁️ 👄 👁️';
-        document.body.appendChild(face);
-        
-        setTimeout(() => face.style.opacity = '1', 100);
-        
-        // Make all main elements fall down
-        const elementsToDrop = document.querySelectorAll('header, nav, section, footer, .view');
         elementsToDrop.forEach((el, index) => {
             setTimeout(() => {
                 el.classList.add('gravity-fall');
-            }, index * 200 + Math.random() * 500); // random staggering
+            }, index * 200 + Math.random() * 500);
         });
-        
-    }, 12000);
+    }, 4000);
 
-    // STAGE 3: 20 seconds in - ANTI-CHEAT RECOVERY
+    // STAGE 2: Anti-Cheat Terminal
     setTimeout(() => {
-        clearInterval(intervalId); // stop falling code
+        clearInterval(intervalId); // Stop falling code
         
         const anticheat = document.createElement('div');
         anticheat.className = 'anticheat-overlay';
@@ -1362,31 +1348,65 @@ function triggerApocalypse() {
             "[AUREXIS ANTI-CHEAT PROTOCOL INITIATED]",
             "> ISOLATING THREAT: DOX",
             "> NEUTRALIZING MALWARE...",
-            "> REBUILDING DOM ARCHITECTURE...",
-            "> SYSTEM RECOVERY AT 100%"
+            "> DELETING DOX...",
+            "> ERROR: ACCESS DENIED.",
+            "> DELETION FAILED. DOX IS IMMORTAL.",
+            "> INITIATING EMERGENCY DOM RECOVERY..."
         ];
-        
-        lines.forEach(text => {
-            const lineDiv = document.createElement('div');
-            lineDiv.className = 'anticheat-line';
-            lineDiv.innerText = text;
-            anticheat.appendChild(lineDiv);
-        });
         
         document.body.appendChild(anticheat);
         setTimeout(() => anticheat.style.opacity = '1', 100);
         
-        // Reveal lines one by one
-        const lineElements = anticheat.querySelectorAll('.anticheat-line');
-        lineElements.forEach((el, index) => {
-            setTimeout(() => el.classList.add('visible'), 1000 + (index * 1500));
+        lines.forEach((text, index) => {
+            setTimeout(() => {
+                const lineDiv = document.createElement('div');
+                lineDiv.className = 'anticheat-line visible';
+                if (text.includes("FAILED") || text.includes("ERROR") || text.includes("IMMORTAL")) {
+                    lineDiv.style.color = '#ff0033';
+                    lineDiv.style.textShadow = '0 0 10px #ff0033';
+                }
+                lineDiv.innerText = text;
+                anticheat.appendChild(lineDiv);
+            }, 1000 + (index * 1500));
         });
         
-        // Reload page to fix everything
+        // STAGE 3: Recovery with Drones
+        const totalLinesTime = 1000 + (lines.length * 1500) + 2000;
         setTimeout(() => {
-            window.location.reload();
-        }, 1000 + (lines.length * 1500) + 1000);
+            anticheat.style.opacity = '0';
+            setTimeout(() => anticheat.remove(), 2000);
+            
+            // Remove apocalypse classes except maybe a subtle red tint
+            document.body.classList.remove('apocalypse-mode');
+            
+            // Drones swarm to lift elements
+            let droneInterval = setInterval(() => {
+                const drone = document.createElement('div');
+                drone.className = 'recovery-drone';
+                drone.style.left = (Math.random() * 100) + 'vw';
+                drone.style.animationDuration = (2 + Math.random() * 3) + 's';
+                document.body.appendChild(drone);
+                setTimeout(() => drone.remove(), 5000);
+            }, 50);
+            
+            // Elements fly back up
+            elementsToDrop.forEach((el, index) => {
+                setTimeout(() => {
+                    el.classList.remove('gravity-fall');
+                    el.classList.add('gravity-restore');
+                }, index * 100 + Math.random() * 300);
+            });
+            
+            // Stop drones after a while
+            setTimeout(() => {
+                clearInterval(droneInterval);
+                // Clean up animation classes
+                elementsToDrop.forEach(el => el.classList.remove('gravity-restore'));
+            }, 5000);
+            
+        }, totalLinesTime);
         
-    }, 20000);
+    }, 10000);
 }
+
 
