@@ -126,6 +126,28 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // SPA Routing Logic
     function handleRoute() {
+        // === CURSOR LOCK OVERLAY ===
+        // Prevents browser cursor flashing during DOM reflows and CSS animations
+        let cursorLock = document.getElementById('cursor-lock');
+        if (!cursorLock) {
+            cursorLock = document.createElement('div');
+            cursorLock.id = 'cursor-lock';
+            cursorLock.style.position = 'fixed';
+            cursorLock.style.top = '0';
+            cursorLock.style.left = '0';
+            cursorLock.style.width = '100vw';
+            cursorLock.style.height = '100vh';
+            cursorLock.style.zIndex = '9999999';
+            document.body.appendChild(cursorLock);
+        }
+        cursorLock.style.display = 'block';
+        cursorLock.style.setProperty('cursor', 'var(--cursor-default, auto)', 'important');
+
+        setTimeout(() => {
+            cursorLock.style.display = 'none';
+        }, 400); // 0.3s transition + 100ms buffer
+        // ============================
+
         const hash = window.location.hash || '#home';
         
         document.querySelectorAll('.view').forEach(v => {
