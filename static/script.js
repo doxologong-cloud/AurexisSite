@@ -778,7 +778,16 @@ document.addEventListener('DOMContentLoaded', () => {
                 }
                 
                 data.reviews.forEach(r => {
-                    const stars = '<svg style="vertical-align: text-bottom; margin-right: 2px;" width="16" height="16" viewBox="0 0 24 24" fill="#ffc107" stroke="#ffc107" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>'.repeat(r.rating);
+                    
+                    let stars = '';
+                    for (let i = 1; i <= 5; i++) {
+                        if (i <= r.rating) {
+                            stars += `<svg class="review-star filled" style="vertical-align: text-bottom; margin-right: 4px;" width="20" height="20" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"></path></svg>`;
+                        } else {
+                            stars += `<svg class="review-star" style="vertical-align: text-bottom; margin-right: 4px;" width="20" height="20" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"></path></svg>`;
+                        }
+                    }
+
                     const user = r.users || {};
                     const avatar = user.avatar || '/static/assets/default-avatar.png';
                     const nickname = user.nickname || 'Неизвестно';
@@ -3381,4 +3390,25 @@ function switchView(viewId) {
             break;
         }
     }
+}
+
+// ==========================================
+// Custom Cursor Logic
+// ==========================================
+const cursor = document.getElementById('custom-cursor');
+if (cursor) {
+    document.addEventListener('mousemove', e => {
+        cursor.style.left = e.clientX + 'px';
+        cursor.style.top = e.clientY + 'px';
+    });
+
+    document.addEventListener('mousedown', () => cursor.classList.add('clicking'));
+    document.addEventListener('mouseup', () => cursor.classList.remove('clicking'));
+
+    // Hover effect on interactive elements
+    const interactiveElements = document.querySelectorAll('a, button, input, textarea, select, .theme-card, .msgr-tab, .dropdown-item');
+    interactiveElements.forEach(el => {
+        el.addEventListener('mouseenter', () => cursor.classList.add('hovering'));
+        el.addEventListener('mouseleave', () => cursor.classList.remove('hovering'));
+    });
 }

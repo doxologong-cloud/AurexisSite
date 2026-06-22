@@ -16,9 +16,17 @@
 <script src="https://cdn.jsdelivr.net/npm/particles.js@2.0.0/particles.min.js"></script>
 <!-- Styles -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-<link href="{{ url_for('static', filename='style.css') }}?v=52" rel="stylesheet"/>
-<link href="/static/manifest.json" rel="manifest"/></head>
+<link href="{{ url_for('static', filename='style.css') }}?v=53" rel="stylesheet"/>
+<link href="/static/manifest.json" rel="manifest"/>
+<script>
+    (function() {
+        const savedTheme = localStorage.getItem('theme') || 'theme-matrix';
+        document.documentElement.className = savedTheme;
+    })();
+</script>
+</head>
 <body>
+<div id="custom-cursor"></div>
 <!-- Preloader / Welcome Screen -->
 <div id="welcome-screen">
 <div class="glitch-wrapper">
@@ -380,18 +388,32 @@
 <!-- Settings View -->
 <div class="view" id="view-settings">
 <div style="padding: 20px;">
-<h3 style="color: var(--neon-color); text-transform: uppercase;">Внешний вид</h3>
-<div style="margin-top: 15px;">
-<label style="color: #fff; margin-right: 10px;">Тема оформления:</label>
-<select id="theme-selector" onchange="changeTheme(this.value)" style="background: rgba(0,0,0,0.5); border: 1px solid var(--neon-color); color: var(--neon-color); padding: 5px; border-radius: 5px; cursor: pointer;">
-<option value="matrix">Матрица (Неоновый Желтый)</option>
-<option value="synthwave">Синтвейв (Розово-Фиолетовый)</option>
-<option value="cyberpunk">Киберпанк (Голубой/Розовый)</option>
-</select>
+<h3 style="color: var(--neon-color); text-transform: uppercase; margin-bottom: 20px;">Внешний вид</h3>
+
+<label style="color: #fff; font-size: 1.1rem;">Выбор темы:</label>
+<div class="settings-theme-cards">
+    <div class="theme-card active" id="card-matrix" onclick="changeTheme('theme-matrix')">
+        <div class="theme-card-color" style="background: linear-gradient(135deg, #e5b322, #b8860b); box-shadow: 0 0 10px #e5b322;"></div>
+        <div style="font-weight: bold; color: #e5b322;">Матрица</div>
+        <div style="font-size: 0.8rem; color: #888;">Неоновый Желтый</div>
+    </div>
+    
+    <div class="theme-card" id="card-synthwave" onclick="changeTheme('theme-synthwave')">
+        <div class="theme-card-color" style="background: linear-gradient(135deg, #b026ff, #ff0055); box-shadow: 0 0 10px #b026ff;"></div>
+        <div style="font-weight: bold; color: #b026ff;">Синтвейв</div>
+        <div style="font-size: 0.8rem; color: #888;">Розовый Неон</div>
+    </div>
+    
+    <div class="theme-card" id="card-cyberpunk" onclick="changeTheme('theme-cyberpunk')">
+        <div class="theme-card-color" style="background: linear-gradient(135deg, #00ff88, #00a8ff); box-shadow: 0 0 10px #00ff88;"></div>
+        <div style="font-weight: bold; color: #00ff88;">Киберпанк</div>
+        <div style="font-size: 0.8rem; color: #888;">Токсичный Неон</div>
+    </div>
 </div>
-<div style="margin-top: 25px;">
-<label style="color: #fff; margin-right: 10px;">Язык интерфейса:</label>
-<select id="lang-selector" onchange="changeLang(this.value)" style="background: rgba(0,0,0,0.5); border: 1px solid var(--neon-color); color: var(--neon-color); padding: 5px; border-radius: 5px; cursor: pointer;">
+
+<div style="margin-top: 40px;">
+<label style="color: #fff; margin-right: 10px; font-size: 1.1rem;">Язык интерфейса:</label>
+<select id="lang-selector" onchange="changeLang(this.value)" style="background: rgba(0,0,0,0.5); border: 1px solid rgba(255,255,255,0.2); color: white; padding: 10px; border-radius: 8px; cursor: none; font-size: 1rem; width: 200px;">
 <option value="ru">Русский (RU)</option>
 <option value="en">English (EN)</option>
 </select>
@@ -463,7 +485,7 @@
             100% { transform: translate(0) }
         }
     </style>
-<script src="{{ url_for('static', filename='script.js') }}?v=52"></script>
+<script src="{{ url_for('static', filename='script.js') }}?v=53"></script>
 <!-- Hacker Terminal -->
 <div class="view" id="view-hacker" style="background: #000; color: #0f0; font-family: monospace; padding: 20px; font-size: 16px; overflow-y: auto; height: 100vh; width: 100%; box-sizing: border-box;">
 <div id="hacker-output"></div>
