@@ -1,4 +1,4 @@
-*, html, body {
+html, body {
     cursor: var(--cursor-default, auto) !important;
 }
 /* Reset and Base Styles */
@@ -1998,8 +1998,7 @@ select, select:hover, select:active, select:focus,
 .theme-card, .theme-card:hover, .theme-card:active,
 .msgr-tab, .msgr-tab:hover, .msgr-tab:active,
 .dropdown-item, .dropdown-item:hover, .dropdown-item:active,
-[onclick], [onclick]:hover, [onclick]:active,
-[onclick] *, a *, button * {
+[onclick], [onclick]:hover, [onclick]:active {
     cursor: var(--cursor-pointer, pointer) !important;
 }
 
