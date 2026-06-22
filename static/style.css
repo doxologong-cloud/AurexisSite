@@ -2044,3 +2044,76 @@ body.no-animations *, body.no-animations {
     text-orientation: upright;
     animation: falling-code linear forwards;
 }
+
+/* Hacker 3D Grid */
+.hacker-3d-grid-container {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    perspective: 600px;
+    z-index: -6;
+    pointer-events: none;
+    background: radial-gradient(circle at center 30%, #1a0000 0%, #000 70%);
+    overflow: hidden;
+}
+
+.hacker-3d-grid {
+    position: absolute;
+    width: 200%;
+    height: 150%;
+    bottom: -30%;
+    left: -50%;
+    background-image: 
+        linear-gradient(rgba(255, 0, 0, 0.4) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255, 0, 0, 0.4) 1px, transparent 1px);
+    background-size: 50px 50px;
+    transform: rotateX(75deg);
+    transform-origin: top center;
+    animation: grid-move 2s linear infinite;
+    mask-image: linear-gradient(to bottom, transparent 0%, black 40%);
+    -webkit-mask-image: linear-gradient(to bottom, transparent 0%, black 40%);
+}
+
+@keyframes grid-move {
+    0% { transform: rotateX(75deg) translateY(0); }
+    100% { transform: rotateX(75deg) translateY(50px); }
+}
+
+.hacker-error-window {
+    position: fixed;
+    background: rgba(10, 0, 0, 0.95);
+    border: 1px solid #ff0000;
+    box-shadow: 0 0 20px rgba(255, 0, 0, 0.4);
+    color: #ff0000;
+    font-family: 'Courier New', Courier, monospace;
+    z-index: 999999;
+    pointer-events: none;
+    animation: hacker-glitch 0.2s 3;
+    min-width: 300px;
+}
+.hacker-error-header {
+    background: #ff0000;
+    color: #000;
+    font-weight: bold;
+    padding: 4px 10px;
+    font-size: 14px;
+    display: flex;
+    justify-content: space-between;
+}
+.hacker-error-body {
+    padding: 15px;
+    font-size: 16px;
+    white-space: pre-wrap;
+    text-shadow: 0 0 5px red;
+}
+
+@keyframes hacker-glitch {
+    0% { transform: translate(0) }
+    20% { transform: translate(-2px, 2px) }
+    40% { transform: translate(-2px, -2px) }
+    60% { transform: translate(2px, 2px) }
+    80% { transform: translate(2px, -2px) }
+    100% { transform: translate(0) }
+}

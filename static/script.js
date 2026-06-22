@@ -2845,27 +2845,17 @@ function enableHackerMode() {
     }
     document.body.classList.add('hacked-theme');
     
-    // Create the scary background overlay
-    let hackerBg = document.getElementById('hacker-bg-overlay');
-    if (!hackerBg) {
-        hackerBg = document.createElement('div');
-        hackerBg.id = 'hacker-bg-overlay';
-        hackerBg.style.position = 'fixed';
-        hackerBg.style.top = '0';
-        hackerBg.style.left = '0';
-        hackerBg.style.width = '100vw';
-        hackerBg.style.height = '100vh';
-        hackerBg.style.background = 'radial-gradient(ellipse at center, #1a0505 0%, #000000 100%)';
-        hackerBg.style.fontFamily = 'monospace';
-        hackerBg.style.fontSize = '13px';
-        hackerBg.style.lineHeight = '1.3';
-        hackerBg.style.overflow = 'hidden';
-        hackerBg.style.zIndex = '-5';
-        hackerBg.style.pointerEvents = 'none';
-        hackerBg.style.opacity = '0.45';
-        hackerBg.style.wordBreak = 'break-all';
-        hackerBg.style.whiteSpace = 'pre-wrap';
-        document.body.appendChild(hackerBg);
+    // Create 3D Grid Background
+    let gridContainer = document.getElementById('hacker-grid-overlay');
+    if (!gridContainer) {
+        gridContainer = document.createElement('div');
+        gridContainer.id = 'hacker-grid-overlay';
+        gridContainer.className = 'hacker-3d-grid-container';
+        
+        let grid = document.createElement('div');
+        grid.className = 'hacker-3d-grid';
+        gridContainer.appendChild(grid);
+        document.body.appendChild(gridContainer);
         
         // Add CRT scanlines
         let crt = document.createElement('div');
@@ -2878,77 +2868,67 @@ function enableHackerMode() {
         crt.style.background = 'linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.4) 50%)';
         crt.style.backgroundSize = '100% 4px';
         crt.style.pointerEvents = 'none';
-        crt.style.zIndex = '999998'; // Just below bugs
+        crt.style.zIndex = '999998';
         crt.style.opacity = '0.6';
         document.body.appendChild(crt);
     }
     
-    const scaryPhrases = [
-        "SYSTEM OVERRIDE INITIATED", "NULL_POINTER_EXCEPTION AT 0xDEADBEEF", "THEY ARE WATCHING",
-        "DON'T LOOK BEHIND YOU", "I CAN SEE YOU", "DATA CORRUPTION DETECTED", "FATAL ERROR",
-        "CONNECTING TO UNKNOWN HOST...", "DOWNLOADING SOUL...", "SECURITY BREACH", "ACCESS GRANTED: ROOT",
-        "FORMATTING DRIVE C:", "RUN", "01010100 01010010 01010101 01010011 01010100", "DELETING PROTOCOLS"
+    const sysErrors = [
+        "SYSTEM OVERRIDE INITIATED
+BYPASSING FIREWALL...", 
+        "FATAL EXCEPTION 0x0000005
+DATA CORRUPTION IN SECTOR 7", 
+        "SECURITY BREACH DETECTED
+UNAUTHORIZED ROOT ACCESS",
+        "CONNECTING TO UNKNOWN HOST...
+DOWNLOADING PAYLOAD...", 
+        "WARNING: PROTOCOL OVERRIDE
+MEMORY LEAK DETECTED",
+        "ACCESS GRANTED: ROOT
+DELETING LOGS..."
     ];
     
-    const colors = ['#ff3333', '#880000', '#555555', '#444444', '#ffffff', '#cc0000'];
-    
-    // Start generating ton of text
+    // Generate occasional system error windows
     hackerModeInterval = setInterval(() => {
-        // Append a massive chunk of text
-        let chunk = "";
-        for (let i = 0; i < 5; i++) {
-            let col = colors[Math.floor(Math.random() * colors.length)];
-            let text = "";
-            if (Math.random() > 0.8) {
-                text = scaryPhrases[Math.floor(Math.random() * scaryPhrases.length)];
-            } else {
-                let hex = "";
-                for(let j=0; j<8; j++) hex += Math.floor(Math.random()*16).toString(16).toUpperCase();
-                text = "0x" + hex;
-            }
-            // Add a little glow if it's white or bright red
-            let shadow = (col === '#ffffff' || col === '#ff3333') ? `text-shadow: 0 0 5px ${col};` : '';
-            chunk += `<span style="color: ${col}; ${shadow}">${text} </span>`;
-        }
-        hackerBg.innerHTML += chunk + (Math.random() > 0.5 ? "<br>" : "");
-        
-        // Keep the text from becoming too huge in DOM to avoid lag
-        if (hackerBg.innerHTML.length > 6000) {
-            hackerBg.innerHTML = hackerBg.innerHTML.substring(1500);
-        }
-        
-        // Occasional big red bug (5% chance)
-        if (Math.random() < 0.05) {
-            const bug = document.createElement('div');
-            bug.className = 'fake-bug';
-            bug.style.position = 'fixed';
-            bug.style.top = Math.random() * window.innerHeight + 'px';
-            bug.style.left = Math.random() * window.innerWidth + 'px';
-            bug.style.color = '#ff0000';
-            bug.style.fontFamily = 'monospace';
-            bug.style.fontWeight = 'bold';
-            bug.style.fontSize = (Math.random() * 40 + 20) + 'px';
-            bug.style.pointerEvents = 'none';
-            bug.style.zIndex = '999999';
-            bug.style.textShadow = '0 0 20px red, 0 0 10px red';
+        if (Math.random() < 0.3) {
+            const win = document.createElement('div');
+            win.className = 'hacker-error-window';
             
-            bug.textContent = scaryPhrases[Math.floor(Math.random() * scaryPhrases.length)];
+            // Random position but keep it generally visible
+            const top = Math.max(10, Math.random() * (window.innerHeight - 200));
+            const left = Math.max(10, Math.random() * (window.innerWidth - 400));
             
-            document.body.appendChild(bug);
-            setTimeout(() => { if (bug.parentNode) bug.remove(); }, 800 + Math.random() * 1000);
+            win.style.top = top + 'px';
+            win.style.left = left + 'px';
+            
+            const header = document.createElement('div');
+            header.className = 'hacker-error-header';
+            header.innerHTML = '<span>SYSTEM ALERT</span><span>X</span>';
+            
+            const body = document.createElement('div');
+            body.className = 'hacker-error-body';
+            body.textContent = sysErrors[Math.floor(Math.random() * sysErrors.length)];
+            
+            win.appendChild(header);
+            win.appendChild(body);
+            document.body.appendChild(win);
+            
+            // Remove after 2-4 seconds
+            setTimeout(() => { if (win.parentNode) win.remove(); }, 2000 + Math.random() * 2000);
         }
-    }, 50); // Very fast interval to simulate pouring text
+    }, 2000); // Check every 2 seconds
 }
 
 function disableHackerMode() {
     document.body.classList.remove('hacked-theme');
     if (hackerModeInterval) clearInterval(hackerModeInterval);
-    document.querySelectorAll('.fake-bug').forEach(e => e.remove());
-    document.querySelectorAll('.falling-code-line').forEach(e => e.remove());
-    const bg = document.getElementById('hacker-bg-overlay');
-    if (bg) bg.remove();
+    document.querySelectorAll('.hacker-error-window').forEach(e => e.remove());
+    const grid = document.getElementById('hacker-grid-overlay');
+    if (grid) grid.remove();
     const crt = document.getElementById('hacker-crt-overlay');
     if (crt) crt.remove();
+    const oldBg = document.getElementById('hacker-bg-overlay');
+    if (oldBg) oldBg.remove();
 }
 function toggleAnimations(enabled) {
     if (!enabled) {
@@ -3017,7 +2997,7 @@ function changeTheme(themeName) {
     let finalCursorPointer = `url('${svgPointer}') 12 6, pointer`;
 
     if (themeName === 'hacked') {
-        const hackerCursor = `data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 32 32"><line x1="16" y1="0" x2="16" y2="32" stroke="%23ff0000" stroke-width="2"/><line x1="0" y1="16" x2="32" y2="16" stroke="%23ff0000" stroke-width="2"/><circle cx="16" cy="16" r="10" fill="none" stroke="%23ff0000" stroke-width="2"/><circle cx="16" cy="16" r="2" fill="%23ff0000"/></svg>`;
+        const hackerCursor = `data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 32 32"><defs><filter id="glow"><feDropShadow dx="0" dy="0" stdDeviation="2" flood-color="%23ff0000" flood-opacity="1"/></filter></defs><path d="M 4 4 L 12 28 L 16 16 L 28 12 Z" fill="%23ff0000" filter="url(%23glow)"/></svg>`;
         finalCursorDefault = `url('${hackerCursor}') 16 16, crosshair`;
         finalCursorPointer = `url('${hackerCursor}') 16 16, crosshair`;
     }
