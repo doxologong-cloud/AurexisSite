@@ -282,6 +282,8 @@ def update_profile():
     data = request.json
     new_nickname = data.get('nickname')
     new_username = data.get('username')
+    new_banner = data.get('banner')
+    new_status_text = data.get('status_text')
     email = session['user']['email']
     
     if not new_nickname or not new_username:
@@ -300,11 +302,20 @@ def update_profile():
         # Update user
         url = f"{SUPABASE_URL}/rest/v1/users?email=eq.{email}"
         payload = {"nickname": new_nickname, "username": new_username}
+        if new_banner is not None:
+            payload["banner"] = new_banner
+        if new_status_text is not None:
+            payload["status_text"] = new_status_text
+
         res = requests.patch(url, json=payload, headers=get_supabase_headers())
         
         if res.status_code in [200, 204]:
             session['user']['nickname'] = new_nickname
             session['user']['username'] = new_username
+            if new_banner is not None:
+                session['user']['banner'] = new_banner
+            if new_status_text is not None:
+                session['user']['status_text'] = new_status_text
             session.modified = True
             return jsonify({"success": True, "user": session['user']})
             

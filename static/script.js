@@ -405,6 +405,16 @@ document.addEventListener('DOMContentLoaded', () => {
         if (accUsername) accUsername.textContent = userData.username || '@user';
         if (accAvatar) accAvatar.src = avatarUrl;
         
+        const accBanner = document.getElementById('acc-banner');
+        if (accBanner) {
+            const bannerUrl = userData.banner || '/static/assets/default-banner.png';
+            accBanner.style.backgroundImage = `url('${bannerUrl}')`;
+        }
+        const accStatusText = document.getElementById('acc-status-text');
+        if (accStatusText) {
+            accStatusText.textContent = userData.status_text || 'Установите статус...';
+        }
+        
         const ownerBadge = document.getElementById('acc-owner-badge');
         if (ownerBadge) ownerBadge.style.display = userData.is_admin ? 'inline-flex' : 'none';
         
@@ -522,7 +532,32 @@ document.addEventListener('DOMContentLoaded', () => {
     const profileEditForm = document.getElementById('profile-edit-form');
     const editNickInput = document.getElementById('edit-nickname');
     const editUserInput = document.getElementById('edit-username');
+    const editStatusInput = document.getElementById('edit-status');
     const editError = document.getElementById('edit-profile-error');
+    const bannerUploadInput = document.getElementById('banner-upload-input');
+    const changeBannerBtn = document.getElementById('change-banner-btn');
+    
+    let currentBannerBase64 = null;
+
+    if (changeBannerBtn && bannerUploadInput) {
+        changeBannerBtn.addEventListener('click', (e) => {
+            e.preventDefault();
+            bannerUploadInput.click();
+        });
+        
+        bannerUploadInput.addEventListener('change', (event) => {
+            const file = event.target.files[0];
+            if(!file) return;
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                currentBannerBase64 = e.target.result;
+                changeBannerBtn.textContent = 'Баннер выбран (сохраните изменения)';
+                changeBannerBtn.style.color = '#00ffaa';
+                changeBannerBtn.style.borderColor = '#00ffaa';
+            };
+            reader.readAsDataURL(file);
+        });
+    }
 
     if(editBtn && cancelEditBtn && saveProfileBtn) {
         editBtn.addEventListener('click', () => {
@@ -530,7 +565,17 @@ document.addEventListener('DOMContentLoaded', () => {
             profileEditForm.style.display = 'block';
             editNickInput.value = document.getElementById('acc-nickname').textContent;
             editUserInput.value = document.getElementById('acc-username').textContent;
+            
+            const currentStatus = document.getElementById('acc-status-text').textContent;
+            editStatusInput.value = currentStatus === 'Установите статус...' ? '' : currentStatus;
+            
             editError.textContent = '';
+            currentBannerBase64 = null;
+            if(changeBannerBtn) {
+                changeBannerBtn.textContent = 'Изменить фон профиля (Баннер)';
+                changeBannerBtn.style.color = 'var(--neon-purple)';
+                changeBannerBtn.style.borderColor = 'var(--neon-purple)';
+            }
         });
 
         cancelEditBtn.addEventListener('click', () => {
@@ -541,6 +586,8 @@ document.addEventListener('DOMContentLoaded', () => {
         saveProfileBtn.addEventListener('click', async () => {
             const newNick = editNickInput.value.trim();
             const newUser = editUserInput.value.trim();
+            const newStatus = editStatusInput.value.trim();
+            
             if(!newNick || !newUser) {
                 editError.textContent = 'Заполните все поля!';
                 return;
@@ -550,15 +597,20 @@ document.addEventListener('DOMContentLoaded', () => {
             saveProfileBtn.textContent = 'Сохранение...';
             
             try {
+                const payload = { nickname: newNick, username: newUser, status_text: newStatus };
+                if (currentBannerBase64) {
+                    payload.banner = currentBannerBase64;
+                }
+                
                 const res = await fetch('/api/update-profile', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ nickname: newNick, username: newUser })
+                    body: JSON.stringify(payload)
                 });
                 const data = await res.json();
                 if(data.success) {
                     if(window.loginUser) window.loginUser(data.user);
-                    profileDisplay.style.display = 'flex';
+                    profileDisplay.style.display = 'block';
                     profileEditForm.style.display = 'none';
                 } else {
                     editError.textContent = data.message;
@@ -575,7 +627,8 @@ document.addEventListener('DOMContentLoaded', () => {
     const accAvatarImg = document.getElementById('acc-avatar-img');
     if(accAvatarImg) {
         accAvatarImg.addEventListener('click', () => {
-            avatarUploadInput.click();
+            const avaInput = document.getElementById('avatar-upload-input');
+            if (avaInput) avaInput.click();
         });
     }
 
