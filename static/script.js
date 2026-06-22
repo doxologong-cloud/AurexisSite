@@ -141,7 +141,6 @@ document.addEventListener('DOMContentLoaded', () => {
             document.body.appendChild(cursorLock);
         }
         cursorLock.style.display = 'block';
-        cursorLock.style.setProperty('cursor', 'var(--cursor-default, auto)', 'important');
 
         setTimeout(() => {
             cursorLock.style.display = 'none';
