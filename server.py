@@ -698,8 +698,8 @@ def ai_chat():
     
     messages = [{"role": "system", "content": system_prompt}]
     
-    # Append history (limit to last 10 turns to avoid token bloat)
-    for msg in history[-10:]:
+    # Append history (limit to last 4 turns to avoid token bloat and 429 limit)
+    for msg in history[-4:]:
         role = msg.get("role", "user")
         if role not in ["user", "assistant"]:
             role = "user"
@@ -719,7 +719,9 @@ def ai_chat():
     
     try:
         res = requests.post(url, json=payload, headers={"Content-Type": "application/json", "Authorization": f"Bearer {api_key}"}, stream=True)
-        if res.status_code != 200:
+        if res.status_code == 429:
+            return jsonify({"error": "⚠️ Сеть перегружена (Слишком быстро пишете). Подождите 3-5 секунд и повторите попытку."}), 429
+        elif res.status_code != 200:
             return jsonify({"error": f"Ошибка от GROQ. Статус: {res.status_code}. Текст: {res.text}"}), 500
 
         def generate():
