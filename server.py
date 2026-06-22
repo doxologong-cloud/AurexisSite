@@ -751,6 +751,8 @@ def search_users():
         return jsonify({'error': 'Unauthorized'}), 401
         
     q = request.args.get('q', '').lower()
+    if q.startswith('@'):
+        q = q[1:]
     if not q or len(q) < 2:
         return jsonify({'users': []}), 200
         

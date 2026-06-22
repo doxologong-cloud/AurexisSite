@@ -410,7 +410,175 @@
                 </div>
             </section>
         </div>
-    </main>
+    
+<!-- Messenger View -->
+        <div id="view-messenger" class="view hidden-view">
+            <div class="messenger-container">
+                <div class="messenger-sidebar">
+                    <div class="messenger-header" style="flex-direction: column; gap: 10px; align-items: stretch; padding: 15px;">
+                        <div style="display: flex; justify-content: space-between; align-items: center;">
+                            <h2 style="margin: 0;">Лента</h2>
+                        </div>
+                        <div style="position: relative;">
+                            <input type="text" id="user-search-input" placeholder="Поиск юзернейма..." style="width: 100%; padding: 8px 12px; border-radius: 20px; border: 1px solid rgba(255,255,255,0.1); background: rgba(0,0,0,0.3); color: white; box-sizing: border-box;">
+                            <div id="search-results-container" style="display: none; position: absolute; top: 100%; left: 0; right: 0; background: rgba(15,15,20,0.95); border: 1px solid var(--neon-primary); border-radius: 10px; margin-top: 5px; max-height: 200px; overflow-y: auto; z-index: 100;">
+                            </div>
+                        </div>
+                        <div class="messenger-tabs" style="display: flex; gap: 10px; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 5px;">
+                            <span class="msgr-tab active" id="tab-chats" style="cursor: pointer; font-size: 0.9rem; color: var(--neon-primary);">Чаты</span>
+                            <span class="msgr-tab" id="tab-contacts" style="cursor: pointer; font-size: 0.9rem; color: #888;">Контакты</span>
+                        </div>
+                    </div>
+                    <div class="chats-list" id="chats-list">
+                        <!-- Chats will be populated here -->
+                        <div style="text-align: center; color: #888; margin-top: 20px;">Загрузка чатов...</div>
+                    </div>
+                </div>
+                
+                <div class="messenger-main" id="messenger-main">
+                    <div class="no-chat-selected" id="no-chat-selected">
+                        <p>Выберите чат или создайте новый</p>
+                    </div>
+                    
+                    <div class="active-chat" id="active-chat" style="display: none;">
+                        <div class="chat-header" style="display: flex; justify-content: space-between; align-items: center;">
+                            <div>
+                                <h3 id="active-chat-name" style="margin: 0;">Имя Чата</h3>
+                                <span id="active-chat-status" style="font-size: 0.8rem; color: var(--neon-primary);">В сети</span>
+                            </div>
+                            <button id="add-to-contacts-btn" class="glow-btn small-btn" style="display: none;">+ В контакты</button>
+                        </div>
+                        <div class="chat-messages" id="active-chat-messages">
+                            <!-- Messages -->
+                        </div>
+                        <div class="chat-input-area">
+                            <button id="stickers-btn" class="icon-btn">😊</button>
+                            <input type="text" id="messenger-input" placeholder="Напишите сообщение..." autocomplete="off">
+                            <button id="messenger-send-btn" class="icon-btn">➤</button>
+                        </div>
+                        
+                        <div class="stickers-panel" id="stickers-panel" style="display: none;">
+                            <img src="https://fonts.gstatic.com/s/e/notoemoji/latest/1f60e/512.gif" class="sticker-item" alt="😎">
+                            <img src="https://fonts.gstatic.com/s/e/notoemoji/latest/1f92f/512.gif" class="sticker-item" alt="🤯">
+                            <img src="https://fonts.gstatic.com/s/e/notoemoji/latest/1f680/512.gif" class="sticker-item" alt="🚀">
+                            <img src="https://fonts.gstatic.com/s/e/notoemoji/latest/1f525/512.gif" class="sticker-item" alt="🔥">
+                            <img src="https://fonts.gstatic.com/s/e/notoemoji/latest/1f47d/512.gif" class="sticker-item" alt="👽">
+                            <img src="https://fonts.gstatic.com/s/e/notoemoji/latest/1f916/512.gif" class="sticker-item" alt="🤖">
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- New Chat Modal -->
+            <div id="new-chat-modal" class="modal" style="display: none; align-items: center; justify-content: center; position: fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.8); z-index:1000;">
+                <div class="modal-content" style="background:var(--bg-card); padding:30px; border-radius:15px; border:1px solid rgba(255,255,255,0.1); width: 400px; text-align:center;">
+                    <h3>Создать новый чат</h3>
+                    <div style="margin: 20px 0;">
+                        <button id="tab-dm" class="glow-btn" style="margin-right:10px;">Личный чат</button>
+                        <button id="tab-group" class="glow-btn" style="opacity:0.5;">Группа</button>
+                    </div>
+                    
+                    <div id="dm-form">
+                        <input type="email" id="dm-email" placeholder="Email пользователя" class="chat-input" style="width:100%; padding:10px; margin-bottom:15px; background:rgba(0,0,0,0.5); border:1px solid rgba(255,255,255,0.2); color:white; border-radius:5px;">
+                    </div>
+                    
+                    <div id="group-form" style="display:none;">
+                        <input type="text" id="group-name" placeholder="Название группы" class="chat-input" style="width:100%; padding:10px; margin-bottom:15px; background:rgba(0,0,0,0.5); border:1px solid rgba(255,255,255,0.2); color:white; border-radius:5px;">
+                        <input type="text" id="group-emails" placeholder="Email участников (через запятую)" class="chat-input" style="width:100%; padding:10px; margin-bottom:15px; background:rgba(0,0,0,0.5); border:1px solid rgba(255,255,255,0.2); color:white; border-radius:5px;">
+                    </div>
+                    
+                    <button id="create-chat-submit" class="glow-btn" style="width:100%;">Создать</button>
+                    <button id="close-chat-modal" class="glow-btn" style="width:100%; margin-top:10px; background:rgba(255,0,0,0.2);">Отмена</button>
+                </div>
+            </div>
+        </div>
+
+
+        <!-- Portfolio View -->
+        <div id="view-portfolio" class="view hidden-view">
+            <div class="hero" style="min-height: 40vh; padding-top: 100px;">
+                <h1 class="glitch" data-text="НАШИ БОТЫ" style="font-size: 3.5rem;">НАШИ БОТЫ</h1>
+                <p>Лучшие Discord-боты для вашего сервера.</p>
+            </div>
+            
+            <div class="portfolio-grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 30px; padding: 50px;">
+                <!-- Card 1 -->
+                <div class="tilt-card" style="background: rgba(10,10,15,0.8); border: 1px solid var(--neon-primary); border-radius: 15px; padding: 30px; text-align: center; transition: transform 0.3s, box-shadow 0.3s; position: relative; overflow: hidden;">
+                    <div style="font-size: 4rem; margin-bottom: 20px;">🛡️</div>
+                    <h3 style="color: var(--neon-primary); margin-bottom: 10px;">Aurex Protect</h3>
+                    <p style="color: #aaa; margin-bottom: 20px;">Продвинутая система модерации и анти-спама для крупных серверов.</p>
+                    <div style="font-weight: bold; font-size: 1.2rem; margin-bottom: 20px;">Бесплатно</div>
+                    <button class="glow-btn" style="width: 100%;">Добавить на сервер</button>
+                </div>
+                
+                <!-- Card 2 -->
+                <div class="tilt-card" style="background: rgba(10,10,15,0.8); border: 1px solid var(--neon-secondary); border-radius: 15px; padding: 30px; text-align: center; transition: transform 0.3s, box-shadow 0.3s; position: relative; overflow: hidden;">
+                    <div style="font-size: 4rem; margin-bottom: 20px;">🎵</div>
+                    <h3 style="color: var(--neon-secondary); margin-bottom: 10px;">Aurex Music</h3>
+                    <p style="color: #aaa; margin-bottom: 20px;">Музыкальный бот с поддержкой Spotify, YouTube и фильтрами звука.</p>
+                    <div style="font-weight: bold; font-size: 1.2rem; margin-bottom: 20px;">$5 / месяц</div>
+                    <button class="glow-btn secondary" style="width: 100%;">Купить Premium</button>
+                </div>
+                
+                <!-- Card 3 -->
+                <div class="tilt-card" style="background: rgba(10,10,15,0.8); border: 1px solid #ff0055; border-radius: 15px; padding: 30px; text-align: center; transition: transform 0.3s, box-shadow 0.3s; position: relative; overflow: hidden;">
+                    <div style="font-size: 4rem; margin-bottom: 20px;">🎲</div>
+                    <h3 style="color: #ff0055; margin-bottom: 10px;">Aurex Economy</h3>
+                    <p style="color: #aaa; margin-bottom: 20px;">Экономика, мини-игры, казино и уровни активности.</p>
+                    <div style="font-weight: bold; font-size: 1.2rem; margin-bottom: 20px;">Бесплатно</div>
+                    <button class="glow-btn" style="width: 100%; border-color: #ff0055; color: #ff0055; box-shadow: 0 0 10px rgba(255,0,85,0.2);">Добавить на сервер</button>
+                </div>
+            </div>
+        </div>
+
+<!-- Global Chat Widget -->
+    <div id="global-chat-widget">
+        <button id="chat-toggle-btn" title="Глобальный чат">💬</button>
+        <div id="chat-window">
+            <div id="chat-header">
+                <span>Глобальный чат</span>
+                <button id="chat-close-btn" style="background: none; border: none; color: white; cursor: pointer; font-size: 1.2rem;">&times;</button>
+            </div>
+            <div id="chat-messages">
+                <!-- Messages will load here -->
+            </div>
+            <div id="chat-input-area">
+                <input type="text" id="chat-input" placeholder="Напишите сообщение...">
+                <button id="chat-send-btn">➤</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Styles for settings switch -->
+    <style>
+        .switch input:checked + .slider { background-color: var(--neon-primary); }
+        .switch input:checked + .slider:before { transform: translateX(26px); }
+        .slider:before {
+            position: absolute; content: ""; height: 26px; width: 26px; left: 4px; bottom: 4px;
+            background-color: white; transition: .4s; border-radius: 50%;
+        }
+    </style>
+
+    <div id="easter-egg-terminal" style="display: none; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: black; z-index: 9999; color: #00ff00; font-family: 'Courier New', Courier, monospace; padding: 20px; box-sizing: border-box; overflow: hidden;">
+        <div id="terminal-content" style="font-size: 1.2rem; line-height: 1.5; text-shadow: 0 0 5px #00ff00;"></div>
+        <div id="terminal-cursor" style="display: inline-block; width: 10px; height: 1.2rem; background: #00ff00; animation: blink 1s infinite;"></div>
+    </div>
+    <style>
+        @keyframes blink { 0%, 49% { opacity: 1; } 50%, 100% { opacity: 0; } }
+        .glitch-effect { animation: terminalGlitch 0.2s linear infinite; color: red; text-shadow: 0 0 10px red; }
+        @keyframes terminalGlitch {
+            0% { transform: translate(0) }
+            20% { transform: translate(-2px, 2px) }
+            40% { transform: translate(-2px, -2px) }
+            60% { transform: translate(2px, 2px) }
+            80% { transform: translate(2px, -2px) }
+            100% { transform: translate(0) }
+        }
+    </style>
+
+    <script src="{{ url_for('static', filename='script.js') }}"></script>
+
+</main>
 
     <!-- Footer -->
     <footer>
@@ -625,171 +793,5 @@
     <!-- EASTER EGG TERMINAL -->
 
     
-        <!-- Messenger View -->
-        <div id="view-messenger" class="view hidden-view">
-            <div class="messenger-container">
-                <div class="messenger-sidebar">
-                    <div class="messenger-header" style="flex-direction: column; gap: 10px; align-items: stretch; padding: 15px;">
-                        <div style="display: flex; justify-content: space-between; align-items: center;">
-                            <h2 style="margin: 0;">Лента</h2>
-                        </div>
-                        <div style="position: relative;">
-                            <input type="text" id="user-search-input" placeholder="Поиск юзернейма..." style="width: 100%; padding: 8px 12px; border-radius: 20px; border: 1px solid rgba(255,255,255,0.1); background: rgba(0,0,0,0.3); color: white; box-sizing: border-box;">
-                            <div id="search-results-container" style="display: none; position: absolute; top: 100%; left: 0; right: 0; background: rgba(15,15,20,0.95); border: 1px solid var(--neon-primary); border-radius: 10px; margin-top: 5px; max-height: 200px; overflow-y: auto; z-index: 100;">
-                            </div>
-                        </div>
-                        <div class="messenger-tabs" style="display: flex; gap: 10px; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 5px;">
-                            <span class="msgr-tab active" id="tab-chats" style="cursor: pointer; font-size: 0.9rem; color: var(--neon-primary);">Чаты</span>
-                            <span class="msgr-tab" id="tab-contacts" style="cursor: pointer; font-size: 0.9rem; color: #888;">Контакты</span>
-                        </div>
-                    </div>
-                    <div class="chats-list" id="chats-list">
-                        <!-- Chats will be populated here -->
-                        <div style="text-align: center; color: #888; margin-top: 20px;">Загрузка чатов...</div>
-                    </div>
-                </div>
-                
-                <div class="messenger-main" id="messenger-main">
-                    <div class="no-chat-selected" id="no-chat-selected">
-                        <p>Выберите чат или создайте новый</p>
-                    </div>
-                    
-                    <div class="active-chat" id="active-chat" style="display: none;">
-                        <div class="chat-header" style="display: flex; justify-content: space-between; align-items: center;">
-                            <div>
-                                <h3 id="active-chat-name" style="margin: 0;">Имя Чата</h3>
-                                <span id="active-chat-status" style="font-size: 0.8rem; color: var(--neon-primary);">В сети</span>
-                            </div>
-                            <button id="add-to-contacts-btn" class="glow-btn small-btn" style="display: none;">+ В контакты</button>
-                        </div>
-                        <div class="chat-messages" id="active-chat-messages">
-                            <!-- Messages -->
-                        </div>
-                        <div class="chat-input-area">
-                            <button id="stickers-btn" class="icon-btn">😊</button>
-                            <input type="text" id="messenger-input" placeholder="Напишите сообщение..." autocomplete="off">
-                            <button id="messenger-send-btn" class="icon-btn">➤</button>
-                        </div>
-                        
-                        <div class="stickers-panel" id="stickers-panel" style="display: none;">
-                            <img src="https://fonts.gstatic.com/s/e/notoemoji/latest/1f60e/512.gif" class="sticker-item" alt="😎">
-                            <img src="https://fonts.gstatic.com/s/e/notoemoji/latest/1f92f/512.gif" class="sticker-item" alt="🤯">
-                            <img src="https://fonts.gstatic.com/s/e/notoemoji/latest/1f680/512.gif" class="sticker-item" alt="🚀">
-                            <img src="https://fonts.gstatic.com/s/e/notoemoji/latest/1f525/512.gif" class="sticker-item" alt="🔥">
-                            <img src="https://fonts.gstatic.com/s/e/notoemoji/latest/1f47d/512.gif" class="sticker-item" alt="👽">
-                            <img src="https://fonts.gstatic.com/s/e/notoemoji/latest/1f916/512.gif" class="sticker-item" alt="🤖">
-                        </div>
-                    </div>
-                </div>
-            </div>
-            
-            <!-- New Chat Modal -->
-            <div id="new-chat-modal" class="modal" style="display: none; align-items: center; justify-content: center; position: fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.8); z-index:1000;">
-                <div class="modal-content" style="background:var(--bg-card); padding:30px; border-radius:15px; border:1px solid rgba(255,255,255,0.1); width: 400px; text-align:center;">
-                    <h3>Создать новый чат</h3>
-                    <div style="margin: 20px 0;">
-                        <button id="tab-dm" class="glow-btn" style="margin-right:10px;">Личный чат</button>
-                        <button id="tab-group" class="glow-btn" style="opacity:0.5;">Группа</button>
-                    </div>
-                    
-                    <div id="dm-form">
-                        <input type="email" id="dm-email" placeholder="Email пользователя" class="chat-input" style="width:100%; padding:10px; margin-bottom:15px; background:rgba(0,0,0,0.5); border:1px solid rgba(255,255,255,0.2); color:white; border-radius:5px;">
-                    </div>
-                    
-                    <div id="group-form" style="display:none;">
-                        <input type="text" id="group-name" placeholder="Название группы" class="chat-input" style="width:100%; padding:10px; margin-bottom:15px; background:rgba(0,0,0,0.5); border:1px solid rgba(255,255,255,0.2); color:white; border-radius:5px;">
-                        <input type="text" id="group-emails" placeholder="Email участников (через запятую)" class="chat-input" style="width:100%; padding:10px; margin-bottom:15px; background:rgba(0,0,0,0.5); border:1px solid rgba(255,255,255,0.2); color:white; border-radius:5px;">
-                    </div>
-                    
-                    <button id="create-chat-submit" class="glow-btn" style="width:100%;">Создать</button>
-                    <button id="close-chat-modal" class="glow-btn" style="width:100%; margin-top:10px; background:rgba(255,0,0,0.2);">Отмена</button>
-                </div>
-            </div>
-        </div>
-
-
-        <!-- Portfolio View -->
-        <div id="view-portfolio" class="view hidden-view">
-            <div class="hero" style="min-height: 40vh; padding-top: 100px;">
-                <h1 class="glitch" data-text="НАШИ БОТЫ" style="font-size: 3.5rem;">НАШИ БОТЫ</h1>
-                <p>Лучшие Discord-боты для вашего сервера.</p>
-            </div>
-            
-            <div class="portfolio-grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 30px; padding: 50px;">
-                <!-- Card 1 -->
-                <div class="tilt-card" style="background: rgba(10,10,15,0.8); border: 1px solid var(--neon-primary); border-radius: 15px; padding: 30px; text-align: center; transition: transform 0.3s, box-shadow 0.3s; position: relative; overflow: hidden;">
-                    <div style="font-size: 4rem; margin-bottom: 20px;">🛡️</div>
-                    <h3 style="color: var(--neon-primary); margin-bottom: 10px;">Aurex Protect</h3>
-                    <p style="color: #aaa; margin-bottom: 20px;">Продвинутая система модерации и анти-спама для крупных серверов.</p>
-                    <div style="font-weight: bold; font-size: 1.2rem; margin-bottom: 20px;">Бесплатно</div>
-                    <button class="glow-btn" style="width: 100%;">Добавить на сервер</button>
-                </div>
-                
-                <!-- Card 2 -->
-                <div class="tilt-card" style="background: rgba(10,10,15,0.8); border: 1px solid var(--neon-secondary); border-radius: 15px; padding: 30px; text-align: center; transition: transform 0.3s, box-shadow 0.3s; position: relative; overflow: hidden;">
-                    <div style="font-size: 4rem; margin-bottom: 20px;">🎵</div>
-                    <h3 style="color: var(--neon-secondary); margin-bottom: 10px;">Aurex Music</h3>
-                    <p style="color: #aaa; margin-bottom: 20px;">Музыкальный бот с поддержкой Spotify, YouTube и фильтрами звука.</p>
-                    <div style="font-weight: bold; font-size: 1.2rem; margin-bottom: 20px;">$5 / месяц</div>
-                    <button class="glow-btn secondary" style="width: 100%;">Купить Premium</button>
-                </div>
-                
-                <!-- Card 3 -->
-                <div class="tilt-card" style="background: rgba(10,10,15,0.8); border: 1px solid #ff0055; border-radius: 15px; padding: 30px; text-align: center; transition: transform 0.3s, box-shadow 0.3s; position: relative; overflow: hidden;">
-                    <div style="font-size: 4rem; margin-bottom: 20px;">🎲</div>
-                    <h3 style="color: #ff0055; margin-bottom: 10px;">Aurex Economy</h3>
-                    <p style="color: #aaa; margin-bottom: 20px;">Экономика, мини-игры, казино и уровни активности.</p>
-                    <div style="font-weight: bold; font-size: 1.2rem; margin-bottom: 20px;">Бесплатно</div>
-                    <button class="glow-btn" style="width: 100%; border-color: #ff0055; color: #ff0055; box-shadow: 0 0 10px rgba(255,0,85,0.2);">Добавить на сервер</button>
-                </div>
-            </div>
-        </div>
-
-<!-- Global Chat Widget -->
-    <div id="global-chat-widget">
-        <button id="chat-toggle-btn" title="Глобальный чат">💬</button>
-        <div id="chat-window">
-            <div id="chat-header">
-                <span>Глобальный чат</span>
-                <button id="chat-close-btn" style="background: none; border: none; color: white; cursor: pointer; font-size: 1.2rem;">&times;</button>
-            </div>
-            <div id="chat-messages">
-                <!-- Messages will load here -->
-            </div>
-            <div id="chat-input-area">
-                <input type="text" id="chat-input" placeholder="Напишите сообщение...">
-                <button id="chat-send-btn">➤</button>
-            </div>
-        </div>
-    </div>
-
-    <!-- Styles for settings switch -->
-    <style>
-        .switch input:checked + .slider { background-color: var(--neon-primary); }
-        .switch input:checked + .slider:before { transform: translateX(26px); }
-        .slider:before {
-            position: absolute; content: ""; height: 26px; width: 26px; left: 4px; bottom: 4px;
-            background-color: white; transition: .4s; border-radius: 50%;
-        }
-    </style>
-
-    <div id="easter-egg-terminal" style="display: none; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: black; z-index: 9999; color: #00ff00; font-family: 'Courier New', Courier, monospace; padding: 20px; box-sizing: border-box; overflow: hidden;">
-        <div id="terminal-content" style="font-size: 1.2rem; line-height: 1.5; text-shadow: 0 0 5px #00ff00;"></div>
-        <div id="terminal-cursor" style="display: inline-block; width: 10px; height: 1.2rem; background: #00ff00; animation: blink 1s infinite;"></div>
-    </div>
-    <style>
-        @keyframes blink { 0%, 49% { opacity: 1; } 50%, 100% { opacity: 0; } }
-        .glitch-effect { animation: terminalGlitch 0.2s linear infinite; color: red; text-shadow: 0 0 10px red; }
-        @keyframes terminalGlitch {
-            0% { transform: translate(0) }
-            20% { transform: translate(-2px, 2px) }
-            40% { transform: translate(-2px, -2px) }
-            60% { transform: translate(2px, 2px) }
-            80% { transform: translate(2px, -2px) }
-            100% { transform: translate(0) }
-        }
-    </style>
-
-    <script src="{{ url_for('static', filename='script.js') }}"></script>
-</body>
+        </body>
 </html>
