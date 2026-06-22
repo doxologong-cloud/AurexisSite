@@ -110,6 +110,18 @@ document.addEventListener('DOMContentLoaded', () => {
         // Initialize Router
         handleRoute();
         window.addEventListener('hashchange', handleRoute);
+        
+        // Prevent cursor flicker on navigation links by intercepting native hash scrolling
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const targetHash = this.getAttribute('href');
+                if (window.location.hash !== targetHash) {
+                    window.history.pushState(null, null, targetHash);
+                    handleRoute();
+                }
+            });
+        });
     }
 
     // SPA Routing Logic
