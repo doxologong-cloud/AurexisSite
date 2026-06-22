@@ -1181,8 +1181,8 @@ document.addEventListener('DOMContentLoaded', () => {
     const mockMessagesContainer = document.getElementById('discord-mock-messages');
     
     function updateMockBotIdentity() {
-        const newName = builderNameInput.value || 'AUREXIS DEMO';
-        const newColor = builderColorInput.value || '#e5b322';
+        const newName = builderNameInput ? builderNameInput.value || 'AUREXIS DEMO' : 'AUREXIS DEMO';
+        const newColor = builderColorInput ? builderColorInput.value || '#e5b322' : '#e5b322';
         document.querySelectorAll('.discord-author').forEach(el => {
             el.textContent = newName;
             el.style.color = newColor;
@@ -1193,30 +1193,32 @@ document.addEventListener('DOMContentLoaded', () => {
     if (builderColorInput) builderColorInput.addEventListener('input', updateMockBotIdentity);
 
     function addMockMessage(contentHTML) {
-        const newName = builderNameInput.value || 'AUREXIS DEMO';
-        const newColor = builderColorInput.value || '#e5b322';
+        const newName = builderNameInput ? builderNameInput.value || 'AUREXIS DEMO' : 'AUREXIS DEMO';
+        const newColor = builderColorInput ? builderColorInput.value || '#e5b322' : '#e5b322';
         const msgDiv = document.createElement('div');
         msgDiv.className = 'discord-msg';
-        msgDiv.innerHTML = \
+        msgDiv.innerHTML = `
             <img src="/static/assets/logo.png" class="discord-avatar">
             <div class="discord-msg-content">
                 <div class="discord-msg-header">
-                    <span class="discord-author" style="color: \;">\</span>
+                    <span class="discord-author" style="color: ${newColor};">${newName}</span>
                     <span class="discord-bot-tag">BOT</span>
-                    <span class="discord-time">Только что</span>
+                    <span class="discord-time">РўРѕР»СЊРєРѕ С‡С‚Рѕ</span>
                 </div>
-                <div class="discord-text">\</div>
+                <div class="discord-text">${contentHTML}</div>
             </div>
-        \;
-        mockMessagesContainer.appendChild(msgDiv);
-        mockMessagesContainer.scrollTop = mockMessagesContainer.scrollHeight;
+        `;
+        if (mockMessagesContainer) {
+            mockMessagesContainer.appendChild(msgDiv);
+            mockMessagesContainer.scrollTop = mockMessagesContainer.scrollHeight;
+        }
     }
 
     const modules = [
-        { id: 'module-music', html: '<div class="discord-embed"><div class="discord-embed-title">?? Сейчас играет</div><div>Cyberpunk Mix 2026 - Synthwave Radio</div></div>' },
-        { id: 'module-economy', html: '?? <strong>@user</strong>, ваш баланс пополнен на 500 монет! Текущий баланс: 1500.' },
-        { id: 'module-moderation', html: '?? <strong>@troll</strong> был предупрежден модератором <strong>@admin</strong>. Причина: Спам.' },
-        { id: 'module-ai', html: '?? <em>Генерирую ответ...</em><br>Искусственный интеллект AUREXIS FLORA готов к работе. Задайте мне любой вопрос.' }
+        { id: 'module-music', html: '<div class="discord-embed"><div class="discord-embed-title">рџЋµ РЎРµР№С‡Р°СЃ РёРіСЂР°РµС‚</div><div>Cyberpunk Mix 2026 - Synthwave Radio</div></div>' },
+        { id: 'module-economy', html: 'рџ’° <strong>@user</strong>, РІР°С€ Р±Р°Р»Р°РЅСЃ РїРѕРїРѕР»РЅРµРЅ РЅР° 500 РјРѕРЅРµС‚! РўРµРєСѓС‰РёР№ Р±Р°Р»Р°РЅСЃ: 1500.' },
+        { id: 'module-moderation', html: 'рџ”Ё <strong>@troll</strong> Р±С‹Р» РїСЂРµРґСѓРїСЂРµР¶РґРµРЅ РјРѕРґРµСЂР°С‚РѕСЂРѕРј <strong>@admin</strong>. РџСЂРёС‡РёРЅР°: РЎРїР°Рј.' },
+        { id: 'module-ai', html: 'рџ§  <em>Р“РµРЅРµСЂРёСЂСѓСЋ РѕС‚РІРµС‚...</em><br>РСЃРєСѓСЃСЃС‚РІРµРЅРЅС‹Р№ РёРЅС‚РµР»Р»РµРєС‚ AUREXIS FLORA РіРѕС‚РѕРІ Рє СЂР°Р±РѕС‚Рµ. Р—Р°РґР°Р№С‚Рµ РјРЅРµ Р»СЋР±РѕР№ РІРѕРїСЂРѕСЃ.' }
     ];
 
     modules.forEach(mod => {
@@ -1234,30 +1236,33 @@ document.addEventListener('DOMContentLoaded', () => {
     if (builderOrderBtn) {
         builderOrderBtn.addEventListener('click', () => {
             if (!window.currentUser) {
-                alert('Пожалуйста, авторизуйтесь для заказа!');
+                alert('РџРѕР¶Р°Р»СѓР№СЃС‚Р°, Р°РІС‚РѕСЂРёР·СѓР№С‚РµСЃСЊ РґР»СЏ Р·Р°РєР°Р·Р°!');
                 document.getElementById('open-auth').click();
                 return;
             }
-            const botName = builderNameInput.value || 'AUREXIS DEMO';
-            const botColor = builderColorInput.value || '#e5b322';
+            const botName = builderNameInput ? builderNameInput.value || 'AUREXIS DEMO' : 'AUREXIS DEMO';
+            const botColor = builderColorInput ? builderColorInput.value || '#e5b322' : '#e5b322';
             let activeModules = [];
             modules.forEach(mod => {
-                if(document.getElementById(mod.id).checked) {
-                    activeModules.push(document.querySelector(\label[for='\']\) ? document.querySelector(\label[for='\']\).previousElementSibling.textContent : mod.id);
+                const checkbox = document.getElementById(mod.id);
+                if (checkbox && checkbox.checked) {
+                    activeModules.push(mod.id.replace('module-', ''));
                 }
             });
             
-            const orderText = \ЗАКАЗ БОТА:
-Имя: \
-Цвет: \
-Модули: \\;
+            const orderText = `Р—РђРљРђР— Р‘РћРўРђ:
+РРјСЏ: ${botName}
+Р¦РІРµС‚: ${botColor}
+РњРѕРґСѓР»Рё: ${activeModules.length > 0 ? activeModules.join(', ') : 'Р‘Р°Р·РѕРІС‹Р№ С„СѓРЅРєС†РёРѕРЅР°Р»'}`;
 
             // Open ticket modal and prefill
-            document.getElementById('modal-ticket').style.display = 'flex';
-            document.getElementById('ticket-topic').value = 'Заказ кастомного бота';
-            document.getElementById('ticket-message').value = orderText;
+            const ticketModal = document.getElementById('modal-ticket');
+            if(ticketModal) {
+                ticketModal.style.display = 'flex';
+                document.getElementById('ticket-topic').value = 'Р—Р°РєР°Р· РєР°СЃС‚РѕРјРЅРѕРіРѕ Р±РѕС‚Р°';
+                document.getElementById('ticket-message').value = orderText;
+            }
         });
     }
 
 });
-
