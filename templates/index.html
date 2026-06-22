@@ -43,6 +43,7 @@
         <div class="nav-links">
             <a href="#home">Главная</a>
             <a href="#about">О нас</a>
+            <a href="#builder" style="color: var(--neon-secondary); font-weight: 600;">Конструктор 🛠️</a>
             <a href="#" id="open-auth" class="nav-auth-link" style="color: var(--neon-primary); font-weight: 600;">Вход / Регистрация</a>
             <div class="nav-account" id="nav-account" style="display: none; position: relative; cursor: pointer;">
                 <div class="user-profile" id="user-profile">
@@ -177,6 +178,85 @@
                             </div>
                             <h3 style="color: #ff0055;">Эксклюзивный функционал</h3>
                             <p>От продвинутой экономики до секретных разработок вроде подписок FLORA. Мы создаем фишки, которых нет ни у одного другого бота на рынке.</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </div>
+
+        <!-- Builder View -->
+        <div id="view-builder" class="view hidden-view">
+            <section class="about-section">
+                <h2>Конструктор <span class="highlight">AUREXIS</span></h2>
+                <p class="subtitle">Собери своего идеального Discord-бота прямо сейчас</p>
+                <div class="builder-container">
+                    <!-- Left Panel (Controls) -->
+                    <div class="builder-controls panel-glitch">
+                        <div class="control-group">
+                            <label>Имя бота</label>
+                            <input type="text" id="builder-bot-name" placeholder="SuperBot" value="AUREXIS DEMO" class="auth-input">
+                        </div>
+                        <div class="control-group">
+                            <label>Цвет имени (HEX)</label>
+                            <input type="color" id="builder-bot-color" value="#e5b322" class="auth-input" style="padding: 0; height: 40px; cursor: pointer;">
+                        </div>
+                        
+                        <h3 style="margin-top: 20px; font-size: 1.2rem; color: #fff;">Модули</h3>
+                        <div class="module-toggle">
+                            <span>Музыка 🎵</span>
+                            <label class="switch">
+                                <input type="checkbox" id="module-music">
+                                <span class="slider round"></span>
+                            </label>
+                        </div>
+                        <div class="module-toggle">
+                            <span>Экономика 💰</span>
+                            <label class="switch">
+                                <input type="checkbox" id="module-economy">
+                                <span class="slider round"></span>
+                            </label>
+                        </div>
+                        <div class="module-toggle">
+                            <span>Модерация 🔨</span>
+                            <label class="switch">
+                                <input type="checkbox" id="module-moderation">
+                                <span class="slider round"></span>
+                            </label>
+                        </div>
+                        <div class="module-toggle">
+                            <span>ИИ Ответов 🧠</span>
+                            <label class="switch">
+                                <input type="checkbox" id="module-ai">
+                                <span class="slider round"></span>
+                            </label>
+                        </div>
+
+                        <button id="builder-order-btn" class="submit-btn" style="margin-top: 25px; background: linear-gradient(45deg, #4facfe, #00f2fe);">
+                            Оформить заказ на бота
+                        </button>
+                    </div>
+
+                    <!-- Right Panel (Discord Mock) -->
+                    <div class="builder-discord">
+                        <div class="discord-header">
+                            <div class="discord-channel"># канал-тестирования</div>
+                        </div>
+                        <div class="discord-messages" id="discord-mock-messages">
+                            <!-- Messages will be injected here by JS -->
+                            <div class="discord-msg">
+                                <img src="/static/assets/logo.png" class="discord-avatar">
+                                <div class="discord-msg-content">
+                                    <div class="discord-msg-header">
+                                        <span class="discord-author" style="color: #e5b322;">AUREXIS DEMO</span>
+                                        <span class="discord-bot-tag">BOT</span>
+                                        <span class="discord-time">Сегодня в 14:00</span>
+                                    </div>
+                                    <div class="discord-text">Привет! Включи модули слева, чтобы увидеть, как я работаю. 🚀</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="discord-input-box">
+                            <div class="discord-input">Написать #канал-тестирования...</div>
                         </div>
                     </div>
                 </div>
