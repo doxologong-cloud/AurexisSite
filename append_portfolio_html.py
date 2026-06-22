@@ -48,7 +48,7 @@ portfolio_html = """
 """
 
 if 'id="view-portfolio"' not in text:
-    text = text.replace('<!-- End of Main Content -->', portfolio_html + '\n<!-- End of Main Content -->')
+    text = text.replace('<!-- Global Chat Widget -->', portfolio_html + '\n<!-- Global Chat Widget -->')
     with open('templates/index.html', 'w', encoding='utf-8') as f:
         f.write(text)
     print("Added Portfolio HTML")
