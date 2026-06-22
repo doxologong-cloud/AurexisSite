@@ -2807,16 +2807,24 @@ function changeTheme(themeName) {
         root.style.setProperty('--neon-color', '#ffcc00');
         root.style.setProperty('--bg-color', '#0a0a0a');
         root.style.setProperty('--glow-color', 'rgba(255, 204, 0, 0.5)');
+        root.style.setProperty('--neon-primary', '#e5b322');
     } else if (themeName === 'synthwave') {
         root.style.setProperty('--neon-color', '#ff00ff');
         root.style.setProperty('--bg-color', '#1a0b2e');
         root.style.setProperty('--glow-color', 'rgba(255, 0, 255, 0.5)');
+        root.style.setProperty('--neon-primary', '#b026ff');
     } else if (themeName === 'cyberpunk') {
         root.style.setProperty('--neon-color', '#00ffcc');
         root.style.setProperty('--bg-color', '#0b1a1a');
         root.style.setProperty('--glow-color', 'rgba(0, 255, 204, 0.5)');
+        root.style.setProperty('--neon-primary', '#00ff88');
     }
     localStorage.setItem('aurex_theme', themeName);
+    
+    // Update active card
+    document.querySelectorAll('.theme-card').forEach(c => c.classList.remove('active'));
+    const activeCard = document.getElementById('card-' + themeName);
+    if(activeCard) activeCard.classList.add('active');
 }
 
 function changeLang(lang) {

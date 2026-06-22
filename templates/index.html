@@ -16,12 +16,27 @@
 <script src="https://cdn.jsdelivr.net/npm/particles.js@2.0.0/particles.min.js"></script>
 <!-- Styles -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-<link href="{{ url_for('static', filename='style.css') }}?v=54" rel="stylesheet"/>
-<link href="/static/manifest.json" rel="manifest"/>
+<link href="{{ url_for('static', filename='style.css') }}?v=55" rel="stylesheet"/>
 <script>
     (function() {
-        const savedTheme = localStorage.getItem('theme') || 'theme-matrix';
-        document.documentElement.className = savedTheme;
+        const theme = localStorage.getItem('aurex_theme') || 'matrix';
+        const root = document.documentElement;
+        if (theme === 'matrix') {
+            root.style.setProperty('--neon-color', '#ffcc00');
+            root.style.setProperty('--bg-color', '#0a0a0a');
+            root.style.setProperty('--glow-color', 'rgba(255, 204, 0, 0.5)');
+            root.style.setProperty('--neon-primary', '#e5b322');
+        } else if (theme === 'synthwave') {
+            root.style.setProperty('--neon-color', '#ff00ff');
+            root.style.setProperty('--bg-color', '#1a0b2e');
+            root.style.setProperty('--glow-color', 'rgba(255, 0, 255, 0.5)');
+            root.style.setProperty('--neon-primary', '#b026ff');
+        } else if (theme === 'cyberpunk') {
+            root.style.setProperty('--neon-color', '#00ffcc');
+            root.style.setProperty('--bg-color', '#0b1a1a');
+            root.style.setProperty('--glow-color', 'rgba(0, 255, 204, 0.5)');
+            root.style.setProperty('--neon-primary', '#00ff88');
+        }
     })();
 </script>
 </head>
@@ -391,19 +406,19 @@
 
 <label style="color: #fff; font-size: 1.1rem;">Выбор темы:</label>
 <div class="settings-theme-cards">
-    <div class="theme-card active" id="card-matrix" onclick="changeTheme('theme-matrix')">
+    <div class="theme-card active" id="card-matrix" onclick="changeTheme('matrix')">
         <div class="theme-card-color" style="background: linear-gradient(135deg, #e5b322, #b8860b); box-shadow: 0 0 10px #e5b322;"></div>
         <div style="font-weight: bold; color: #e5b322;">Матрица</div>
         <div style="font-size: 0.8rem; color: #888;">Неоновый Желтый</div>
     </div>
     
-    <div class="theme-card" id="card-synthwave" onclick="changeTheme('theme-synthwave')">
+    <div class="theme-card" id="card-synthwave" onclick="changeTheme('synthwave')">
         <div class="theme-card-color" style="background: linear-gradient(135deg, #b026ff, #ff0055); box-shadow: 0 0 10px #b026ff;"></div>
         <div style="font-weight: bold; color: #b026ff;">Синтвейв</div>
         <div style="font-size: 0.8rem; color: #888;">Розовый Неон</div>
     </div>
     
-    <div class="theme-card" id="card-cyberpunk" onclick="changeTheme('theme-cyberpunk')">
+    <div class="theme-card" id="card-cyberpunk" onclick="changeTheme('cyberpunk')">
         <div class="theme-card-color" style="background: linear-gradient(135deg, #00ff88, #00a8ff); box-shadow: 0 0 10px #00ff88;"></div>
         <div style="font-weight: bold; color: #00ff88;">Киберпанк</div>
         <div style="font-size: 0.8rem; color: #888;">Токсичный Неон</div>
@@ -484,7 +499,7 @@
             100% { transform: translate(0) }
         }
     </style>
-<script src="{{ url_for('static', filename='script.js') }}?v=54"></script>
+<script src="{{ url_for('static', filename='script.js') }}?v=55"></script>
 <!-- Hacker Terminal -->
 <div class="view" id="view-hacker" style="background: #000; color: #0f0; font-family: monospace; padding: 20px; font-size: 16px; overflow-y: auto; height: 100vh; width: 100%; box-sizing: border-box;">
 <div id="hacker-output"></div>
