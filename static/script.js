@@ -463,4 +463,99 @@ document.addEventListener('DOMContentLoaded', () => {
             avatarUploadInput.click();
         });
     }
+
+    // --- REVIEWS LOGIC ---
+    const submitReviewBtn = document.getElementById('submit-review-btn');
+    if (submitReviewBtn) {
+        submitReviewBtn.addEventListener('click', async () => {
+            const rating = document.getElementById('review-rating').value;
+            const text = document.getElementById('review-text').value;
+            const err = document.getElementById('review-error');
+            
+            if (!rating || !text) {
+                err.textContent = 'Заполните все поля';
+                return;
+            }
+            submitReviewBtn.disabled = true;
+            submitReviewBtn.textContent = 'Отправка...';
+            
+            try {
+                const res = await fetch('/api/reviews', {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({ rating, text })
+                });
+                const data = await res.json();
+                if (data.success) {
+                    err.textContent = '';
+                    err.style.color = '#00ffaa';
+                    err.textContent = 'Отзыв успешно отправлен!';
+                    document.getElementById('review-text').value = '';
+                    loadReviews();
+                } else {
+                    err.style.color = '#ff4444';
+                    err.textContent = data.message;
+                }
+            } catch (e) {
+                err.style.color = '#ff4444';
+                err.textContent = 'Ошибка сети';
+            }
+            submitReviewBtn.disabled = false;
+            submitReviewBtn.textContent = 'Отправить отзыв';
+        });
+    }
+
+    async function loadReviews() {
+        const container = document.getElementById('reviews-container');
+        if (!container) return;
+        
+        try {
+            const res = await fetch('/api/reviews');
+            const data = await res.json();
+            if (data.success) {
+                container.innerHTML = '';
+                if (data.reviews.length === 0) {
+                    container.innerHTML = '<div style="text-align: center; width: 100%; color: var(--text-muted);">Пока нет отзывов. Станьте первым!</div>';
+                    return;
+                }
+                
+                data.reviews.forEach(r => {
+                    const stars = '⭐'.repeat(r.rating);
+                    const user = r.users || {};
+                    const avatar = user.avatar || '/static/assets/default-avatar.png';
+                    const nickname = user.nickname || 'Неизвестно';
+                    
+                    container.innerHTML += `
+                        <div class="bot-card" style="display: flex; flex-direction: column; align-items: center; text-align: center;">
+                            <img src="${avatar}" style="width: 60px; height: 60px; border-radius: 50%; object-fit: cover; border: 2px solid var(--neon-primary); margin-bottom: 10px;">
+                            <h3 style="font-size: 1.2rem; margin-bottom: 5px;">${nickname}</h3>
+                            <div style="color: #ffd700; margin-bottom: 15px;">${stars}</div>
+                            <p style="color: var(--text-muted); font-size: 0.95rem; font-style: italic;">"${r.text}"</p>
+                        </div>
+                    `;
+                });
+            }
+        } catch (e) {
+            container.innerHTML = '<div style="text-align: center; width: 100%; color: #ff4444;">Ошибка загрузки отзывов</div>';
+        }
+    }
+    
+    // --- BOT STATUS LOGIC ---
+    async function loadBotStatus() {
+        try {
+            const res = await fetch('/api/bots/status');
+            const data = await res.json();
+            if (data.success && data.bots) {
+                for (const [botId, botData] of Object.entries(data.bots)) {
+                    const el = document.getElementById('status-' + botId);
+                    if (el) {
+                        el.innerHTML = `<span class="status-dot" style="background: ${botData.color}; box-shadow: 0 0 10px ${botData.color}"></span> <span style="color: ${botData.color}">${botData.status}</span>`;
+                    }
+                }
+            }
+        } catch (e) {}
+    }
+
+    loadReviews();
+    loadBotStatus();
 });

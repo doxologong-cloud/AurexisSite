@@ -5,6 +5,7 @@ import random
 import os
 import hashlib
 from dotenv import load_dotenv
+import json
 
 load_dotenv()
 
@@ -307,6 +308,34 @@ def logout():
     session.pop('user', None)
     return jsonify({"success": True})
 
+# --- REVIEWS ---
+@app.route('/api/reviews', methods=['GET'])
+def get_reviews():
+    url = f"{SUPABASE_URL}/rest/v1/reviews?select=*,users(nickname,avatar,username)&order=created_at.desc&limit=10"
+    res = requests.get(url, headers=get_supabase_headers())
+    if res.status_code == 200:
+        return jsonify({"success": True, "reviews": res.json()})
+    return jsonify({"success": False, "message": "Ошибка БД"})
+
+@app.route('/api/reviews', methods=['POST'])
+def add_review():
+    if 'user' not in session:
+        return jsonify({"success": False, "message": "Не авторизован."})
+    
+    data = request.json
+    rating = data.get('rating')
+    text = data.get('text')
+    
+    if not text or not rating:
+        return jsonify({"success": False, "message": "Заполните все поля."})
+        
+    url = f"{SUPABASE_URL}/rest/v1/reviews"
+    payload = {"email": session['user']['email'], "rating": int(rating), "text": text}
+    res = requests.post(url, json=payload, headers=get_supabase_headers())
+    if res.status_code in [200, 201]:
+        return jsonify({"success": True})
+    return jsonify({"success": False, "message": "Ошибка сохранения."})
+
 # --- PUBLIC PROFILES ---
 @app.route('/u/<username>')
 def public_profile(username):
@@ -357,6 +386,40 @@ def admin_update_flora():
     if res.status_code in [200, 204]:
         return jsonify({"success": True})
     return jsonify({"success": False, "message": "Ошибка сохранения"})
+
+# --- BOT STATUS ---
+def get_bot_status():
+    try:
+        if os.path.exists('bot_status.json'):
+            with open('bot_status.json', 'r', encoding='utf-8') as f:
+                return json.load(f)
+    except Exception:
+        pass
+    return {"aurexis_music": {"status": "Online", "color": "#00ffaa"}}
+
+@app.route('/api/bots/status', methods=['GET'])
+def api_get_bot_status():
+    return jsonify({"success": True, "bots": get_bot_status()})
+
+@app.route('/api/admin/bot-status', methods=['POST'])
+def admin_update_bot_status():
+    if 'user' not in session or not session['user'].get('is_admin'):
+        return jsonify({"success": False, "message": "Доступ запрещен"})
+    
+    data = request.json
+    bot_id = data.get('bot_id')
+    status = data.get('status')
+    color = data.get('color')
+    
+    current_status = get_bot_status()
+    current_status[bot_id] = {"status": status, "color": color}
+    
+    try:
+        with open('bot_status.json', 'w', encoding='utf-8') as f:
+            json.dump(current_status, f, ensure_ascii=False)
+        return jsonify({"success": True})
+    except Exception as e:
+        return jsonify({"success": False, "message": "Ошибка сохранения"})
 
 if __name__ == '__main__':
     app.run(debug=True, port=5000)

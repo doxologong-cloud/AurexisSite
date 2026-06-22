@@ -89,7 +89,7 @@
                         </div>
                         <h3 class="bot-name">AUREXIS SUPPORT</h3>
                         <p class="bot-desc">Профессиональный бот для технической поддержки. Организует тикеты, автоматизирует ответы и помогает общаться с вашей аудиторией 24/7.</p>
-                        <div class="bot-status"><span class="status-dot"></span> Online</div>
+                        <div class="bot-status" id="status-aurexis_support"><span class="status-dot"></span> Online</div>
                     </div>
 
                     <!-- Bot 2 -->
@@ -99,7 +99,7 @@
                         </div>
                         <h3 class="bot-name">AUREXIS ECONOMY</h3>
                         <p class="bot-desc">Создайте уникальную экономику на вашем сервере! Игры, казино, валюта, магазины и уровни. Вовлеченность участников гарантирована.</p>
-                        <div class="bot-status"><span class="status-dot"></span> Online</div>
+                        <div class="bot-status" id="status-aurexis_economy"><span class="status-dot"></span> Online</div>
                     </div>
 
                     <!-- Bot 3 -->
@@ -109,7 +109,7 @@
                         </div>
                         <h3 class="bot-name">AUREXIS MAFIA</h3>
                         <p class="bot-desc">Легендарная игра прямо в чате. Полностью автоматизированный процесс игры в Мафию с ролями, голосованиями и ночными фазами.</p>
-                        <div class="bot-status"><span class="status-dot"></span> Online</div>
+                        <div class="bot-status" id="status-aurexis_mafia"><span class="status-dot"></span> Online</div>
                     </div>
 
                     <!-- Bot 4 -->
@@ -120,8 +120,17 @@
                         <div class="badge">NEW</div>
                         <h3 class="bot-name neon-text-green">FLORA</h3>
                         <p class="bot-desc">Новейшая разработка Aurexis Studio. Мощный .exe бот с уникальным функционалом и скрытой работой в системе.</p>
-                        <div class="bot-status status-green"><span class="status-dot"></span> Active</div>
+                        <div class="bot-status status-green" id="status-aurexis_flora"><span class="status-dot"></span> Active</div>
                     </div>
+                </div>
+            </section>
+            
+            <!-- Reviews Section -->
+            <section class="about-section" style="padding-top: 40px; margin-bottom: 50px;">
+                <h2 class="section-title">Отзывы о сайте</h2>
+                <div class="bots-grid" id="reviews-container" style="gap: 20px;">
+                    <!-- Reviews will be loaded dynamically here -->
+                    <div style="text-align: center; width: 100%; color: var(--text-muted);">Загрузка отзывов...</div>
                 </div>
             </section>
         </div>
@@ -200,6 +209,20 @@
                             <p style="font-size: 0.9rem; color: var(--text-muted); margin-bottom: 15px;">Статус: <span id="acc-flora-status" style="color: #ff4444;">Не активна</span></p>
                             <button class="btn btn-primary" style="padding: 8px 15px; font-size: 0.9rem;">Приобрести</button>
                         </div>
+                    </div>
+
+                    <h3 style="color: var(--neon-primary); margin-bottom: 15px;">Оставить отзыв</h3>
+                    <div style="background: rgba(0,0,0,0.3); padding: 20px; border-radius: 10px; border: 1px solid rgba(255,255,255,0.1); margin-bottom: 30px;">
+                        <div class="input-group">
+                            <label>Оценка (1-5)</label>
+                            <input type="number" id="review-rating" min="1" max="5" value="5" required style="width: 100px;">
+                        </div>
+                        <div class="input-group">
+                            <label>Ваш отзыв</label>
+                            <textarea id="review-text" rows="3" required style="width: 100%; background: transparent; border: 1px solid rgba(255,255,255,0.2); color: white; border-radius: 5px; padding: 10px;" placeholder="Напишите, что вы думаете о нашем сайте..."></textarea>
+                        </div>
+                        <div id="review-error" class="auth-error"></div>
+                        <button id="submit-review-btn" class="btn btn-primary" style="width: 100%; margin-top: 10px;">Отправить отзыв</button>
                     </div>
 
                     <button class="btn btn-secondary" onclick="document.getElementById('logout-btn').click()" style="background: #ff3333; border-color: #ff3333; width: 100%;">Выйти из аккаунта</button>

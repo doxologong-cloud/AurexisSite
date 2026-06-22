@@ -75,6 +75,46 @@
         <div style="text-align: center; margin-top: 30px;">
             <a href="/" class="btn btn-secondary">Вернуться на сайт</a>
         </div>
+        
+        <!-- BOT STATUS MANAGEMENT -->
+        <h2 class="section-title" style="margin-top: 50px; font-size: 1.8rem;">Статусы ботов</h2>
+        <table class="admin-table">
+            <thead>
+                <tr>
+                    <th>Бот ID</th>
+                    <th>Текст Статуса</th>
+                    <th>Цвет (HEX)</th>
+                    <th>Действие</th>
+                </tr>
+            </thead>
+            <tbody id="bots-tbody">
+                <tr>
+                    <td>aurexis_support</td>
+                    <td><input type="text" id="status-aurexis_support-text" value="Online" style="padding:5px; background: transparent; color: white; border: 1px solid var(--neon-primary);"></td>
+                    <td><input type="color" id="status-aurexis_support-color" value="#00ffaa"></td>
+                    <td><button class="flora-toggle active" onclick="saveBotStatus('aurexis_support')">Сохранить</button></td>
+                </tr>
+                <tr>
+                    <td>aurexis_economy</td>
+                    <td><input type="text" id="status-aurexis_economy-text" value="Online" style="padding:5px; background: transparent; color: white; border: 1px solid var(--neon-primary);"></td>
+                    <td><input type="color" id="status-aurexis_economy-color" value="#00ffaa"></td>
+                    <td><button class="flora-toggle active" onclick="saveBotStatus('aurexis_economy')">Сохранить</button></td>
+                </tr>
+                <tr>
+                    <td>aurexis_mafia</td>
+                    <td><input type="text" id="status-aurexis_mafia-text" value="Online" style="padding:5px; background: transparent; color: white; border: 1px solid var(--neon-primary);"></td>
+                    <td><input type="color" id="status-aurexis_mafia-color" value="#00ffaa"></td>
+                    <td><button class="flora-toggle active" onclick="saveBotStatus('aurexis_mafia')">Сохранить</button></td>
+                </tr>
+                <tr>
+                    <td>aurexis_flora</td>
+                    <td><input type="text" id="status-aurexis_flora-text" value="Active" style="padding:5px; background: transparent; color: white; border: 1px solid var(--neon-primary);"></td>
+                    <td><input type="color" id="status-aurexis_flora-color" value="#ff0055"></td>
+                    <td><button class="flora-toggle active" onclick="saveBotStatus('aurexis_flora')">Сохранить</button></td>
+                </tr>
+            </tbody>
+        </table>
+
     </div>
 
     <!-- Scripts -->
@@ -135,7 +175,44 @@
             }
         }
 
+        async function loadBotStatuses() {
+            try {
+                const res = await fetch('/api/bots/status');
+                const data = await res.json();
+                if (data.success && data.bots) {
+                    for (const [botId, botData] of Object.entries(data.bots)) {
+                        const textEl = document.getElementById('status-' + botId + '-text');
+                        const colorEl = document.getElementById('status-' + botId + '-color');
+                        if (textEl) textEl.value = botData.status;
+                        if (colorEl) colorEl.value = botData.color;
+                    }
+                }
+            } catch (e) {}
+        }
+
+        async function saveBotStatus(botId) {
+            const status = document.getElementById('status-' + botId + '-text').value;
+            const color = document.getElementById('status-' + botId + '-color').value;
+            
+            try {
+                const res = await fetch('/api/admin/bot-status', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ bot_id: botId, status: status, color: color })
+                });
+                const data = await res.json();
+                if (data.success) {
+                    alert('Статус обновлен!');
+                } else {
+                    alert('Ошибка: ' + data.message);
+                }
+            } catch (e) {
+                alert('Ошибка соединения');
+            }
+        }
+
         loadUsers();
+        loadBotStatuses();
     </script>
 </body>
 </html>
