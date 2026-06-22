@@ -211,8 +211,21 @@
                         </div>
                     </div>
 
-                    <h3 style="color: var(--neon-primary); margin-bottom: 15px;">Оставить отзыв</h3>
-                    <div style="background: rgba(0,0,0,0.3); padding: 20px; border-radius: 10px; border: 1px solid rgba(255,255,255,0.1); margin-bottom: 30px;">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
+                        <h3 style="color: var(--neon-primary); margin: 0;">Оставить отзыв</h3>
+                        <button id="toggle-review-btn" class="btn" style="background: transparent; color: var(--neon-primary); border: 1px solid var(--neon-primary); padding: 5px 15px; border-radius: 5px; cursor: pointer;">Развернуть</button>
+                    </div>
+                    
+                    <div id="review-form-container" style="display: none; background: rgba(0,0,0,0.3); padding: 20px; border-radius: 10px; border: 1px solid rgba(255,255,255,0.1); margin-bottom: 30px;">
+                        <div style="background: rgba(255,255,255,0.05); padding: 15px; border-radius: 8px; margin-bottom: 20px; border-left: 3px solid var(--neon-purple);">
+                            <h4 style="margin-top: 0; color: var(--neon-purple); margin-bottom: 5px;">📝 Правила публикации отзыва</h4>
+                            <ul style="color: var(--text-muted); font-size: 0.85rem; margin: 0; padding-left: 20px; line-height: 1.5;">
+                                <li>Пожалуйста, пишите конструктивно и по делу.</li>
+                                <li>Запрещено использование нецензурной лексики, оскорблений и 18+ контента.</li>
+                                <li>Администрация оставляет за собой право удалить отзыв при нарушении правил.</li>
+                            </ul>
+                        </div>
+                        
                         <div class="input-group">
                             <label>Оценка (1-5)</label>
                             <input type="number" id="review-rating" min="1" max="5" value="5" required style="width: 100px;">
@@ -224,6 +237,19 @@
                         <div id="review-error" class="auth-error"></div>
                         <button id="submit-review-btn" class="btn btn-primary" style="width: 100%; margin-top: 10px;">Отправить отзыв</button>
                     </div>
+
+                    <script>
+                        document.getElementById('toggle-review-btn').addEventListener('click', function() {
+                            const container = document.getElementById('review-form-container');
+                            if (container.style.display === 'none') {
+                                container.style.display = 'block';
+                                this.textContent = 'Свернуть';
+                            } else {
+                                container.style.display = 'none';
+                                this.textContent = 'Развернуть';
+                            }
+                        });
+                    </script>
 
                     <button class="btn btn-secondary" onclick="document.getElementById('logout-btn').click()" style="background: #ff3333; border-color: #ff3333; width: 100%;">Выйти из аккаунта</button>
                 </div>
