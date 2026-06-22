@@ -452,6 +452,7 @@ a {
 .status-green .status-dot {
     background: var(--neon-green);
     box-shadow: 0 0 8px var(--neon-green);
+    animation: blink 5s infinite;
 }
 
 .badge {
@@ -1888,3 +1889,13 @@ body.apocalypse-mode .btn {
 }
 
 #view-editor.active { display: flex !important; }
+
+
+.status-offline .status-dot {
+    background: #5a3434;
+    box-shadow: none;
+    animation: none;
+}
+.status-offline {
+    color: #666;
+}
