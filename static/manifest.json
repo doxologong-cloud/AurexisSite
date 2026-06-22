@@ -1,0 +1,16 @@
+{
+  "name": "Aurexis Web-OS",
+  "short_name": "Aurexis",
+  "description": "Киберпанк ОС и Мессенджер для разработчиков.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#0a0a0a",
+  "theme_color": "#ffcc00",
+  "icons": [
+    {
+      "src": "https://cdn-icons-png.flaticon.com/512/825/825530.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}

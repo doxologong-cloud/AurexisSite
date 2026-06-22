@@ -16,7 +16,7 @@
 <script src="https://cdn.jsdelivr.net/npm/particles.js@2.0.0/particles.min.js"></script>
 <!-- Styles -->
 <link href="{{ url_for('static', filename='style.css') }}" rel="stylesheet"/>
-</head>
+<link href="/static/manifest.json" rel="manifest"/></head>
 <body>
 <!-- Preloader / Welcome Screen -->
 <div id="welcome-screen">
@@ -45,7 +45,7 @@
 <a href="#portfolio">Магазин Ботов</a>
 <a class="nav-ai-link" href="#builder">Нейро-Ассистент 🧠</a>
 <a class="nav-feed-link" href="#messenger">Лента 💬</a>
-</div>
+<a class="nav-link" href="#" onclick="switchView('view-editor')">Редактор</a></div>
 <div class="nav-auth-section" style="display: flex; align-items: center; gap: 15px;">
 <a class="nav-auth-link" href="#" id="open-auth" style="color: var(--neon-primary); font-weight: 600;">Вход / Регистрация</a>
 <div class="nav-account" id="nav-account" style="display: none; position: relative; cursor: pointer;">
@@ -416,7 +416,7 @@
 <span id="active-chat-status" style="font-size: 0.8rem; color: var(--neon-primary);">В сети</span>
 </div>
 <button class="glow-btn small-btn" id="add-to-contacts-btn" style="display: none;">+ В контакты</button>
-</div>
+<span id="e2ee-lock" style="color: #2ed573; margin-left: 10px; font-size: 14px; cursor: help;" title="Чат защищен сквозным шифрованием (E2EE)">🔐</span><button id="btn-call" onclick="startCall()" style="background: transparent; border: none; color: var(--neon-color); font-size: 20px; cursor: pointer; margin-left: 10px;">📞</button></div>
 <div class="chat-messages" id="active-chat-messages">
 <!-- Messages -->
 </div>
@@ -532,7 +532,6 @@
         }
     </style>
 <script src="{{ url_for('static', filename='script.js') }}"></script>
-
 <!-- Hacker Terminal -->
 <div class="window" id="view-hacker" style="border-color: #0f0; box-shadow: 0 0 20px rgba(0,255,0,0.3);">
 <div class="window-header" onmousedown="startDrag(event, 'view-hacker')" style="background: rgba(0,255,0,0.1); border-bottom: 1px solid #0f0;">
@@ -547,6 +546,28 @@
 <span style="color: #0f0; margin-right: 5px;">root@aurexis:~#</span>
 <input id="hacker-input" style="background: transparent; border: none; color: #0f0; outline: none; flex: 1; font-family: monospace;" type="text"/>
 </div>
+</div>
+</div>
+
+<!-- Code Editor Window -->
+<div class="window" id="view-editor" style="width: 600px; height: 400px; border-color: #00a8ff; box-shadow: 0 0 20px rgba(0, 168, 255, 0.3);">
+<div class="window-header" onmousedown="startDrag(event, 'view-editor')" style="background: rgba(0, 168, 255, 0.1); border-bottom: 1px solid #00a8ff;">
+<div class="window-title" style="color: #00a8ff;">Live-Code Editor</div>
+<div class="window-controls">
+<button class="window-btn btn-min" onclick="minimizeWindow('view-editor')"></button>
+<button class="window-btn btn-max" onclick="maximizeWindow('view-editor')"></button>
+<button class="window-btn btn-close" onclick="closeWindow('view-editor')"></button>
+</div>
+</div>
+<div class="window-content" style="display: flex; flex-direction: column;">
+<div style="background: #111; border-bottom: 1px solid #333; padding: 5px;">
+<button onclick="runCode()" style="background: #2ed573; color: #000; border: none; padding: 5px 15px; border-radius: 3px; cursor: pointer; font-weight: bold;">▶ Run</button>
+</div>
+<textarea id="code-textarea" spellcheck="false" style="flex: 1; background: #000; color: #00a8ff; font-family: monospace; border: none; padding: 10px; outline: none; resize: none;"># Пиши код бота здесь...
+def on_message(msg):
+    if msg == 'ping':
+        return 'pong'</textarea>
+<div id="code-output" style="height: 100px; background: #111; color: #fff; padding: 10px; font-family: monospace; overflow-y: auto; border-top: 1px solid #333;">Output will appear here...</div>
 </div>
 </div>
 </main>
