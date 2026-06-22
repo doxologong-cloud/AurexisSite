@@ -10,6 +10,7 @@ import json
 load_dotenv()
 
 app = Flask(__name__)
+app.config['TEMPLATES_AUTO_RELOAD'] = True
 app.secret_key = os.getenv("SECRET_KEY", "super-secret-key-12345")
 
 SUPABASE_URL = "https://bbeaokhcckhuhcxnagsf.supabase.co"
