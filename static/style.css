@@ -1,3 +1,6 @@
+*, html, body {
+    cursor: var(--cursor-default, auto) !important;
+}
 /* Reset and Base Styles */
 * {
     margin: 0;
