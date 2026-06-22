@@ -16,7 +16,7 @@
 <script src="https://cdn.jsdelivr.net/npm/particles.js@2.0.0/particles.min.js"></script>
 <!-- Styles -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-<link href="{{ url_for('static', filename='style.css') }}?v=78" rel="stylesheet"></link>
+<link href="{{ url_for('static', filename='style.css') }}?v=79" rel="stylesheet"></link>
 <script>
     (function() {
         const theme = localStorage.getItem('aurex_theme') || 'matrix';
@@ -457,17 +457,17 @@
     <div style="display: flex; flex-direction: column; gap: 15px;">
         <label style="display: flex; align-items: center; justify-content: space-between; width: 300px; color: #fff;">
             <span data-i18n="t_anim_toggle">Анимации интерфейса</span>
-            <label class="switch" style="position: relative; display: inline-block; width: 50px; height: 24px;">
-                <input type="checkbox" id="anim-toggle" checked onchange="toggleAnimations(this.checked)" style="opacity: 0; width: 0; height: 0;">
-                <span class="slider" style="position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background-color: #333; transition: .4s; border-radius: 24px;"></span>
+            <label class="switch">
+                <input type="checkbox" id="anim-toggle" checked onchange="toggleAnimations(this.checked)">
+                <span class="slider round"></span>
             </label>
         </label>
 
         <label style="display: flex; align-items: center; justify-content: space-between; width: 300px; color: #fff;">
             <span data-i18n="t_particles_toggle">Частицы на фоне</span>
-            <label class="switch" style="position: relative; display: inline-block; width: 50px; height: 24px;">
-                <input type="checkbox" id="particles-toggle" checked onchange="toggleParticles(this.checked)" style="opacity: 0; width: 0; height: 0;">
-                <span class="slider" style="position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background-color: #333; transition: .4s; border-radius: 24px;"></span>
+            <label class="switch">
+                <input type="checkbox" id="particles-toggle" checked onchange="toggleParticles(this.checked)">
+                <span class="slider round"></span>
             </label>
         </label>
     </div>
@@ -514,15 +514,6 @@
 </div>
 </div>
 </div>
-<!-- Styles for settings switch -->
-<style>
-        .switch input:checked + .slider { background-color: var(--neon-primary); }
-        .switch input:checked + .slider:before { transform: translateX(26px); }
-        .slider:before {
-            position: absolute; content: ""; height: 26px; width: 26px; left: 4px; bottom: 4px;
-            background-color: white; transition: .4s; border-radius: 50%;
-        }
-    </style>
 <div id="easter-egg-terminal" style="display: none; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: black; z-index: 9999; color: #00ff00; font-family: 'Courier New', Courier, monospace; padding: 20px; box-sizing: border-box; overflow: hidden;">
 <div id="terminal-content" style="font-size: 1.2rem; line-height: 1.5; text-shadow: 0 0 5px #00ff00;"></div>
 <div id="terminal-cursor" style="display: inline-block; width: 10px; height: 1.2rem; background: #00ff00; animation: blink 1s infinite;"></div>
@@ -539,7 +530,7 @@
             100% { transform: translate(0) }
         }
     </style>
-<script src="{{ url_for('static', filename='script.js') }}?v=78"></script>
+<script src="{{ url_for('static', filename='script.js') }}?v=79"></script>
 <!-- Hacker Terminal -->
 <div class="view" id="view-hacker" style="background: #000; color: #0f0; font-family: monospace; padding: 20px; font-size: 16px; overflow-y: auto; height: 100vh; width: 100%; box-sizing: border-box;">
 <div id="hacker-output"></div>
