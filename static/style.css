@@ -806,7 +806,8 @@ footer {
     position: absolute;
     top: 120%;
     right: 0;
-    background: var(--bg-card);
+    background: rgba(15, 15, 20, 0.95);
+    backdrop-filter: blur(15px);
     border: 1px solid rgba(255, 255, 255, 0.1);
     border-radius: 10px;
     padding: 10px 0;
