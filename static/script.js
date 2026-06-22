@@ -998,7 +998,6 @@ document.addEventListener('DOMContentLoaded', () => {
             window.removeEventListener('keydown', closeEasterEgg);
         }
     }
-    }
     
     // --- PARTICLES.JS LOGIC ---
     function initParticles() {
