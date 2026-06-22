@@ -936,10 +936,10 @@ document.addEventListener('DOMContentLoaded', () => {
         document.getElementById('ticket-chat-title').textContent = topic;
         const statusEl = document.getElementById('ticket-chat-status');
         if (status === 'open') {
-            statusEl.innerHTML = __(\'Статус:\') + \' <span style="color: #00ffaa;">\' + __(\'Открыт\') + \'</span>\';
+            statusEl.innerHTML = __('Статус:') + ' <span style="color: #00ffaa;">' + __('Открыт') + '</span>';
             document.getElementById('ticket-reply-container').style.display = 'flex';
         } else {
-            statusEl.innerHTML = __(\'Статус:\') + \' <span style="color: #ff4444;">\' + __(\'Закрыт\') + \'</span>\';
+            statusEl.innerHTML = __('Статус:') + ' <span style="color: #ff4444;">' + __('Закрыт') + '</span>';
             document.getElementById('ticket-reply-container').style.display = 'none';
         }
         
