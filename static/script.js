@@ -826,7 +826,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     const el = document.getElementById('status-' + botId);
                     if (el) {
                         const anim = botData.status === 'Offline' ? 'none' : (botData.status === 'Active' ? 'blink 5s infinite' : 'blink 0.5s infinite');
-                        el.innerHTML = `<span class="status-dot" style="background: ${botData.color}; box-shadow: ${botData.status === 'Offline' ? 'none' : `0 0 10px ${botData.color}`}; animation: ${anim}"></span> <span style="color: ${botData.color}">${botData.status}</span>`;
+                        el.innerHTML = `<span class="status-dot" style="background: ${botData.color}; box-shadow: ${botData.status === 'Offline' ? 'none' : `0 0 10px ${botData.color}`}; animation: ${anim}"></span> <span style="color: ${botData.color}">${__(botData.status)}</span>`;
                     }
                 }
             }
@@ -847,7 +847,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     return;
                 }
                 data.news.forEach(n => {
-                    const date = new Date(n.created_at).toLocaleDateString('ru-RU', {day: 'numeric', month: 'long', year: 'numeric'});
+                    const date = new Date(n.created_at).toLocaleDateString(localStorage.getItem('aurex_lang') === 'en' ? 'en-US' : 'ru-RU', {day: 'numeric', month: 'long', year: 'numeric'});
                     container.innerHTML += `
                         <div style="background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.1); border-radius: 10px; padding: 20px;">
                             <div style="color: var(--neon-primary); font-size: 0.85rem; margin-bottom: 5px;">${date}</div>

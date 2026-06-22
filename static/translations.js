@@ -503,7 +503,13 @@ window.applyTranslations = function() {
     document.querySelectorAll('[data-i18n]').forEach(el => {
         const key = el.getAttribute('data-i18n');
         if (translations[key]) {
-            el.innerHTML = translations[key][lang];
+            
+            if (el.tagName === 'TEXTAREA' || el.tagName === 'INPUT') {
+                el.value = translations[key][lang];
+            } else {
+                el.innerHTML = translations[key][lang];
+            }
+
         }
     });
 
