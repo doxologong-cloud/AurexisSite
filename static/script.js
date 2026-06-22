@@ -1661,8 +1661,7 @@ document.addEventListener('DOMContentLoaded', () => {
             showToast('Войдите, чтобы открыть Ленту', 'error');
             return;
         }
-        showView('view-messenger');
-        loadChats();
+        // Let the default link click change the hash
     });
 
     // New Chat Modal
@@ -1973,10 +1972,7 @@ function handleEasterEgg(eggCode) {
 
 document.addEventListener('DOMContentLoaded', () => {
     // Navigate to portfolio
-    document.querySelector('a[href="#portfolio"]')?.addEventListener('click', (e) => {
-        e.preventDefault();
-        showView('view-portfolio');
-    });
+    // Native hash navigation is sufficient for portfolio
 
     const cards = document.querySelectorAll('.tilt-card');
     cards.forEach(card => {
