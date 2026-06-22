@@ -61,6 +61,12 @@ document.addEventListener('DOMContentLoaded', () => {
                 accView.classList.remove('hidden-view');
                 accView.classList.add('active');
             }
+        } else if (hash === '#builder') {
+            const builderView = document.getElementById('view-builder');
+            if(builderView) {
+                builderView.classList.remove('hidden-view');
+                builderView.classList.add('active');
+            }
         } else if (hash === '#settings') {
             const settingsView = document.getElementById('view-settings');
             if(settingsView) {
