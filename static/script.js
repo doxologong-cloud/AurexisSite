@@ -3401,3 +3401,24 @@ function switchView(viewId) {
 }
 
 
+
+// ==========================================
+// Custom Cursor Logic
+// ==========================================
+const cursor = document.getElementById('custom-cursor');
+if (cursor) {
+    document.addEventListener('mousemove', e => {
+        cursor.style.left = e.clientX + 'px';
+        cursor.style.top = e.clientY + 'px';
+    });
+
+    document.addEventListener('mousedown', () => cursor.classList.add('clicking'));
+    document.addEventListener('mouseup', () => cursor.classList.remove('clicking'));
+
+    // Hover effect on interactive elements
+    const interactiveElements = document.querySelectorAll('a, button, input, textarea, select, .theme-card, .msgr-tab, .dropdown-item');
+    interactiveElements.forEach(el => {
+        el.addEventListener('mouseenter', () => cursor.classList.add('hovering'));
+        el.addEventListener('mouseleave', () => cursor.classList.remove('hovering'));
+    });
+}

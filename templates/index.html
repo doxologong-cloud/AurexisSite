@@ -16,7 +16,7 @@
 <script src="https://cdn.jsdelivr.net/npm/particles.js@2.0.0/particles.min.js"></script>
 <!-- Styles -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-<link href="{{ url_for('static', filename='style.css') }}?v=55" rel="stylesheet"/>
+<link href="{{ url_for('static', filename='style.css') }}?v=56" rel="stylesheet"/>
 <script>
     (function() {
         const theme = localStorage.getItem('aurex_theme') || 'matrix';
@@ -40,7 +40,8 @@
     })();
 </script>
 </head>
-<body>
+<body class="custom-cursor-enabled">
+<div id="custom-cursor"></div>
 <!-- Preloader / Welcome Screen -->
 <div id="welcome-screen">
 <div class="glitch-wrapper">
@@ -499,7 +500,7 @@
             100% { transform: translate(0) }
         }
     </style>
-<script src="{{ url_for('static', filename='script.js') }}?v=55"></script>
+<script src="{{ url_for('static', filename='script.js') }}?v=56"></script>
 <!-- Hacker Terminal -->
 <div class="view" id="view-hacker" style="background: #000; color: #0f0; font-family: monospace; padding: 20px; font-size: 16px; overflow-y: auto; height: 100vh; width: 100%; box-sizing: border-box;">
 <div id="hacker-output"></div>
