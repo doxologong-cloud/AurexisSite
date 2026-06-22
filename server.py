@@ -596,7 +596,7 @@ def reply_ticket(ticket_id):
 def admin_tickets():
     if 'user' not in session or not session['user'].get('is_admin'):
         return jsonify({"success": False})
-    url = f"{SUPABASE_URL}/rest/v1/tickets?select=*,users(nickname,avatar)&order=created_at.desc"
+    url = f"{SUPABASE_URL}/rest/v1/tickets?select=*&order=created_at.desc"
     res = requests.get(url, headers=get_supabase_headers())
     if res.status_code == 200:
         return jsonify({"success": True, "tickets": res.json()})

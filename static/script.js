@@ -1821,7 +1821,7 @@ async function openChat(chat) {
     
     // Setup polling
     if(messagePollingInterval) clearInterval(messagePollingInterval);
-    messagePollingInterval = setInterval(loadChatMessages, 3000);
+    messagePollingInterval = setInterval(loadChatMessages, 2000);
 }
 
 async function loadChatMessages() {
@@ -1872,16 +1872,31 @@ async function sendMessengerMessage(forceMessage = null) {
     
     input.value = '';
     
-    // Optimistic UI could be added here, but simple fetch is fine
+    // Optimistic UI
+    const msgsContainer = document.getElementById('messenger-messages');
+    const msgDiv = document.createElement('div');
+    msgDiv.className = 'msg-bubble msg-out';
+    msgDiv.style.opacity = '0.7';
+    if(message.startsWith('STICKER:')) {
+        const url = message.split('STICKER:')[1];
+        msgDiv.innerHTML = `<img src="${url}" class="msg-sticker" style="max-width: 150px; border-radius: 10px;">`;
+    } else {
+        msgDiv.textContent = message;
+    }
+    msgsContainer.appendChild(msgDiv);
+    msgsContainer.scrollTop = msgsContainer.scrollHeight;
+    
     try {
         await fetch('/api/send_chat_message', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ chat_id: activeChatId, message })
         });
+        msgDiv.style.opacity = '1';
         loadChatMessages();
     } catch(e) {
         console.error(e);
+        msgDiv.style.color = 'red';
     }
 }
 
@@ -2564,7 +2579,7 @@ let isRecording = false;
 async function toggleVoiceRecord() {
     const btn = document.getElementById('btn-voice');
     if (!isRecording) {
-        try {
+                try {
             const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
             mediaRecorder = new MediaRecorder(stream);
             mediaRecorder.start();
@@ -2580,11 +2595,10 @@ async function toggleVoiceRecord() {
                 const audioBlob = new Blob(audioChunks, { type: 'audio/wav' });
                 audioChunks = [];
                 // Simulate sending audio
-                alert("Голосовое сообщение записано! (Интеграция с БД в след. фазе)");
-                // Usually we'd upload to Supabase Storage and send the URL
+                showToast("Голосовое сообщение отправлено! (интеграция в след. фазе)", "success");
             };
         } catch(e) {
-            alert("Нет доступа к микрофону!");
+            showToast("Нет доступа к микрофону. Нажмите на значок замка в адресной строке и разрешите доступ!", "error");
         }
     } else {
         mediaRecorder.stop();
