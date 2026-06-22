@@ -295,7 +295,7 @@ const translations = {
         "t_97": "Economy, minigames, casino, and levels.",
         "t_98": "Free",
         "t_99": "Add to Server",
-        "t_100": "# Пиши код бота здесь...\ndef on_message(msg):\n    if msg == 'ping':\n        return 'pong'",
+        "t_100": "# Write your bot code here...\ndef on_message(msg):\n    if msg == 'ping':\n        return 'pong'",
         "t_101": "© 2026 Aurexis Studio. All rights reserved.",
         "t_102": "Discord Server",
         "t_103": "Terms of Service",
