@@ -1474,6 +1474,10 @@ async function sendGlobalChat() {
     }
 
     async function sendToAI() {
+        if(!window.currentUser) {
+            showToast('⚠️ Войдите в аккаунт или зарегистрируйтесь (в Панели Управления), чтобы общаться с нейросетью.', 'error');
+            return;
+        }
         if(isGenerating) return;
         if(!aiInput || !aiInput.value.trim()) return;
         
