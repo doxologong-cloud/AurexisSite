@@ -1,3 +1,32 @@
+// Global Google callback
+window.handleGoogleCredentialResponse = async (response) => {
+    try {
+        const res = await fetch('/api/google-login', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ token: response.credential })
+        });
+        const data = await res.json();
+        if (data.success && data.user) {
+            document.getElementById('modal-auth').style.display = 'none';
+            document.getElementById('open-auth').style.display = 'none';
+            document.getElementById('nav-account').style.display = 'flex';
+            document.getElementById('nav-username').textContent = data.user.nickname;
+            
+            const avatarImg = document.getElementById('nav-avatar-img');
+            if(data.user.avatar) {
+                avatarImg.src = data.user.avatar;
+            } else {
+                avatarImg.src = "/static/assets/default-avatar.png";
+            }
+        } else {
+            alert('Ошибка входа через Google: ' + data.message);
+        }
+    } catch (e) {
+        alert('Ошибка соединения с сервером.');
+    }
+};
+
 document.addEventListener('DOMContentLoaded', () => {
     // Preloader Logic
     const welcomeScreen = document.getElementById('welcome-screen');
@@ -112,7 +141,6 @@ document.addEventListener('DOMContentLoaded', () => {
             // Reset forms and errors
             document.querySelectorAll('.auth-error').forEach(el => el.textContent = '');
             verifyForm.style.display = 'none';
-            authSocialWrap.style.display = 'block';
 
             if (tab.dataset.tab === 'login') {
                 loginForm.style.display = 'flex';
@@ -284,7 +312,6 @@ document.addEventListener('DOMContentLoaded', () => {
         // Reset auth modal to Registration form
         verifyForm.style.display = 'none';
         document.querySelector('.auth-tabs').style.display = 'flex';
-        authSocialWrap.style.display = 'block';
         loginForm.style.display = 'none';
         registerForm.style.display = 'flex';
         
@@ -292,4 +319,68 @@ document.addEventListener('DOMContentLoaded', () => {
         const regTab = document.querySelector('.auth-tab[data-tab="register"]');
         if(regTab) regTab.classList.add('active');
     });
+
+    // Avatar Upload Logic
+    const changeAvatarBtn = document.getElementById('change-avatar-btn');
+    const avatarUploadInput = document.getElementById('avatar-upload-input');
+    const navAvatarImg = document.getElementById('nav-avatar-img');
+
+    if(changeAvatarBtn && avatarUploadInput) {
+        changeAvatarBtn.addEventListener('click', () => {
+            avatarUploadInput.click();
+        });
+
+        avatarUploadInput.addEventListener('change', (e) => {
+            const file = e.target.files[0];
+            if(!file) return;
+
+            const reader = new FileReader();
+            reader.onload = (event) => {
+                const img = new Image();
+                img.onload = async () => {
+                    // Compress via Canvas
+                    const canvas = document.createElement('canvas');
+                    const MAX_SIZE = 150;
+                    let width = img.width;
+                    let height = img.height;
+
+                    if (width > height) {
+                        if (width > MAX_SIZE) {
+                            height *= MAX_SIZE / width;
+                            width = MAX_SIZE;
+                        }
+                    } else {
+                        if (height > MAX_SIZE) {
+                            width *= MAX_SIZE / height;
+                            height = MAX_SIZE;
+                        }
+                    }
+                    canvas.width = width;
+                    canvas.height = height;
+                    const ctx = canvas.getContext('2d');
+                    ctx.drawImage(img, 0, 0, width, height);
+                    const base64Avatar = canvas.toDataURL('image/jpeg', 0.8);
+
+                    // Send to Server
+                    try {
+                        const res = await fetch('/api/update-avatar', {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify({ avatar: base64Avatar })
+                        });
+                        const data = await res.json();
+                        if(data.success) {
+                            navAvatarImg.src = base64Avatar;
+                        } else {
+                            alert("Ошибка обновления аватарки: " + data.message);
+                        }
+                    } catch(err) {
+                        alert("Ошибка сети");
+                    }
+                };
+                img.src = event.target.result;
+            };
+            reader.readAsDataURL(file);
+        });
+    }
 });

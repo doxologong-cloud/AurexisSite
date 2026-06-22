@@ -44,6 +44,16 @@ def create_user(nickname, email, password):
         print("Supabase POST error:", e)
         return False
 
+def update_user_avatar(email, avatar_base64):
+    try:
+        url = f"{SUPABASE_URL}/rest/v1/users?email=eq.{email}"
+        payload = {"avatar": avatar_base64}
+        res = requests.patch(url, json=payload, headers=get_supabase_headers())
+        return res.status_code in [200, 204]
+    except Exception as e:
+        print("Supabase PATCH error:", e)
+        return False
+
 # Temporary store for verification codes
 verification_codes = {}
 
@@ -121,7 +131,7 @@ def verify():
             return jsonify({"success": False, "message": "Ошибка сохранения в облако."})
         
         del verification_codes[email]
-        session['user'] = {"nickname": user_data['nickname'], "email": email}
+        session['user'] = {"nickname": user_data['nickname'], "email": email, "avatar": None}
         return jsonify({"success": True, "user": session['user']})
     
     return jsonify({"success": False, "message": "Неверный код."})
@@ -135,9 +145,67 @@ def login():
     user = get_user_by_email(email)
     
     if user and user.get('password') == password:
-        session['user'] = {"nickname": user.get('nickname'), "email": email}
+        session['user'] = {"nickname": user.get('nickname'), "email": email, "avatar": user.get('avatar')}
         return jsonify({"success": True, "user": session['user']})
     return jsonify({"success": False, "message": "Неверная почта или пароль."})
+
+@app.route('/api/google-login', methods=['POST'])
+def google_login():
+    data = request.json
+    token = data.get('token')
+    if not token:
+        return jsonify({"success": False, "message": "Токен не предоставлен."})
+    
+    try:
+        res = requests.get(f"https://oauth2.googleapis.com/tokeninfo?id_token={token}")
+        if res.status_code != 200:
+            return jsonify({"success": False, "message": "Неверный токен."})
+        
+        token_info = res.json()
+        email = token_info.get('email')
+        nickname = token_info.get('name')
+        picture = token_info.get('picture')
+        
+        user = get_user_by_email(email)
+        avatar_url = picture
+        
+        if not user:
+            # Create new user via Google
+            success = create_user(nickname, email, "google-oauth")
+            if not success:
+                return jsonify({"success": False, "message": "Ошибка регистрации через Google."})
+            if picture:
+                update_user_avatar(email, picture)
+        else:
+            # Existing user
+            nickname = user.get('nickname')
+            avatar_url = user.get('avatar')
+            if not avatar_url and picture:
+                update_user_avatar(email, picture)
+                avatar_url = picture
+                
+        session['user'] = {"nickname": nickname, "email": email, "avatar": avatar_url}
+        return jsonify({"success": True, "user": session['user']})
+        
+    except Exception as e:
+        return jsonify({"success": False, "message": "Ошибка сервера."})
+
+@app.route('/api/update-avatar', methods=['POST'])
+def update_avatar():
+    if 'user' not in session:
+        return jsonify({"success": False, "message": "Не авторизован."})
+    
+    data = request.json
+    avatar_base64 = data.get('avatar')
+    if not avatar_base64:
+        return jsonify({"success": False, "message": "Нет аватарки."})
+        
+    success = update_user_avatar(session['user']['email'], avatar_base64)
+    if success:
+        session['user']['avatar'] = avatar_base64
+        session.modified = True
+        return jsonify({"success": True})
+    return jsonify({"success": False, "message": "Ошибка сохранения в облако."})
 
 @app.route('/api/me', methods=['GET'])
 def me():
