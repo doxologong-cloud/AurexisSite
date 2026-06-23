@@ -3030,10 +3030,15 @@ function changeTheme(themeName) {
             img.src = 'data:image/svg+xml,' + encodeURIComponent(svgStr);
         }
 
-        const hackerCursorStr = `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path d="M 2 2 L 10 22 L 13 13 L 22 10 Z" fill="#ff0000" stroke="#ff0000" stroke-width="2" stroke-linejoin="round" stroke-opacity="0.4"/></svg>`;
+        const hackerCursorStr = shape === 'circle' ? `<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"32\" height=\"32\" viewBox=\"0 0 32 32\"><circle cx=\"16\" cy=\"16\" r=\"10\" fill=\"none\" stroke=\"#ff0000\" stroke-width=\"2\"/><circle cx=\"16\" cy=\"16\" r=\"3\" fill=\"#ff0000\"/></svg>` : `<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"24\" height=\"24\" viewBox=\"0 0 24 24\"><path d=\"M 2 2 L 10 22 L 13 13 L 22 10 Z\" fill=\"#ff0000\" stroke=\"#ff0000\" stroke-width=\"2\" stroke-linejoin=\"round\" stroke-opacity=\"0.4\"/></svg>`;
 
-        rasterizeSVGToPNG(themeName === 'hacked' ? hackerCursorStr : svgDefaultStr, themeName === 'hacked' ? 2 : 12, themeName === 'hacked' ? 2 : 6, function(pngUrlDefault) {
-            rasterizeSVGToPNG(themeName === 'hacked' ? hackerCursorStr : svgPointerStr, themeName === 'hacked' ? 2 : 12, themeName === 'hacked' ? 2 : 6, function(pngUrlPointer) {
+        let hotspotDefX = shape === 'circle' ? 16 : (themeName === 'hacked' ? 2 : 12);
+        let hotspotDefY = shape === 'circle' ? 16 : (themeName === 'hacked' ? 2 : 6);
+        let hotspotPtrX = shape === 'circle' ? 16 : (themeName === 'hacked' ? 2 : 12);
+        let hotspotPtrY = shape === 'circle' ? 16 : (themeName === 'hacked' ? 2 : 6);
+        
+        rasterizeSVGToPNG(themeName === 'hacked' ? hackerCursorStr : svgDefaultStr, hotspotDefX, hotspotDefY, function(pngUrlDefault) {
+            rasterizeSVGToPNG(themeName === 'hacked' ? hackerCursorStr : svgPointerStr, hotspotPtrX, hotspotPtrY, function(pngUrlPointer) {
                 let cursorStyleEl = document.getElementById('dynamic-cursor-style');
                 if (!cursorStyleEl) {
                     cursorStyleEl = document.createElement('style');
@@ -3674,3 +3679,15 @@ function switchView(viewId) {
 
 
 
+
+
+// === CURSOR SHAPE SETTING ===
+window.changeCursorShape = function(shape) {
+    localStorage.setItem('aurex_cursor_shape', shape);
+    updateThemeColors(theme);
+    
+    // Update UI toggle buttons if they exist
+    document.querySelectorAll('.cursor-btn').forEach(btn => btn.classList.remove('active'));
+    let activeBtn = document.getElementById('cursor-btn-' + shape);
+    if(activeBtn) activeBtn.classList.add('active');
+};

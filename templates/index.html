@@ -16,7 +16,7 @@
 <script src="https://cdn.jsdelivr.net/npm/particles.js@2.0.0/particles.min.js"></script>
 <!-- Styles -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-<link href="{{ url_for('static', filename='style.css') }}?v=103" rel="stylesheet"></link>
+<link href="{{ url_for('static', filename='style.css') }}?v=104" rel="stylesheet"></link>
 <script>
     (function() {
         const theme = localStorage.getItem('aurex_theme') || 'matrix';
@@ -62,14 +62,20 @@
             document.body && document.body.classList.add('hacked-theme');
         }
         
-        const svgDefaultStr = `<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 32 32"><defs><linearGradient id="theme-grad" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#${color1}"/><stop offset="100%" stop-color="#${color2}"/></linearGradient></defs><g transform="translate(12, 6) rotate(-25)"><polygon points="-1,0 -9,18 -4,18 -1,12" fill="rgba(0,0,0,0.5)" transform="translate(1, 2)"/><polygon points="1,0 9,18 4,18 1,12" fill="rgba(0,0,0,0.5)" transform="translate(1, 2)"/><polygon points="-1,0 -9,18 -4,18 -1,12" fill="url(#theme-grad)"/><polygon points="1,0 9,18 4,18 1,12" fill="url(#theme-grad)"/></g></svg>`;
-        const svgPointerStr = `<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 32 32"><defs><linearGradient id="theme-grad-ptr" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#${ptrColor1}"/><stop offset="100%" stop-color="#${ptrColor2}"/></linearGradient></defs><g transform="translate(12, 6) rotate(-25)"><polygon points="-1,0 -9,18 -4,18 -1,12" fill="rgba(0,0,0,0.5)" transform="translate(1, 2)"/><polygon points="1,0 9,18 4,18 1,12" fill="rgba(0,0,0,0.5)" transform="translate(1, 2)"/><polygon points="-1,0 -9,18 -4,18 -1,12" fill="url(#theme-grad-ptr)"/><polygon points="1,0 9,18 4,18 1,12" fill="url(#theme-grad-ptr)"/></g></svg>`;
+        let svgDefaultStr, svgPointerStr;
+        if (localStorage.getItem('aurex_cursor_shape') === 'circle') {
+            svgDefaultStr = `<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 32 32"><defs><linearGradient id="theme-grad" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#${color1}"/><stop offset="100%" stop-color="#${color2}"/></linearGradient></defs><circle cx="16" cy="16" r="10" fill="none" stroke="url(#theme-grad)" stroke-width="2"/><circle cx="16" cy="16" r="3" fill="url(#theme-grad)"/></svg>`;
+            svgPointerStr = `<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 32 32"><defs><linearGradient id="theme-grad-ptr" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#${ptrColor1}"/><stop offset="100%" stop-color="#${ptrColor2}"/></linearGradient></defs><circle cx="16" cy="16" r="12" fill="none" stroke="url(#theme-grad-ptr)" stroke-width="3"/><circle cx="16" cy="16" r="4" fill="url(#theme-grad-ptr)"/></svg>`;
+        } else {
+            svgDefaultStr = `<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 32 32"><defs><linearGradient id="theme-grad" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#${color1}"/><stop offset="100%" stop-color="#${color2}"/></linearGradient></defs><g transform="translate(12, 6) rotate(-25)"><polygon points="-1,0 -9,18 -4,18 -1,12" fill="rgba(0,0,0,0.5)" transform="translate(1, 2)"/><polygon points="1,0 9,18 4,18 1,12" fill="rgba(0,0,0,0.5)" transform="translate(1, 2)"/><polygon points="-1,0 -9,18 -4,18 -1,12" fill="url(#theme-grad)"/><polygon points="1,0 9,18 4,18 1,12" fill="url(#theme-grad)"/></g></svg>`;
+            svgPointerStr = `<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 32 32"><defs><linearGradient id="theme-grad-ptr" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#${ptrColor1}"/><stop offset="100%" stop-color="#${ptrColor2}"/></linearGradient></defs><g transform="translate(12, 6) rotate(-25)"><polygon points="-1,0 -9,18 -4,18 -1,12" fill="rgba(0,0,0,0.5)" transform="translate(1, 2)"/><polygon points="1,0 9,18 4,18 1,12" fill="rgba(0,0,0,0.5)" transform="translate(1, 2)"/><polygon points="-1,0 -9,18 -4,18 -1,12" fill="url(#theme-grad-ptr)"/><polygon points="1,0 9,18 4,18 1,12" fill="url(#theme-grad-ptr)"/></g></svg>`;
+        }
         
         let finalCursorDefault = `url("data:image/svg+xml,${encodeURIComponent(svgDefaultStr)}") 12 6, auto`;
         let finalCursorPointer = `url("data:image/svg+xml,${encodeURIComponent(svgPointerStr)}") 12 6, pointer`;
 
         if (theme === 'hacked') {
-            const hackerCursorStr = `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path d="M 2 2 L 10 22 L 13 13 L 22 10 Z" fill="#ff0000" stroke="#ff0000" stroke-width="2" stroke-linejoin="round" stroke-opacity="0.4"/></svg>`;
+            const hackerCursorStr = localStorage.getItem('aurex_cursor_shape') === 'circle' ? `<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"32\" height=\"32\" viewBox=\"0 0 32 32\"><circle cx=\"16\" cy=\"16\" r=\"10\" fill=\"none\" stroke=\"#ff0000\" stroke-width=\"2\"/><circle cx=\"16\" cy=\"16\" r=\"3\" fill=\"#ff0000\"/></svg>` : `<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"24\" height=\"24\" viewBox=\"0 0 24 24\"><path d=\"M 2 2 L 10 22 L 13 13 L 22 10 Z\" fill=\"#ff0000\" stroke=\"#ff0000\" stroke-width=\"2\" stroke-linejoin=\"round\" stroke-opacity=\"0.4\"/></svg>`;
             finalCursorDefault = `url("data:image/svg+xml,${encodeURIComponent(hackerCursorStr)}") 2 2, crosshair`;
             finalCursorPointer = `url("data:image/svg+xml,${encodeURIComponent(hackerCursorStr)}") 2 2, crosshair`;
         }
@@ -115,8 +121,14 @@
         }
 
         // Apply PNG cursors asynchronously to prevent render blocking
-        rasterizeSVGToPNG(theme === 'hacked' ? hackerCursorStr : svgDefaultStr, theme === 'hacked' ? 2 : 12, theme === 'hacked' ? 2 : 6, function(pngUrlDefault) {
-            rasterizeSVGToPNG(theme === 'hacked' ? hackerCursorStr : svgPointerStr, theme === 'hacked' ? 2 : 12, theme === 'hacked' ? 2 : 6, function(pngUrlPointer) {
+        const shape = localStorage.getItem('aurex_cursor_shape') || 'triangle';
+        let hotspotDefX = shape === 'circle' ? 16 : (theme === 'hacked' ? 2 : 12);
+        let hotspotDefY = shape === 'circle' ? 16 : (theme === 'hacked' ? 2 : 6);
+        let hotspotPtrX = shape === 'circle' ? 16 : (theme === 'hacked' ? 2 : 12);
+        let hotspotPtrY = shape === 'circle' ? 16 : (theme === 'hacked' ? 2 : 6);
+        
+        rasterizeSVGToPNG(theme === 'hacked' ? hackerCursorStr : svgDefaultStr, hotspotDefX, hotspotDefY, function(pngUrlDefault) {
+            rasterizeSVGToPNG(theme === 'hacked' ? hackerCursorStr : svgPointerStr, hotspotPtrX, hotspotPtrY, function(pngUrlPointer) {
                 let cursorStyleEl = document.getElementById('dynamic-cursor-style');
                 if (cursorStyleEl) {
                     cursorStyleEl.innerHTML = `
@@ -505,7 +517,15 @@
 <h3 style="color: var(--neon-color); text-transform: uppercase; margin-bottom: 20px;"><span data-i18n="t_78">Внешний вид</span></h3>
 
 <label style="color: #fff; font-size: 1.1rem;"><span data-i18n="t_79">Выбор темы:</span></label>
-<div class="settings-theme-cards">
+  <h3 style="color: var(--neon-color); text-transform: uppercase; margin-bottom: 20px; margin-top: 30px;">Выбор Курсора</h3>
+  
+  <div style="display: flex; gap: 15px; margin-bottom: 30px;">
+      <button id="cursor-btn-triangle" class="cursor-btn active" onclick="changeCursorShape('triangle')" style="padding: 10px 20px; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.2); border-radius: 5px; color: white; cursor: pointer; transition: 0.3s;">Классический (Треугольник)</button>
+      <button id="cursor-btn-circle" class="cursor-btn" onclick="changeCursorShape('circle')" style="padding: 10px 20px; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.2); border-radius: 5px; color: white; cursor: pointer; transition: 0.3s;">Неоновый (Кружок)</button>
+  </div>
+
+  <label style="color: #fff; font-size: 1.1rem; display: block; margin-bottom: 10px;">Цветовая Тема:</label>
+  <div class="settings-theme-cards">
     <div class="theme-card active" id="card-matrix" onclick="changeTheme('matrix')">
         <div class="theme-card-color" style="background: linear-gradient(135deg, #e5b322, #b8860b); box-shadow: 0 0 10px #e5b322;"></div>
         <div style="font-weight: bold; color: #e5b322;"><span data-i18n="t_80">Матрица</span></div>
@@ -628,8 +648,9 @@
             80% { transform: translate(2px, -2px) }
             100% { transform: translate(0) }
         }
-    </style>
-<script src="{{ url_for('static', filename='script.js') }}?v=103"></script>
+        .cursor-btn.active { border-color: var(--neon-primary) !important; background: rgba(0, 255, 170, 0.1) !important; color: var(--neon-primary) !important; }
+</style>
+<script src="{{ url_for('static', filename='script.js') }}?v=104"></script>
 <!-- Hacker Terminal -->
 <div class="view" id="view-hacker" style="background: #000; color: #0f0; font-family: monospace; padding: 20px; font-size: 16px; overflow-y: auto; height: 100vh; width: 100%; box-sizing: border-box;">
 <div id="hacker-output"></div>
