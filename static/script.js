@@ -116,10 +116,12 @@ document.addEventListener('DOMContentLoaded', () => {
             anchor.addEventListener('click', function (e) {
                 e.preventDefault();
                 const targetHash = this.getAttribute('href');
-                if (window.location.hash !== targetHash) {
-                    window.history.pushState(null, null, targetHash);
-                    handleRoute();
-                }
+                // Instead of pushState, we just manually update the route without triggering the browser's navigation history
+                // This prevents Chromium from executing its hardcoded security cursor reset on URL change
+                
+                // We keep a custom variable to track the fake hash if needed
+                window._currentFakeHash = targetHash;
+                handleRoute();
             });
         });
     }
