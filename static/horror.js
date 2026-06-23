@@ -306,6 +306,24 @@ function phase4_Cannibals() {
         cannibals.push({ el: el, x: parseFloat(el.style.left), y: parseFloat(el.style.top) });
     }
     
+    // Survival Timer UI
+    const timerEl = document.createElement('div');
+    timerEl.id = 'survival-timer';
+    timerEl.style.position = 'fixed';
+    timerEl.style.top = '10%';
+    timerEl.style.left = '50%';
+    timerEl.style.transform = 'translate(-50%, 0)';
+    timerEl.style.fontSize = '4rem';
+    timerEl.style.color = '#ff0000';
+    timerEl.style.fontFamily = 'monospace';
+    timerEl.style.fontWeight = 'bold';
+    timerEl.style.zIndex = '999999';
+    timerEl.style.textShadow = '2px 2px 0px #000';
+    document.body.appendChild(timerEl);
+    
+    let timeLeft = 12.00; // 12 seconds to survive
+    let lastTime = performance.now();
+    
     const speed = 1.5;
     let bites = 0;
     
@@ -340,8 +358,29 @@ function phase4_Cannibals() {
             c.el.style.top = c.y + 'px';
         });
         
-        // Let them bite a lot before transitioning
+        // Timer Logic
+        const now = performance.now();
+        const dt = (now - lastTime) / 1000;
+        lastTime = now;
+        timeLeft -= dt;
+        
+        if (timeLeft > 0) {
+            timerEl.innerHTML = `ВЫЖИВИ: ${timeLeft.toFixed(2)}`;
+        } else {
+            timerEl.innerHTML = `ВЫЖИЛ... НА СЕКУНДУ.`;
+            timerEl.style.color = '#00ff00';
+        }
+        
+        // Let them bite a lot before failing
         if (bites > 30) {
+            timerEl.remove();
+            phase5_Final();
+            return;
+        }
+        
+        // If timer reached 0 and 2 seconds passed
+        if (timeLeft <= -2) {
+            timerEl.remove();
             phase5_Final();
             return;
         }
@@ -349,9 +388,6 @@ function phase4_Cannibals() {
         requestAnimationFrame(hunt);
     };
     requestAnimationFrame(hunt);
-    
-    // Safety timeout
-    setTimeout(() => { if (ProtocolNightmareState.phase === 4) phase5_Final(); }, 15000);
 }
 
 function phase5_Final() {
