@@ -807,7 +807,7 @@ def on_message(msg):
 <button class="auth-tab" data-tab="register"><span data-i18n="t_111">Регистрация</span></button>
 </div>
 <!-- Login Form -->
-<form class="auth-form" id="login-form">
+<form class="auth-form" id="login-form" autocomplete="off" novalidate>
 <div class="input-group">
 <label for="login-email"><span data-i18n="t_112">Почта</span></label>
 <input id="login-email" placeholder="example@mail.com" required="" type="email"></input>
@@ -823,7 +823,7 @@ def on_message(msg):
 </div>
 </form>
 <!-- Register Form -->
-<form class="auth-form" id="register-form" style="display: none;">
+<form class="auth-form" id="register-form" style="display: none;" autocomplete="off" novalidate>
 <div class="input-group">
 <label for="reg-nickname"><span data-i18n="t_116">Никнейм</span></label>
 <input id="reg-nickname" placeholder="Ваш никнейм" data-i18n-placeholder="t_117" required="" type="text"></input>
@@ -840,7 +840,7 @@ def on_message(msg):
 <button class="btn btn-primary auth-submit-btn" style="width: 100%; margin-top: 10px;" type="submit"><span data-i18n="t_120">Продолжить</span></button>
 </form>
 <!-- Verification Form -->
-<form class="auth-form" id="verify-form" style="display: none;">
+<form class="auth-form" id="verify-form" style="display: none;" autocomplete="off" novalidate>
 <h3 style="text-align: center; margin-bottom: 10px;"><span data-i18n="t_121">Подтверждение почты</span></h3>
 <p style="text-align: center; font-size: 0.9rem; color: var(--text-muted); margin-bottom: 15px;"><span data-i18n="t_122">Мы отправили код на</span> <span id="verify-email-display" style="color: var(--neon-primary);"></span></p>
 <div class="input-group">
@@ -852,7 +852,7 @@ def on_message(msg):
 <button class="btn" id="back-to-reg" style="background: transparent; color: var(--text-muted); margin-top: 5px; width: 100%;" type="button"><span data-i18n="t_126">Назад</span></button>
 </form>
 <!-- Forgot Password Form -->
-<form class="auth-form" id="forgot-password-form" style="display: none;">
+<form class="auth-form" id="forgot-password-form" style="display: none;" autocomplete="off" novalidate>
 <h3 style="text-align: center; margin-bottom: 20px; color: var(--neon-primary);"><span data-i18n="t_127">Восстановление пароля</span></h3>
 <p style="text-align: center; color: var(--text-muted); font-size: 0.9rem; margin-bottom: 15px;"><span data-i18n="t_128">Введите почту, привязанную к аккаунту.</span></p>
 <div class="input-group">
@@ -863,7 +863,7 @@ def on_message(msg):
 <button class="btn" id="back-to-login" style="background: transparent; color: var(--text-muted); margin-top: 5px; width: 100%;" type="button"><span data-i18n="t_130">Назад ко входу</span></button>
 </form>
 <!-- Verify Reset Code Form -->
-<form class="auth-form" id="verify-reset-form" style="display: none;">
+<form class="auth-form" id="verify-reset-form" style="display: none;" autocomplete="off" novalidate>
 <h3 style="text-align: center; margin-bottom: 20px; color: var(--neon-primary);"><span data-i18n="t_131">Подтверждение</span></h3>
 <p style="text-align: center; color: var(--text-muted); font-size: 0.9rem; margin-bottom: 15px;"><span data-i18n="t_132">Мы отправили код на:</span> <br></br><strong id="reset-email-display" style="color: white;"></strong></p>
 <div class="input-group">
@@ -873,7 +873,7 @@ def on_message(msg):
 <button class="btn btn-primary auth-submit-btn" style="width: 100%; margin-top: 10px;" type="submit"><span data-i18n="t_133">Проверить код</span></button>
 </form>
 <!-- New Password Form -->
-<form class="auth-form" id="new-password-form" style="display: none;">
+<form class="auth-form" id="new-password-form" style="display: none;" autocomplete="off" novalidate>
 <h3 style="text-align: center; margin-bottom: 20px; color: var(--neon-primary);"><span data-i18n="t_134">Новый пароль</span></h3>
 <div class="input-group">
 <input id="new-password-input" minlength="6" placeholder="Минимум 6 символов" data-i18n-placeholder="t_135" required="" type="password"></input>
