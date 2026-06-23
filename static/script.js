@@ -530,7 +530,8 @@ document.addEventListener('DOMContentLoaded', () => {
     // Login Function
     window.loginUser = function(userData, showAlert = true) {
         window.currentUser = userData;
-        document.getElementById('modal-auth').style.display = 'none';
+        document.getElementById('modal-auth').classList.remove('show-modal');
+        document.getElementById('modal-auth').style.display = '';
         
         // Update Navbar
         document.getElementById('open-auth').style.display = 'none';
@@ -3070,8 +3071,8 @@ function changeTheme(themeName) {
                         document.head.appendChild(cursorStyleEl);
                     }
                     cursorStyleEl.innerHTML = `
-                        html.cursor-circle, html.cursor-circle *:not(input):not(textarea), html.cursor-circle *:not(input):not(textarea)::before, html.cursor-circle *:not(input):not(textarea)::after, html.cursor-circle ::-webkit-scrollbar, html.cursor-circle ::-webkit-scrollbar-thumb, html.cursor-circle ::-webkit-resizer { cursor: none !important; }
-                        html:not(.cursor-circle), html:not(.cursor-circle) *:not(input):not(textarea), html:not(.cursor-circle) *:not(input):not(textarea)::before, html:not(.cursor-circle) *:not(input):not(textarea)::after {
+                        html.cursor-circle, html.cursor-circle *, html.cursor-circle *::before, html.cursor-circle *::after, html.cursor-circle ::-webkit-scrollbar, html.cursor-circle ::-webkit-scrollbar-thumb, html.cursor-circle ::-webkit-resizer { cursor: none !important; }
+                        html:not(.cursor-circle), html:not(.cursor-circle) *, html:not(.cursor-circle) *::before, html:not(.cursor-circle) *::after {
                             cursor: ${pngUrlDefault} 2 2, auto !important;
                         }
                         html:not(.cursor-circle) a, html:not(.cursor-circle) a *,
@@ -3082,9 +3083,6 @@ function changeTheme(themeName) {
                         html:not(.cursor-circle) .dropdown-item, html:not(.cursor-circle) .dropdown-item *,
                         html:not(.cursor-circle) [onclick], html:not(.cursor-circle) [onclick] * {
                             cursor: ${pngUrlPointer} 8 2, pointer !important;
-                        }
-                        input, textarea {
-                            cursor: text !important;
                         }
                     `;
                 });
@@ -3776,11 +3774,7 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     document.addEventListener('mouseover', (e) => {
-        if (cursor && (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA')) {
-            cursor.style.opacity = '0';
-        } else if (cursor && document.documentElement.classList.contains('cursor-circle')) {
-            cursor.style.opacity = '1';
-        }
+        // No longer hiding cursor over inputs as per user request
     });
 
     // Dashboard Live Stats Animation
