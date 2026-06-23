@@ -161,6 +161,12 @@ document.addEventListener('DOMContentLoaded', () => {
                 accView.classList.remove('hidden-view');
                 accView.classList.add('active');
             }
+        } else if (hash === '#stats') {
+            const statsView = document.getElementById('view-stats');
+            if(statsView) {
+                statsView.classList.remove('hidden-view');
+                statsView.classList.add('active');
+            }
         } else if (hash === '#builder') {
             const builderView = document.getElementById('view-builder');
             if(builderView) {
@@ -198,15 +204,15 @@ document.addEventListener('DOMContentLoaded', () => {
                 homeView.classList.remove('hidden-view');
                 homeView.classList.add('active');
             }
-            if (hash === '#bots') {
+            if (hash === '#services') {
                 setTimeout(() => {
-                    const botsSec = document.getElementById('bots');
-                    if (botsSec) botsSec.scrollIntoView({behavior: 'smooth'});
+                    const servicesSec = document.getElementById('services');
+                    if (servicesSec) servicesSec.scrollIntoView({behavior: 'smooth'});
                 }, 50);
             }
         }
         
-        if (hash !== '#bots') {
+        if (hash !== '#services') {
             window.scrollTo(0, 0);
         }
     }
