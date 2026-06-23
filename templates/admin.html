@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Админ-панель | Aurexis Studio</title>
     <link rel="icon" type="image/x-icon" href="{{ url_for('static', filename='assets/favicon.ico') }}">
-    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}?v=104">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}?v=106">
     <style>
         body {
             margin: 0;
@@ -356,6 +356,7 @@
 
         // Apply PNG cursors asynchronously to prevent render blocking
         const shape = localStorage.getItem('aurex_cursor_shape') || 'triangle';
+        if (shape === 'circle') document.documentElement.classList.add('cursor-circle');
         let hotspotDefX = shape === 'circle' ? 16 : (theme === 'hacked' ? 2 : 12);
         let hotspotDefY = shape === 'circle' ? 16 : (theme === 'hacked' ? 2 : 6);
         let hotspotPtrX = shape === 'circle' ? 16 : (theme === 'hacked' ? 2 : 12);
@@ -386,6 +387,8 @@
 </script>
 </head>
 <body>
+    <!-- Animated Custom Cursor -->
+    <div id="custom-cursor"></div>
     <div id="particles-js"></div>
     <div class="bg-glow bg-glow-1"></div>
     <div class="bg-glow bg-glow-2"></div>

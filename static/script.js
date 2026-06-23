@@ -3684,6 +3684,15 @@ function switchView(viewId) {
 // === CURSOR SHAPE SETTING ===
 window.changeCursorShape = function(shape) {
     localStorage.setItem('aurex_cursor_shape', shape);
+    
+    const cursorDOM = document.getElementById('custom-cursor');
+    if (shape === 'circle') {
+        document.documentElement.classList.add('cursor-circle');
+        if (cursorDOM) cursorDOM.style.display = 'block';
+    } else {
+        document.documentElement.classList.remove('cursor-circle');
+        if (cursorDOM) cursorDOM.style.display = 'none';
+    }
     const currentTheme = localStorage.getItem('aurex_theme') || 'matrix';
     changeTheme(currentTheme);
     
@@ -3692,3 +3701,40 @@ window.changeCursorShape = function(shape) {
     let activeBtn = document.getElementById('cursor-btn-' + shape);
     if(activeBtn) activeBtn.classList.add('active');
 };
+
+
+// === ANIMATED DOM CURSOR LOGIC ===
+document.addEventListener('DOMContentLoaded', () => {
+    const cursor = document.getElementById('custom-cursor');
+    const shape = localStorage.getItem('aurex_cursor_shape') || 'triangle';
+    if (shape === 'circle' && cursor) {
+        cursor.style.display = 'block';
+    }
+
+    document.addEventListener('mousemove', (e) => {
+        if (!cursor || !document.documentElement.classList.contains('cursor-circle')) return;
+        
+        cursor.style.left = e.clientX + 'px';
+        cursor.style.top = e.clientY + 'px';
+        
+        // Hover detection
+        const isClickable = e.target.closest('a, button, input, select, textarea, .theme-card, .dropdown-item, .cursor-btn, .clickable, i');
+        if (isClickable) {
+            cursor.classList.add('hover-effect');
+        } else {
+            cursor.classList.remove('hover-effect');
+        }
+    });
+
+    document.addEventListener('mousedown', () => {
+        if (cursor && document.documentElement.classList.contains('cursor-circle')) {
+            cursor.classList.add('click-effect');
+        }
+    });
+
+    document.addEventListener('mouseup', () => {
+        if (cursor) {
+            cursor.classList.remove('click-effect');
+        }
+    });
+});

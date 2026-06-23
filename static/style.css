@@ -2134,3 +2134,47 @@ body.no-animations *, body.no-animations {
     80% { transform: translate(2px, -2px) }
     100% { transform: translate(0) }
 }
+
+
+/* === ANIMATED DOM CURSOR === */
+html.cursor-circle, html.cursor-circle * {
+    cursor: none !important;
+}
+
+#custom-cursor {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 14px;
+    height: 14px;
+    border-radius: 50%;
+    background-color: var(--neon-primary, #ff0055);
+    pointer-events: none;
+    z-index: 9999999;
+    transform: translate(-50%, -50%);
+    transition: width 0.15s cubic-bezier(0.175, 0.885, 0.32, 1.275), 
+                height 0.15s cubic-bezier(0.175, 0.885, 0.32, 1.275), 
+                background-color 0.15s ease, 
+                border 0.15s ease,
+                box-shadow 0.15s ease;
+    border: 2px solid transparent;
+    box-sizing: border-box;
+    display: none;
+    box-shadow: 0 0 10px var(--neon-primary, #ff0055);
+}
+
+#custom-cursor.click-effect {
+    width: 35px;
+    height: 35px;
+    background-color: transparent !important;
+    border: 3px solid var(--neon-primary, #ff0055);
+    box-shadow: 0 0 15px var(--neon-primary, #ff0055) inset, 0 0 15px var(--neon-primary, #ff0055);
+}
+
+#custom-cursor.hover-effect {
+    width: 24px;
+    height: 24px;
+    background-color: transparent;
+    border: 2px solid var(--neon-color, #ffcc00);
+    box-shadow: 0 0 10px var(--neon-color, #ffcc00) inset, 0 0 10px var(--neon-color, #ffcc00);
+}

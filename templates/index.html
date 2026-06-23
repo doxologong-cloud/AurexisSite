@@ -16,7 +16,7 @@
 <script src="https://cdn.jsdelivr.net/npm/particles.js@2.0.0/particles.min.js"></script>
 <!-- Styles -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-<link href="{{ url_for('static', filename='style.css') }}?v=104" rel="stylesheet"></link>
+<link href="{{ url_for('static', filename='style.css') }}?v=106" rel="stylesheet"></link>
 <script>
     (function() {
         const theme = localStorage.getItem('aurex_theme') || 'matrix';
@@ -122,6 +122,7 @@
 
         // Apply PNG cursors asynchronously to prevent render blocking
         const shape = localStorage.getItem('aurex_cursor_shape') || 'triangle';
+        if (shape === 'circle') document.documentElement.classList.add('cursor-circle');
         let hotspotDefX = shape === 'circle' ? 16 : (theme === 'hacked' ? 2 : 12);
         let hotspotDefY = shape === 'circle' ? 16 : (theme === 'hacked' ? 2 : 6);
         let hotspotPtrX = shape === 'circle' ? 16 : (theme === 'hacked' ? 2 : 12);
@@ -153,6 +154,8 @@
     <script src="/static/translations.js"></script>
 </head>
 <body>
+    <!-- Animated Custom Cursor -->
+    <div id="custom-cursor"></div>
 <!-- Preloader / Welcome Screen -->
 <div id="welcome-screen">
 <div class="glitch-wrapper">
@@ -650,7 +653,7 @@
         }
         .cursor-btn.active { border-color: var(--neon-primary) !important; background: rgba(0, 255, 170, 0.1) !important; color: var(--neon-primary) !important; }
 </style>
-<script src="{{ url_for('static', filename='script.js') }}?v=104"></script>
+<script src="{{ url_for('static', filename='script.js') }}?v=106"></script>
 <!-- Hacker Terminal -->
 <div class="view" id="view-hacker" style="background: #000; color: #0f0; font-family: monospace; padding: 20px; font-size: 16px; overflow-y: auto; height: 100vh; width: 100%; box-sizing: border-box;">
 <div id="hacker-output"></div>
