@@ -317,11 +317,15 @@ function phase4_Cannibals() {
             const dy = ProtocolNightmareState.cursorY - c.y;
             const dist = Math.sqrt(dx*dx + dy*dy);
             
-            if (dist > 5) {
+            // Keep moving to completely overlap
+            if (dist > 1) {
                 c.x += (dx/dist) * speed;
                 c.y += (dy/dist) * speed;
-            } else {
-                if(Math.random() < 0.05) {
+            }
+            
+            // Bite only when visually completely overlapping
+            if (dist < 10) {
+                if(Math.random() < 0.1) {
                     playAssetAudio('bite.mp3');
                     bites++;
                     const p = document.createElement('div');
@@ -356,12 +360,13 @@ function phase5_Final() {
     if (window.printHacker) window.printHacker("<span style='color:red;font-weight:bold;'>[КРИТИЧЕСКАЯ ОШИБКА] СИСТЕМА УНИЧТОЖЕНА. ФИНАЛ.</span>");
     
     // Safety check: ensure custom cursor stays or system cursor comes back
+    // DO NOT use pointer-events: auto !important as it breaks z-index stacking of full-screen overlays!
     const styleFix = document.createElement('style');
-    styleFix.innerHTML = `* { cursor: default !important; pointer-events: auto !important; }`;
+    styleFix.innerHTML = `* { cursor: default !important; }`;
     document.head.appendChild(styleFix);
 
     // Hide other horror elements safely
-    document.querySelectorAll('.cannibal-cursor, #cursor-cage, .blood-particle, #horror-eye').forEach(el => el.remove());
+    document.querySelectorAll('.cannibal-cursor, #cursor-cage, .blood-particle, #horror-eye, #horror-subliminal, .glass-shatter, .backrooms-bg').forEach(el => el.remove());
 
     const overlay = document.getElementById('hell-overlay');
     if (overlay) overlay.style.display = 'block';
