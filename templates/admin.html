@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Админ-панель | Aurexis Studio</title>
     <link rel="icon" type="image/x-icon" href="{{ url_for('static', filename='assets/favicon.ico') }}">
-    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}?v=101">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}?v=102">
     <style>
         body {
             margin: 0;
@@ -354,11 +354,11 @@
                 if (cursorStyleEl) {
                     cursorStyleEl.innerHTML = `
                         html, body, div, p, span, h1, h2, h3, h4, h5, h6, section, article, nav, header, footer, main, ul, li, label,
-                        .view, .view * {
+                        .view, .view *, nav.navbar, nav.navbar * {
                             cursor: ${pngUrlDefault}, auto !important;
                         }
-                        a, a:hover, a:active, a:focus,
-                        button, button:hover, button:active, button:focus,
+                        a, a:hover, a:active, a:focus, a *,
+                        button, button:hover, button:active, button:focus, button *,
                         input, select, textarea, .theme-card, .msgr-tab, .dropdown-item,
                         [onclick], [onclick] * {
                             cursor: ${pngUrlPointer}, pointer !important;

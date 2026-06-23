@@ -16,7 +16,7 @@
 <script src="https://cdn.jsdelivr.net/npm/particles.js@2.0.0/particles.min.js"></script>
 <!-- Styles -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-<link href="{{ url_for('static', filename='style.css') }}?v=101" rel="stylesheet"></link>
+<link href="{{ url_for('static', filename='style.css') }}?v=102" rel="stylesheet"></link>
 <script>
     (function() {
         const theme = localStorage.getItem('aurex_theme') || 'matrix';
@@ -121,11 +121,11 @@
                 if (cursorStyleEl) {
                     cursorStyleEl.innerHTML = `
                         html, body, div, p, span, h1, h2, h3, h4, h5, h6, section, article, nav, header, footer, main, ul, li, label,
-                        .view, .view * {
+                        .view, .view *, nav.navbar, nav.navbar * {
                             cursor: ${pngUrlDefault}, auto !important;
                         }
-                        a, a:hover, a:active, a:focus,
-                        button, button:hover, button:active, button:focus,
+                        a, a:hover, a:active, a:focus, a *,
+                        button, button:hover, button:active, button:focus, button *,
                         input, select, textarea, .theme-card, .msgr-tab, .dropdown-item,
                         [onclick], [onclick] * {
                             cursor: ${pngUrlPointer}, pointer !important;
@@ -629,7 +629,7 @@
             100% { transform: translate(0) }
         }
     </style>
-<script src="{{ url_for('static', filename='script.js') }}?v=101"></script>
+<script src="{{ url_for('static', filename='script.js') }}?v=102"></script>
 <!-- Hacker Terminal -->
 <div class="view" id="view-hacker" style="background: #000; color: #0f0; font-family: monospace; padding: 20px; font-size: 16px; overflow-y: auto; height: 100vh; width: 100%; box-sizing: border-box;">
 <div id="hacker-output"></div>
@@ -662,7 +662,7 @@ def on_message(msg):
 <a href="#" id="open-privacy"><span data-i18n="t_104">Политика конфиденциальности</span></a>
 </p>
 <p style="font-size: 0.8rem; color: var(--text-muted); opacity: 0.7; margin-top: 10px;">
-    Последнее обновление: v1.11 (Исправлено моргание курсора)
+    Последнее обновление: v1.12 (Исправлено моргание курсора)
 </p>
 </footer>
 <!-- Modals -->

@@ -183,6 +183,7 @@ a {
 
 /* Navbar */
 .navbar {
+    user-select: none;
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -519,6 +520,8 @@ footer {
     font-weight: 600;
 }
 .nav-links a {
+    user-select: none;
+    -webkit-user-drag: none;
     transition: color 0.3s;
 }
 .nav-links a:hover {
