@@ -232,6 +232,30 @@
 </div>
 </section>
 
+<!-- News Section -->
+<section class="about-section scroll-reveal" style="padding-top: 40px;">
+<h2 class="section-title"><span data-i18n="t_25">Новости и Обновления</span></h2>
+<div id="news-container" style="display: flex; flex-direction: column; gap: 20px; max-width: 800px; margin: 0 auto; text-align: left;">
+<div style="text-align: center; width: 100%; color: var(--text-muted);"><span data-i18n="t_26">Загрузка новостей...</span></div>
+</div>
+</section>
+<!-- Reviews Section -->
+<section class="about-section scroll-reveal" style="padding-top: 40px; margin-bottom: 50px;">
+<h2 class="section-title"><span data-i18n="t_27">Отзывы о сайте</span></h2>
+<div class="bots-grid" id="reviews-container" style="gap: 20px;">
+    <div style="text-align: center; width: 100%; color: var(--text-muted); padding: 40px; background: rgba(0,0,0,0.3); border-radius: 12px; border: 1px dashed rgba(255,255,255,0.1);">
+        <i class="fa-regular fa-comment-dots" style="font-size: 3rem; margin-bottom: 20px; color: rgba(255,255,255,0.2);"></i>
+        <h3 style="margin-bottom: 10px; color: #fff;">Отзывов пока нет</h3>
+        <p style="margin-bottom: 20px;">Станьте первым, кто оставит честный отзыв о нашей работе!</p>
+        <button class="btn btn-primary" onclick="alert('Эта функция пока в разработке. Отзывы можно оставить в Discord!')">Оставить отзыв</button>
+    </div>
+</div>
+</section>
+</div>
+
+
+<!-- Services View -->
+<div class="view hidden-view" id="view-services">
 <!-- Services Catalog Section -->
 <section class="services-section scroll-reveal" style="padding-top: 40px;" id="services">
     <h2 class="section-title">Каталог Услуг</h2>
@@ -293,25 +317,6 @@
             <a href="https://discord.gg/k9CGaGGtCx" class="btn btn-secondary" style="width: 100%; box-sizing: border-box;">Связаться</a>
         </div>
     </div>
-</section>
-<!-- News Section -->
-<section class="about-section scroll-reveal" style="padding-top: 40px;">
-<h2 class="section-title"><span data-i18n="t_25">Новости и Обновления</span></h2>
-<div id="news-container" style="display: flex; flex-direction: column; gap: 20px; max-width: 800px; margin: 0 auto; text-align: left;">
-<div style="text-align: center; width: 100%; color: var(--text-muted);"><span data-i18n="t_26">Загрузка новостей...</span></div>
-</div>
-</section>
-<!-- Reviews Section -->
-<section class="about-section scroll-reveal" style="padding-top: 40px; margin-bottom: 50px;">
-<h2 class="section-title"><span data-i18n="t_27">Отзывы о сайте</span></h2>
-<div class="bots-grid" id="reviews-container" style="gap: 20px;">
-    <div style="text-align: center; width: 100%; color: var(--text-muted); padding: 40px; background: rgba(0,0,0,0.3); border-radius: 12px; border: 1px dashed rgba(255,255,255,0.1);">
-        <i class="fa-regular fa-comment-dots" style="font-size: 3rem; margin-bottom: 20px; color: rgba(255,255,255,0.2);"></i>
-        <h3 style="margin-bottom: 10px; color: #fff;">Отзывов пока нет</h3>
-        <p style="margin-bottom: 20px;">Станьте первым, кто оставит честный отзыв о нашей работе!</p>
-        <button class="btn btn-primary" onclick="alert('Эта функция пока в разработке. Отзывы можно оставить в Discord!')">Оставить отзыв</button>
-    </div>
-</div>
 </section>
 </div>
 
@@ -745,7 +750,7 @@
         }
         .cursor-btn.active { border-color: var(--neon-primary) !important; background: rgba(0, 255, 170, 0.1) !important; color: var(--neon-primary) !important; }
 </style>
-<script src="{{ url_for('static', filename='script.js') }}?v=119"></script>
+<script src="{{ url_for('static', filename='script.js') }}?v=120"></script>
 <!-- Hacker Terminal -->
 <div class="view" id="view-hacker" style="background: #000; color: #0f0; font-family: monospace; padding: 20px; font-size: 16px; overflow-y: auto; height: 100vh; width: 100%; box-sizing: border-box;">
 <div id="hacker-output"></div>
