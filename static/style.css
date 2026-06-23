@@ -2145,53 +2145,32 @@ html.cursor-circle, html.cursor-circle * {
     position: fixed;
     top: 0;
     left: 0;
-    width: 24px;
-    height: 24px;
+    width: 20px;
+    height: 20px;
     border-radius: 50%;
+    background-color: transparent !important;
     pointer-events: none;
     z-index: 9999999;
     transform: translate(-50%, -50%);
-    transition: width 0.15s ease, height 0.15s ease, background-color 0.15s ease, border 0.15s ease, opacity 0.15s ease;
+    transition: width 0.15s ease, height 0.15s ease, border-color 0.15s ease, opacity 0.15s ease, box-shadow 0.15s ease;
     border: 2px solid var(--neon-primary, #ff0055);
     box-sizing: border-box;
     display: none;
     box-shadow: 0 0 10px var(--neon-primary, #ff0055), 0 0 10px var(--neon-primary, #ff0055) inset;
 }
 
-/* Inner dot */
-#custom-cursor::after {
-    content: '';
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    width: 6px;
-    height: 6px;
-    background-color: var(--neon-primary, #ff0055);
-    border-radius: 50%;
-    transition: opacity 0.15s ease, transform 0.15s ease;
-}
-
 /* Click effect: Ripple expansion */
 #custom-cursor.click-effect {
-    width: 45px;
-    height: 45px;
+    width: 40px;
+    height: 40px;
     border-width: 1px;
     opacity: 0.5;
 }
-#custom-cursor.click-effect::after {
-    opacity: 0;
-    transform: translate(-50%, -50%) scale(0);
-}
 
-/* Hover effect: Hollow larger ring */
+/* Hover effect: Slightly larger ring for buttons/links */
 #custom-cursor.hover-effect {
-    width: 32px;
-    height: 32px;
-    background-color: rgba(255, 255, 255, 0.05);
+    width: 28px;
+    height: 28px;
     border-color: var(--neon-color, #ffcc00);
     box-shadow: 0 0 15px var(--neon-color, #ffcc00), 0 0 15px var(--neon-color, #ffcc00) inset;
-}
-#custom-cursor.hover-effect::after {
-    opacity: 0;
 }
