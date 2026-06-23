@@ -3064,8 +3064,8 @@ function changeTheme(themeName) {
                         document.head.appendChild(cursorStyleEl);
                     }
                     cursorStyleEl.innerHTML = `
-                        html.cursor-circle, html.cursor-circle * { cursor: none !important; }
-                        html:not(.cursor-circle), html:not(.cursor-circle) * {
+                        html.cursor-circle, html.cursor-circle *, html.cursor-circle *::before, html.cursor-circle *::after, html.cursor-circle *::placeholder, html.cursor-circle ::-webkit-scrollbar, html.cursor-circle ::-webkit-scrollbar-thumb, html.cursor-circle ::-webkit-resizer { cursor: none !important; }
+                        html:not(.cursor-circle), html:not(.cursor-circle) *, html:not(.cursor-circle) *::before, html:not(.cursor-circle) *::after, html:not(.cursor-circle) *::placeholder {
                             cursor: ${pngUrlDefault} 2 2, auto !important;
                         }
                         html:not(.cursor-circle) a, html:not(.cursor-circle) a *,
