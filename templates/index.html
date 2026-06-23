@@ -16,7 +16,7 @@
 <script src="https://cdn.jsdelivr.net/npm/particles.js@2.0.0/particles.min.js"></script>
 <!-- Styles -->
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-<link href="{{ url_for('static', filename='style.css') }}?v=113" rel="stylesheet"></link>
+<link href="{{ url_for('static', filename='style.css') }}?v=116" rel="stylesheet"></link>
 
 <script>
     (function() {
@@ -155,18 +155,19 @@
     <script src="/static/translations.js"></script>
 </head>
 <body>
-    <!-- Animated Custom Cursor -->
-    <div id="custom-cursor"></div>
-<!-- Preloader / Welcome Screen -->
-<div id="welcome-screen">
-<div class="glitch-wrapper">
-<h1 class="glitch" data-text="AUREXIS STUDIO">AUREXIS STUDIO</h1>
+<!-- EPIC PRELOADER -->
+<div id="preloader">
+    <div class="preloader-content">
+        <svg class="preloader-logo" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <polygon points="12 2 2 22 22 22"></polygon>
+            <circle cx="12" cy="15" r="3"></circle>
+        </svg>
+        <div class="preloader-text">AUREXIS STUDIO</div>
+        <div class="preloader-bar"><div class="preloader-progress"></div></div>
+    </div>
 </div>
-<p class="welcome-text"><span data-i18n="t_2">Загрузка системы...</span></p>
-<div class="progress-bar-container">
-<div class="progress-bar"></div>
-</div>
-</div>
+<!-- Animated Custom Cursor -->
+<div id="custom-cursor"></div>
 <!-- Background Animation Elements -->
 <div id="particles-js"></div>
 <div class="bg-glow bg-glow-1"></div>
@@ -230,6 +231,32 @@
 <a class="btn btn-secondary" href="https://discord.gg/k9CGaGGtCx" target="_blank"><span data-i18n="t_19">Вступить в Discord</span></a>
 </div>
 </section>
+<!-- Dashboard Stats Section -->
+<section class="dashboard-section scroll-reveal" style="margin: 40px 0;">
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px;">
+        <div class="stat-card" style="background: rgba(0,0,0,0.5); padding: 20px; border-radius: 12px; border: 1px solid rgba(255,255,255,0.1); text-align: center; backdrop-filter: blur(10px);">
+            <div style="font-size: 2.5rem; font-weight: bold; color: var(--neon-primary); font-family: 'Space Grotesk', sans-serif;" id="stat-ping">14ms</div>
+            <div style="color: #aaa; font-size: 0.9rem; text-transform: uppercase; letter-spacing: 1px; margin-top: 5px;">Network Ping</div>
+            <div style="height: 40px; margin-top: 15px; position: relative;">
+                <svg width="100%" height="100%" viewBox="0 0 100 40" preserveAspectRatio="none">
+                    <polyline points="0,30 20,25 40,35 60,15 80,28 100,20" fill="none" stroke="var(--neon-primary)" stroke-width="2" id="ping-chart"/>
+                </svg>
+            </div>
+        </div>
+        <div class="stat-card" style="background: rgba(0,0,0,0.5); padding: 20px; border-radius: 12px; border: 1px solid rgba(255,255,255,0.1); text-align: center; backdrop-filter: blur(10px);">
+            <div style="font-size: 2.5rem; font-weight: bold; color: var(--neon-secondary); font-family: 'Space Grotesk', sans-serif;" id="stat-uptime">99.99%</div>
+            <div style="color: #aaa; font-size: 0.9rem; text-transform: uppercase; letter-spacing: 1px; margin-top: 5px;">Global Uptime</div>
+            <div style="height: 40px; margin-top: 15px; position: relative; overflow: hidden; background: rgba(255,255,255,0.05); border-radius: 4px;">
+                <div style="position: absolute; top: 0; left: 0; height: 100%; width: 100%; background: var(--neon-secondary); opacity: 0.2; animation: preloaderPulse 2s infinite;"></div>
+            </div>
+        </div>
+        <div class="stat-card" style="background: rgba(0,0,0,0.5); padding: 20px; border-radius: 12px; border: 1px solid rgba(255,255,255,0.1); text-align: center; backdrop-filter: blur(10px);">
+            <div style="font-size: 2.5rem; font-weight: bold; color: #00ffaa; font-family: 'Space Grotesk', sans-serif;" id="stat-cmds">1.2M</div>
+            <div style="color: #aaa; font-size: 0.9rem; text-transform: uppercase; letter-spacing: 1px; margin-top: 5px;">Commands Processed</div>
+             <div style="font-size: 0.9rem; color: #00ffaa; margin-top: 25px;"><i class="fa-solid fa-arrow-trend-up"></i> +450 / sec</div>
+        </div>
+    </div>
+</section>
 <!-- Bots Grid Section -->
 <section class="bots-section" id="bots">
 <h2 class="section-title"><span data-i18n="t_20">Наш Арсенал</span></h2>
@@ -273,6 +300,69 @@
 </div>
 </div>
 </section>
+
+<!-- Services Catalog Section -->
+<section class="services-section scroll-reveal" style="padding-top: 40px;" id="services">
+    <h2 class="section-title">Каталог Услуг</h2>
+    <div class="bots-grid">
+        <div class="bot-card" style="border-top: 3px solid var(--neon-primary);">
+            <div style="font-size: 2rem; color: var(--neon-primary); margin-bottom: 15px;"><i class="fa-solid fa-code"></i></div>
+            <h3 class="bot-name" style="margin-bottom: 10px;">Разработка Бота</h3>
+            <p class="bot-desc">Создание кастомного Discord-бота любой сложности под ваши уникальные задачи. От экономики до модерации.</p>
+            <a href="https://discord.gg/k9CGaGGtCx" class="btn btn-primary" style="margin-top: 20px; width: 100%; box-sizing: border-box;">Заказать</a>
+        </div>
+        <div class="bot-card" style="border-top: 3px solid var(--neon-secondary);">
+            <div style="font-size: 2rem; color: var(--neon-secondary); margin-bottom: 15px;"><i class="fa-solid fa-server"></i></div>
+            <h3 class="bot-name" style="margin-bottom: 10px;">Хостинг 24/7</h3>
+            <p class="bot-desc">Надежный и быстрый хостинг для ваших ботов с гарантированным аптаймом 99.9% и защитой от DDoS.</p>
+            <a href="https://discord.gg/k9CGaGGtCx" class="btn btn-primary" style="margin-top: 20px; width: 100%; box-sizing: border-box;">Подробнее</a>
+        </div>
+        <div class="bot-card" style="border-top: 3px solid #00ffaa;">
+            <div style="font-size: 2rem; color: #00ffaa; margin-bottom: 15px;"><i class="fa-brands fa-discord"></i></div>
+            <h3 class="bot-name" style="margin-bottom: 10px;">Настройка Сервера</h3>
+            <p class="bot-desc">Полная настройка ролей, каналов, прав доступа и ботов для вашего Discord-сервера под ключ.</p>
+            <a href="https://discord.gg/k9CGaGGtCx" class="btn btn-primary" style="margin-top: 20px; width: 100%; box-sizing: border-box;">Заказать</a>
+        </div>
+    </div>
+</section>
+
+<!-- Pricing Section -->
+<section class="pricing-section scroll-reveal" style="padding-top: 40px;" id="pricing">
+    <h2 class="section-title">Тарифы</h2>
+    <div style="display: flex; flex-wrap: wrap; justify-content: center; gap: 30px; margin-top: 30px;">
+        <div class="pricing-card" style="background: rgba(0,0,0,0.4); border: 1px solid rgba(255,255,255,0.1); border-radius: 12px; padding: 30px; width: 300px; text-align: center;">
+            <h3 style="color: #aaa; font-size: 1.2rem;">BASIC</h3>
+            <div style="font-size: 2.5rem; font-weight: bold; color: #fff; margin: 20px 0;">Бесплатно</div>
+            <ul style="list-style: none; padding: 0; color: #ccc; margin-bottom: 30px; line-height: 2;">
+                <li><i class="fa-solid fa-check" style="color: #00ffaa; margin-right: 10px;"></i> Базовые боты</li>
+                <li><i class="fa-solid fa-check" style="color: #00ffaa; margin-right: 10px;"></i> Стандартный аптайм</li>
+                <li><i class="fa-solid fa-xmark" style="color: #ff4444; margin-right: 10px;"></i> Приоритетная поддержка</li>
+            </ul>
+            <a href="#bots" class="btn btn-secondary" style="width: 100%; box-sizing: border-box;">Начать</a>
+        </div>
+        <div class="pricing-card" style="background: rgba(0,0,0,0.6); border: 2px solid var(--neon-primary); border-radius: 12px; padding: 30px; width: 320px; text-align: center; transform: scale(1.05); box-shadow: 0 0 20px rgba(0, 242, 254, 0.2); position: relative;">
+            <div style="position: absolute; top: -15px; left: 50%; transform: translateX(-50%); background: var(--neon-primary); color: #000; font-weight: bold; padding: 5px 15px; border-radius: 20px; font-size: 0.8rem;">POPULAR</div>
+            <h3 style="color: var(--neon-primary); font-size: 1.2rem;">PRO</h3>
+            <div style="font-size: 2.5rem; font-weight: bold; color: #fff; margin: 20px 0;">399₽<span style="font-size: 1rem; color: #aaa;">/мес</span></div>
+            <ul style="list-style: none; padding: 0; color: #ccc; margin-bottom: 30px; line-height: 2;">
+                <li><i class="fa-solid fa-check" style="color: #00ffaa; margin-right: 10px;"></i> Все функции ботов</li>
+                <li><i class="fa-solid fa-check" style="color: #00ffaa; margin-right: 10px;"></i> Хостинг 24/7</li>
+                <li><i class="fa-solid fa-check" style="color: #00ffaa; margin-right: 10px;"></i> Приоритетная поддержка</li>
+            </ul>
+            <a href="https://discord.gg/k9CGaGGtCx" class="btn btn-primary" style="width: 100%; box-sizing: border-box;">Купить PRO</a>
+        </div>
+        <div class="pricing-card" style="background: rgba(0,0,0,0.4); border: 1px solid rgba(255,255,255,0.1); border-radius: 12px; padding: 30px; width: 300px; text-align: center;">
+            <h3 style="color: #aaa; font-size: 1.2rem;">ULTRA</h3>
+            <div style="font-size: 2.5rem; font-weight: bold; color: #fff; margin: 20px 0;">999₽<span style="font-size: 1rem; color: #aaa;">/мес</span></div>
+            <ul style="list-style: none; padding: 0; color: #ccc; margin-bottom: 30px; line-height: 2;">
+                <li><i class="fa-solid fa-check" style="color: #00ffaa; margin-right: 10px;"></i> Кастомный бот</li>
+                <li><i class="fa-solid fa-check" style="color: #00ffaa; margin-right: 10px;"></i> Выделенный сервер</li>
+                <li><i class="fa-solid fa-check" style="color: #00ffaa; margin-right: 10px;"></i> Личный менеджер</li>
+            </ul>
+            <a href="https://discord.gg/k9CGaGGtCx" class="btn btn-secondary" style="width: 100%; box-sizing: border-box;">Связаться</a>
+        </div>
+    </div>
+</section>
 <!-- News Section -->
 <section class="about-section scroll-reveal" style="padding-top: 40px;">
 <h2 class="section-title"><span data-i18n="t_25">Новости и Обновления</span></h2>
@@ -283,10 +373,78 @@
 <!-- Reviews Section -->
 <section class="about-section scroll-reveal" style="padding-top: 40px; margin-bottom: 50px;">
 <h2 class="section-title"><span data-i18n="t_27">Отзывы о сайте</span></h2>
-<div class="bots-grid" id="reviews-container" style="gap: 20px;">
-<!-- Reviews will be loaded dynamically here -->
-<div style="text-align: center; width: 100%; color: var(--text-muted);"><span data-i18n="t_28">Загрузка отзывов...</span></div>
+<div class="reviews-marquee-container" style="overflow: hidden; white-space: nowrap; position: relative; width: 100%; padding: 20px 0;">
+    <div class="reviews-marquee" style="display: inline-flex; gap: 20px; animation: marquee 30s linear infinite;">
+        <!-- Review 1 -->
+        <div class="review-card" style="background: rgba(0,0,0,0.5); border-left: 4px solid #5865F2; padding: 20px; border-radius: 8px; width: 350px; display: inline-block; white-space: normal; vertical-align: top;">
+            <div style="display: flex; align-items: center; gap: 15px; margin-bottom: 15px;">
+                <img src="https://cdn.discordapp.com/embed/avatars/0.png" style="width: 40px; height: 40px; border-radius: 50%;" alt="avatar">
+                <div>
+                    <div style="color: #fff; font-weight: bold; display: flex; align-items: center; gap: 5px;">ShizikBlack <span style="background: #5865F2; font-size: 0.6rem; padding: 2px 5px; border-radius: 4px; color: #fff;">BOT DEV</span></div>
+                    <div style="color: #aaa; font-size: 0.8rem;">Вчера, в 18:30</div>
+                </div>
+            </div>
+            <div style="color: #ccc; line-height: 1.5; font-size: 0.95rem;">Заказал бота для своего РП-сервера. Сделали за 2 дня, функционал космос. Отдельный респект за удобную админку на сайте.</div>
+        </div>
+        <!-- Review 2 -->
+        <div class="review-card" style="background: rgba(0,0,0,0.5); border-left: 4px solid #3ba55c; padding: 20px; border-radius: 8px; width: 350px; display: inline-block; white-space: normal; vertical-align: top;">
+            <div style="display: flex; align-items: center; gap: 15px; margin-bottom: 15px;">
+                <img src="https://cdn.discordapp.com/embed/avatars/1.png" style="width: 40px; height: 40px; border-radius: 50%;" alt="avatar">
+                <div>
+                    <div style="color: #fff; font-weight: bold;">User_777</div>
+                    <div style="color: #aaa; font-size: 0.8rem;">Сегодня, в 12:15</div>
+                </div>
+            </div>
+            <div style="color: #ccc; line-height: 1.5; font-size: 0.95rem;">Бот Flora просто топчик! Настроил экономику за 5 минут, комьюнити в восторге. Аптайм реально 100%, ни разу не упал.</div>
+        </div>
+        <!-- Review 3 -->
+        <div class="review-card" style="background: rgba(0,0,0,0.5); border-left: 4px solid #faa61a; padding: 20px; border-radius: 8px; width: 350px; display: inline-block; white-space: normal; vertical-align: top;">
+            <div style="display: flex; align-items: center; gap: 15px; margin-bottom: 15px;">
+                <img src="https://cdn.discordapp.com/embed/avatars/2.png" style="width: 40px; height: 40px; border-radius: 50%;" alt="avatar">
+                <div>
+                    <div style="color: #fff; font-weight: bold;">CyberNinja</div>
+                    <div style="color: #aaa; font-size: 0.8rem;">22 июня 2026</div>
+                </div>
+            </div>
+            <div style="color: #ccc; line-height: 1.5; font-size: 0.95rem;">Дизайн сайта отвал башки. Никогда не видел таких красивых интерфейсов для ботов. Очень круто!</div>
+        </div>
+        <!-- Duplicate for infinite scroll -->
+        <div class="review-card" style="background: rgba(0,0,0,0.5); border-left: 4px solid #5865F2; padding: 20px; border-radius: 8px; width: 350px; display: inline-block; white-space: normal; vertical-align: top;">
+            <div style="display: flex; align-items: center; gap: 15px; margin-bottom: 15px;">
+                <img src="https://cdn.discordapp.com/embed/avatars/0.png" style="width: 40px; height: 40px; border-radius: 50%;" alt="avatar">
+                <div>
+                    <div style="color: #fff; font-weight: bold; display: flex; align-items: center; gap: 5px;">ShizikBlack <span style="background: #5865F2; font-size: 0.6rem; padding: 2px 5px; border-radius: 4px; color: #fff;">BOT DEV</span></div>
+                    <div style="color: #aaa; font-size: 0.8rem;">Вчера, в 18:30</div>
+                </div>
+            </div>
+            <div style="color: #ccc; line-height: 1.5; font-size: 0.95rem;">Заказал бота для своего РП-сервера. Сделали за 2 дня, функционал космос. Отдельный респект за удобную админку на сайте.</div>
+        </div>
+        <div class="review-card" style="background: rgba(0,0,0,0.5); border-left: 4px solid #3ba55c; padding: 20px; border-radius: 8px; width: 350px; display: inline-block; white-space: normal; vertical-align: top;">
+            <div style="display: flex; align-items: center; gap: 15px; margin-bottom: 15px;">
+                <img src="https://cdn.discordapp.com/embed/avatars/1.png" style="width: 40px; height: 40px; border-radius: 50%;" alt="avatar">
+                <div>
+                    <div style="color: #fff; font-weight: bold;">User_777</div>
+                    <div style="color: #aaa; font-size: 0.8rem;">Сегодня, в 12:15</div>
+                </div>
+            </div>
+            <div style="color: #ccc; line-height: 1.5; font-size: 0.95rem;">Бот Flora просто топчик! Настроил экономику за 5 минут, комьюнити в восторге. Аптайм реально 100%, ни разу не упал.</div>
+        </div>
+        <div class="review-card" style="background: rgba(0,0,0,0.5); border-left: 4px solid #faa61a; padding: 20px; border-radius: 8px; width: 350px; display: inline-block; white-space: normal; vertical-align: top;">
+            <div style="display: flex; align-items: center; gap: 15px; margin-bottom: 15px;">
+                <img src="https://cdn.discordapp.com/embed/avatars/2.png" style="width: 40px; height: 40px; border-radius: 50%;" alt="avatar">
+                <div>
+                    <div style="color: #fff; font-weight: bold;">CyberNinja</div>
+                    <div style="color: #aaa; font-size: 0.8rem;">22 июня 2026</div>
+                </div>
+            </div>
+            <div style="color: #ccc; line-height: 1.5; font-size: 0.95rem;">Дизайн сайта отвал башки. Никогда не видел таких красивых интерфейсов для ботов. Очень круто!</div>
+        </div>
+    </div>
 </div>
+<style>
+@keyframes marquee { 0% { transform: translateX(0); } 100% { transform: translateX(calc(-50% - 10px)); } }
+.reviews-marquee-container:hover .reviews-marquee { animation-play-state: paused; }
+</style>
 </section>
 </div>
 <!-- About View -->
@@ -387,6 +545,41 @@
 <button class="btn" id="edit-profile-btn" style="background: rgba(0,0,0,0.5); color: white; border: 1px solid rgba(255,255,255,0.2); padding: 8px 20px; backdrop-filter: blur(5px); z-index: 2;"><span data-i18n="t_45">Редактировать</span></button>
 </div>
 </div>
+</div>
+
+<!-- Achievements Section -->
+<div id="acc-achievements" style="margin-bottom: 30px; background: rgba(0,0,0,0.3); padding: 20px; border-radius: 15px; border: 1px solid rgba(255,255,255,0.1);">
+    <h3 style="margin-bottom: 20px; font-size: 1.4rem; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 10px;"><i class="fa-solid fa-trophy" style="color: gold; margin-right: 10px;"></i>Достижения</h3>
+    <div style="display: flex; gap: 15px; flex-wrap: wrap;">
+        <div class="achievement-card" style="background: rgba(255,215,0,0.1); border: 1px solid rgba(255,215,0,0.3); padding: 10px 15px; border-radius: 10px; display: flex; align-items: center; gap: 10px;" title="Зарегистрирован на сайте">
+            <i class="fa-solid fa-star" style="color: gold; font-size: 1.5rem;"></i>
+            <div>
+                <div style="font-weight: bold; color: #fff;">Первопроходец</div>
+                <div style="font-size: 0.8rem; color: #aaa;">Создан аккаунт</div>
+            </div>
+        </div>
+        <div class="achievement-card" style="background: rgba(0, 242, 254,0.1); border: 1px solid rgba(0, 242, 254,0.3); padding: 10px 15px; border-radius: 10px; display: flex; align-items: center; gap: 10px;" title="Использовал терминал">
+            <i class="fa-solid fa-terminal" style="color: var(--neon-primary); font-size: 1.5rem;"></i>
+            <div>
+                <div style="font-weight: bold; color: #fff;">Хакер</div>
+                <div style="font-size: 0.8rem; color: #aaa;">Открыл консоль</div>
+            </div>
+        </div>
+        <div class="achievement-card" style="background: rgba(255, 0, 85,0.1); border: 1px solid rgba(255, 0, 85,0.3); padding: 10px 15px; border-radius: 10px; display: flex; align-items: center; gap: 10px;" title="Сменил тему оформления">
+            <i class="fa-solid fa-palette" style="color: var(--neon-purple, #ff0055); font-size: 1.5rem;"></i>
+            <div>
+                <div style="font-weight: bold; color: #fff;">Дизайнер</div>
+                <div style="font-size: 0.8rem; color: #aaa;">Кастомизация</div>
+            </div>
+        </div>
+        <div class="achievement-card" style="background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); padding: 10px 15px; border-radius: 10px; display: flex; align-items: center; gap: 10px; opacity: 0.5; filter: grayscale(100%);" title="Секретное достижение">
+            <i class="fa-solid fa-lock" style="color: #aaa; font-size: 1.5rem;"></i>
+            <div>
+                <div style="font-weight: bold; color: #ccc;">Скрыто</div>
+                <div style="font-size: 0.8rem; color: #888;">???</div>
+            </div>
+        </div>
+    </div>
 </div>
 <!-- Hidden inputs for files -->
 <input accept="image/*" id="banner-upload-input" style="display: none;" type="file"></input>
@@ -654,7 +847,7 @@
         }
         .cursor-btn.active { border-color: var(--neon-primary) !important; background: rgba(0, 255, 170, 0.1) !important; color: var(--neon-primary) !important; }
 </style>
-<script src="{{ url_for('static', filename='script.js') }}?v=113"></script>
+<script src="{{ url_for('static', filename='script.js') }}?v=116"></script>
 <!-- Hacker Terminal -->
 <div class="view" id="view-hacker" style="background: #000; color: #0f0; font-family: monospace; padding: 20px; font-size: 16px; overflow-y: auto; height: 100vh; width: 100%; box-sizing: border-box;">
 <div id="hacker-output"></div>

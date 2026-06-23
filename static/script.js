@@ -92,19 +92,19 @@ document.addEventListener('DOMContentLoaded', () => {
     }, {once: true});
 
     // Preloader Logic
-    const welcomeScreen = document.getElementById('welcome-screen');
+    const preloader = document.getElementById('preloader');
     
     if (sessionStorage.getItem('aurex_welcomed')) {
         // Skip preloader on reload
-        welcomeScreen.style.display = 'none';
+        if (preloader) preloader.style.display = 'none';
         document.querySelector('.hero') && document.querySelector('.hero').classList.add('show');
         initScrollAnimations();
     } else {
         // Simulate loading time
         setTimeout(() => {
-            welcomeScreen.style.opacity = '0';
+            if (preloader) preloader.style.opacity = '0';
             setTimeout(() => {
-                welcomeScreen.style.display = 'none';
+                if (preloader) preloader.style.display = 'none';
                 sessionStorage.setItem('aurex_welcomed', 'true');
                 // Show main elements after preloader finishes
                 document.querySelector('.hero') && document.querySelector('.hero').classList.add('show');
@@ -3765,4 +3765,25 @@ document.addEventListener('DOMContentLoaded', () => {
     document.addEventListener('mouseenter', () => {
         if (cursor && document.documentElement.classList.contains('cursor-circle')) cursor.style.opacity = '1';
     });
+
+    // Dashboard Live Stats Animation
+    const pingEl = document.getElementById('stat-ping');
+    const cmdsEl = document.getElementById('stat-cmds');
+    const pingChart = document.getElementById('ping-chart');
+    if (pingEl && cmdsEl && pingChart) {
+        let cmdsCount = 1205000;
+        let points = [0,30, 20,25, 40,35, 60,15, 80,28, 100,20];
+        setInterval(() => {
+            const newPing = Math.floor(Math.random() * 10) + 10;
+            pingEl.innerText = newPing + 'ms';
+            
+            points.shift(); points.shift();
+            for(let i=0; i<points.length; i+=2) { points[i] -= 20; }
+            points.push(100, Math.floor(Math.random() * 30) + 10);
+            pingChart.setAttribute('points', points.join(','));
+            
+            cmdsCount += Math.floor(Math.random() * 50) + 20;
+            cmdsEl.innerText = (cmdsCount / 1000000).toFixed(3) + 'M';
+        }, 1500);
+    }
 });

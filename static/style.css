@@ -302,7 +302,7 @@ a {
     font-weight: 600;
     font-size: 1.1rem;
     transition: all 0.3s ease;
-    cursor: var(--cursor-pointer, pointer) !important;
+
 }
 
 .btn-primary {
@@ -633,7 +633,7 @@ footer {
     color: var(--text-muted);
     font-size: 1.2rem;
     font-family: 'Space Grotesk', sans-serif;
-    cursor: var(--cursor-pointer, pointer) !important;
+
     transition: color 0.3s;
     position: relative;
 }
@@ -748,7 +748,7 @@ footer {
     color: var(--text-muted);
     font-size: 28px;
     font-weight: bold;
-    cursor: var(--cursor-pointer, pointer) !important;
+
     transition: color 0.3s;
 }
 .close-btn:hover {
@@ -776,7 +776,7 @@ footer {
     position: relative;
     display: flex;
     align-items: center;
-    cursor: var(--cursor-pointer, pointer) !important;
+
 }
 
 .user-profile {
@@ -877,7 +877,7 @@ footer {
     color: #000;
     border: none;
     font-size: 24px;
-    cursor: var(--cursor-pointer, pointer) !important;
+
     box-shadow: 0 0 15px var(--glow-primary);
     transition: all 0.3s ease;
     display: flex;
@@ -997,7 +997,7 @@ footer {
     border-radius: 50%;
     width: 40px;
     height: 40px;
-    cursor: var(--cursor-pointer, pointer) !important;
+
     display: flex;
     justify-content: center;
     align-items: center;
@@ -1315,7 +1315,7 @@ footer {
     width: 50px;
     border-radius: 8px;
     color: #000;
-    cursor: var(--cursor-pointer, pointer) !important;
+
     display: flex;
     align-items: center;
     justify-content: center;
@@ -1363,7 +1363,7 @@ footer {
 
 .slider {
   position: absolute;
-  cursor: var(--cursor-pointer, pointer) !important;
+
   top: 0;
   left: 0;
   right: 0;
@@ -1600,7 +1600,7 @@ body.apocalypse-mode .btn {
 .custom-toast a {
     color: var(--neon-primary);
     text-decoration: underline;
-    cursor: var(--cursor-pointer, pointer) !important;
+
     font-weight: bold;
 }
 .custom-toast.error a {
@@ -1643,7 +1643,7 @@ body.apocalypse-mode .btn {
     background: transparent !important;
     border: none;
     color: #ff0033 !important;
-    cursor: var(--cursor-pointer, pointer) !important;
+
     transition: 0.3s;
     display: flex;
     align-items: center;
@@ -1698,7 +1698,7 @@ body.apocalypse-mode .btn {
 
 .chat-item {
     padding: 15px 20px;
-    cursor: var(--cursor-pointer, pointer) !important;
+
     border-bottom: 1px solid rgba(255,255,255,0.02);
     transition: background 0.2s;
     display: flex;
@@ -1876,7 +1876,7 @@ body.apocalypse-mode .btn {
 .sticker-item {
     width: 50px;
     height: 50px;
-    cursor: var(--cursor-pointer, pointer) !important;
+
     transition: transform 0.2s;
 }
 
@@ -1903,7 +1903,7 @@ body.apocalypse-mode .btn {
 
 .menu-item {
     padding: 8px 15px;
-    cursor: var(--cursor-pointer, pointer) !important;
+
     color: #fff;
     transition: background 0.2s, color 0.2s;
     font-size: 14px;
@@ -1941,7 +1941,7 @@ body.apocalypse-mode .btn {
     border-radius: 10px;
     padding: 15px;
     text-align: center;
-    cursor: var(--cursor-pointer, pointer) !important;
+
     transition: all 0.3s;
 }
 
@@ -1986,7 +1986,7 @@ body.apocalypse-mode .btn {
 
 
 body {
-    cursor: var(--cursor-default, auto) !important;
+
 }
 
 a, a:hover, a:active, a:focus,
@@ -1998,7 +1998,7 @@ select, select:hover, select:active, select:focus,
 .msgr-tab, .msgr-tab:hover, .msgr-tab:active,
 .dropdown-item, .dropdown-item:hover, .dropdown-item:active,
 [onclick], [onclick]:hover, [onclick]:active {
-    cursor: var(--cursor-pointer, pointer) !important;
+
 }
 
 body:active, body *:active {
@@ -2136,7 +2136,7 @@ body.no-animations *, body.no-animations {
 
 /* === ANIMATED DOM CURSOR === */
 html.cursor-circle, html.cursor-circle * {
-    cursor: none !important;
+
 }
 
 #custom-cursor {
@@ -2176,3 +2176,51 @@ html.cursor-circle, html.cursor-circle * {
     border: 2px solid var(--neon-color, #ffcc00);
     box-shadow: 0 0 10px var(--neon-color, #ffcc00) inset, 0 0 10px var(--neon-color, #ffcc00);
 }
+
+/* PRELOADER */
+#preloader {
+    position: fixed;
+    top: 0; left: 0; width: 100%; height: 100%;
+    background: #000;
+    z-index: 99999999;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    transition: opacity 0.5s ease, visibility 0.5s ease;
+}
+.preloader-content {
+    text-align: center;
+}
+.preloader-logo {
+    width: 80px; height: 80px;
+    animation: preloaderPulse 2s infinite;
+    stroke: var(--neon-primary, #00f2fe);
+}
+.preloader-text {
+    color: var(--neon-primary, #00f2fe);
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 1.5rem;
+    font-weight: bold;
+    letter-spacing: 4px;
+    margin-top: 20px;
+    opacity: 0;
+    animation: preloaderFadeIn 1s forwards 0.5s;
+}
+.preloader-bar {
+    width: 200px; height: 2px;
+    background: rgba(255,255,255,0.1);
+    margin: 20px auto 0;
+    overflow: hidden;
+}
+.preloader-progress {
+    width: 0%; height: 100%;
+    background: var(--neon-primary, #00f2fe);
+    animation: preloaderProgress 1.5s cubic-bezier(0.8, 0, 0.2, 1) forwards;
+}
+@keyframes preloaderPulse {
+    0%, 100% { filter: drop-shadow(0 0 5px var(--neon-primary)); transform: scale(1); }
+    50% { filter: drop-shadow(0 0 20px var(--neon-primary)); transform: scale(1.1); }
+}
+@keyframes preloaderFadeIn { to { opacity: 1; } }
+@keyframes preloaderProgress { to { width: 100%; } }
