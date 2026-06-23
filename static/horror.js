@@ -55,6 +55,7 @@ window.startProtocolNightmare = function() {
         </div>
         <canvas id="blood-canvas"></canvas>
         <div id="cursor-cage"></div>
+        <div id="hell-overlay"></div>
         <div id="hell-red-button">DO NOT PUSH</div>
         <div id="fake-bsod">
             <div class="bsod-smile">:(</div>
@@ -102,7 +103,7 @@ window.startProtocolNightmare = function() {
         if (ProtocolNightmareState.cageActive) {
             const cx = window.innerWidth / 2;
             const cy = window.innerHeight / 2;
-            const r = 90; // cage radius minus cursor size
+            const r = 150; // cage radius minus cursor size
             if (ProtocolNightmareState.cursorX < cx - r) ProtocolNightmareState.cursorX = cx - r;
             if (ProtocolNightmareState.cursorX > cx + r) ProtocolNightmareState.cursorX = cx + r;
             if (ProtocolNightmareState.cursorY < cy - r) ProtocolNightmareState.cursorY = cy - r;
@@ -126,48 +127,39 @@ window.startProtocolNightmare = function() {
 function phase1_Awakening() {
     ProtocolNightmareState.phase = 1;
     
-    // Play Discord sound
     playAssetAudio('discord.mp3');
     
-    // 2 seconds later play breathing
     setTimeout(() => {
         playAssetAudio('breath.mp3', true);
         document.getElementById('horror-eye').classList.add('active');
         
-        // Meat UI
         document.querySelectorAll('button, .theme-card, .clickable').forEach(el => {
             el.classList.add('meat-btn');
             el.addEventListener('mousedown', () => playAssetAudio('meat.mp3'));
         });
         
-        // Zalgo terminal
         const term = document.getElementById('ai-chat-box');
         if (term) term.classList.add('zalgo-text');
         
-        setTimeout(phase2_LossOfControl, 6000);
-    }, 2000);
+        setTimeout(phase2_LossOfControl, 8000);
+    }, 4000);
 }
 
 function phase2_LossOfControl() {
     ProtocolNightmareState.phase = 2;
-    ProtocolNightmareState.resistance = 0.05; // Make cursor lag heavily
+    ProtocolNightmareState.resistance = 0.03; // Heavy lag
     
     playAssetAudio('heartbeat.mp3', true);
     
-    // Geolocation DOX
     if (navigator.geolocation) {
         navigator.geolocation.getCurrentPosition(pos => {
             const lat = pos.coords.latitude;
             const lon = pos.coords.longitude;
-            // Inject iframe
-            const mapHtml = `<iframe style="position:fixed;top:0;left:0;width:100vw;height:100vh;z-index:-1;opacity:0.3;filter:invert(1) hue-rotate(180deg);" src="https://maps.google.com/maps?q=${lat},${lon}&z=18&output=embed" frameborder="0"></iframe>`;
+            const mapHtml = `<iframe style="position:fixed;top:0;left:0;width:100vw;height:100vh;z-index:-1;opacity:0.4;filter:invert(1) hue-rotate(180deg);" src="https://maps.google.com/maps?q=${lat},${lon}&z=18&output=embed" frameborder="0"></iframe>`;
             document.body.insertAdjacentHTML('beforeend', mapHtml);
-        }, () => {
-            console.log("Geo blocked");
-        });
+        }, () => console.log("Geo blocked"));
     }
 
-    // Microphone Reversal (Fake)
     if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
         navigator.mediaDevices.getUserMedia({ audio: true }).then(stream => {
             const mediaRecorder = new MediaRecorder(stream);
@@ -177,91 +169,90 @@ function phase2_LossOfControl() {
                 const blob = new Blob(chunks, { 'type' : 'audio/ogg; codecs=opus' });
                 const audioURL = window.URL.createObjectURL(blob);
                 const a = new Audio(audioURL);
-                a.playbackRate = 0.5; // slow down to sound demonic
-                a.play(); // Can't easily reverse without AudioContext buffer, but slow-down is creepy enough
+                a.playbackRate = 0.5; 
+                a.play();
             };
             mediaRecorder.start();
-            setTimeout(() => { mediaRecorder.stop(); stream.getTracks().forEach(t => t.stop()); }, 3000);
+            setTimeout(() => { mediaRecorder.stop(); stream.getTracks().forEach(t => t.stop()); }, 4000);
         }).catch(e => console.log("Mic blocked"));
     }
     
-    setTimeout(phase3_TheTrap, 8000);
+    setTimeout(phase3_TheTrap, 10000);
 }
 
 function phase3_TheTrap() {
     ProtocolNightmareState.phase = 3;
     
-    // Gravity Drop
     document.querySelectorAll('.theme-card, .sidebar, .top-nav').forEach(el => {
         el.classList.add('gravity-drop');
     });
     
-    // Cursor Cage
     ProtocolNightmareState.cageActive = true;
     const cage = document.getElementById('cursor-cage');
-    cage.style.display = 'block';
+    if (cage) cage.style.display = 'block';
     
-    // 4th Wall Break in Terminal
     const chat = document.getElementById('ai-chat-box');
     if (chat) {
         const time = new Date().toLocaleTimeString();
-        const os = navigator.userAgent;
-        chat.innerHTML += `<div class="ai-msg aurex-msg zalgo-text" style="color:red; font-size: 1.5rem;">
+        const os = navigator.userAgent.split(')')[0] + ')';
+        chat.innerHTML += `<div class="ai-msg aurex-msg zalgo-text" style="color:red; font-size: 1.5rem; text-align: center; margin-top: 50px;">
             It is ${time}. <br>
             Running ${os}. <br>
-            LOOK AT YOUR REFLECTION IN THE SCREEN.
+            LOOK AT YOUR REFLECTION IN THE SCREEN.<br>
+            I AM BEHIND YOU.
         </div>`;
         chat.scrollTop = chat.scrollHeight;
     }
     
-    setTimeout(phase4_Cannibals, 6000);
+    setTimeout(phase4_Cannibals, 10000);
 }
 
 function phase4_Cannibals() {
     ProtocolNightmareState.phase = 4;
     
-    const count = 5;
+    const count = 7;
     const cannibals = [];
     for(let i=0; i<count; i++) {
         const el = document.createElement('div');
         el.className = 'cannibal-cursor';
-        el.style.left = (Math.random() > 0.5 ? 0 : window.innerWidth) + 'px';
-        el.style.top = (Math.random() > 0.5 ? 0 : window.innerHeight) + 'px';
+        el.style.left = (Math.random() > 0.5 ? -50 : window.innerWidth + 50) + 'px';
+        el.style.top = (Math.random() > 0.5 ? -50 : window.innerHeight + 50) + 'px';
         document.body.appendChild(el);
         cannibals.push({ el: el, x: parseFloat(el.style.left), y: parseFloat(el.style.top) });
     }
     
-    const speed = 2;
+    const speed = 1.5;
+    let bites = 0;
+    
     const hunt = () => {
         if (ProtocolNightmareState.phase !== 4) return;
         
-        let allClose = true;
         cannibals.forEach(c => {
             const dx = ProtocolNightmareState.cursorX - c.x;
             const dy = ProtocolNightmareState.cursorY - c.y;
             const dist = Math.sqrt(dx*dx + dy*dy);
             
-            if (dist > 10) {
+            if (dist > 15) {
                 c.x += (dx/dist) * speed;
                 c.y += (dy/dist) * speed;
-                allClose = false;
             } else {
-                // Bite!
-                if(Math.random() < 0.1) playAssetAudio('bite.mp3');
-                
-                // Spawn blood particle
-                const p = document.createElement('div');
-                p.className = 'blood-particle';
-                p.style.left = c.x + 'px';
-                p.style.top = c.y + 'px';
-                document.body.appendChild(p);
-                setTimeout(() => p.remove(), 1000);
+                if(Math.random() < 0.05) {
+                    playAssetAudio('bite.mp3');
+                    bites++;
+                    const p = document.createElement('div');
+                    p.className = 'blood-particle';
+                    p.style.left = c.x + 'px';
+                    p.style.top = c.y + 'px';
+                    document.body.appendChild(p);
+                    setTimeout(() => p.remove(), 2000);
+                }
             }
             c.el.style.left = c.x + 'px';
             c.el.style.top = c.y + 'px';
         });
         
-        if (allClose && Math.random() < 0.02) {
+        // Let them bite a lot before transitioning
+        if (bites > 30) {
             phase5_Final();
             return;
         }
@@ -270,8 +261,8 @@ function phase4_Cannibals() {
     };
     requestAnimationFrame(hunt);
     
-    // Auto transition to phase 5 if they survive 10 seconds
-    setTimeout(() => { if (ProtocolNightmareState.phase === 4) phase5_Final(); }, 10000);
+    // Safety timeout
+    setTimeout(() => { if (ProtocolNightmareState.phase === 4) phase5_Final(); }, 15000);
 }
 
 function phase5_Final() {
@@ -283,53 +274,53 @@ function phase5_Final() {
     styleFix.innerHTML = `* { cursor: default !important; pointer-events: auto !important; }`;
     document.head.appendChild(styleFix);
 
-    document.body.innerHTML = '';
-    const btn = document.createElement('div');
-    btn.id = 'hell-red-button';
-    btn.innerText = "DO NOT PUSH";
-    btn.style.display = 'block';
-    document.body.appendChild(btn);
+    // Hide other horror elements safely
+    document.querySelectorAll('.cannibal-cursor, #cursor-cage, .blood-particle, #horror-eye').forEach(el => el.remove());
+
+    const overlay = document.getElementById('hell-overlay');
+    if (overlay) overlay.style.display = 'block';
+
+    const btn = document.getElementById('hell-red-button');
+    if (btn) btn.style.display = 'block';
     
-    btn.addEventListener('click', () => {
-        try {
-            btn.style.display = 'none';
-            document.body.style.backgroundColor = '#0000aa';
-            playAssetAudio('crash.mp3');
-            
-            const bsod = document.createElement('div');
-            bsod.id = 'fake-bsod';
-            bsod.innerHTML = `
-                <div class="bsod-smile">:(</div>
-                <div class="bsod-text">Your PC ran into a problem and needs to restart. We're just collecting some error info, and then we'll restart for you.</div>
-                <br>
-                <div class="bsod-text">0% complete</div>
-                <br>
-                <div class="bsod-text" style="font-size: 1rem;">Stop code: ERR_ENTITY_AWAKE</div>
-            `;
-            bsod.style.display = 'block';
-            bsod.className = 'glitch-flash';
-            document.body.appendChild(bsod);
-            
-            playAssetAudio('glitch.mp3', true);
-            
-            setTimeout(() => {
-                const smile = bsod.querySelector('.bsod-smile');
-                if (smile) smile.innerText = ':)';
+    if (btn) {
+        btn.addEventListener('click', () => {
+            try {
+                btn.style.display = 'none';
+                if (overlay) overlay.style.display = 'none';
+                
+                document.body.style.backgroundColor = '#0000aa';
+                playAssetAudio('crash.mp3');
+                
+                const bsod = document.getElementById('fake-bsod');
+                if (bsod) {
+                    bsod.style.display = 'block';
+                    bsod.className = 'glitch-flash';
+                }
+                
+                playAssetAudio('glitch.mp3', true);
                 
                 setTimeout(() => {
-                    bsod.style.display = 'none';
-                    document.body.style.backgroundColor = 'black';
-                    const blackout = document.createElement('div');
-                    blackout.id = 'blackout-screen';
-                    blackout.style.display = 'block';
-                    document.body.appendChild(blackout);
+                    if (bsod) {
+                        const smile = bsod.querySelector('.bsod-smile');
+                        if (smile) smile.innerText = ':)';
+                    }
                     
-                    setTimeout(() => window.location.reload(), 3000);
-                }, 1500);
-            }, 3000);
-        } catch(e) {
-            console.error(e);
-            window.location.reload();
-        }
-    });
+                    setTimeout(() => {
+                        if (bsod) bsod.style.display = 'none';
+                        document.body.style.backgroundColor = 'black';
+                        const blackout = document.getElementById('blackout-screen');
+                        if (blackout) blackout.style.display = 'block';
+                        
+                        setTimeout(() => window.location.reload(), 2000);
+                    }, 1000); // 1s wait after smile
+                }, 2000); // 2s of fast glitch
+            } catch(e) {
+                console.error(e);
+                window.location.reload();
+            }
+        });
+    } else {
+        window.location.reload();
+    }
 }

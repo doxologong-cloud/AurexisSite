@@ -124,6 +124,17 @@
     box-shadow: 0 0 5px red;
 }
 
+#hell-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: rgba(0,0,0,0.9);
+    z-index: 999999;
+    display: none;
+}
+
 /* The Red Button */
 #hell-red-button {
     position: fixed;
