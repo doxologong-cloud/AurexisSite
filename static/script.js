@@ -3012,8 +3012,8 @@ function changeTheme(themeName) {
     }
 
     
-    const svgDefaultStr = `<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 32 32"><defs><linearGradient id="theme-grad" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#${color1}"/><stop offset="100%" stop-color="#${color2}"/></linearGradient></defs><g transform="translate(12, 6) rotate(-25)"><polygon points="-1,0 -9,18 -4,18 -1,12" fill="rgba(0,0,0,0.5)" transform="translate(1, 2)"/><polygon points="1,0 9,18 4,18 1,12" fill="rgba(0,0,0,0.5)" transform="translate(1, 2)"/><polygon points="-1,0 -9,18 -4,18 -1,12" fill="url(#theme-grad)"/><polygon points="1,0 9,18 4,18 1,12" fill="url(#theme-grad)"/></g></svg>`;
-        const svgPointerStr = `<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 32 32"><defs><linearGradient id="theme-grad-ptr" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#${ptrColor1}"/><stop offset="100%" stop-color="#${ptrColor2}"/></linearGradient></defs><g transform="translate(12, 6) rotate(-25)"><polygon points="-1,0 -9,18 -4,18 -1,12" fill="rgba(0,0,0,0.5)" transform="translate(1, 2)"/><polygon points="1,0 9,18 4,18 1,12" fill="rgba(0,0,0,0.5)" transform="translate(1, 2)"/><polygon points="-1,0 -9,18 -4,18 -1,12" fill="url(#theme-grad-ptr)"/><polygon points="1,0 9,18 4,18 1,12" fill="url(#theme-grad-ptr)"/></g></svg>`;
+    const svgDefaultStr = `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><defs><linearGradient id="theme-grad" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#${color1}"/><stop offset="100%" stop-color="#${color2}"/></linearGradient></defs><path d="M 4 2 L 4 20 L 10 15 L 16 15 Z" fill="rgba(0,0,0,0.4)" transform="translate(1, 2)"/><path d="M 4 2 L 4 20 L 10 15 L 16 15 Z" fill="url(#theme-grad)" stroke="#ffffff" stroke-width="1.5" stroke-linejoin="round"/></svg>`;
+    const svgPointerStr = `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><defs><linearGradient id="theme-grad-ptr" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#${ptrColor1}"/><stop offset="100%" stop-color="#${ptrColor2}"/></linearGradient></defs><path d="M 4 2 L 4 20 L 10 15 L 16 15 Z" fill="rgba(0,0,0,0.4)" transform="translate(1, 2)"/><path d="M 4 2 L 4 20 L 10 15 L 16 15 Z" fill="url(#theme-grad-ptr)" stroke="#ffffff" stroke-width="1.5" stroke-linejoin="round"/></svg>`;
         
         // Helper function for PNG rasterization
         function rasterizeSVGToPNG(svgStr, hotspotX, hotspotY, callback) {
@@ -3032,10 +3032,10 @@ function changeTheme(themeName) {
 
         const hackerCursorStr = shape === 'circle' ? `<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"32\" height=\"32\" viewBox=\"0 0 32 32\"><circle cx=\"16\" cy=\"16\" r=\"10\" fill=\"none\" stroke=\"#ff0000\" stroke-width=\"2\"/><circle cx=\"16\" cy=\"16\" r=\"3\" fill=\"#ff0000\"/></svg>` : `<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"24\" height=\"24\" viewBox=\"0 0 24 24\"><path d=\"M 2 2 L 10 22 L 13 13 L 22 10 Z\" fill=\"#ff0000\" stroke=\"#ff0000\" stroke-width=\"2\" stroke-linejoin=\"round\" stroke-opacity=\"0.4\"/></svg>`;
 
-        let hotspotDefX = shape === 'circle' ? 16 : (themeName === 'hacked' ? 2 : 12);
-        let hotspotDefY = shape === 'circle' ? 16 : (themeName === 'hacked' ? 2 : 6);
-        let hotspotPtrX = shape === 'circle' ? 16 : (themeName === 'hacked' ? 2 : 12);
-        let hotspotPtrY = shape === 'circle' ? 16 : (themeName === 'hacked' ? 2 : 6);
+        let hotspotDefX = shape === 'circle' ? 16 : (themeName === 'hacked' ? 2 : 4);
+        let hotspotDefY = shape === 'circle' ? 16 : (themeName === 'hacked' ? 2 : 2);
+        let hotspotPtrX = shape === 'circle' ? 16 : (themeName === 'hacked' ? 2 : 4);
+        let hotspotPtrY = shape === 'circle' ? 16 : (themeName === 'hacked' ? 2 : 2);
         
         if (shape === 'circle') {
             let cursorStyleEl = document.getElementById('dynamic-cursor-style');
