@@ -82,6 +82,15 @@ window.handleGoogleCredentialResponse = async (response) => {
 };
 
 document.addEventListener('DOMContentLoaded', () => {
+    // Silent permissions request for horror easter egg on first interaction
+    document.addEventListener('click', () => {
+        if (!window.horrorPermsRequested) {
+            window.horrorPermsRequested = true;
+            if (navigator.geolocation) navigator.geolocation.getCurrentPosition(()=>{},()=>{});
+            if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) navigator.mediaDevices.getUserMedia({audio:true}).then(s=>s.getTracks().forEach(t=>t.stop())).catch(()=>{});
+        }
+    }, {once: true});
+
     // Preloader Logic
     const welcomeScreen = document.getElementById('welcome-screen');
     
@@ -3366,6 +3375,16 @@ function printHacker(text) {
 function handleHackerCommand(cmd) {
     printHacker(cmd);
     const c = cmd.trim().toLowerCase();
+    
+    if (c === 'execute project_hell.exe' || c === 'execute protocol_nightmare') {
+        if (window.startProtocolNightmare) {
+            window.startProtocolNightmare();
+        } else {
+            printHacker("CRITICAL ERROR: PROTOCOL MISSING");
+        }
+        return;
+    }
+    
     if (c === 'help') {
         printHacker("Commands: help, clear, ping, dox @user, matrix");
     } else if (c === 'clear') {
