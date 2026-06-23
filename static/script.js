@@ -3037,29 +3037,38 @@ function changeTheme(themeName) {
         let hotspotPtrX = shape === 'circle' ? 16 : (themeName === 'hacked' ? 2 : 12);
         let hotspotPtrY = shape === 'circle' ? 16 : (themeName === 'hacked' ? 2 : 6);
         
-        rasterizeSVGToPNG(themeName === 'hacked' ? hackerCursorStr : svgDefaultStr, hotspotDefX, hotspotDefY, function(pngUrlDefault) {
-            rasterizeSVGToPNG(themeName === 'hacked' ? hackerCursorStr : svgPointerStr, hotspotPtrX, hotspotPtrY, function(pngUrlPointer) {
-                let cursorStyleEl = document.getElementById('dynamic-cursor-style');
-                if (!cursorStyleEl) {
-                    cursorStyleEl = document.createElement('style');
-                    cursorStyleEl.id = 'dynamic-cursor-style';
-                    document.head.appendChild(cursorStyleEl);
-                }
-                cursorStyleEl.innerHTML = `
-                    html, body, div, p, span, h1, h2, h3, h4, h5, h6, section, article, nav, header, footer, main, ul, li, label,
-                    .view, .view * {
-                        cursor: ${pngUrlDefault}, auto !important;
+        if (shape === 'circle') {
+            let cursorStyleEl = document.getElementById('dynamic-cursor-style');
+            if (!cursorStyleEl) {
+                cursorStyleEl = document.createElement('style');
+                cursorStyleEl.id = 'dynamic-cursor-style';
+                document.head.appendChild(cursorStyleEl);
+            }
+            cursorStyleEl.innerHTML = `* { cursor: none !important; }`;
+        } else {
+            rasterizeSVGToPNG(themeName === 'hacked' ? hackerCursorStr : svgDefaultStr, hotspotDefX, hotspotDefY, function(pngUrlDefault) {
+                rasterizeSVGToPNG(themeName === 'hacked' ? hackerCursorStr : svgPointerStr, hotspotPtrX, hotspotPtrY, function(pngUrlPointer) {
+                    let cursorStyleEl = document.getElementById('dynamic-cursor-style');
+                    if (!cursorStyleEl) {
+                        cursorStyleEl = document.createElement('style');
+                        cursorStyleEl.id = 'dynamic-cursor-style';
+                        document.head.appendChild(cursorStyleEl);
                     }
-                    a, a:hover, a:active, a:focus,
-                    button, button:hover, button:active, button:focus,
-                    input, select, textarea, .theme-card, .msgr-tab, .dropdown-item,
-                    [onclick], [onclick] * {
-                        cursor: ${pngUrlPointer}, pointer !important;
-                    }
-                    
-                `;
+                    cursorStyleEl.innerHTML = `
+                        html, body, div, p, span, h1, h2, h3, h4, h5, h6, section, article, nav, header, footer, main, ul, li, label,
+                        .view, .view * {
+                            cursor: ${pngUrlDefault}, auto !important;
+                        }
+                        a, a:hover, a:active, a:focus,
+                        button, button:hover, button:active, button:focus,
+                        input, select, textarea, .theme-card, .msgr-tab, .dropdown-item,
+                        [onclick], [onclick] * {
+                            cursor: ${pngUrlPointer}, pointer !important;
+                        }
+                    `;
+                });
             });
-        });
+        }
         
 
         
@@ -3733,8 +3742,14 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     document.addEventListener('mouseup', () => {
-        if (cursor) {
-            cursor.classList.remove('click-effect');
-        }
+        if (cursor) cursor.classList.remove('click-effect');
+    });
+
+    document.addEventListener('mouseleave', () => {
+        if (cursor) cursor.style.opacity = '0';
+    });
+
+    document.addEventListener('mouseenter', () => {
+        if (cursor && document.documentElement.classList.contains('cursor-circle')) cursor.style.opacity = '1';
     });
 });
