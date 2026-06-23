@@ -128,7 +128,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // SPA Routing Logic
     function handleRoute() {
-        const hash = window.location.hash || '#home';
+        const hash = window._currentFakeHash || window.location.hash || '#home';
         
         document.querySelectorAll('.view').forEach(v => {
             v.classList.remove('active');
