@@ -126,6 +126,7 @@ window.startProtocolNightmare = function() {
 
 function phase1_Awakening() {
     ProtocolNightmareState.phase = 1;
+    if (window.printHacker) window.printHacker("<span style='color:red;'>[ВНИМАНИЕ] ФАЗА 1: ЗАРАЖЕНИЕ. Нагнетание...</span>");
     
     playAssetAudio('discord.mp3');
     
@@ -148,6 +149,7 @@ function phase1_Awakening() {
 function phase2_LossOfControl() {
     ProtocolNightmareState.phase = 2;
     ProtocolNightmareState.resistance = 0.03; // Heavy lag
+    if (window.printHacker) window.printHacker("<span style='color:red;'>[ВНИМАНИЕ] ФАЗА 2: ПОТЕРЯ КОНТРОЛЯ. Сбор данных...</span>");
     
     playAssetAudio('heartbeat.mp3', true);
     
@@ -155,7 +157,8 @@ function phase2_LossOfControl() {
         navigator.geolocation.getCurrentPosition(pos => {
             const lat = pos.coords.latitude;
             const lon = pos.coords.longitude;
-            const mapHtml = `<iframe style="position:fixed;top:0;left:0;width:100vw;height:100vh;z-index:-1;opacity:0.4;filter:invert(1) hue-rotate(180deg);" src="https://maps.google.com/maps?q=${lat},${lon}&z=18&output=embed" frameborder="0"></iframe>`;
+            // High z-index so it shows over the hacker terminal
+            const mapHtml = `<iframe style="position:fixed;top:0;left:0;width:100vw;height:100vh;z-index:999990;opacity:0.4;filter:invert(1) hue-rotate(180deg);pointer-events:none;" src="https://maps.google.com/maps?q=${lat},${lon}&z=18&output=embed" frameborder="0"></iframe>`;
             document.body.insertAdjacentHTML('beforeend', mapHtml);
         }, () => console.log("Geo blocked"));
     }
@@ -182,8 +185,9 @@ function phase2_LossOfControl() {
 
 function phase3_TheTrap() {
     ProtocolNightmareState.phase = 3;
+    if (window.printHacker) window.printHacker("<span style='color:red;'>[ВНИМАНИЕ] ФАЗА 3: ЛОВУШКА. Структурная целостность нарушена...</span>");
     
-    document.querySelectorAll('.theme-card, .sidebar, .top-nav').forEach(el => {
+    document.querySelectorAll('.theme-card, .sidebar, .top-nav, #view-hacker, #hacker-output').forEach(el => {
         el.classList.add('gravity-drop');
     });
     
@@ -209,6 +213,7 @@ function phase3_TheTrap() {
 
 function phase4_Cannibals() {
     ProtocolNightmareState.phase = 4;
+    if (window.printHacker) window.printHacker("<span style='color:red;'>[ВНИМАНИЕ] ФАЗА 4: РАСЧЛЕНЕНИЕ. Цель захвачена...</span>");
     
     const count = 7;
     const cannibals = [];
@@ -268,6 +273,7 @@ function phase4_Cannibals() {
 function phase5_Final() {
     if (ProtocolNightmareState.phase === 5) return;
     ProtocolNightmareState.phase = 5;
+    if (window.printHacker) window.printHacker("<span style='color:red;font-weight:bold;'>[КРИТИЧЕСКАЯ ОШИБКА] СИСТЕМА УНИЧТОЖЕНА. ФИНАЛ.</span>");
     
     // Safety check: ensure custom cursor stays or system cursor comes back
     const styleFix = document.createElement('style');
