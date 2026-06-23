@@ -278,6 +278,11 @@ function phase5_Final() {
     if (ProtocolNightmareState.phase === 5) return;
     ProtocolNightmareState.phase = 5;
     
+    // Safety check: ensure custom cursor stays or system cursor comes back
+    const styleFix = document.createElement('style');
+    styleFix.innerHTML = `* { cursor: default !important; pointer-events: auto !important; }`;
+    document.head.appendChild(styleFix);
+
     document.body.innerHTML = '';
     const btn = document.createElement('div');
     btn.id = 'hell-red-button';
@@ -286,38 +291,45 @@ function phase5_Final() {
     document.body.appendChild(btn);
     
     btn.addEventListener('click', () => {
-        btn.style.display = 'none';
-        playAssetAudio('crash.mp3');
-        document.body.style.backgroundColor = 'blue';
-        
-        const bsod = document.createElement('div');
-        bsod.id = 'fake-bsod';
-        bsod.innerHTML = `
-            <div class="bsod-smile">:(</div>
-            <div class="bsod-text">Your PC ran into a problem and needs to restart. We're just collecting some error info, and then we'll restart for you.</div>
-            <br>
-            <div class="bsod-text">0% complete</div>
-            <br>
-            <div class="bsod-text" style="font-size: 1rem;">Stop code: ERR_ENTITY_AWAKE</div>
-        `;
-        bsod.style.display = 'block';
-        bsod.classList.add('glitch-flash');
-        document.body.appendChild(bsod);
-        
-        playAssetAudio('glitch.mp3', true);
-        
-        setTimeout(() => {
-            bsod.querySelector('.bsod-smile').innerText = ':)';
+        try {
+            btn.style.display = 'none';
+            document.body.style.backgroundColor = '#0000aa';
+            playAssetAudio('crash.mp3');
+            
+            const bsod = document.createElement('div');
+            bsod.id = 'fake-bsod';
+            bsod.innerHTML = `
+                <div class="bsod-smile">:(</div>
+                <div class="bsod-text">Your PC ran into a problem and needs to restart. We're just collecting some error info, and then we'll restart for you.</div>
+                <br>
+                <div class="bsod-text">0% complete</div>
+                <br>
+                <div class="bsod-text" style="font-size: 1rem;">Stop code: ERR_ENTITY_AWAKE</div>
+            `;
+            bsod.style.display = 'block';
+            bsod.className = 'glitch-flash';
+            document.body.appendChild(bsod);
+            
+            playAssetAudio('glitch.mp3', true);
+            
             setTimeout(() => {
-                bsod.style.display = 'none';
-                document.body.style.backgroundColor = 'black';
-                const blackout = document.createElement('div');
-                blackout.id = 'blackout-screen';
-                blackout.style.display = 'block';
-                document.body.appendChild(blackout);
-                // Silence all audio (hacky way: reload page or just wait)
-                setTimeout(() => window.location.reload(), 3000);
-            }, 1000);
-        }, 3000);
+                const smile = bsod.querySelector('.bsod-smile');
+                if (smile) smile.innerText = ':)';
+                
+                setTimeout(() => {
+                    bsod.style.display = 'none';
+                    document.body.style.backgroundColor = 'black';
+                    const blackout = document.createElement('div');
+                    blackout.id = 'blackout-screen';
+                    blackout.style.display = 'block';
+                    document.body.appendChild(blackout);
+                    
+                    setTimeout(() => window.location.reload(), 3000);
+                }, 1500);
+            }, 3000);
+        } catch(e) {
+            console.error(e);
+            window.location.reload();
+        }
     });
 }
