@@ -3064,18 +3064,21 @@ function changeTheme(themeName) {
                         document.head.appendChild(cursorStyleEl);
                     }
                     cursorStyleEl.innerHTML = `
-                        html.cursor-circle, html.cursor-circle *, html.cursor-circle *::before, html.cursor-circle *::after, html.cursor-circle *::placeholder, html.cursor-circle ::-webkit-scrollbar, html.cursor-circle ::-webkit-scrollbar-thumb, html.cursor-circle ::-webkit-resizer { cursor: none !important; }
-                        html:not(.cursor-circle), html:not(.cursor-circle) *, html:not(.cursor-circle) *::before, html:not(.cursor-circle) *::after, html:not(.cursor-circle) *::placeholder {
+                        html.cursor-circle, html.cursor-circle *:not(input):not(textarea), html.cursor-circle *:not(input):not(textarea)::before, html.cursor-circle *:not(input):not(textarea)::after, html.cursor-circle ::-webkit-scrollbar, html.cursor-circle ::-webkit-scrollbar-thumb, html.cursor-circle ::-webkit-resizer { cursor: none !important; }
+                        html:not(.cursor-circle), html:not(.cursor-circle) *:not(input):not(textarea), html:not(.cursor-circle) *:not(input):not(textarea)::before, html:not(.cursor-circle) *:not(input):not(textarea)::after {
                             cursor: ${pngUrlDefault} 2 2, auto !important;
                         }
                         html:not(.cursor-circle) a, html:not(.cursor-circle) a *,
                         html:not(.cursor-circle) button, html:not(.cursor-circle) button *,
-                        html:not(.cursor-circle) input, html:not(.cursor-circle) select, html:not(.cursor-circle) textarea,
+                        html:not(.cursor-circle) select,
                         html:not(.cursor-circle) .theme-card, html:not(.cursor-circle) .theme-card *,
                         html:not(.cursor-circle) .msgr-tab, html:not(.cursor-circle) .msgr-tab *,
                         html:not(.cursor-circle) .dropdown-item, html:not(.cursor-circle) .dropdown-item *,
                         html:not(.cursor-circle) [onclick], html:not(.cursor-circle) [onclick] * {
                             cursor: ${pngUrlPointer} 8 2, pointer !important;
+                        }
+                        input, textarea {
+                            cursor: text !important;
                         }
                     `;
                 });
@@ -3764,6 +3767,14 @@ document.addEventListener('DOMContentLoaded', () => {
 
     document.addEventListener('mouseenter', () => {
         if (cursor && document.documentElement.classList.contains('cursor-circle')) cursor.style.opacity = '1';
+    });
+
+    document.addEventListener('mouseover', (e) => {
+        if (cursor && (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA')) {
+            cursor.style.opacity = '0';
+        } else if (cursor && document.documentElement.classList.contains('cursor-circle')) {
+            cursor.style.opacity = '1';
+        }
     });
 
     // Dashboard Live Stats Animation
