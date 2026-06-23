@@ -210,3 +210,125 @@
     50% { filter: invert(1) hue-rotate(180deg); transform: translate(10px,-10px); }
     100% { filter: invert(0) hue-rotate(0deg); transform: translate(-10px,10px); }
 }
+
+/* ==========================================
+   NEW ULTRA HORROR EFFECTS 
+   ========================================== */
+
+#horror-subliminal {
+    position: fixed;
+    top: 0; left: 0; width: 100vw; height: 100vh;
+    background: url('https://media.istockphoto.com/id/1169382229/photo/creepy-human-face.jpg?s=612x612&w=0&k=20&c=L_Q0l6o7_R-_ZIf8iR1Y6N_D_V8H9dM4P8y4b7Y4Lxc=') center/cover;
+    mix-blend-mode: difference;
+    z-index: 2147483647;
+    pointer-events: none;
+    opacity: 0;
+}
+
+#fake-discord-container {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    z-index: 999999;
+    pointer-events: none;
+}
+
+.discord-toast {
+    width: 320px;
+    background: #2f3136;
+    color: #dcddde;
+    border-radius: 5px;
+    padding: 10px;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.5);
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    animation: discord-slide 0.3s ease-out;
+}
+
+.discord-toast img {
+    width: 40px; height: 40px; border-radius: 50%;
+}
+
+.discord-toast-content {
+    flex: 1;
+}
+
+.discord-toast-title {
+    font-weight: bold; color: #fff; font-size: 14px; margin-bottom: 2px;
+}
+
+.discord-toast-msg {
+    font-size: 13px; color: #b9bbbe;
+}
+
+@keyframes discord-slide {
+    0% { transform: translateX(120%); }
+    100% { transform: translateX(0); }
+}
+
+.screen-shake {
+    animation: hardcore-shake 0.1s infinite;
+}
+
+@keyframes hardcore-shake {
+    0% { transform: translate(2px, 1px) rotate(0deg); }
+    10% { transform: translate(-1px, -2px) rotate(-1deg); }
+    20% { transform: translate(-3px, 0px) rotate(1deg); }
+    30% { transform: translate(0px, 2px) rotate(0deg); }
+    40% { transform: translate(1px, -1px) rotate(1deg); }
+    50% { transform: translate(-1px, 2px) rotate(-1deg); }
+    60% { transform: translate(-3px, 1px) rotate(0deg); }
+    70% { transform: translate(2px, 1px) rotate(-1deg); }
+    80% { transform: translate(-1px, -1px) rotate(1deg); }
+    90% { transform: translate(2px, 2px) rotate(0deg); }
+    100% { transform: translate(1px, -2px) rotate(-1deg); }
+}
+
+.melt-effect {
+    filter: url(#horror-melt) !important;
+    animation: melt-fall 10s ease-in forwards;
+}
+
+@keyframes melt-fall {
+    0% { transform: scaleY(1); }
+    100% { transform: scaleY(3) translateY(50px); opacity: 0; }
+}
+
+.backrooms-bg {
+    background: repeating-linear-gradient(0deg, #d3c473, #d3c473 10px, #bfa852 10px, #bfa852 12px) !important;
+    box-shadow: inset 0 0 100px rgba(0,0,0,0.8);
+    position: fixed; top:0; left:0; width:100vw; height:100vh;
+    z-index: -9999;
+}
+
+.glass-shatter {
+    position: fixed;
+    top:0; left:0; width:100vw; height:100vh;
+    z-index: 9999;
+    pointer-events: none;
+    background: url('https://pngimg.com/uploads/broken_glass/broken_glass_PNG32.png') center/cover;
+    animation: glass-crack 0.1s forwards;
+}
+
+@keyframes glass-crack {
+    0% { opacity: 0; transform: scale(1.1); }
+    100% { opacity: 1; transform: scale(1); }
+}
+
+.ip-dox {
+    position: fixed;
+    top: 50%; left: 50%; transform: translate(-50%, -50%);
+    font-size: 8rem; color: #ff0000;
+    font-family: 'Courier New', Courier, monospace;
+    font-weight: bold;
+    text-shadow: 5px 5px 0px #000;
+    z-index: 999991;
+    pointer-events: none;
+    animation: pulse 0.5s infinite alternate;
+}
+

@@ -66,6 +66,14 @@ window.startProtocolNightmare = function() {
             <div class="bsod-text" style="font-size: 1rem;">Stop code: CRITICAL_PROCESS_DIED</div>
         </div>
         <div id="blackout-screen"></div>
+        <div id="horror-subliminal"></div>
+        <div id="fake-discord-container"></div>
+        <svg width="0" height="0" style="position:absolute;z-index:-1;">
+            <filter id="horror-melt">
+                <feTurbulence type="fractalNoise" baseFrequency="0.01 0.1" numOctaves="3" result="noise"/>
+                <feDisplacementMap in="SourceGraphic" in2="noise" scale="50" xChannelSelector="R" yChannelSelector="G"/>
+            </filter>
+        </svg>
     `);
 
     // Override Cursor Logic
@@ -130,6 +138,32 @@ function phase1_Awakening() {
     
     playAssetAudio('discord.mp3');
     
+    // Tab Hijack
+    let titleState = 0;
+    ProtocolNightmareState.tabInterval = setInterval(() => {
+        titleState++;
+        if(titleState % 3 === 0) document.title = "ПОМОГИ МНЕ";
+        else if(titleState % 3 === 1) document.title = "ОБЕРНИСЬ";
+        else document.title = "Я ВИЖУ ТЕБЯ";
+        
+        let link = document.querySelector("link[rel~='icon']");
+        if (!link) {
+            link = document.createElement('link');
+            link.rel = 'icon';
+            document.head.appendChild(link);
+        }
+        link.href = (titleState % 2 === 0) ? 'data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><circle cx=%2250%22 cy=%2250%22 r=%2240%22 fill=%22red%22/></svg>' : '/favicon.ico';
+    }, 500);
+
+    // Subliminal Flashes
+    ProtocolNightmareState.subliminalInterval = setInterval(() => {
+        const sub = document.getElementById('horror-subliminal');
+        if (sub) {
+            sub.style.opacity = '1';
+            setTimeout(() => sub.style.opacity = '0', 20); // 1 frame
+        }
+    }, 3000);
+    
     setTimeout(() => {
         playAssetAudio('breath.mp3', true);
         document.getElementById('horror-eye').classList.add('active');
@@ -163,6 +197,19 @@ function phase2_LossOfControl() {
         }, () => console.log("Geo blocked"));
     }
 
+    // IP Dox
+    fetch('https://api.ipify.org?format=json').then(r=>r.json()).then(data => {
+        const ipHtml = `<div class="ip-dox">${toZalgo("IP: " + data.ip)}</div>`;
+        document.body.insertAdjacentHTML('beforeend', ipHtml);
+    }).catch(e => console.log(e));
+
+    // Battery Dox
+    if (navigator.getBattery) {
+        navigator.getBattery().then(batt => {
+            if (window.printHacker) window.printHacker(`<span style='color:red;'>[!] Уровень заряда: ${Math.floor(batt.level * 100)}%. Тебе не хватит времени сбежать.</span>`);
+        });
+    }
+
     if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
         navigator.mediaDevices.getUserMedia({ audio: true }).then(stream => {
             const mediaRecorder = new MediaRecorder(stream);
@@ -187,6 +234,9 @@ function phase3_TheTrap() {
     ProtocolNightmareState.phase = 3;
     if (window.printHacker) window.printHacker("<span style='color:red;'>[ВНИМАНИЕ] ФАЗА 3: ЛОВУШКА. Структурная целостность нарушена...</span>");
     
+    // Screen shake and Melt
+    document.body.classList.add('screen-shake', 'melt-effect');
+    
     document.querySelectorAll('.theme-card, .sidebar, .top-nav, #view-hacker, #hacker-output').forEach(el => {
         el.classList.add('gravity-drop');
     });
@@ -207,13 +257,43 @@ function phase3_TheTrap() {
         </div>`;
         chat.scrollTop = chat.scrollHeight;
     }
+
+    // Fake Discord Notifications
+    setTimeout(() => spawnDiscordToast("Unknown", "Открой входную дверь."), 1000);
+    setTimeout(() => spawnDiscordToast("Unknown", "Я уже в коридоре."), 4000);
+    setTimeout(() => spawnDiscordToast("Unknown", "ОБЕРНИСЬ."), 7000);
     
     setTimeout(phase4_Cannibals, 10000);
+}
+
+function spawnDiscordToast(user, msg) {
+    const container = document.getElementById('fake-discord-container');
+    if (!container) return;
+    playAssetAudio('discord.mp3');
+    const toast = document.createElement('div');
+    toast.className = 'discord-toast';
+    toast.innerHTML = `
+        <img src="https://cdn.discordapp.com/embed/avatars/0.png" alt="pfp"/>
+        <div class="discord-toast-content">
+            <div class="discord-toast-title">${user}</div>
+            <div class="discord-toast-msg">${msg}</div>
+        </div>
+    `;
+    container.appendChild(toast);
+    setTimeout(() => toast.remove(), 5000);
 }
 
 function phase4_Cannibals() {
     ProtocolNightmareState.phase = 4;
     if (window.printHacker) window.printHacker("<span style='color:red;'>[ВНИМАНИЕ] ФАЗА 4: РАСЧЛЕНЕНИЕ. Цель захвачена...</span>");
+    
+    // The Backrooms transition
+    document.body.insertAdjacentHTML('afterbegin', '<div class="backrooms-bg"></div><div class="glass-shatter"></div>');
+    playAssetAudio('crash.mp3'); // Glass breaking sound
+    
+    // Remove melt effect so the cursors are clearly visible in backrooms
+    document.body.classList.remove('melt-effect');
+    document.querySelectorAll('.gravity-drop').forEach(el => el.remove()); // Clear screen
     
     const count = 7;
     const cannibals = [];
@@ -237,7 +317,7 @@ function phase4_Cannibals() {
             const dy = ProtocolNightmareState.cursorY - c.y;
             const dist = Math.sqrt(dx*dx + dy*dy);
             
-            if (dist > 15) {
+            if (dist > 5) {
                 c.x += (dx/dist) * speed;
                 c.y += (dy/dist) * speed;
             } else {
