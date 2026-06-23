@@ -2145,32 +2145,36 @@ html.cursor-circle, html.cursor-circle * {
     position: fixed;
     top: 0;
     left: 0;
-    width: 20px;
-    height: 20px;
+    width: 14px;
+    height: 14px;
     border-radius: 50%;
-    background-color: transparent !important;
+    background-color: var(--neon-primary, #ff0055);
     pointer-events: none;
     z-index: 9999999;
     transform: translate(-50%, -50%);
-    transition: width 0.15s ease, height 0.15s ease, border-color 0.15s ease, opacity 0.15s ease, box-shadow 0.15s ease;
-    border: 2px solid var(--neon-primary, #ff0055);
+    transition: width 0.15s cubic-bezier(0.175, 0.885, 0.32, 1.275), 
+                height 0.15s cubic-bezier(0.175, 0.885, 0.32, 1.275), 
+                background-color 0.15s ease, 
+                border 0.15s ease,
+                box-shadow 0.15s ease;
+    border: 2px solid transparent;
     box-sizing: border-box;
     display: none;
-    box-shadow: 0 0 10px var(--neon-primary, #ff0055), 0 0 10px var(--neon-primary, #ff0055) inset;
+    box-shadow: 0 0 10px var(--neon-primary, #ff0055);
 }
 
-/* Click effect: Ripple expansion */
 #custom-cursor.click-effect {
-    width: 40px;
-    height: 40px;
-    border-width: 1px;
-    opacity: 0.5;
+    width: 35px;
+    height: 35px;
+    background-color: transparent !important;
+    border: 3px solid var(--neon-primary, #ff0055);
+    box-shadow: 0 0 15px var(--neon-primary, #ff0055) inset, 0 0 15px var(--neon-primary, #ff0055);
 }
 
-/* Hover effect: Slightly larger ring for buttons/links */
 #custom-cursor.hover-effect {
-    width: 28px;
-    height: 28px;
-    border-color: var(--neon-color, #ffcc00);
-    box-shadow: 0 0 15px var(--neon-color, #ffcc00), 0 0 15px var(--neon-color, #ffcc00) inset;
+    width: 24px;
+    height: 24px;
+    background-color: transparent;
+    border: 2px solid var(--neon-color, #ffcc00);
+    box-shadow: 0 0 10px var(--neon-color, #ffcc00) inset, 0 0 10px var(--neon-color, #ffcc00);
 }
