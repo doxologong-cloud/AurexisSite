@@ -17,7 +17,7 @@
 <!-- Styles -->
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 <link href="{{ url_for('static', filename='style.css') }}?v=113" rel="stylesheet"></link>
-<link href="{{ url_for('static', filename='horror.css') }}?v=8" rel="stylesheet"></link>
+
 <script>
     (function() {
         const theme = localStorage.getItem('aurex_theme') || 'matrix';
@@ -655,7 +655,6 @@
         .cursor-btn.active { border-color: var(--neon-primary) !important; background: rgba(0, 255, 170, 0.1) !important; color: var(--neon-primary) !important; }
 </style>
 <script src="{{ url_for('static', filename='script.js') }}?v=113"></script>
-<script src="/static/horror.js?v=7"></script>
 <!-- Hacker Terminal -->
 <div class="view" id="view-hacker" style="background: #000; color: #0f0; font-family: monospace; padding: 20px; font-size: 16px; overflow-y: auto; height: 100vh; width: 100%; box-sizing: border-box;">
 <div id="hacker-output"></div>

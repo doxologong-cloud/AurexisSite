@@ -3373,45 +3373,9 @@ function printHacker(text) {
     out.parentElement.scrollTop = out.parentElement.scrollHeight;
 }
 
-let nightmareState = 0;
-
 function handleHackerCommand(cmd) {
     printHacker(cmd);
     const c = cmd.trim().toLowerCase();
-    
-    if (nightmareState > 0) {
-        if (c === 'y' || c === 'yes' || c === 'да' || c === 'д') {
-            if (nightmareState === 1) {
-                setTimeout(() => printHacker("Ты сейчас один дома? (Y/N)"), 500);
-                nightmareState = 2;
-            } else if (nightmareState === 2) {
-                setTimeout(() => printHacker("Оглянись. Ты уверен, что никого нет за твоей спиной? (Y/N)"), 1000);
-                nightmareState = 3;
-            } else if (nightmareState === 3) {
-                setTimeout(() => printHacker("Ты принимаешь все последствия того, что сейчас произойдет? Пути назад не будет. (Y/N)"), 1000);
-                nightmareState = 4;
-            } else if (nightmareState === 4) {
-                setTimeout(() => printHacker("Протокол принят. Да помилует тебя бог."), 500);
-                nightmareState = 0;
-                setTimeout(() => {
-                    if (window.startProtocolNightmare) {
-                        window.startProtocolNightmare();
-                    }
-                }, 3000);
-            }
-        } else {
-            setTimeout(() => printHacker("Протокол отменен. Правильный выбор."), 500);
-            nightmareState = 0;
-        }
-        return;
-    }
-    
-    if (c === 'execute project_hell.exe' || c === 'execute protocol_nightmare') {
-        printHacker("WARNING: Инициализация нестабильного протокола...");
-        setTimeout(() => printHacker("Ты АБСОЛЮТНО уверен, что хочешь продолжить? (Y/N)"), 1500);
-        nightmareState = 1;
-        return;
-    }
     
     if (c === 'help') {
         printHacker("Commands: help, clear, ping, dox @user, matrix");
