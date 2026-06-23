@@ -3684,7 +3684,8 @@ function switchView(viewId) {
 // === CURSOR SHAPE SETTING ===
 window.changeCursorShape = function(shape) {
     localStorage.setItem('aurex_cursor_shape', shape);
-    updateThemeColors(theme);
+    const currentTheme = localStorage.getItem('aurex_theme') || 'matrix';
+    changeTheme(currentTheme);
     
     // Update UI toggle buttons if they exist
     document.querySelectorAll('.cursor-btn').forEach(btn => btn.classList.remove('active'));
