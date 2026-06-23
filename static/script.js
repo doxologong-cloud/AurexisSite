@@ -3065,13 +3065,15 @@ function changeTheme(themeName) {
                     }
                     cursorStyleEl.innerHTML = `
                         html.cursor-circle, html.cursor-circle * { cursor: none !important; }
-                        html:not(.cursor-circle) html, html:not(.cursor-circle) body, html:not(.cursor-circle) div, html:not(.cursor-circle) p, html:not(.cursor-circle) span, html:not(.cursor-circle) h1, html:not(.cursor-circle) h2, html:not(.cursor-circle) h3, html:not(.cursor-circle) h4, html:not(.cursor-circle) h5, html:not(.cursor-circle) h6, html:not(.cursor-circle) section, html:not(.cursor-circle) article, html:not(.cursor-circle) nav, html:not(.cursor-circle) header, html:not(.cursor-circle) footer, html:not(.cursor-circle) main, html:not(.cursor-circle) ul, html:not(.cursor-circle) li, html:not(.cursor-circle) label,
-                        html:not(.cursor-circle) .view, html:not(.cursor-circle) .view * {
+                        html:not(.cursor-circle), html:not(.cursor-circle) * {
                             cursor: ${pngUrlDefault} 2 2, auto !important;
                         }
-                        html:not(.cursor-circle) a, html:not(.cursor-circle) a:hover, html:not(.cursor-circle) a:active, html:not(.cursor-circle) a:focus,
-                        html:not(.cursor-circle) button, html:not(.cursor-circle) button:hover, html:not(.cursor-circle) button:active, html:not(.cursor-circle) button:focus,
-                        html:not(.cursor-circle) input, html:not(.cursor-circle) select, html:not(.cursor-circle) textarea, html:not(.cursor-circle) .theme-card, html:not(.cursor-circle) .msgr-tab, html:not(.cursor-circle) .dropdown-item, html:not(.cursor-circle) .dropdown-menu a,
+                        html:not(.cursor-circle) a, html:not(.cursor-circle) a *,
+                        html:not(.cursor-circle) button, html:not(.cursor-circle) button *,
+                        html:not(.cursor-circle) input, html:not(.cursor-circle) select, html:not(.cursor-circle) textarea,
+                        html:not(.cursor-circle) .theme-card, html:not(.cursor-circle) .theme-card *,
+                        html:not(.cursor-circle) .msgr-tab, html:not(.cursor-circle) .msgr-tab *,
+                        html:not(.cursor-circle) .dropdown-item, html:not(.cursor-circle) .dropdown-item *,
                         html:not(.cursor-circle) [onclick], html:not(.cursor-circle) [onclick] * {
                             cursor: ${pngUrlPointer} 8 2, pointer !important;
                         }
