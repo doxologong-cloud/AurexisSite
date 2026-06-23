@@ -3050,36 +3050,48 @@ function changeTheme(themeName) {
     const svgDefaultStr = `<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 32 32"><defs><linearGradient id="theme-grad" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#${color1}"/><stop offset="100%" stop-color="#${color2}"/></linearGradient></defs><g transform="translate(12, 6) rotate(-25)"><polygon points="-1,0 -9,18 -4,18 -1,12" fill="rgba(0,0,0,0.5)" transform="translate(1, 2)"/><polygon points="1,0 9,18 4,18 1,12" fill="rgba(0,0,0,0.5)" transform="translate(1, 2)"/><polygon points="-1,0 -9,18 -4,18 -1,12" fill="url(#theme-grad)"/><polygon points="1,0 9,18 4,18 1,12" fill="url(#theme-grad)"/></g></svg>`;
         const svgPointerStr = `<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 32 32"><defs><linearGradient id="theme-grad-ptr" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#${ptrColor1}"/><stop offset="100%" stop-color="#${ptrColor2}"/></linearGradient></defs><g transform="translate(12, 6) rotate(-25)"><polygon points="-1,0 -9,18 -4,18 -1,12" fill="rgba(0,0,0,0.5)" transform="translate(1, 2)"/><polygon points="1,0 9,18 4,18 1,12" fill="rgba(0,0,0,0.5)" transform="translate(1, 2)"/><polygon points="-1,0 -9,18 -4,18 -1,12" fill="url(#theme-grad-ptr)"/><polygon points="1,0 9,18 4,18 1,12" fill="url(#theme-grad-ptr)"/></g></svg>`;
         
-        let finalCursorDefault = `url("data:image/svg+xml,${encodeURIComponent(svgDefaultStr)}") 12 6, auto`;
-        let finalCursorPointer = `url("data:image/svg+xml,${encodeURIComponent(svgPointerStr)}") 12 6, pointer`;
-
-        if (themeName === 'hacked') {
-            const hackerCursorStr = `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path d="M 2 2 L 10 22 L 13 13 L 22 10 Z" fill="#ff0000" stroke="#ff0000" stroke-width="2" stroke-linejoin="round" stroke-opacity="0.4"/></svg>`;
-            finalCursorDefault = `url("data:image/svg+xml,${encodeURIComponent(hackerCursorStr)}") 2 2, crosshair`;
-            finalCursorPointer = `url("data:image/svg+xml,${encodeURIComponent(hackerCursorStr)}") 2 2, crosshair`;
+        // Helper function for PNG rasterization
+        function rasterizeSVGToPNG(svgStr, hotspotX, hotspotY, callback) {
+            const img = new Image();
+            img.onload = function() {
+                const canvas = document.createElement('canvas');
+                canvas.width = img.width || 32;
+                canvas.height = img.height || 32;
+                const ctx = canvas.getContext('2d');
+                ctx.drawImage(img, 0, 0);
+                const pngDataUrl = canvas.toDataURL('image/png');
+                callback(`url("${pngDataUrl}") ${hotspotX} ${hotspotY}`);
+            };
+            img.src = 'data:image/svg+xml,' + encodeURIComponent(svgStr);
         }
 
-        let cursorStyleEl = document.getElementById('dynamic-cursor-style');
-        if (!cursorStyleEl) {
-            cursorStyleEl = document.createElement('style');
-            cursorStyleEl.id = 'dynamic-cursor-style';
-            document.head.appendChild(cursorStyleEl);
-        }
-        cursorStyleEl.innerHTML = `
-            html, body, div, p, span, h1, h2, h3, h4, h5, h6, section, article, nav, header, footer, main, ul, li, label,
-            #cursor-lock, .view, .view * {
-                cursor: ${finalCursorDefault} !important;
-            }
-            a, a:hover, a:active, a:focus,
-            button, button:hover, button:active, button:focus,
-            input, select, textarea, .theme-card, .msgr-tab, .dropdown-item,
-            [onclick], [onclick] * {
-                cursor: ${finalCursorPointer} !important;
-            }
-            #cursor-lock {
-                cursor: ${finalCursorDefault} !important;
-            }
-        `;
+        const hackerCursorStr = `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path d="M 2 2 L 10 22 L 13 13 L 22 10 Z" fill="#ff0000" stroke="#ff0000" stroke-width="2" stroke-linejoin="round" stroke-opacity="0.4"/></svg>`;
+
+        rasterizeSVGToPNG(themeName === 'hacked' ? hackerCursorStr : svgDefaultStr, themeName === 'hacked' ? 2 : 12, themeName === 'hacked' ? 2 : 6, function(pngUrlDefault) {
+            rasterizeSVGToPNG(themeName === 'hacked' ? hackerCursorStr : svgPointerStr, themeName === 'hacked' ? 2 : 12, themeName === 'hacked' ? 2 : 6, function(pngUrlPointer) {
+                let cursorStyleEl = document.getElementById('dynamic-cursor-style');
+                if (!cursorStyleEl) {
+                    cursorStyleEl = document.createElement('style');
+                    cursorStyleEl.id = 'dynamic-cursor-style';
+                    document.head.appendChild(cursorStyleEl);
+                }
+                cursorStyleEl.innerHTML = `
+                    html, body, div, p, span, h1, h2, h3, h4, h5, h6, section, article, nav, header, footer, main, ul, li, label,
+                    #cursor-lock, .view, .view * {
+                        cursor: ${pngUrlDefault}, auto !important;
+                    }
+                    a, a:hover, a:active, a:focus,
+                    button, button:hover, button:active, button:focus,
+                    input, select, textarea, .theme-card, .msgr-tab, .dropdown-item,
+                    [onclick], [onclick] * {
+                        cursor: ${pngUrlPointer}, pointer !important;
+                    }
+                    #cursor-lock {
+                        cursor: ${pngUrlDefault}, auto !important;
+                    }
+                `;
+            });
+        });
         
 
         
