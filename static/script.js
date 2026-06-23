@@ -126,43 +126,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // SPA Routing Logic
     function handleRoute() {
-        // === ADVANCED CURSOR LOCK OVERLAY ===
-        let cursorLock = document.getElementById('cursor-lock');
-        if (!cursorLock) {
-            cursorLock = document.createElement('div');
-            cursorLock.id = 'cursor-lock';
-            cursorLock.style.position = 'fixed';
-            cursorLock.style.top = '0';
-            cursorLock.style.left = '0';
-            cursorLock.style.width = '100vw';
-            cursorLock.style.height = '100vh';
-            cursorLock.style.zIndex = '9999999';
-            
-            // Hardware Acceleration + Persistent Render Tree
-            cursorLock.style.transform = 'translateZ(0)';
-            cursorLock.style.willChange = 'visibility';
-            cursorLock.style.visibility = 'hidden';
-            
-            document.body.appendChild(cursorLock);
-        }
-        
-        // Show shield without remounting DOM
-        cursorLock.style.visibility = 'visible';
-
-        // Shield lifetime
-        setTimeout(() => {
-            cursorLock.style.visibility = 'hidden';
-        }, 400);
-
-        // Yield main thread to guarantee shield paint BEFORE heavy DOM swap
-        requestAnimationFrame(() => {
-            requestAnimationFrame(() => {
-                _executeRouteDOMSwap();
-            });
-        });
-    }
-
-    function _executeRouteDOMSwap() {
         const hash = window.location.hash || '#home';
         
         document.querySelectorAll('.view').forEach(v => {
@@ -3077,7 +3040,7 @@ function changeTheme(themeName) {
                 }
                 cursorStyleEl.innerHTML = `
                     html, body, div, p, span, h1, h2, h3, h4, h5, h6, section, article, nav, header, footer, main, ul, li, label,
-                    #cursor-lock, .view, .view * {
+                    .view, .view * {
                         cursor: ${pngUrlDefault}, auto !important;
                     }
                     a, a:hover, a:active, a:focus,
@@ -3086,9 +3049,7 @@ function changeTheme(themeName) {
                     [onclick], [onclick] * {
                         cursor: ${pngUrlPointer}, pointer !important;
                     }
-                    #cursor-lock {
-                        cursor: ${pngUrlDefault}, auto !important;
-                    }
+                    
                 `;
             });
         });

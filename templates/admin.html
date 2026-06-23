@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Админ-панель | Aurexis Studio</title>
     <link rel="icon" type="image/x-icon" href="{{ url_for('static', filename='assets/favicon.ico') }}">
-    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}?v=100">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}?v=101">
     <style>
         body {
             margin: 0;
@@ -318,7 +318,7 @@
         }
         cursorStyleEl.innerHTML = `
             html, body, div, p, span, h1, h2, h3, h4, h5, h6, section, article, nav, header, footer, main, ul, li, label,
-            #cursor-lock, .view, .view * {
+            .view, .view * {
                 cursor: ${finalCursorDefault} !important;
             }
             a, a:hover, a:active, a:focus,
@@ -354,7 +354,7 @@
                 if (cursorStyleEl) {
                     cursorStyleEl.innerHTML = `
                         html, body, div, p, span, h1, h2, h3, h4, h5, h6, section, article, nav, header, footer, main, ul, li, label,
-                        #cursor-lock, .view, .view * {
+                        .view, .view * {
                             cursor: ${pngUrlDefault}, auto !important;
                         }
                         a, a:hover, a:active, a:focus,
@@ -363,9 +363,7 @@
                         [onclick], [onclick] * {
                             cursor: ${pngUrlPointer}, pointer !important;
                         }
-                        #cursor-lock {
-                            cursor: ${pngUrlDefault}, auto !important;
-                        }
+                        
                     `;
                 }
             });
