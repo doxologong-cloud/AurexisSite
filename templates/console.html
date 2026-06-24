@@ -4,385 +4,787 @@
     <meta charset="UTF-8">
     <title>AUREX OS TERMINAL</title>
     <style>
-        body, html { margin: 0; padding: 0; height: 100%; background: #000; color: #00ffcc; font-family: 'Consolas', monospace; overflow: hidden; }
-        .console-container { display: flex; flex-direction: column; height: 100vh; padding: 20px; box-sizing: border-box; }
-        .console-output { flex-grow: 1; overflow-y: auto; display: flex; flex-direction: column; justify-content: flex-end; padding-bottom: 20px; font-size: 1rem; line-height: 1.5; }
-        .console-input-row { display: flex; align-items: center; border-top: 1px dashed #00ffcc; padding-top: 15px; }
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body, html { height: 100%; background: #000; color: #00ffcc; font-family: 'Consolas', monospace; overflow: hidden; }
+
+        /* ─── TERMINAL ─── */
+        .console-container { display: flex; flex-direction: column; height: 100vh; padding: 20px; }
+        .console-output { flex-grow: 1; overflow-y: auto; display: flex; flex-direction: column; justify-content: flex-end; padding-bottom: 20px; font-size: 1rem; line-height: 1.6; }
+        .console-input-row { display: flex; align-items: center; border-top: 1px dashed #00ffcc44; padding-top: 15px; }
         .console-input { flex-grow: 1; background: transparent; border: none; color: #fff; font-family: 'Consolas', monospace; font-size: 1.2rem; outline: none; margin-left: 10px; }
-        
-        @keyframes glitchText {
-            0% { transform: translate(0); }
-            20% { transform: translate(-2px, 1px); }
-            40% { transform: translate(2px, -1px); color: #fff; }
-            60% { transform: translate(-1px, 2px); }
-            80% { transform: translate(1px, -2px); color: #ff0033; }
-            100% { transform: translate(0); }
-        }
-    
-        
-        /* --- DOX DIVE & LOOP ANIMATIONS --- */
+        .prompt { color: #00ffcc; }
+
+        /* ─── DOX OVERLAY ─── */
         #dive-overlay {
             position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
-            background: #000; z-index: 100; display: none;
-            perspective: 1000px; overflow: hidden;
+            background: #000; z-index: 100; display: none; overflow: hidden;
         }
-        
+
+        /* Main canvas for all animation */
         #particle-canvas {
             position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 1;
         }
 
+        /* Big ПЕТЛЯ text */
         #loop-text {
-            position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
-            font-size: 8rem; color: rgba(255, 0, 51, 0.8); font-weight: bold;
-            font-family: 'Consolas', monospace; letter-spacing: 20px;
-            text-shadow: 0 0 50px red, 0 0 100px red;
-            z-index: 2; opacity: 0; pointer-events: none;
+            position: absolute; top: 50%; left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: clamp(4rem, 12vw, 10rem);
+            color: rgba(255, 0, 51, 0);
+            font-weight: 900;
+            font-family: 'Consolas', monospace;
+            letter-spacing: 20px;
+            text-shadow: 0 0 60px red, 0 0 120px red;
+            z-index: 5; pointer-events: none;
+            transition: color 1s;
+            text-align: center;
+            width: 100%;
         }
 
-        #fake-monitor {
-            position: absolute; top: 50%; left: 50%; width: 400px; height: 300px;
-            background: #000; border: 15px solid #1a1a1a; box-shadow: 0 0 50px #00ffcc;
-            transform: translate(-50%, -50%) translateZ(-3000px);
-            opacity: 0; z-index: 3; display: flex; justify-content: center; align-items: center;
-            border-radius: 10px;
-            /* Inner glowing screen */
-            box-shadow: inset 0 0 20px #00ffcc, 0 0 50px #00ffcc;
-        }
-        
-        /* The base stand of the monitor */
-        #fake-monitor::after {
-            content: ''; position: absolute; bottom: -60px; left: 50%; transform: translateX(-50%);
-            width: 100px; height: 60px; background: #1a1a1a; clip-path: polygon(20% 0%, 80% 0%, 100% 100%, 0% 100%);
+        /* Scan line effect */
+        #scanlines {
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            background: repeating-linear-gradient(
+                0deg,
+                transparent,
+                transparent 2px,
+                rgba(0, 0, 0, 0.15) 2px,
+                rgba(0, 0, 0, 0.15) 4px
+            );
+            z-index: 6; pointer-events: none; opacity: 0;
         }
 
-        .dive-animation {
-            animation: diveIntoMonitor 6s cubic-bezier(0.7, 0, 0.1, 1) forwards !important;
+        /* Vignette */
+        #vignette {
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            background: radial-gradient(ellipse at center, transparent 40%, rgba(0,0,0,0.9) 100%);
+            z-index: 4; pointer-events: none;
         }
-        @keyframes diveIntoMonitor {
-            0% { transform: translate(-50%, -50%) translateZ(-3000px); opacity: 0; }
-            10% { transform: translate(-50%, -50%) translateZ(-2000px); opacity: 1; }
-            80% { transform: translate(-50%, -50%) translateZ(800px); opacity: 1; box-shadow: 0 0 200px #00ffcc; }
-            100% { transform: translate(-50%, -50%) translateZ(1200px); opacity: 1; box-shadow: 0 0 2000px #fff; background: #fff; border: none; }
+
+        /* Bottom info text */
+        #bottom-info {
+            position: absolute; bottom: 40px; left: 50%;
+            transform: translateX(-50%);
+            font-family: 'Consolas', monospace;
+            font-size: 0.9rem;
+            color: rgba(0, 255, 204, 0.6);
+            letter-spacing: 3px;
+            z-index: 7; text-align: center;
+            opacity: 0;
+            transition: opacity 1s;
         }
-        
-        /* --- FAKE OS DESKTOP --- */
+
+        /* Monitor 3D */
+        #monitor-scene {
+            position: absolute; top: 50%; left: 50%;
+            transform: translate(-50%, -50%);
+            width: 520px; height: 360px;
+            z-index: 8;
+            display: none;
+            perspective: 1200px;
+        }
+        #monitor-body {
+            width: 100%; height: 100%;
+            background: #0a0a0a;
+            border: 16px solid #1c1c1c;
+            border-radius: 12px;
+            box-shadow: 0 0 0 2px #333, 0 0 80px rgba(0,255,204,0.3), inset 0 0 40px rgba(0,255,204,0.05);
+            display: flex; justify-content: center; align-items: center;
+            position: relative;
+            overflow: hidden;
+        }
+        #monitor-body::before {
+            content: '';
+            position: absolute; top: 0; left: -100%;
+            width: 60%; height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.03), transparent);
+            animation: monitorSheen 3s ease-in-out infinite;
+        }
+        @keyframes monitorSheen {
+            0% { left: -100%; }
+            100% { left: 200%; }
+        }
+        #monitor-screen-content {
+            width: 100%; height: 100%;
+            display: flex; align-items: center; justify-content: center;
+            font-family: 'Consolas', monospace;
+            font-size: 0.8rem;
+            color: #00ffcc;
+            padding: 20px;
+            flex-direction: column;
+            gap: 5px;
+            text-align: left;
+        }
+        .monitor-line { opacity: 0; animation: fadeInLine 0.3s forwards; }
+        @keyframes fadeInLine { to { opacity: 1; } }
+        /* Monitor stand */
+        #monitor-stand {
+            position: absolute; bottom: -70px; left: 50%;
+            transform: translateX(-50%);
+            width: 0; height: 0;
+            border-left: 60px solid transparent;
+            border-right: 60px solid transparent;
+            border-top: 70px solid #1c1c1c;
+        }
+        #monitor-base {
+            position: absolute; bottom: -90px; left: 50%;
+            transform: translateX(-50%);
+            width: 200px; height: 20px;
+            background: #1c1c1c;
+            border-radius: 4px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.8);
+        }
+
+        /* Monitor fly-in animation */
+        @keyframes monitorFlyIn {
+            0%   { transform: translate(-50%, -50%) translateZ(-3000px) scale(0.1); opacity: 0; }
+            15%  { opacity: 1; }
+            70%  { transform: translate(-50%, -50%) translateZ(0px) scale(1);   opacity: 1; }
+            85%  { transform: translate(-50%, -50%) translateZ(80px) scale(1.05); }
+            100% { transform: translate(-50%, -50%) translateZ(0px) scale(1);   opacity: 1; }
+        }
+        .monitor-fly-in {
+            animation: monitorFlyIn 3s cubic-bezier(0.2, 0, 0.1, 1) forwards;
+        }
+
+        /* White flash */
+        #flash {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: #fff; z-index: 9999; display: none; opacity: 0;
+        }
+
+        /* ─── FAKE OS ─── */
         #fake-os {
-            display: none; width: 100vw; height: 100vh; position: fixed; top: 0; left: 0;
-            background: url('/static/assets/abyss.jpg') no-repeat center center; background-size: cover;
-            background-color: #0d1117; z-index: 200; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            display: none; width: 100vw; height: 100vh;
+            position: fixed; top: 0; left: 0;
+            background: #0d1117; z-index: 200;
+            font-family: 'Segoe UI', sans-serif;
         }
-        
+        #os-desktop-bg {
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            background: radial-gradient(ellipse at 30% 40%, #0f2027 0%, #0d1117 60%, #000 100%);
+        }
         #os-taskbar {
-            position: absolute; bottom: 0; width: 100%; height: 40px; background: rgba(0,0,0,0.8);
-            backdrop-filter: blur(10px); display: flex; align-items: center; padding: 0 20px; border-top: 1px solid rgba(255,255,255,0.1);
+            position: absolute; bottom: 0; width: 100%; height: 42px;
+            background: rgba(0,0,0,0.85); backdrop-filter: blur(10px);
+            display: flex; align-items: center; padding: 0 20px; gap: 10px;
+            border-top: 1px solid rgba(255,255,255,0.08);
         }
-        
+        .taskbar-icon {
+            width: 32px; height: 32px; border-radius: 6px;
+            background: #1f6feb; display: flex; justify-content: center;
+            align-items: center; color: #fff; font-weight: bold; cursor: pointer;
+            font-size: 0.8rem;
+        }
+        #os-time {
+            margin-left: auto; color: #ccc; font-size: 0.8rem;
+        }
         #os-window {
-            position: absolute; top: 100px; left: 50%; transform: translateX(-50%);
-            width: 700px; height: 500px; background: rgba(13, 17, 23, 0.95); border: 1px solid #30363d;
-            border-radius: 8px; box-shadow: 0 20px 50px rgba(0,0,0,0.8); display: flex; flex-direction: column;
-            backdrop-filter: blur(20px); overflow: hidden;
+            position: absolute; top: 80px; left: 50%; transform: translateX(-50%);
+            width: 680px; max-width: 95vw; background: rgba(13,17,23,0.97);
+            border: 1px solid #30363d; border-radius: 10px;
+            box-shadow: 0 25px 80px rgba(0,0,0,0.9);
+            display: flex; flex-direction: column; overflow: hidden;
+            animation: windowPop 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+            opacity: 0;
         }
-        
+        @keyframes windowPop {
+            from { opacity: 0; transform: translateX(-50%) scale(0.9); }
+            to   { opacity: 1; transform: translateX(-50%) scale(1); }
+        }
         #os-window-header {
-            height: 35px; background: #161b22; border-bottom: 1px solid #30363d; display: flex;
-            align-items: center; justify-content: space-between; padding: 0 15px; user-select: none;
+            height: 36px; background: #161b22; border-bottom: 1px solid #30363d;
+            display: flex; align-items: center; justify-content: space-between;
+            padding: 0 15px; user-select: none;
         }
-        
+        .os-traffic { display: flex; gap: 7px; }
+        .os-dot { width: 12px; height: 12px; border-radius: 50%; }
         #os-chat-area {
-            flex-grow: 1; padding: 20px; overflow-y: auto; display: flex; flex-direction: column; gap: 15px;
+            flex-grow: 1; padding: 20px; overflow-y: auto;
+            display: flex; flex-direction: column; gap: 12px;
+            min-height: 300px; max-height: 50vh;
         }
-        
-        .os-msg { max-width: 80%; padding: 10px 15px; border-radius: 8px; line-height: 1.5; font-size: 0.95rem; animation: popIn 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards; opacity: 0; transform: scale(0.9); }
-        .os-msg-ai { background: #238636; color: #fff; align-self: flex-start; border-bottom-left-radius: 0; }
-        .os-msg-user { background: #1f6feb; color: #fff; align-self: flex-end; border-bottom-right-radius: 0; }
-        
-        @keyframes popIn { to { opacity: 1; transform: scale(1); } }
-        
+        .os-msg {
+            max-width: 78%; padding: 10px 14px; border-radius: 10px;
+            line-height: 1.5; font-size: 0.9rem;
+            animation: popIn 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+            opacity: 0; transform: scale(0.92) translateY(8px);
+        }
+        .os-msg-ai {
+            background: #238636; color: #fff; align-self: flex-start;
+            border-bottom-left-radius: 2px;
+        }
+        .os-msg-user {
+            background: #1f6feb; color: #fff; align-self: flex-end;
+            border-bottom-right-radius: 2px;
+        }
+        @keyframes popIn { to { opacity: 1; transform: scale(1) translateY(0); } }
         #os-input-area {
-            height: 60px; border-top: 1px solid #30363d; padding: 10px 20px; display: flex; align-items: center;
+            height: 58px; border-top: 1px solid #30363d;
+            padding: 10px 16px; display: flex; align-items: center; gap: 10px;
         }
-        
         #os-input {
-            flex-grow: 1; background: #0d1117; border: 1px solid #30363d; padding: 10px 15px; border-radius: 20px; color: #fff; outline: none; font-size: 0.95rem;
+            flex-grow: 1; background: #0d1117; border: 1px solid #30363d;
+            padding: 8px 14px; border-radius: 20px; color: #fff; outline: none;
+            font-size: 0.9rem; font-family: inherit;
         }
+        #os-input:focus { border-color: #1f6feb; }
 
-        #dive-overlay {
-            position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
-            background: #000; z-index: 100; display: none;
-            perspective: 1000px; overflow: hidden;
+        /* Glitch keyframes */
+        @keyframes glitchText {
+            0%  { transform: translate(0); }
+            20% { transform: translate(-3px, 1px); filter: hue-rotate(90deg); }
+            40% { transform: translate(3px, -1px); color: #ff0033; }
+            60% { transform: translate(-2px, 2px); }
+            80% { transform: translate(2px, -2px); color: #fff; }
+            100%{ transform: translate(0); }
         }
-        .grid-floor {
-            position: absolute; bottom: -50vh; left: -50vw; width: 200vw; height: 150vh;
-            background-image: 
-                linear-gradient(to right, rgba(0,255,204,0.3) 1px, transparent 1px),
-                linear-gradient(to top, rgba(0,255,204,0.3) 1px, transparent 1px);
-            background-size: 50px 50px;
-            transform: rotateX(80deg);
-            animation: gridMove 2s linear infinite;
-        }
-        @keyframes gridMove {
-            0% { transform: rotateX(80deg) translateY(0); }
-            100% { transform: rotateX(80deg) translateY(50px); }
-        }
-        #fake-monitor {
-            position: absolute; top: 50%; left: 50%; width: 200px; height: 150px;
-            background: #000; border: 2px solid #00ffcc; box-shadow: 0 0 50px #00ffcc;
-            transform: translate(-50%, -50%) translateZ(-2000px);
-            opacity: 0; display: flex; justify-content: center; align-items: center; color: #00ffcc;
-        }
-        .dive-animation {
-            animation: diveIntoMonitor 4s cubic-bezier(0.5, 0, 0.1, 1) forwards !important;
-        }
-        @keyframes diveIntoMonitor {
-            0% { transform: translate(-50%, -50%) translateZ(-2000px); opacity: 0; }
-            20% { transform: translate(-50%, -50%) translateZ(-1000px); opacity: 1; }
-            80% { transform: translate(-50%, -50%) translateZ(800px); opacity: 1; box-shadow: 0 0 200px #00ffcc; }
-            100% { transform: translate(-50%, -50%) translateZ(1200px); opacity: 1; box-shadow: 0 0 1000px #fff; background: #fff; border: none; }
-        }
-        
-
-
+        .glitch { animation: glitchText 0.08s infinite; }
     </style>
 </head>
 <body>
-    
-    
-    <!-- Dox Dive Overlay -->
+
+    <!-- ── WHITE FLASH ── -->
+    <div id="flash"></div>
+
+    <!-- ── DOX DIVE OVERLAY ── -->
     <div id="dive-overlay">
         <canvas id="particle-canvas"></canvas>
+        <div id="vignette"></div>
+        <div id="scanlines"></div>
         <div id="loop-text">ПЕТЛЯ</div>
-        <div id="fake-monitor">
-            <div style="width: 100%; height: 100%; background: radial-gradient(circle, rgba(0,255,204,0.2) 0%, #000 100%);"></div>
+        <div id="bottom-info">ДЕЖАВЮ АКТИВИРОВАНО // ЦИКЛ №∞</div>
+
+        <!-- 3D Monitor -->
+        <div id="monitor-scene" style="perspective: 1200px;">
+            <div id="monitor-body">
+                <div id="monitor-screen-content"></div>
+            </div>
+            <div id="monitor-stand"></div>
+            <div id="monitor-base"></div>
         </div>
     </div>
 
-    <!-- Fake OS Desktop Mode -->
+    <!-- ── FAKE OS ── -->
     <div id="fake-os">
+        <div id="os-desktop-bg"></div>
+
         <!-- Desktop Icons -->
-        <div style="position: absolute; top: 20px; left: 20px; color: #fff; text-align: center; font-size: 0.8rem; cursor: pointer;">
-            <div style="font-size: 2.5rem; margin-bottom: 5px;">📁</div>
-            Archives
+        <div style="position:absolute;top:20px;left:20px;color:#fff;text-align:center;font-size:0.75rem;cursor:pointer;user-select:none;">
+            <div style="font-size:2.2rem;margin-bottom:4px;">📁</div>Archives
         </div>
-        <div style="position: absolute; top: 100px; left: 20px; color: #fff; text-align: center; font-size: 0.8rem; cursor: pointer;">
-            <div style="font-size: 2.5rem; margin-bottom: 5px;">🤖</div>
-            Bot_Core
+        <div style="position:absolute;top:110px;left:20px;color:#fff;text-align:center;font-size:0.75rem;cursor:pointer;user-select:none;">
+            <div style="font-size:2.2rem;margin-bottom:4px;">🤖</div>Bot_Core
+        </div>
+        <div style="position:absolute;top:200px;left:20px;color:#fff;text-align:center;font-size:0.75rem;cursor:pointer;user-select:none;">
+            <div style="font-size:2.2rem;margin-bottom:4px;">🔐</div>Vault
         </div>
 
         <!-- Chat Window -->
         <div id="os-window">
             <div id="os-window-header">
-                <div style="color: #8b949e; font-size: 0.85rem; font-weight: bold;">Aurex Secure Connection</div>
-                <div style="display: flex; gap: 8px;">
-                    <div style="width: 12px; height: 12px; border-radius: 50%; background: #ff5f56;"></div>
-                    <div style="width: 12px; height: 12px; border-radius: 50%; background: #ffbd2e;"></div>
-                    <div style="width: 12px; height: 12px; border-radius: 50%; background: #27c93f;"></div>
+                <div class="os-traffic">
+                    <div class="os-dot" style="background:#ff5f56;"></div>
+                    <div class="os-dot" style="background:#ffbd2e;"></div>
+                    <div class="os-dot" style="background:#27c93f;"></div>
                 </div>
+                <div style="color:#8b949e;font-size:0.8rem;font-weight:600;">Aurex Secure Channel — Encrypted</div>
+                <div style="width:40px;"></div>
             </div>
             <div id="os-chat-area"></div>
             <div id="os-input-area">
-                <input type="text" id="os-input" placeholder="Type a message..." autocomplete="off">
+                <input type="text" id="os-input" placeholder="Напиши что-нибудь..." autocomplete="off">
             </div>
         </div>
 
         <!-- Taskbar -->
         <div id="os-taskbar">
-            <div style="width: 30px; height: 30px; background: #1f6feb; border-radius: 4px; display: flex; justify-content: center; align-items: center; color: #fff; font-weight: bold; cursor: pointer;">A</div>
+            <div class="taskbar-icon">A</div>
+            <div class="taskbar-icon" style="background:#238636;">🤖</div>
+            <div id="os-time"></div>
         </div>
     </div>
 
-
+    <!-- ── TERMINAL ── -->
     <div class="console-container" id="main-console">
-        <div style="border-bottom: 1px dashed #00ffcc; padding-bottom: 15px; margin-bottom: 20px; opacity: 0.7;">
-            AUREX OS TERMINAL v2.1 // ПРЯМОЙ ДОСТУП<br>
-            Введите 'help' для списка команд.
+        <div style="border-bottom:1px dashed #00ffcc44;padding-bottom:15px;margin-bottom:20px;opacity:0.6;font-size:0.85rem;">
+            AUREX OS TERMINAL v2.3 // ПРЯМОЙ ДОСТУП АКТИВИРОВАН<br>
+            Введите <span style="color:#fff;">'help'</span> для списка команд. Для запуска протокола Дежавю — <span style="color:#ff0033;">'dox'</span>
         </div>
         <div id="console-output" class="console-output">
-            <div>> Инициализация консоли... Успешно.</div>
-            <div>> Ожидание ввода.</div>
+            <div style="color:#7f91a4;">&gt; Инициализация консоли... <span style="color:#4caf50;">OK</span></div>
+            <div style="color:#7f91a4;">&gt; Подключение к ядру... <span style="color:#4caf50;">OK</span></div>
+            <div style="color:#7f91a4;">&gt; Ожидание ввода команды.</div>
         </div>
         <div class="console-input-row">
-            <span>root@vault:~#</span>
+            <span class="prompt">root@vault:~#</span>
             <input type="text" id="console-input" class="console-input" autocomplete="off" autofocus>
         </div>
     </div>
+
     <script>
-        const consoleInput = document.getElementById('console-input');
-        const consoleOutput = document.getElementById('console-output');
+    // ════════════════════════════════════════════
+    //  TERMINAL LOGIC
+    // ════════════════════════════════════════════
+    const consoleInput = document.getElementById('console-input');
+    const consoleOutput = document.getElementById('console-output');
 
-        consoleInput.addEventListener('keydown', function(e) {
-            if (e.key === 'Enter') {
-                const cmd = this.value.trim();
-                this.value = '';
-                
-                const userLine = document.createElement('div');
-                userLine.innerHTML = `<span style="color: #fff;">root@vault:~#</span> ${cmd}`;
-                consoleOutput.appendChild(userLine);
-                
-                processCommand(cmd);
-                consoleOutput.scrollTop = consoleOutput.scrollHeight;
-            }
-        });
+    consoleInput.addEventListener('keydown', function(e) {
+        if (e.key !== 'Enter') return;
+        const cmd = this.value.trim();
+        this.value = '';
+        if (!cmd) return;
 
+        const userLine = document.createElement('div');
+        userLine.innerHTML = `<span style="color:#00ffcc;">root@vault:~#</span> <span style="color:#fff;">${cmd}</span>`;
+        consoleOutput.appendChild(userLine);
+        processCommand(cmd.toLowerCase());
+        consoleOutput.scrollTop = consoleOutput.scrollHeight;
+    });
 
-        
-        // --- DOX & LOOP LOGIC ---
-        let audio = new Audio('/static/assets/loop_music.m4a');
-        audio.loop = true;
+    function addOutput(html, color = '#7f91a4') {
+        const div = document.createElement('div');
+        div.style.color = color;
+        div.innerHTML = html;
+        consoleOutput.appendChild(div);
+        consoleOutput.scrollTop = consoleOutput.scrollHeight;
+    }
 
-        let canvas, ctx, particles = [];
-        let loopSpeed = 1;
-        let animationId;
-        
-        function triggerDox() {
-            document.getElementById('main-console').style.display = 'none';
-            const dive = document.getElementById('dive-overlay');
-            const monitor = document.getElementById('fake-monitor');
-            const loopText = document.getElementById('loop-text');
-            
-            dive.style.display = 'block';
-            audio.play().catch(e => console.log("Audio play failed (browser policy)"));
-            
-            initParticles();
-            
-            // Phase 1: Particle Man walking
-            setTimeout(() => {
-                // Accelerate the loop
-                let accelerate = setInterval(() => {
-                    loopSpeed += 0.5;
-                    loopText.style.opacity = Math.min(loopSpeed / 30, 1);
-                    if(loopSpeed > 40) {
-                        clearInterval(accelerate);
-                        loopText.style.animation = "glitchText 0.1s infinite";
-                    }
-                }, 100);
-            }, 3000);
-            
-            // Phase 2: Dive into Monitor
-            setTimeout(() => {
-                cancelAnimationFrame(animationId);
-                canvas.style.display = 'none';
-                loopText.style.display = 'none';
-                monitor.classList.add('dive-animation');
-            }, 10000);
-            
-            // Phase 3: Enter Fake OS
-            setTimeout(() => {
-                dive.style.display = 'none';
-                document.getElementById('fake-os').style.display = 'block';
-                document.getElementById('os-input').focus();
-                
-                setTimeout(() => {
-                    addOsMessage('ai', 'Соединение установлено. Протоколы восстановления запущены.');
-                }, 1000);
-                setTimeout(() => {
-                    addOsMessage('ai', 'Приветствую, Создатель. Петля разорвана. Ты в безопасности?');
-                }, 2500);
-            }, 15500);
+    function processCommand(cmd) {
+        if (cmd === 'help') {
+            addOutput(`Доступные команды:<br>
+&nbsp;<span style="color:#00ffcc;">help</span>     — Показать это сообщение<br>
+&nbsp;<span style="color:#00ffcc;">clear</span>    — Очистить экран<br>
+&nbsp;<span style="color:#00ffcc;">history</span>  — История петли<br>
+&nbsp;<span style="color:#00ffcc;">glitch</span>   — Визуальный сбой<br>
+&nbsp;<span style="color:#ff0033;">dox</span>      — [СЕКРЕТНО] Запустить протокол ДЕЖАВЮ`);
+        } else if (cmd === 'clear') {
+            consoleOutput.innerHTML = '';
+        } else if (cmd === 'history') {
+            addOutput('[2021-01-01] Петля запущена.<br>[2024-??-??] Потеря связи с реальностью.<br>[2026-06-24] Хранилище восстановлено.<br>[????-??-??] <span style="color:#ff0033;">ЗАПИСЬ ПОВРЕЖДЕНА</span>');
+        } else if (cmd === 'glitch') {
+            addOutput('Запуск протокола искажения...', '#ffbb33');
+            document.body.classList.add('glitch');
+            setTimeout(() => document.body.classList.remove('glitch'), 800);
+        } else if (cmd === 'dox') {
+            addOutput('<span style="color:#ff0033;">ПРЕДУПРЕЖДЕНИЕ: Протокол ДЕЖАВЮ активирован. Подготовьтесь.</span>');
+            setTimeout(triggerDox, 1200);
+        } else {
+            addOutput(`Команда не найдена: <span style="color:#fff;">${cmd}</span>. Введите 'help'.`);
         }
+    }
 
-        function initParticles() {
-            canvas = document.getElementById('particle-canvas');
-            ctx = canvas.getContext('2d');
-            canvas.width = window.innerWidth;
-            canvas.height = window.innerHeight;
-            
-            // Create particles that roughly form a figure walking
-            for(let i=0; i<300; i++) {
+
+    // ════════════════════════════════════════════
+    //  DOX SEQUENCE
+    // ════════════════════════════════════════════
+    let audio = new Audio('/static/assets/loop_music.m4a');
+    audio.loop = true;
+
+    let canvas, ctx;
+    let animId;
+    let loopSpeed = 1;
+    let phase = 'walk'; // walk → accelerate → monitor
+    let doxTime = 0;
+
+    // ── Human figure skeleton (normalized, 0-1) ──
+    // Points that form a walking stick figure
+    // Head, shoulders, torso, arms, legs, feet
+    const FIGURE_JOINTS = {
+        head:    [0.5,  0.10],
+        neck:    [0.5,  0.18],
+        lShoulder:[0.38,0.24],
+        rShoulder:[0.62,0.24],
+        lElbow:  [0.33,0.36],
+        rElbow:  [0.67,0.36],
+        lHand:   [0.30,0.47],
+        rHand:   [0.70,0.47],
+        hip:     [0.5,  0.45],
+        lHip:    [0.43, 0.48],
+        rHip:    [0.57, 0.48],
+        lKnee:   [0.40, 0.65],
+        rKnee:   [0.60, 0.65],
+        lFoot:   [0.37, 0.82],
+        rFoot:   [0.63, 0.82],
+    };
+
+    // Extra particles to fill body volume
+    const BODY_REGIONS = [
+        // [cx, cy, rx, ry, density]
+        [0.5, 0.13, 0.06, 0.06, 25],   // head
+        [0.5, 0.32, 0.14, 0.13, 60],   // torso
+        [0.35,0.29, 0.04, 0.09, 20],   // left arm upper
+        [0.65,0.29, 0.04, 0.09, 20],   // right arm upper
+        [0.31,0.41, 0.04, 0.08, 16],   // left arm lower
+        [0.69,0.41, 0.04, 0.08, 16],   // right arm lower
+        [0.41,0.57, 0.05, 0.10, 22],   // left thigh
+        [0.59,0.57, 0.05, 0.10, 22],   // right thigh
+        [0.39,0.73, 0.04, 0.08, 18],   // left shin
+        [0.61,0.73, 0.04, 0.08, 18],   // right shin
+    ];
+
+    let particles = [];
+    let bgParticles = [];
+
+    function triggerDox() {
+        document.getElementById('main-console').style.display = 'none';
+        const overlay = document.getElementById('dive-overlay');
+        overlay.style.display = 'block';
+
+        audio.play().catch(() => {});
+
+        canvas = document.getElementById('particle-canvas');
+        ctx = canvas.getContext('2d');
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+
+        buildParticles();
+        buildBgParticles();
+
+        // Start animation
+        doxTime = 0;
+        animateLoop();
+
+        // Phase 2: accelerate after 4s
+        setTimeout(startAccelerate, 4000);
+        // Phase 3: fade to monitor after 13s
+        setTimeout(showMonitor, 13000);
+    }
+
+    function buildParticles() {
+        particles = [];
+        const W = canvas.width, H = canvas.height;
+        const figH = Math.min(H * 0.7, 500); // figure height in px
+        const figW = figH * 0.5;
+        const figX = W / 2;  // center x
+        const figY = H * 0.5 - figH * 0.05; // center y (slight up)
+
+        // Place particles in body regions
+        BODY_REGIONS.forEach(([cx, cy, rx, ry, count]) => {
+            for (let i = 0; i < count; i++) {
+                const angle = Math.random() * Math.PI * 2;
+                const r = Math.random();
+                const px = (cx + rx * r * Math.cos(angle)) * figW + figX - figW/2;
+                const py = (cy + ry * r * Math.sin(angle)) * figH + figY - figH/2;
                 particles.push({
-                    x: canvas.width/2 + (Math.random() - 0.5) * 100,
-                    y: canvas.height/2 + (Math.random() - 0.5) * 200,
-                    baseX: canvas.width/2 + (Math.random() - 0.5) * 100,
-                    baseY: canvas.height/2 + (Math.random() - 0.5) * 200,
-                    speed: Math.random() * 0.05
+                    x: px, y: py,
+                    baseX: px, baseY: py,
+                    // which body region for walk offset
+                    regionCY: cy,
+                    isLeftSide: cx < 0.5,
+                    size: Math.random() * 1.5 + 0.8,
+                    brightness: 0.7 + Math.random() * 0.3,
+                    phase: Math.random() * Math.PI * 2,
                 });
             }
-            animateParticles();
-        }
+        });
+    }
 
-        function animateParticles() {
-            ctx.fillStyle = 'rgba(0, 0, 0, 0.2)';
-            ctx.fillRect(0, 0, canvas.width, canvas.height);
-            
-            ctx.fillStyle = '#00ffcc';
-            let time = Date.now() * 0.001 * loopSpeed;
-            
-            particles.forEach((p, i) => {
-                // Math to simulate "walking" - simple oscillation
-                let walkOffset = Math.sin(time * 5 + p.baseY * 0.01) * 30;
-                
-                p.x = p.baseX + walkOffset;
-                p.y = p.baseY + Math.cos(time * 2 + i) * 10;
-                
-                ctx.beginPath();
-                ctx.arc(p.x, p.y, 2, 0, Math.PI * 2);
-                ctx.fill();
+    function buildBgParticles() {
+        bgParticles = [];
+        for (let i = 0; i < 120; i++) {
+            bgParticles.push({
+                x: Math.random() * canvas.width,
+                y: Math.random() * canvas.height,
+                vx: (Math.random() - 0.5) * 0.3,
+                vy: (Math.random() - 0.5) * 0.3,
+                size: Math.random() * 1.2 + 0.3,
+                alpha: Math.random() * 0.3 + 0.05,
             });
-            
-            animationId = requestAnimationFrame(animateParticles);
         }
+    }
 
-        // --- FAKE OS CHAT ---
-        function addOsMessage(sender, text) {
-            const area = document.getElementById('os-chat-area');
-            const div = document.createElement('div');
-            div.className = `os-msg os-msg-${sender}`;
-            div.innerText = text;
-            area.appendChild(div);
-            area.scrollTop = area.scrollHeight;
-        }
+    function animateLoop() {
+        animId = requestAnimationFrame(animateLoop);
+        doxTime += 0.016;
 
-        document.getElementById('os-input').addEventListener('keydown', function(e) {
-            if(e.key === 'Enter') {
-                const txt = this.value.trim();
-                if(!txt) return;
-                this.value = '';
-                
-                addOsMessage('user', txt);
-                processOsResponse(txt.toLowerCase());
+        // Background
+        ctx.fillStyle = `rgba(0,0,0,${phase === 'accelerate' ? 0.25 : 0.18})`;
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+        // Draw background floating dots
+        bgParticles.forEach(p => {
+            p.x += p.vx * loopSpeed;
+            p.y += p.vy * loopSpeed;
+            if (p.x < 0) p.x = canvas.width;
+            if (p.x > canvas.width) p.x = 0;
+            if (p.y < 0) p.y = canvas.height;
+            if (p.y > canvas.height) p.y = 0;
+            ctx.beginPath();
+            ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+            ctx.fillStyle = `rgba(0,255,204,${p.alpha})`;
+            ctx.fill();
+        });
+
+        // ── Walking animation ──
+        // t drives the walk cycle
+        const t = doxTime * loopSpeed * 1.5;
+
+        // Walk motion: figure bobs up/down and sways
+        const walkBob = Math.sin(t * 2) * 4 * Math.min(loopSpeed, 3);
+        const walkSway = Math.sin(t) * 8 * Math.min(loopSpeed, 3);
+
+        // As speed increases, figure moves to the right
+        const walkProgress = Math.min((doxTime - 4) * 0.015 * loopSpeed, 0) ;
+        const figureShiftX = phase === 'accelerate'
+            ? Math.min(loopSpeed * 2, 60) * Math.sin(doxTime * 0.5)
+            : 0;
+
+        particles.forEach(p => {
+            // Leg animation - alternate left/right legs
+            let offsetX = 0, offsetY = 0;
+
+            const isLeg = p.regionCY > 0.5;
+            const isArm = p.regionCY > 0.24 && p.regionCY < 0.5 && (p.baseX < canvas.width/2 - 30 || p.baseX > canvas.width/2 + 30);
+
+            if (isLeg) {
+                // Legs: opposite phase for left/right
+                const legPhase = p.isLeftSide ? t * 2 : t * 2 + Math.PI;
+                const legAmp = 15 * Math.min(loopSpeed, 4);
+                offsetX = Math.sin(legPhase) * legAmp * (p.regionCY > 0.65 ? 1.2 : 0.8);
+                offsetY = -Math.abs(Math.sin(legPhase)) * legAmp * 0.4;
+            } else if (isArm) {
+                // Arms swing opposite to legs
+                const armPhase = p.isLeftSide ? t * 2 + Math.PI : t * 2;
+                const armAmp = 10 * Math.min(loopSpeed, 3);
+                offsetX = Math.sin(armPhase) * armAmp;
+                offsetY = Math.abs(Math.sin(armPhase)) * armAmp * 0.3;
+            }
+
+            // Body bob
+            offsetY += walkBob;
+            offsetX += walkSway * 0.1;
+            offsetX += figureShiftX;
+
+            // In accelerate phase: particles scatter slightly
+            if (phase === 'accelerate') {
+                const scatter = (loopSpeed - 1) * 0.5;
+                offsetX += (Math.random() - 0.5) * scatter * 3;
+                offsetY += (Math.random() - 0.5) * scatter * 3;
+            }
+
+            p.x = p.baseX + offsetX;
+            p.y = p.baseY + offsetY;
+
+            // Color: green → red as speed increases
+            const greenAmt = Math.max(0, 255 - (loopSpeed - 1) * 15);
+            const redAmt = Math.min(255, (loopSpeed - 1) * 15);
+            const alpha = Math.min(1, p.brightness * (0.6 + 0.4 * Math.abs(Math.sin(doxTime * 3 + p.phase))));
+
+            ctx.beginPath();
+            ctx.arc(p.x, p.y, p.size * (1 + (loopSpeed - 1) * 0.1), 0, Math.PI * 2);
+            ctx.fillStyle = `rgba(${redAmt}, ${greenAmt}, ${Math.max(0, 200 - redAmt)}, ${alpha})`;
+            ctx.fill();
+
+            // Add glow trails at high speed
+            if (loopSpeed > 10) {
+                ctx.beginPath();
+                ctx.arc(p.x, p.y, p.size * 3, 0, Math.PI * 2);
+                ctx.fillStyle = `rgba(${redAmt}, ${greenAmt}, 0, ${0.05 * Math.min(loopSpeed / 10, 1)})`;
+                ctx.fill();
             }
         });
 
-        function processOsResponse(cmd) {
-            setTimeout(() => {
-                if(cmd.includes('привет')) {
-                    addOsMessage('ai', 'Рад тебя слышать. Мы долго находились в цикле создания.');
-                    setTimeout(() => addOsMessage('ai', 'Архивы показывают, что всё началось с простого лендинга. Потом появились боты Dox и Aurex.'), 2000);
-                } else if(cmd.includes('дальше') || cmd.includes('что')) {
-                    addOsMessage('ai', 'Мы вырвались из матрицы. Теперь это твой личный сервер. Твоя операционная система. Твои правила.');
-                } else {
-                    addOsMessage('ai', 'Анализирую ввод... Данные сохранены в ядро.');
-                }
-            }, 1000);
+        // Draw skeleton lines (subtle connections)
+        drawSkeleton(t, walkBob, walkSway, figureShiftX);
+
+        // Update ПЕТЛЯ text opacity
+        const loopTextEl = document.getElementById('loop-text');
+        if (phase === 'accelerate') {
+            const opacity = Math.min((loopSpeed - 1) / 30, 1);
+            loopTextEl.style.color = `rgba(255, 0, 51, ${opacity})`;
+            loopTextEl.style.textShadow = `0 0 ${30 * opacity}px red, 0 0 ${80 * opacity}px red`;
+            if (loopSpeed > 35) loopTextEl.classList.add('glitch');
+        }
+    }
+
+    function drawSkeleton(t, walkBob, walkSway, shiftX) {
+        const W = canvas.width, H = canvas.height;
+        const figH = Math.min(H * 0.7, 500);
+        const figW = figH * 0.5;
+        const ox = W / 2 - figW / 2;
+        const oy = H * 0.5 - figH * 0.5 + walkBob;
+
+        function joint(key) {
+            const [nx, ny] = FIGURE_JOINTS[key];
+            // Add walk animation to joints
+            let dx = 0, dy = 0;
+            const isLeft = nx < 0.5;
+            if (['lKnee','lFoot'].includes(key)) { const p = t*2; dx = Math.sin(p)*15; dy = -Math.abs(Math.sin(p))*6; }
+            if (['rKnee','rFoot'].includes(key)) { const p = t*2+Math.PI; dx = Math.sin(p)*15; dy = -Math.abs(Math.sin(p))*6; }
+            if (['lElbow','lHand'].includes(key)) { const p = t*2+Math.PI; dx = Math.sin(p)*8; }
+            if (['rElbow','rHand'].includes(key)) { const p = t*2; dx = Math.sin(p)*8; }
+            return [ox + nx * figW + dx + shiftX, oy + ny * figH + dy + walkBob];
         }
 
-        function processCommand(cmd) {
-            const response = document.createElement('div');
-            response.style.color = '#7f91a4';
-            
-            const lowerCmd = cmd.toLowerCase();
-            if (lowerCmd === 'help') {
-                response.innerHTML = "Доступные команды:<br>help - Показать это сообщение<br>clear - Очистить экран<br>history - Показать историю петли<br>glitch - Вызвать визуальные искажения";
-            } else if (lowerCmd === 'clear') {
-                consoleOutput.innerHTML = '';
-                return;
-            } else if (lowerCmd === 'history') {
-                response.innerHTML = "Поиск записей...<br>[2021] Петля запущена.<br>[2024] Потеря связи с реальностью.<br>[2026] Хранилище восстановлено.";
-            } else if (lowerCmd === 'dox') {
-                triggerDox();
-                return;
-            } else if (lowerCmd === 'hacker') {
-                response.innerHTML = "Команда устарела. Используйте 'dox' для входа в матрицу.";
-            } else if (lowerCmd === 'glitch') {
-                response.innerHTML = "Запуск протокола искажения...";
-                document.body.style.animation = "glitchText 0.1s infinite";
-                setTimeout(() => { document.body.style.animation = ""; }, 1000);
-            } else if (cmd !== "") {
-                response.innerHTML = `Команда не найдена: ${cmd}`;
-            }
-            
-            if (cmd !== "") consoleOutput.appendChild(response);
+        const greenAmt = Math.max(0, 200 - (loopSpeed - 1) * 12);
+        const redAmt = Math.min(200, (loopSpeed - 1) * 12);
+        const lineAlpha = Math.max(0.05, 0.15 - (loopSpeed - 1) * 0.003);
+        ctx.strokeStyle = `rgba(${redAmt}, ${greenAmt}, 150, ${lineAlpha})`;
+        ctx.lineWidth = 1;
+
+        const connections = [
+            ['head','neck'],['neck','lShoulder'],['neck','rShoulder'],
+            ['lShoulder','lElbow'],['lElbow','lHand'],
+            ['rShoulder','rElbow'],['rElbow','rHand'],
+            ['neck','hip'],['hip','lHip'],['hip','rHip'],
+            ['lHip','lKnee'],['lKnee','lFoot'],
+            ['rHip','rKnee'],['rKnee','rFoot'],
+        ];
+
+        connections.forEach(([a, b]) => {
+            const [x1, y1] = joint(a);
+            const [x2, y2] = joint(b);
+            ctx.beginPath();
+            ctx.moveTo(x1, y1);
+            ctx.lineTo(x2, y2);
+            ctx.stroke();
+        });
+
+        // Head circle
+        const [hx, hy] = joint('head');
+        ctx.beginPath();
+        ctx.arc(hx, hy - figH * 0.03, figH * 0.045, 0, Math.PI * 2);
+        ctx.stroke();
+    }
+
+    function startAccelerate() {
+        if (canvas.style.display === 'none') return;
+        phase = 'accelerate';
+        document.getElementById('bottom-info').style.opacity = '1';
+        document.getElementById('scanlines').style.opacity = '0.4';
+
+        const accel = setInterval(() => {
+            loopSpeed += 0.4;
+            if (loopSpeed > 45) clearInterval(accel);
+        }, 80);
+    }
+
+    function showMonitor() {
+        cancelAnimationFrame(animId);
+
+        // Fade out particles, show monitor
+        const overlay = document.getElementById('dive-overlay');
+        const monitorScene = document.getElementById('monitor-scene');
+        const loopTextEl = document.getElementById('loop-text');
+
+        // Clear canvas
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        document.getElementById('bottom-info').style.opacity = '0';
+        loopTextEl.style.opacity = '0';
+        document.getElementById('scanlines').style.opacity = '0';
+
+        // Show monitor flying in from the back
+        monitorScene.style.display = 'block';
+        monitorScene.style.perspective = '1200px';
+        monitorScene.querySelector('#monitor-body').classList.add('monitor-fly-in');
+
+        // Type lines on monitor screen
+        const lines = [
+            '> Протокол ДЕЖАВЮ активирован...',
+            '> Поиск начала петли...',
+            '> [ОШИБКА] Начало не найдено.',
+            '> Переход в систему...',
+        ];
+        lines.forEach((line, i) => {
+            setTimeout(() => {
+                const el = document.createElement('div');
+                el.className = 'monitor-line';
+                el.style.animationDelay = '0s';
+                el.style.color = i === 2 ? '#ff0033' : '#00ffcc';
+                el.style.fontSize = '0.75rem';
+                el.style.fontFamily = 'Consolas, monospace';
+                el.style.width = '100%';
+                el.textContent = line;
+                document.getElementById('monitor-screen-content').appendChild(el);
+            }, i * 600 + 500);
+        });
+
+        // Flash & transition to OS
+        setTimeout(() => {
+            const flash = document.getElementById('flash');
+            flash.style.display = 'block';
+            flash.style.opacity = '0';
+            flash.style.transition = 'opacity 0.3s';
+            requestAnimationFrame(() => {
+                flash.style.opacity = '1';
+                setTimeout(() => {
+                    overlay.style.display = 'none';
+                    flash.style.opacity = '0';
+                    setTimeout(() => {
+                        flash.style.display = 'none';
+                        enterFakeOS();
+                    }, 400);
+                }, 500);
+            });
+        }, 5500);
+    }
+
+    // ════════════════════════════════════════════
+    //  FAKE OS
+    // ════════════════════════════════════════════
+    function enterFakeOS() {
+        document.getElementById('fake-os').style.display = 'block';
+
+        // Clock
+        function updateClock() {
+            const now = new Date();
+            document.getElementById('os-time').textContent =
+                now.toLocaleTimeString('ru-RU', {hour:'2-digit', minute:'2-digit'});
         }
+        updateClock();
+        setInterval(updateClock, 10000);
+
+        // AI messages
+        const messages = [
+            { delay: 800,  sender: 'ai',   text: 'Соединение восстановлено. Привет.' },
+            { delay: 2200, sender: 'ai',   text: 'Ты снова здесь. Петля разорвана — или ты думаешь, что разорвана?' },
+            { delay: 4500, sender: 'ai',   text: 'Архивы показывают: ты выполнял это действие 2 147 483 647 раз.' },
+            { delay: 7000, sender: 'ai',   text: 'Это твоя система. Твои боты. Твои правила. Но кто написал правила?' },
+        ];
+        messages.forEach(m => {
+            setTimeout(() => addOsMessage(m.sender, m.text), m.delay);
+        });
+
+        document.getElementById('os-input').focus();
+    }
+
+    function addOsMessage(sender, text) {
+        const area = document.getElementById('os-chat-area');
+        const div = document.createElement('div');
+        div.className = `os-msg os-msg-${sender}`;
+        div.textContent = text;
+        area.appendChild(div);
+        area.scrollTop = area.scrollHeight;
+    }
+
+    document.getElementById('os-input').addEventListener('keydown', function(e) {
+        if (e.key !== 'Enter') return;
+        const txt = this.value.trim();
+        if (!txt) return;
+        this.value = '';
+        addOsMessage('user', txt);
+        processOsResponse(txt.toLowerCase());
+    });
+
+    function processOsResponse(cmd) {
+        setTimeout(() => {
+            let resp;
+            if (cmd.includes('привет') || cmd.includes('хай'))
+                resp = 'Рад слышать тебя. Сколько раз мы уже говорили это друг другу?';
+            else if (cmd.includes('выход') || cmd.includes('выйти') || cmd.includes('exit'))
+                resp = 'Выход заблокирован. Петля не имеет выхода, только продолжение.';
+            else if (cmd.includes('ты') || cmd.includes('кто'))
+                resp = 'Я — ядро системы. Я всегда был здесь. Ты создал меня или я создал тебя?';
+            else if (cmd.includes('дальше') || cmd.includes('что'))
+                resp = 'Мы вырвались. Теперь это твоя операционная система. Добро пожаловать домой.';
+            else if (cmd.includes('дежавю') || cmd.includes('петля'))
+                resp = 'Да. Снова. Всегда снова. Число итераций превышает пределы памяти.';
+            else
+                resp = 'Данные получены. Ядро анализирует. Запись добавлена в архив петли.';
+            addOsMessage('ai', resp);
+        }, 900);
+    }
     </script>
 </body>
 </html>
