@@ -305,22 +305,6 @@
                 </div>
             </div>
 
-            <!-- Panel (Console) Tab -->
-            <div id="tab-panel" class="vault-tab" style="display: none; width: 100%; max-width: 800px; height: 60vh; background: rgba(5,10,15,0.95); border: 1px solid #00ffcc; border-radius: 8px; padding: 20px; box-shadow: 0 0 20px rgba(0,255,204,0.1); font-family: 'Consolas', monospace; color: #00ffcc; display: flex; flex-direction: column;">
-                <div style="border-bottom: 1px dashed #00ffcc; padding-bottom: 10px; margin-bottom: 10px; font-size: 0.9rem; opacity: 0.7;">
-                    AUREX OS TERMINAL v2.1 // ПРЯМОЙ ДОСТУП<br>
-                    Введите 'help' для списка команд.
-                </div>
-                <div id="console-output" style="flex-grow: 1; overflow-y: auto; display: flex; flex-direction: column; justify-content: flex-end; padding-bottom: 10px; font-size: 0.9rem; line-height: 1.5;">
-                    <div>> Инициализация консоли... Успешно.</div>
-                    <div>> Ожидание ввода.</div>
-                </div>
-                <div style="display: flex; align-items: center; border-top: 1px dashed #00ffcc; padding-top: 10px;">
-                    <span style="margin-right: 10px;">root@vault:~#</span>
-                    <input type="text" id="console-input" style="flex-grow: 1; background: transparent; border: none; color: #fff; font-family: 'Consolas', monospace; font-size: 1rem; outline: none;" autocomplete="off" autofocus>
-                </div>
-            </div>
-
             <!-- Journal Tab -->
             <div id="tab-journal" class="vault-tab" style="display: none; width: 100%; max-width: 700px; height: 70vh; background: #1c242d; border: 1px solid #2b3a4a; border-radius: 12px; padding: 30px; box-shadow: 0 10px 30px rgba(0,0,0,0.5); overflow-y: auto;">
                 <h2 style="margin-top: 0; color: #fff; border-bottom: 1px solid #2b3a4a; padding-bottom: 15px;"><i class="fa-solid fa-book-journal-whills"></i> Журнал Обновлений Системы</h2>
@@ -487,6 +471,7 @@
             fakeFront.style.display = 'none';
             vault.style.display = 'flex';
             initVault();
+            openTab('welcome');
         }, 800);
     }
 
