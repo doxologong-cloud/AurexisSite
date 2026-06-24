@@ -10,35 +10,48 @@
 
         /* ── TERMINAL ── */
         #main-console { display:flex; flex-direction:column; height:100vh; padding:20px; }
-        .console-output { flex-grow:1; overflow-y:auto; display:flex; flex-direction:column; justify-content:flex-end; padding-bottom:20px; font-size:1rem; line-height:1.6; }
+        .console-output { flex-grow:1; overflow-y:auto; display:flex; flex-direction:column; justify-content:flex-end; padding-bottom:20px; font-size:1rem; line-height:1.6; text-shadow: 0 0 5px #00ffcc; }
         .console-input-row { display:flex; align-items:center; border-top:1px dashed #00ffcc33; padding-top:15px; }
-        .console-input { flex-grow:1; background:transparent; border:none; color:#fff; font-family:'Consolas',monospace; font-size:1.2rem; outline:none; margin-left:10px; }
+        .console-input { flex-grow:1; background:transparent; border:none; color:#fff; font-family:'Consolas',monospace; font-size:1.2rem; outline:none; margin-left:10px; text-shadow: 0 0 5px #fff; }
 
         /* ── DOX ROOM PHASE ── */
         #dox-phase {
             display:none; position:fixed; top:0; left:0; width:100%; height:100%; z-index:100;
+            background: #000;
         }
-        #dox-three { position:absolute; top:0; left:0; width:100%; height:100%; }
+        #dox-three { position:absolute; top:0; left:0; width:100%; height:100%; filter: contrast(1.2) saturate(1.5) brightness(0.9); }
 
         #loop-counter {
             position:absolute; top:20px; right:24px;
-            font-family:'Consolas',monospace; color:rgba(0,255,204,0.25);
-            font-size:0.75rem; letter-spacing:4px; z-index:20;
+            font-family:'Consolas',monospace; color:rgba(255,0,51,0.5);
+            font-size:0.85rem; letter-spacing:6px; z-index:20;
+            text-shadow: 2px 0 0 rgba(0,255,204,0.5), -2px 0 0 rgba(255,0,51,0.5);
+            animation: glitch-text 0.2s infinite;
         }
 
         #petlya-text {
             position:absolute; top:50%; left:50%; transform:translate(-50%,-50%);
-            font-size:clamp(4rem,13vw,11rem); font-weight:900; letter-spacing:12px;
+            font-size:clamp(4rem,15vw,13rem); font-weight:900; letter-spacing:20px;
             color:rgba(255,0,51,0); text-align:center; width:100%;
             text-shadow:0 0 80px red, 0 0 180px rgba(255,0,0,0.3);
             z-index:20; pointer-events:none;
-            transition: color 1s;
+            transition: color 0.5s;
         }
 
-        #dox-scanlines {
-            position:absolute; top:0; left:0; width:100%; height:100%;
-            background:repeating-linear-gradient(0deg,transparent,transparent 3px,rgba(0,0,0,0.07) 3px,rgba(0,0,0,0.07) 6px);
-            z-index:19; pointer-events:none; opacity:0.45;
+        /* ── VHS / HORROR EFFECTS ── */
+        #vhs-overlay {
+            position:absolute; inset:0; z-index:19; pointer-events:none;
+            background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%), linear-gradient(90deg, rgba(255, 0, 0, 0.06), rgba(0, 255, 0, 0.02), rgba(0, 0, 255, 0.06));
+            background-size: 100% 4px, 3px 100%;
+            opacity: 0.6;
+        }
+        
+        #vhs-tracking {
+            position:absolute; bottom:10%; left:0; width:100%; height:10vh;
+            background: rgba(255,255,255,0.03);
+            box-shadow: 0 0 10px rgba(255,255,255,0.05);
+            z-index:19; pointer-events:none;
+            animation: tracking 3s infinite linear;
         }
 
         /* ── FLASH ── */
@@ -48,11 +61,11 @@
         #br-phase {
             display:none; position:fixed; top:0; left:0; width:100vw; height:100vh; z-index:300; overflow:hidden;
         }
-        #br-three { position:absolute; top:0; left:0; width:100%; height:100%; }
+        #br-three { position:absolute; top:0; left:0; width:100%; height:100%; filter: sepia(0.3) contrast(1.4) brightness(0.8); }
 
-        /* Letterbox */
         #br-phase::before, #br-phase::after {
-            content:''; position:absolute; left:0; width:100%; height:75px; background:#000; z-index:10;
+            content:''; position:absolute; left:0; width:100%; height:10vh; background:#000; z-index:10;
+            box-shadow: 0 0 30px #000;
         }
         #br-phase::before { top:0; }
         #br-phase::after  { bottom:0; }
@@ -60,40 +73,49 @@
         #br-lyric {
             position:absolute; top:50%; left:50%; transform:translate(-50%,-50%);
             z-index:20; text-align:center; pointer-events:none;
-            opacity:0; transition:opacity 0.8s; white-space:pre-line; line-height:1.1;
+            opacity:0; transition:opacity 0.5s; white-space:pre-line; line-height:1.1;
         }
-        #br-lyric.big {
-            font-size:clamp(3rem,11vw,9rem); font-weight:900; letter-spacing:8px;
-        }
-        #br-lyric.med {
-            font-size:clamp(1.5rem,4vw,3.2rem); font-weight:600; letter-spacing:5px;
-        }
-        #br-lyric.sm {
-            font-size:clamp(0.9rem,2.5vw,1.6rem); letter-spacing:4px;
-        }
+        #br-lyric.big { font-size:clamp(4rem,12vw,10rem); font-weight:900; letter-spacing:10px; }
+        #br-lyric.med { font-size:clamp(2rem,5vw,4rem); font-weight:700; letter-spacing:6px; }
+        #br-lyric.sm { font-size:clamp(1rem,3vw,2rem); letter-spacing:4px; opacity:0.7; }
+        
         #br-vignette {
             position:absolute; inset:0;
-            background:radial-gradient(ellipse at center, transparent 25%, rgba(0,0,0,0.82) 100%);
+            background:radial-gradient(ellipse at center, transparent 30%, rgba(0,0,0,0.95) 100%);
             z-index:8; pointer-events:none;
-        }
-        #br-scan {
-            position:absolute; inset:0;
-            background:repeating-linear-gradient(0deg,transparent,transparent 3px,rgba(0,0,0,0.08) 3px,rgba(0,0,0,0.08) 6px);
-            z-index:9; pointer-events:none; opacity:0.5;
-        }
-        #br-hint {
-            position:absolute; bottom:85px; left:50%; transform:translateX(-50%);
-            color:rgba(200,168,75,0.3); font-size:0.7rem; letter-spacing:3px; z-index:20;
-            opacity:0; transition:opacity 2s;
         }
 
         @keyframes shake {
             0%,100%{ transform:translate(0); }
-            25%{ transform:translate(-4px,2px); }
-            50%{ transform:translate(4px,-2px); }
-            75%{ transform:translate(-3px,3px); }
+            20%{ transform:translate(-5px,3px) rotate(-0.5deg); filter: hue-rotate(90deg); }
+            40%{ transform:translate(5px,-3px) rotate(0.5deg); }
+            60%{ transform:translate(-3px,-3px); filter: hue-rotate(-90deg); }
+            80%{ transform:translate(3px,3px); }
         }
-        .shaking { animation:shake 0.08s infinite; }
+        @keyframes tracking {
+            0% { transform: translateY(-100vh); opacity: 0; }
+            50% { opacity: 1; }
+            100% { transform: translateY(100vh); opacity: 0; }
+        }
+        @keyframes glitch-text {
+            0% { transform: translate(0); }
+            20% { transform: translate(-2px, 1px); }
+            40% { transform: translate(2px, -1px); }
+            60% { transform: translate(-1px, 2px); }
+            80% { transform: translate(1px, -2px); }
+        }
+        .shaking { animation:shake 0.15s infinite; }
+        
+        /* Chromatic Aberration wrapper for Three.js canvas */
+        .chromatic {
+            animation: chromAb 0.1s infinite;
+        }
+        @keyframes chromAb {
+            0% { filter: drop-shadow(3px 0 0 rgba(255,0,0,0.4)) drop-shadow(-3px 0 0 rgba(0,255,255,0.4)); }
+            50% { filter: drop-shadow(-3px 0 0 rgba(255,0,0,0.4)) drop-shadow(3px 0 0 rgba(0,255,255,0.4)); }
+            100% { filter: drop-shadow(3px 0 0 rgba(255,0,0,0.4)) drop-shadow(-3px 0 0 rgba(0,255,255,0.4)); }
+        }
+
     </style>
 </head>
 <body>
@@ -102,9 +124,10 @@
 
 <!-- DOX ROOM -->
 <div id="dox-phase">
-    <div id="dox-three"></div>
-    <div id="dox-scanlines"></div>
-    <div id="loop-counter"></div>
+    <div id="dox-three" class="chromatic"></div>
+    <div id="vhs-overlay"></div>
+    <div id="vhs-tracking"></div>
+    <div id="loop-counter">LOOP 0</div>
     <div id="petlya-text">ПЕТЛЯ</div>
 </div>
 
@@ -112,20 +135,19 @@
 <div id="br-phase">
     <div id="br-three"></div>
     <div id="br-vignette"></div>
-    <div id="br-scan"></div>
+    <div id="vhs-overlay"></div>
     <div id="br-lyric" class="big"></div>
-    <div id="br-hint">[ любая клавиша — выход ]</div>
 </div>
 
 <!-- TERMINAL -->
 <div id="main-console">
     <div style="border-bottom:1px dashed #00ffcc22;padding-bottom:15px;margin-bottom:20px;opacity:0.5;font-size:0.85rem;">
         AUREX OS TERMINAL v2.5<br>
-        <span style="color:#444">help</span> — команды &nbsp;·&nbsp; <span style="color:#ff003388">dox</span> — петля
+        <span style="color:#ff003388; text-shadow: 0 0 10px red;">[ CRITICAL WARNING: MEMORY CORRUPTION DETECTED ]</span><br>
+        type <span style="color:#fff">help</span> or <span style="color:#ff0033;font-weight:bold;">dox</span>
     </div>
     <div id="console-output" class="console-output">
-        <div style="color:#2e5a48;">&gt; Инициализация... <span style="color:#4caf50;">OK</span></div>
-        <div style="color:#2e5a48;">&gt; Ожидание.</div>
+        <div style="color:#2e5a48;">&gt; Ожидание ввода.</div>
     </div>
     <div class="console-input-row">
         <span style="color:#00ffcc;">root@vault:~#</span>
@@ -160,10 +182,10 @@ function out(html) {
 }
 
 function runCmd(cmd) {
-    if (cmd === 'help')    out('help · clear · history · <span style="color:#ff0033;font-weight:bold;">dox</span>');
-    else if (cmd === 'clear') co.innerHTML = '';
-    else if (cmd === 'history') out('[2021] Петля запущена.<br>[2024] Потеря связи.<br>[2026] Восстановлено.<br>[????] <span style="color:#ff0033">ПОВРЕЖДЕНО</span>');
-    else if (cmd === 'dox') { out('<span style="color:#ff0033;">▶ ПРОТОКОЛ ДЕЖАВЮ</span>'); setTimeout(triggerDox, 900); }
+    if (cmd === 'dox') { 
+        out('<span style="color:#ff0033; font-weight:900; letter-spacing:2px;">▶ ИНИЦИАЛИЗАЦИЯ ПЕТЛИ...</span>'); 
+        setTimeout(triggerDox, 800); 
+    }
     else out(`<span style="color:#333;">не найдено: ${cmd}</span>`);
 }
 
@@ -187,46 +209,40 @@ function getBass() {
         analyser.getByteFrequencyData(freqData);
         return (freqData[0]+freqData[1]+freqData[2]+freqData[3]) / 4 / 255;
     }
-    return 0.1 + 0.07*Math.sin(Date.now()*0.0007);
+    return Math.random() * 0.2;
 }
 
 // ════════════════════════════════════════════════
 //  THREE.JS DOX ROOM SCENE
 // ════════════════════════════════════════════════
 let doxScene, doxCam, doxRenderer, doxAnimId;
-let charRoot; // character THREE.Group
+let charRoot; 
 
-// Scene layout
 const BED_POS   = new THREE.Vector3(-4.5, 0, 0.5);
 const DESK_POS  = new THREE.Vector3( 4.2, 0, 0.5);
-const CHAR_STAND_Y = 1.25; // hip height when feet on floor
-const CHAR_BED_Y   = 1.05; // hip height when lying (above mattress)
+const CHAR_STAND_Y = 1.35; 
+const CHAR_BED_Y   = 1.15; 
 
-// Loop state machine
-let loopState  = 'lying';   // lying | rising | walking | sitting | pause_desk | flash
-let stateT     = 0;         // 0..1 progress through current state
-let stateStart = 0;         // performance.now() when state began
+let loopState  = 'lying';   
+let stateT     = 0;         
+let stateStart = 0;         
 let loopCount  = 0;
-let speedFactor= 1.0;       // multiplier, shrinks each loop (faster)
+let speedFactor= 1.0;       
 
-// Base durations (seconds)
-const BASE_DUR = { lying:0.9, rising:1.4, walking:2.2, arriving:0.9, sitting:0.5, pause_desk:0.6 };
+const BASE_DUR = { lying:0.8, rising:1.2, walking:2.0, arriving:0.8, sitting:0.5, pause_desk:0.5 };
 function getDur(s) { return BASE_DUR[s] * speedFactor; }
 
-// Character parts (Three.Groups)
 let hipGroup, torsoMesh, headMesh;
 let lShPivot, rShPivot, lElPivot, rElPivot;
 let lHipPivot, rHipPivot, lKneePivot, rKneePivot;
 let charMat;
-
-// Accumulated walk time (for leg cycle)
 let walkTime = 0;
 
-// Camera target (for zoom into monitor)
-const CAM_NORMAL_POS = new THREE.Vector3(0, 6.5, 13);
-const CAM_NORMAL_TGT = new THREE.Vector3(0, 2.0, 0);
-const monitorWorldPos = new THREE.Vector3(DESK_POS.x, 1.85, DESK_POS.z - 0.6);
+const CAM_NORMAL_POS = new THREE.Vector3(-1, 6.5, 12);
+const CAM_NORMAL_TGT = new THREE.Vector3(0, 1.5, 0);
+const monitorWorldPos = new THREE.Vector3(DESK_POS.x, 2.2, DESK_POS.z - 0.5);
 let camZooming = false;
+let roomLights = [];
 
 function triggerDox() {
     document.getElementById('main-console').style.display = 'none';
@@ -242,14 +258,14 @@ function triggerDox() {
 function setupDoxScene() {
     const W = window.innerWidth, H = window.innerHeight;
     doxScene = new THREE.Scene();
-    doxScene.background = new THREE.Color(0x050404);
-    doxScene.fog = new THREE.Fog(0x050404, 18, 32);
+    doxScene.background = new THREE.Color(0x020101);
+    doxScene.fog = new THREE.FogExp2(0x020101, 0.08); // Dense horror fog
 
-    doxCam = new THREE.PerspectiveCamera(52, W/H, 0.1, 100);
+    doxCam = new THREE.PerspectiveCamera(60, W/H, 0.1, 100);
     doxCam.position.copy(CAM_NORMAL_POS);
     doxCam.lookAt(CAM_NORMAL_TGT);
 
-    doxRenderer = new THREE.WebGLRenderer({ antialias:true });
+    doxRenderer = new THREE.WebGLRenderer({ antialias:false, powerPreference: "high-performance" });
     doxRenderer.setSize(W, H);
     doxRenderer.shadowMap.enabled = true;
     doxRenderer.shadowMap.type = THREE.PCFSoftShadowMap;
@@ -262,253 +278,124 @@ function setupDoxScene() {
 }
 
 function buildRoom() {
-    const floorM  = new THREE.MeshLambertMaterial({ color:0x1a1410 });
-    const wallM   = new THREE.MeshLambertMaterial({ color:0x141008 });
-    const ceilM   = new THREE.MeshLambertMaterial({ color:0x0e0c06 });
+    const floorM  = new THREE.MeshStandardMaterial({ color:0x111111, roughness: 0.9, metalness: 0.1 });
+    const wallM   = new THREE.MeshStandardMaterial({ color:0x0a0a0a, roughness: 1.0 });
 
-    // Floor
-    const floor = new THREE.Mesh(new THREE.PlaneGeometry(16, 14), floorM);
+    const floor = new THREE.Mesh(new THREE.PlaneGeometry(20, 20), floorM);
     floor.rotation.x = -Math.PI/2; floor.receiveShadow = true;
     doxScene.add(floor);
-    // Ceiling
-    const ceil = new THREE.Mesh(new THREE.PlaneGeometry(16, 14), ceilM);
-    ceil.rotation.x = Math.PI/2; ceil.position.y = 6;
-    doxScene.add(ceil);
-    // Back wall
-    const bw = new THREE.Mesh(new THREE.PlaneGeometry(16, 6), wallM);
-    bw.position.set(0, 3, -6); doxScene.add(bw);
-    // Left wall
-    const lw = new THREE.Mesh(new THREE.PlaneGeometry(14, 6), wallM);
-    lw.rotation.y = Math.PI/2; lw.position.set(-7.5, 3, 0); doxScene.add(lw);
-    // Right wall
-    const rw = new THREE.Mesh(new THREE.PlaneGeometry(14, 6), wallM);
-    rw.rotation.y = -Math.PI/2; rw.position.set(7.5, 3, 0); doxScene.add(rw);
+    
+    const bw = new THREE.Mesh(new THREE.PlaneGeometry(20, 10), wallM);
+    bw.position.set(0, 5, -8); bw.receiveShadow = true; doxScene.add(bw);
 }
 
 function buildFurniture() {
-    const woodM = new THREE.MeshLambertMaterial({ color:0x3a2512 });
-    const bedM  = new THREE.MeshLambertMaterial({ color:0x4a3520 });
-    const sheetM= new THREE.MeshLambertMaterial({ color:0x2a2035 }); // dark sheets
-    const pillowM=new THREE.MeshLambertMaterial({ color:0x3a3048 });
-    const deskM = new THREE.MeshLambertMaterial({ color:0x1a1a1a });
-    const legM  = new THREE.MeshLambertMaterial({ color:0x111111 });
-
-    // ── BED ──
+    const bedM = new THREE.MeshStandardMaterial({ color:0x151515, roughness:0.8 });
+    const deskM = new THREE.MeshStandardMaterial({ color:0x050505, roughness:0.5 });
+    
     const bx = BED_POS.x, bz = BED_POS.z;
-    // Frame
-    const bedFrame = new THREE.Mesh(new THREE.BoxGeometry(3.2, 0.5, 5.5), bedM);
-    bedFrame.position.set(bx, 0.25, bz); bedFrame.castShadow=true; doxScene.add(bedFrame);
-    // Headboard
-    const headboard = new THREE.Mesh(new THREE.BoxGeometry(3.2, 1.2, 0.15), woodM);
-    headboard.position.set(bx, 0.9, bz-2.75); doxScene.add(headboard);
-    // Mattress
-    const mattress = new THREE.Mesh(new THREE.BoxGeometry(2.9, 0.3, 5.1), bedM);
-    mattress.position.set(bx, 0.65, bz); doxScene.add(mattress);
-    // Sheets
-    const sheets = new THREE.Mesh(new THREE.BoxGeometry(2.85, 0.15, 3.5), sheetM);
-    sheets.position.set(bx, 0.87, bz+0.6); doxScene.add(sheets);
-    // Pillow
-    const pillow = new THREE.Mesh(new THREE.BoxGeometry(2.2, 0.2, 0.9), pillowM);
-    pillow.position.set(bx, 0.87, bz-2.0); doxScene.add(pillow);
+    const bed = new THREE.Mesh(new THREE.BoxGeometry(3.2, 0.8, 5.5), bedM);
+    bed.position.set(bx, 0.4, bz); bed.castShadow=true; bed.receiveShadow=true; doxScene.add(bed);
 
-    // ── DESK ──
     const dx = DESK_POS.x, dz = DESK_POS.z;
-    // Tabletop
-    const tabletop = new THREE.Mesh(new THREE.BoxGeometry(3.5, 0.08, 1.5), deskM);
-    tabletop.position.set(dx, 1.52, dz-0.2); tabletop.castShadow=true; doxScene.add(tabletop);
-    // Legs
-    [[-1.6,-0.6],[-1.6,0.5],[1.6,-0.6],[1.6,0.5]].forEach(([lx,lz])=>{
-        const leg = new THREE.Mesh(new THREE.BoxGeometry(0.07,1.52,0.07), legM);
-        leg.position.set(dx+lx, 0.76, dz-0.2+lz); doxScene.add(leg);
-    });
-
-    // ── PC MONITOR ──
-    const monBack = new THREE.Mesh(new THREE.BoxGeometry(2.0, 1.3, 0.12), deskM);
-    monBack.position.set(dx, 2.22, dz-0.65);
-    monBack.castShadow=true; doxScene.add(monBack);
-    // Monitor screen (glowing)
-    const screenM = new THREE.MeshBasicMaterial({ color:0x002a3a });
-    const screen = new THREE.Mesh(new THREE.BoxGeometry(1.85, 1.15, 0.02), screenM);
-    screen.position.set(dx, 2.22, dz-0.59); doxScene.add(screen);
-    // Monitor glow light
-    const monLight = new THREE.PointLight(0x006688, 1.5, 4);
-    monLight.position.set(dx, 2.2, dz-0.4); doxScene.add(monLight);
-    // Monitor stand
-    const monNeck = new THREE.Mesh(new THREE.BoxGeometry(0.08,0.35,0.08), legM);
-    monNeck.position.set(dx, 1.75, dz-0.65); doxScene.add(monNeck);
-    const monBase = new THREE.Mesh(new THREE.BoxGeometry(0.8,0.04,0.4), deskM);
-    monBase.position.set(dx, 1.58, dz-0.65); doxScene.add(monBase);
-
-    // ── CHAIR ──
-    const chairM = new THREE.MeshLambertMaterial({ color:0x0d0d0d });
-    const seat = new THREE.Mesh(new THREE.BoxGeometry(1.1, 0.1, 1.1), chairM);
-    seat.position.set(dx-0.1, 1.1, dz+0.7); doxScene.add(seat);
-    const back = new THREE.Mesh(new THREE.BoxGeometry(1.0, 1.0, 0.1), chairM);
-    back.position.set(dx-0.1, 1.65, dz+0.15); doxScene.add(back);
-    [[-0.45,-0.45],[0.45,-0.45],[-0.45,0.45],[0.45,0.45]].forEach(([cx,cz])=>{
-        const cl = new THREE.Mesh(new THREE.CylinderGeometry(0.04,0.04,1.1,6), chairM);
-        cl.position.set(dx-0.1+cx, 0.55, dz+0.7+cz); doxScene.add(cl);
-    });
-
-    // ── BEDSIDE LAMP ──
-    const lampBase = new THREE.Mesh(new THREE.CylinderGeometry(0.15,0.18,0.08,8), woodM);
-    lampBase.position.set(bx+1.8, 0.04, bz-2.3); doxScene.add(lampBase);
-    const lampPole = new THREE.Mesh(new THREE.CylinderGeometry(0.03,0.03,0.9,6), woodM);
-    lampPole.position.set(bx+1.8, 0.5, bz-2.3); doxScene.add(lampPole);
-    const lampShade = new THREE.Mesh(new THREE.CylinderGeometry(0.28,0.18,0.3,10), new THREE.MeshLambertMaterial({color:0x3a2a18, side:THREE.DoubleSide}));
-    lampShade.position.set(bx+1.8, 0.95, bz-2.3); doxScene.add(lampShade);
-    const lampGlow = new THREE.PointLight(0xff8833, 0.9, 4.5);
-    lampGlow.position.set(bx+1.8, 0.85, bz-2.3); doxScene.add(lampGlow);
-
-    // ── NIGHTSTAND ──
-    const ns = new THREE.Mesh(new THREE.BoxGeometry(0.6,0.8,0.5), woodM);
-    ns.position.set(bx+1.8, 0.4, bz-2.3); doxScene.add(ns);
+    const desk = new THREE.Mesh(new THREE.BoxGeometry(3.5, 0.1, 2.0), deskM);
+    desk.position.set(dx, 1.5, dz); desk.castShadow=true; desk.receiveShadow=true; doxScene.add(desk);
+    
+    // Monitor screen (Bright red glow for horror)
+    const screen = new THREE.Mesh(new THREE.BoxGeometry(2.0, 1.2, 0.05), new THREE.MeshBasicMaterial({ color:0xff0022 }));
+    screen.position.set(dx, 2.2, dz-0.6); doxScene.add(screen);
+    
+    // Monitor hard light
+    const monLight = new THREE.SpotLight(0xff0022, 5, 20, Math.PI/3, 0.5, 1.5);
+    monLight.position.set(dx, 2.2, dz-0.5);
+    monLight.target.position.set(dx, 1.0, dz+5);
+    monLight.castShadow = true;
+    monLight.shadow.mapSize.width = 1024;
+    monLight.shadow.mapSize.height = 1024;
+    doxScene.add(monLight);
+    doxScene.add(monLight.target);
+    roomLights.push(monLight);
 }
 
 function buildDoxLights() {
-    // Very dim ambient
-    doxScene.add(new THREE.AmbientLight(0x1a0e06, 0.4));
-    // Ceiling center light
-    const ceil = new THREE.PointLight(0x886644, 0.6, 14);
-    ceil.position.set(0, 5.5, 0); doxScene.add(ceil);
+    doxScene.add(new THREE.AmbientLight(0x050505)); // pitch black almost
+    
+    // Flickering overhead light
+    const ceil = new THREE.PointLight(0x4466aa, 1.0, 15);
+    ceil.position.set(0, 6, 0);
+    ceil.castShadow = true;
+    doxScene.add(ceil);
+    roomLights.push(ceil);
 }
 
 function buildCharacter() {
-    charMat = new THREE.MeshPhongMaterial({ color:0x00ffcc, emissive:0x003322, shininess:90 });
-    const C = (rt, rb, h) => new THREE.Mesh(new THREE.CylinderGeometry(rt,rb,h,10), charMat);
-    const S = (r) => new THREE.Mesh(new THREE.SphereGeometry(r,10,8), charMat);
+    // Dark creepy silhouette material
+    charMat = new THREE.MeshStandardMaterial({ color:0x000000, roughness:0.2, metalness:0.8 });
+    const C = (rt, rb, h) => {
+        const m = new THREE.Mesh(new THREE.CylinderGeometry(rt,rb,h,8), charMat);
+        m.castShadow = true; m.receiveShadow = true; return m;
+    };
+    const S = (r) => {
+        const m = new THREE.Mesh(new THREE.SphereGeometry(r,8,8), charMat);
+        m.castShadow = true; return m;
+    };
 
     charRoot = new THREE.Group();
     doxScene.add(charRoot);
-
-    // charRoot.position = hip position
-    // Hip group rotates to lie down
     hipGroup = new THREE.Group();
     charRoot.add(hipGroup);
 
-    // Torso (going UP from hip)
-    torsoMesh = C(0.16, 0.19, 0.85);
-    torsoMesh.position.y = 0.425;
-    torsoMesh.castShadow = true;
+    torsoMesh = C(0.2, 0.15, 0.9);
+    torsoMesh.position.y = 0.45;
     hipGroup.add(torsoMesh);
 
-    // Neck
-    const neck = C(0.1, 0.12, 0.22);
-    neck.position.y = 0.96;
-    hipGroup.add(neck);
-
-    // Head
-    headMesh = S(0.22);
-    headMesh.position.y = 1.18;
-    headMesh.castShadow = true;
+    headMesh = S(0.25);
+    headMesh.position.y = 1.1;
+    // Red glowing eyes
+    const eyeMat = new THREE.MeshBasicMaterial({color:0xff0000});
+    const leye = new THREE.Mesh(new THREE.SphereGeometry(0.04), eyeMat); leye.position.set(-0.1, 1.15, 0.22);
+    const reye = new THREE.Mesh(new THREE.SphereGeometry(0.04), eyeMat); reye.position.set(0.1, 1.15, 0.22);
+    hipGroup.add(leye); hipGroup.add(reye);
     hipGroup.add(headMesh);
 
-    // ── LEFT ARM ──
-    lShPivot = new THREE.Group();
-    lShPivot.position.set(-0.28, 0.8, 0);
-    hipGroup.add(lShPivot);
+    // Left Arm
+    lShPivot = new THREE.Group(); lShPivot.position.set(-0.3, 0.8, 0); hipGroup.add(lShPivot);
+    const lUA = C(0.08, 0.06, 0.5); lUA.position.y = -0.25; lShPivot.add(lUA);
+    lElPivot = new THREE.Group(); lElPivot.position.y = -0.5; lShPivot.add(lElPivot);
+    const lFA = C(0.06, 0.04, 0.5); lFA.position.y = -0.25; lElPivot.add(lFA);
 
-    const lUA = C(0.07, 0.08, 0.52);
-    lUA.position.y = -0.26;
-    lShPivot.add(lUA);
+    // Right Arm
+    rShPivot = new THREE.Group(); rShPivot.position.set(0.3, 0.8, 0); hipGroup.add(rShPivot);
+    const rUA = C(0.08, 0.06, 0.5); rUA.position.y = -0.25; rShPivot.add(rUA);
+    rElPivot = new THREE.Group(); rElPivot.position.y = -0.5; rShPivot.add(rElPivot);
+    const rFA = C(0.06, 0.04, 0.5); rFA.position.y = -0.25; rElPivot.add(rFA);
 
-    lElPivot = new THREE.Group();
-    lElPivot.position.y = -0.52;
-    lShPivot.add(lElPivot);
+    // Left Leg
+    lHipPivot = new THREE.Group(); lHipPivot.position.set(-0.15, 0, 0); hipGroup.add(lHipPivot);
+    const lTh = C(0.12, 0.08, 0.6); lTh.position.y = -0.3; lHipPivot.add(lTh);
+    lKneePivot = new THREE.Group(); lKneePivot.position.y = -0.6; lHipPivot.add(lKneePivot);
+    const lSh = C(0.08, 0.06, 0.6); lSh.position.y = -0.3; lKneePivot.add(lSh);
 
-    const lFA = C(0.055, 0.065, 0.44);
-    lFA.position.y = -0.22;
-    lElPivot.add(lFA);
+    // Right Leg
+    rHipPivot = new THREE.Group(); rHipPivot.position.set(0.15, 0, 0); hipGroup.add(rHipPivot);
+    const rTh = C(0.12, 0.08, 0.6); rTh.position.y = -0.3; rHipPivot.add(rTh);
+    rKneePivot = new THREE.Group(); rKneePivot.position.y = -0.6; rHipPivot.add(rKneePivot);
+    const rSh = C(0.08, 0.06, 0.6); rSh.position.y = -0.3; rKneePivot.add(rSh);
 
-    // ── RIGHT ARM ──
-    rShPivot = new THREE.Group();
-    rShPivot.position.set(0.28, 0.8, 0);
-    hipGroup.add(rShPivot);
-
-    const rUA = C(0.07, 0.08, 0.52);
-    rUA.position.y = -0.26;
-    rShPivot.add(rUA);
-
-    rElPivot = new THREE.Group();
-    rElPivot.position.y = -0.52;
-    rShPivot.add(rElPivot);
-
-    const rFA = C(0.055, 0.065, 0.44);
-    rFA.position.y = -0.22;
-    rElPivot.add(rFA);
-
-    // ── LEFT LEG ──
-    lHipPivot = new THREE.Group();
-    lHipPivot.position.set(-0.14, 0, 0);
-    hipGroup.add(lHipPivot);
-
-    const lTh = C(0.10, 0.12, 0.65);
-    lTh.position.y = -0.325;
-    lHipPivot.add(lTh);
-
-    lKneePivot = new THREE.Group();
-    lKneePivot.position.y = -0.65;
-    lHipPivot.add(lKneePivot);
-
-    const lSh = C(0.075, 0.095, 0.60);
-    lSh.position.y = -0.30;
-    lKneePivot.add(lSh);
-
-    // foot
-    const lFt = new THREE.Mesh(new THREE.BoxGeometry(0.18,0.1,0.32), charMat);
-    lFt.position.set(-0.02,-0.62,0.06);
-    lKneePivot.add(lFt);
-
-    // ── RIGHT LEG ──
-    rHipPivot = new THREE.Group();
-    rHipPivot.position.set(0.14, 0, 0);
-    hipGroup.add(rHipPivot);
-
-    const rTh = C(0.10, 0.12, 0.65);
-    rTh.position.y = -0.325;
-    rHipPivot.add(rTh);
-
-    rKneePivot = new THREE.Group();
-    rKneePivot.position.y = -0.65;
-    rHipPivot.add(rKneePivot);
-
-    const rSh = C(0.075, 0.095, 0.60);
-    rSh.position.y = -0.30;
-    rKneePivot.add(rSh);
-
-    const rFt = new THREE.Mesh(new THREE.BoxGeometry(0.18,0.1,0.32), charMat);
-    rFt.position.set(0.02,-0.62,0.06);
-    rKneePivot.add(rFt);
-
-    // Character glow
-    const glow = new THREE.PointLight(0x00ffcc, 0.6, 2.5);
-    hipGroup.add(glow);
-
-    // Start lying on bed
     charRoot.position.set(BED_POS.x, CHAR_BED_Y, BED_POS.z - 1.0);
-    charRoot.rotation.y = 0; // facing -Z (along bed length)
     poseLying();
 }
 
-// ── POSE FUNCTIONS ──
 function poseLying() {
-    hipGroup.rotation.x = Math.PI/2; // rotate so body is horizontal
-    lHipPivot.rotation.x = 0; rHipPivot.rotation.x = 0;
-    lKneePivot.rotation.x = 0; rKneePivot.rotation.x = 0;
-    lShPivot.rotation.x = 0;  rShPivot.rotation.x = 0;
-    lElPivot.rotation.x = 0;  rElPivot.rotation.x = 0;
-}
-
-function poseStanding() {
-    hipGroup.rotation.x = 0;
-    lHipPivot.rotation.x = 0; rHipPivot.rotation.x = 0;
-    lKneePivot.rotation.x = 0; rKneePivot.rotation.x = 0;
-    lShPivot.rotation.x = 0;  rShPivot.rotation.x = 0;
-    lElPivot.rotation.x = 0;  rElPivot.rotation.x = 0;
+    hipGroup.rotation.set(Math.PI/2, 0, 0);
+    lHipPivot.rotation.set(0,0,0); rHipPivot.rotation.set(0,0,0);
+    lKneePivot.rotation.set(0,0,0); rKneePivot.rotation.set(0,0,0);
+    lShPivot.rotation.set(0,0,0); rShPivot.rotation.set(0,0,0);
+    lElPivot.rotation.set(0,0,0); rElPivot.rotation.set(0,0,0);
 }
 
 function poseSitting() {
-    hipGroup.rotation.x = 0;
+    hipGroup.rotation.set(0,0,0);
     lHipPivot.rotation.x = -Math.PI*0.48; rHipPivot.rotation.x = -Math.PI*0.48;
     lKneePivot.rotation.x =  Math.PI*0.52; rKneePivot.rotation.x =  Math.PI*0.52;
     lShPivot.rotation.x = -0.5; rShPivot.rotation.x = -0.5;
@@ -516,173 +403,124 @@ function poseSitting() {
 }
 
 function applyWalk(t) {
-    const freq = 2.4; // steps per second
+    const freq = 2.8; 
     const cyc = t * freq * Math.PI * 2;
-    const amp = 0.55;
-    const armAmp = 0.35;
+    const amp = 0.7;
 
-    lHipPivot.rotation.x  =  Math.sin(cyc) * amp;
+    // Kinematic trick for legs: bending knees only when foot goes back
+    lHipPivot.rotation.x  = Math.sin(cyc) * amp;
     rHipPivot.rotation.x  = -Math.sin(cyc) * amp;
-    lKneePivot.rotation.x = Math.max(0, -Math.sin(cyc)) * 0.6;
-    rKneePivot.rotation.x = Math.max(0,  Math.sin(cyc)) * 0.6;
-    lShPivot.rotation.x   = -Math.sin(cyc) * armAmp;
-    rShPivot.rotation.x   =  Math.sin(cyc) * armAmp;
-    lElPivot.rotation.x   = Math.max(0, Math.sin(cyc)) * 0.4;
-    rElPivot.rotation.x   = Math.max(0,-Math.sin(cyc)) * 0.4;
+    lKneePivot.rotation.x = Math.max(0, -Math.sin(cyc)) * 1.2;
+    rKneePivot.rotation.x = Math.max(0, Math.sin(cyc)) * 1.2;
+    
+    // Creepy stiff arms
+    lShPivot.rotation.x   = -Math.sin(cyc) * 0.2;
+    rShPivot.rotation.x   = Math.sin(cyc) * 0.2;
+    lShPivot.rotation.z   = 0.2; rShPivot.rotation.z = -0.2;
 
-    // Torso slight forward lean
-    hipGroup.rotation.x = -0.08;
-
-    // Bob
-    charRoot.position.y = CHAR_STAND_Y + Math.abs(Math.sin(cyc*0.5))*0.05;
+    hipGroup.rotation.x = -0.2; // lean forward menacingly
+    
+    // Aggressive vertical bobbing
+    charRoot.position.y = CHAR_STAND_Y + Math.abs(Math.sin(cyc*0.5))*0.15;
 }
 
-function lerp(a, b, t) { return a + (b-a) * Math.min(Math.max(t,0),1); }
-function clamp(v,a,b) { return Math.min(Math.max(v,a),b); }
+function lerp(a, b, t) { return a + (b-a) * t; }
 
-// ── STATE MACHINE ──
 function startState(s) {
     loopState = s; stateStart = performance.now()/1000; stateT = 0;
-    if (s === 'lying') {
+    if(s === 'lying'){
         charRoot.position.set(BED_POS.x, CHAR_BED_Y, BED_POS.z - 1.0);
-        charRoot.rotation.y = 0;
-        poseLying();
+        charRoot.rotation.y = 0; poseLying();
     }
-    if (s === 'walking') {
-        charRoot.rotation.y = -Math.PI/2; // face +X
-        walkTime = 0;
-    }
-    if (s === 'sitting') {
-        charRoot.position.set(DESK_POS.x - 0.1, CHAR_STAND_Y, DESK_POS.z + 0.85);
-        charRoot.rotation.y = Math.PI; // face monitor (-Z)
+    if(s === 'walking') { charRoot.rotation.y = -Math.PI/2; walkTime = 0; }
+    if(s === 'sitting') {
+        charRoot.position.set(DESK_POS.x - 0.2, CHAR_STAND_Y, DESK_POS.z + 0.85);
+        charRoot.rotation.y = Math.PI;
     }
 }
 
 function updateState(now) {
     const elapsed = now/1000 - stateStart;
     const dur = getDur(loopState) || 0.5;
-    stateT = clamp(elapsed / dur, 0, 1);
+    stateT = Math.min(Math.max(elapsed / dur, 0), 1);
 
     if (loopState === 'lying') {
         poseLying();
         if (stateT >= 1) startState('rising');
     }
     else if (loopState === 'rising') {
-        // Rotate from lying to standing, move to floor
         hipGroup.rotation.x = lerp(Math.PI/2, 0, stateT);
-        const fromPos = new THREE.Vector3(BED_POS.x, CHAR_BED_Y, BED_POS.z-1.0);
-        const toPos   = new THREE.Vector3(BED_POS.x+1.5, CHAR_STAND_Y, BED_POS.z);
-        charRoot.position.lerpVectors(fromPos, toPos, stateT);
+        charRoot.position.lerpVectors(new THREE.Vector3(BED_POS.x, CHAR_BED_Y, BED_POS.z-1.0), new THREE.Vector3(BED_POS.x+1.5, CHAR_STAND_Y, BED_POS.z), stateT);
         charRoot.rotation.y = lerp(0, -Math.PI/2, stateT);
-        // Reset limbs to standing as we rise
         lHipPivot.rotation.x = lerp(0, 0, stateT);
-        rHipPivot.rotation.x = 0;
         if (stateT >= 1) startState('walking');
     }
     else if (loopState === 'walking') {
         walkTime += 0.016;
-        const fromX = BED_POS.x + 1.5;
-        const toX   = DESK_POS.x - 0.4;
-        charRoot.position.x = lerp(fromX, toX, stateT);
+        charRoot.position.x = lerp(BED_POS.x+1.5, DESK_POS.x-0.5, stateT);
         charRoot.position.z = BED_POS.z;
-        charRoot.position.y = CHAR_STAND_Y;
-        charRoot.rotation.y = -Math.PI/2;
         applyWalk(walkTime);
         if (stateT >= 1) startState('arriving');
     }
     else if (loopState === 'arriving') {
-        // Walk to chair and start sitting
-        const fromPos = new THREE.Vector3(DESK_POS.x-0.4, CHAR_STAND_Y, BED_POS.z);
-        const toPos   = new THREE.Vector3(DESK_POS.x-0.1, CHAR_STAND_Y, DESK_POS.z+0.85);
-        charRoot.position.lerpVectors(fromPos, toPos, stateT);
-        // Turn to face monitor
+        charRoot.position.lerpVectors(new THREE.Vector3(DESK_POS.x-0.5, CHAR_STAND_Y, BED_POS.z), new THREE.Vector3(DESK_POS.x-0.2, CHAR_STAND_Y, DESK_POS.z+0.85), stateT);
         charRoot.rotation.y = lerp(-Math.PI/2, Math.PI, stateT);
-        // Start bending knees
         lHipPivot.rotation.x  = lerp(0, -Math.PI*0.48, stateT);
         rHipPivot.rotation.x  = lerp(0, -Math.PI*0.48, stateT);
         lKneePivot.rotation.x = lerp(0,  Math.PI*0.52, stateT);
         rKneePivot.rotation.x = lerp(0,  Math.PI*0.52, stateT);
-        lShPivot.rotation.x   = lerp(0, -0.5, stateT);
-        rShPivot.rotation.x   = lerp(0, -0.5, stateT);
-        hipGroup.rotation.x   = lerp(0, 0, stateT);
+        hipGroup.rotation.x   = 0;
+        charRoot.position.y = CHAR_STAND_Y;
         if (stateT >= 1) startState('sitting');
     }
-    else if (loopState === 'sitting') {
+    else if (loopState === 'sitting' || loopState === 'pause_desk') {
         poseSitting();
-        if (stateT >= 1) startState('pause_desk');
-    }
-    else if (loopState === 'pause_desk') {
-        poseSitting();
-        if (stateT >= 1) endLoop();
+        if (stateT >= 1 && loopState === 'sitting') startState('pause_desk');
+        if (stateT >= 1 && loopState === 'pause_desk') endLoop();
     }
 }
 
 function endLoop() {
     loopCount++;
-    speedFactor *= 0.72; // each loop is 28% faster
-    speedFactor = Math.max(speedFactor, 0.08);
+    speedFactor *= 0.65; // Much faster acceleration
+    speedFactor = Math.max(speedFactor, 0.05);
 
     document.getElementById('loop-counter').textContent = `LOOP ${loopCount}`;
 
-    // Update character color toward red
-    const r = Math.min(1.0, loopCount * 0.15);
-    const g = Math.max(0, 1.0 - r * 1.3);
-    charMat.color.setRGB(r + (1-r)*0, g + (1-g)*1*(1-r), (1-r));
-    charMat.emissive.setRGB(r*0.4, g*0.15, (1-r)*0.2);
-
-    const petlya = document.getElementById('petlya-text');
-    if (loopCount >= 4) {
-        const op = clamp((loopCount - 4) / 4, 0, 1);
-        petlya.style.color = `rgba(255,0,51,${op})`;
-    }
-
-    // Camera shake intensifies
-    if (loopCount >= 3) {
-        document.getElementById('dox-phase').classList.add('shaking');
-    }
-
-    // After 8 loops, zoom into monitor
-    if (loopCount >= 8) {
+    if(loopCount >= 3) document.getElementById('dox-phase').classList.add('shaking');
+    if(loopCount >= 5) document.getElementById('petlya-text').style.color = 'rgba(255,0,51,0.8)';
+    if(loopCount >= 7) {
         camZooming = true;
-        setTimeout(doMonitorZoom, 500);
+        setTimeout(doMonitorZoom, 200);
         return;
     }
-
     startState('lying');
 }
 
 function doMonitorZoom() {
-    // Animate camera into PC monitor over 2.5s
-    const start = performance.now();
-    const duration = 2500;
+    const start = performance.now(), duration = 1200;
     const startPos = doxCam.position.clone();
-
     function animZoom() {
-        const t = clamp((performance.now()-start)/duration, 0, 1);
-        const ease = t < 0.5 ? 2*t*t : -1+(4-2*t)*t; // smooth
-
+        const t = Math.min((performance.now()-start)/duration, 1);
+        const ease = t*t*(3 - 2*t); // smoothstep
         doxCam.position.lerpVectors(startPos, monitorWorldPos, ease);
         doxCam.lookAt(monitorWorldPos);
-
-        if (t < 1) { requestAnimationFrame(animZoom); }
-        else { doFlashToBR(); }
+        doxCam.fov = 60 + t*80; doxCam.updateProjectionMatrix();
+        if (t < 1) requestAnimationFrame(animZoom);
+        else doFlashToBR();
     }
     animZoom();
 }
 
 function doFlashToBR() {
     const fl = document.getElementById('flash');
-    fl.style.display='block'; fl.style.opacity='0'; fl.style.transition='opacity 0.35s';
-    requestAnimationFrame(()=>{
-        fl.style.opacity='1';
-        setTimeout(()=>{
-            cancelAnimationFrame(doxAnimId);
-            doxRenderer.dispose();
-            document.getElementById('dox-phase').style.display='none';
-            fl.style.opacity='0';
-            setTimeout(()=>{ fl.style.display='none'; startBackrooms(); }, 400);
-        }, 500);
-    });
+    fl.style.display='block'; fl.style.opacity='1';
+    setTimeout(()=>{
+        cancelAnimationFrame(doxAnimId); doxRenderer.dispose();
+        document.getElementById('dox-phase').style.display='none';
+        fl.style.opacity='0';
+        setTimeout(()=>{ fl.style.display='none'; startBackrooms(); }, 200);
+    }, 100);
 }
 
 let doxLastTime = 0;
@@ -691,140 +529,81 @@ function doxLoop(ts=0) {
     const dt = ts - doxLastTime; doxLastTime = ts;
 
     if (!camZooming) {
-        // Subtle camera breathe
-        const breath = Math.sin(ts*0.0004)*0.08;
-        doxCam.position.y = CAM_NORMAL_POS.y + breath;
-        doxCam.lookAt(CAM_NORMAL_TGT);
-
+        // Dramatic camera shake and pan based on speed
+        const intensity = (1 - speedFactor) * 0.5;
+        doxCam.position.x = CAM_NORMAL_POS.x + Math.sin(ts*0.01)*intensity;
+        doxCam.position.y = CAM_NORMAL_POS.y + Math.cos(ts*0.02)*intensity;
+        doxCam.lookAt(charRoot.position.clone().add(new THREE.Vector3(0, 1, 0))); // Follow character slightly
+        
         updateState(ts);
     }
+    
+    // Flicker lights
+    if(roomLights[1]) roomLights[1].intensity = Math.random() > 0.9 ? 0 : 1.0;
+    if(roomLights[0]) roomLights[0].intensity = 5 + Math.sin(ts*0.05)*2;
 
     doxRenderer.render(doxScene, doxCam);
 }
 
 // ════════════════════════════════════════════════
-//  BACKROOMS (Three.js corridor + Brain Rot lyrics)
+//  BACKROOMS
 // ════════════════════════════════════════════════
 let brScene, brCam, brRenderer, brAnimId, brT=0, brShown=new Set();
 
 const SCRIPT = [
-    {t:2,  text:'ты снова здесь',           cls:'sm',  col:'rgba(200,168,75,0.65)'},
-    {t:6,  text:'всё в норме',              cls:'big', col:'#c8a84b'},
-    {t:11, text:'так расслабься',           cls:'med', col:'rgba(255,255,255,0.5)'},
-    {t:17, text:'не найдём мы\nвыход никогда',cls:'med',col:'#ff4444'},
-    {t:24, text:'ОПАСНО',                   cls:'big', col:'#ff0033'},
-    {t:28, text:'не парься',                cls:'med', col:'rgba(200,168,75,0.8)'},
+    {t:2,  text:'ты снова здесь',           cls:'sm',  col:'#c8a84b'},
+    {t:6,  text:'всё в норме',              cls:'big', col:'#fff'},
+    {t:11, text:'так расслабься',           cls:'med', col:'#aaa'},
+    {t:17, text:'не найдём мы\nвыход никогда',cls:'med',col:'#f00'},
+    {t:24, text:'ОПАСНО',                   cls:'big', col:'#f00'},
+    {t:28, text:'не парься',                cls:'med', col:'#c8a84b'},
     {t:34, text:'упал на дно',              cls:'med', col:'#fff'},
-    {t:41, text:'ГНИЁТ',                    cls:'big', col:'#ff0033'},
-    {t:44, text:'МОЙ МОЗГ',                 cls:'big', col:'#c8a84b'},
-    {t:49, text:'уже давно',                cls:'sm',  col:'rgba(255,255,255,0.4)'},
-    {t:56, text:'я словно пепел',           cls:'med', col:'rgba(200,168,75,0.9)'},
-    {t:62, text:'высоко',                   cls:'big', col:'#00ffcc'},
-    {t:70, text:'полный день боли',         cls:'med', col:'#ff4444'},
-    {t:76, text:'я не в себе',              cls:'med', col:'#fff'},
-    {t:82, text:'и знаю сам',               cls:'sm',  col:'rgba(200,168,75,0.7)'},
-    {t:87, text:'но...',                    cls:'big', col:'rgba(255,255,255,0.3)'},
-    {t:93, text:'меня не спасти',           cls:'med', col:'#ff0033'},
-    {t:99, text:'ВЕДЬ\nПОЗДНО',             cls:'big', col:'#ff0033'},
-    {t:106,text:'ГНИЁТ МОЙ МОЗГ',          cls:'med', col:'#c8a84b'},
-    {t:112,text:'но сладость\nни при чём', cls:'sm',  col:'rgba(255,255,255,0.5)'},
-    {t:118,text:'.',                        cls:'big', col:'#fff'},
-    {t:120,text:'.',                        cls:'big', col:'#fff'},
-    {t:122,text:'.',                        cls:'big', col:'#fff'},
-    {t:127,text:'ты снова здесь',           cls:'sm',  col:'rgba(200,168,75,0.6)'},
-    {t:131,text:'всё в норме',              cls:'big', col:'#c8a84b'},
-    {t:136,text:'так расслабься',           cls:'med', col:'rgba(255,255,255,0.28)'},
+    {t:41, text:'ГНИЁТ',                    cls:'big', col:'#f00'},
+    {t:44, text:'МОЙ МОЗГ',                 cls:'big', col:'#fff'},
 ];
 
 function startBackrooms() {
     document.getElementById('br-phase').style.display='block';
     const W=window.innerWidth, H=window.innerHeight;
     brScene = new THREE.Scene();
-    brScene.fog = new THREE.FogExp2(0x1a1100, 0.028);
-    brScene.background = new THREE.Color(0x0e0b00);
-    brCam = new THREE.PerspectiveCamera(72, W/H, 0.1, 200);
-    brCam.position.set(0,0,0);
-    brRenderer = new THREE.WebGLRenderer({antialias:true});
+    brScene.fog = new THREE.FogExp2(0x110800, 0.05);
+    brScene.background = new THREE.Color(0x050200);
+    brCam = new THREE.PerspectiveCamera(80, W/H, 0.1, 100);
+    
+    brRenderer = new THREE.WebGLRenderer({antialias:false});
     brRenderer.setSize(W,H);
     document.getElementById('br-three').appendChild(brRenderer.domElement);
-    buildBRCorridor(); buildBRLights();
-    document.addEventListener('keydown', exitBR, {once:true});
-    setTimeout(()=>{ document.getElementById('br-hint').style.opacity='1'; }, 28000);
+    
+    // Corridors
+    const texLoader = new THREE.TextureLoader();
+    // Use basic materials with heavy bump for grunge
+    const wallM = new THREE.MeshStandardMaterial({color:0x886611, roughness:1, side:THREE.BackSide});
+    const box = new THREE.Mesh(new THREE.BoxGeometry(6,4,100), wallM);
+    box.position.set(0,0,-50); brScene.add(box);
+    
+    brScene.add(new THREE.AmbientLight(0x221100));
+    for(let z=2;z<100;z+=6){
+        const l=new THREE.PointLight(0xffcc55, 1.5, 12);
+        l.position.set(0,1.8,-z); brScene.add(l);
+    }
+    
     brT=0; renderBR();
-}
-
-function buildBRCorridor() {
-    const CW=5.5, CH=3.8, CL=220;
-    const wallM = new THREE.MeshLambertMaterial({color:0xb89828, side:THREE.BackSide});
-    const box = new THREE.Mesh(new THREE.BoxGeometry(CW,CH,CL), wallM);
-    box.position.set(0,0,-CL/2); brScene.add(box);
-
-    const floorM = new THREE.MeshLambertMaterial({color:0x7a6010});
-    const floor = new THREE.Mesh(new THREE.PlaneGeometry(CW,CL), floorM);
-    floor.rotation.x=-Math.PI/2; floor.position.set(0,-CH/2,-CL/2); brScene.add(floor);
-
-    // Ceiling tiles grid
-    const gridM = new THREE.LineBasicMaterial({color:0x907820, transparent:true, opacity:0.25});
-    for(let z=0;z<CL;z+=1.5){
-        const g=new THREE.BufferGeometry().setFromPoints([
-            new THREE.Vector3(-CW/2,CH/2-0.01,-z),
-            new THREE.Vector3( CW/2,CH/2-0.01,-z)]);
-        brScene.add(new THREE.Line(g,gridM));
-    }
-    for(let x=-CW/2;x<=CW/2;x+=1.5){
-        const g=new THREE.BufferGeometry().setFromPoints([
-            new THREE.Vector3(x,CH/2-0.01,0),
-            new THREE.Vector3(x,CH/2-0.01,-CL)]);
-        brScene.add(new THREE.Line(g,gridM));
-    }
-    // Floor tiles
-    const floorLineM=new THREE.LineBasicMaterial({color:0x5a4808,transparent:true,opacity:0.2});
-    for(let z=0;z<CL;z+=1.5){
-        const g=new THREE.BufferGeometry().setFromPoints([
-            new THREE.Vector3(-CW/2,-CH/2+0.01,-z),
-            new THREE.Vector3( CW/2,-CH/2+0.01,-z)]);
-        brScene.add(new THREE.Line(g,floorLineM));
-    }
-    // Wall seam lines
-    const wallLineM=new THREE.LineBasicMaterial({color:0xa07818,transparent:true,opacity:0.18});
-    for(let z=0;z<CL;z+=3){
-        [-CW/2+0.01, CW/2-0.01].forEach(x=>{
-            const g=new THREE.BufferGeometry().setFromPoints([
-                new THREE.Vector3(x,-CH/2,-z),
-                new THREE.Vector3(x, CH/2,-z)]);
-            brScene.add(new THREE.Line(g,wallLineM));
-        });
-    }
-}
-
-function buildBRLights() {
-    brScene.add(new THREE.AmbientLight(0x3a2600,0.35));
-    for(let z=2;z<220;z+=4){
-        const l=new THREE.PointLight(0xffe080,0.9,9);
-        l.position.set(0,1.7,-z); brScene.add(l);
-        const fix=new THREE.Mesh(new THREE.BoxGeometry(1.4,0.05,0.5),
-            new THREE.MeshBasicMaterial({color:0xfffce0}));
-        fix.position.set(0,1.88,-z); brScene.add(fix);
-    }
 }
 
 function renderBR() {
     brAnimId=requestAnimationFrame(renderBR);
     brT+=0.016;
-    const bass=getBass();
+    const bass = getBass();
 
-    // Walk forward
-    brCam.position.z-=0.45*0.016*60*0.016;
-    if(brCam.position.z<-210) brCam.position.z=0;
-    brCam.position.y=Math.sin(brT*2.2)*0.06;
-    brCam.rotation.z=Math.sin(brT*2.2)*0.007;
-
-    // Flicker
-    if(Math.random()<0.02){
-        brScene.traverse(o=>{if(o.isPointLight)o.intensity=0.15+Math.random()*0.4;});
-    } else {
-        brScene.traverse(o=>{if(o.isPointLight)o.intensity=Math.min(o.intensity+0.07, 0.9+bass*0.5);});
-    }
+    brCam.position.z -= 0.1 + bass*0.2;
+    if(brCam.position.z < -90) brCam.position.z = 0;
+    
+    // Heavy head bobbing
+    brCam.position.y = Math.sin(brT*5)*0.15;
+    brCam.rotation.z = Math.sin(brT*3)*0.05;
+    
+    // Light flicker sync to bass
+    brScene.traverse(o=>{ if(o.isPointLight) o.intensity = Math.max(0.2, bass * 5); });
 
     SCRIPT.forEach(item=>{
         if(brT>=item.t && !brShown.has(item.t)){
@@ -837,41 +616,14 @@ function renderBR() {
 
 function showLyric(item){
     const el=document.getElementById('br-lyric');
-    el.style.opacity='0';
-    setTimeout(()=>{
-        el.textContent=item.text;
-        el.className='br-lyric '+item.cls;
-        el.style.color=item.col;
-        el.style.textShadow=`0 0 40px ${item.col}, 0 0 80px ${item.col}`;
-        el.style.left=item.x||'50%';
-        el.style.transition='opacity 0.7s';
-        requestAnimationFrame(()=>{ el.style.opacity='1'; });
-        const hold=item.text.length<4?1800:Math.min(item.text.length*130,6500);
-        setTimeout(()=>{ el.style.opacity='0'; }, hold);
-    },60);
-}
-
-function exitBR(){
-    cancelAnimationFrame(brAnimId);
-    audioEl.pause(); audioEl.currentTime=0;
-    if(brRenderer) brRenderer.dispose();
-    document.getElementById('br-phase').style.display='none';
-    document.getElementById('main-console').style.display='flex';
-    out('<span style="color:#00ffcc;">&gt; Протокол завершён. Добро пожаловать обратно.</span>');
-    ci.focus();
+    el.textContent=item.text; el.className=item.cls; el.style.color=item.col;
+    el.style.opacity='1'; el.style.transform = `translate(-50%, -50%) scale(${1 + Math.random()*0.2})`;
+    setTimeout(()=>{ el.style.opacity='0'; }, 2000);
 }
 
 window.addEventListener('resize',()=>{
-    if(doxCam&&doxRenderer){
-        doxCam.aspect=window.innerWidth/window.innerHeight;
-        doxCam.updateProjectionMatrix();
-        doxRenderer.setSize(window.innerWidth,window.innerHeight);
-    }
-    if(brCam&&brRenderer){
-        brCam.aspect=window.innerWidth/window.innerHeight;
-        brCam.updateProjectionMatrix();
-        brRenderer.setSize(window.innerWidth,window.innerHeight);
-    }
+    if(doxCam){ doxCam.aspect=window.innerWidth/window.innerHeight; doxCam.updateProjectionMatrix(); doxRenderer.setSize(window.innerWidth,window.innerHeight); }
+    if(brCam){ brCam.aspect=window.innerWidth/window.innerHeight; brCam.updateProjectionMatrix(); brRenderer.setSize(window.innerWidth,window.innerHeight); }
 });
 </script>
 </body>
