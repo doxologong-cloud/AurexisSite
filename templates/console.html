@@ -3,900 +3,815 @@
 <head>
     <meta charset="UTF-8">
     <title>AUREX OS TERMINAL</title>
+    <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Consolas&display=swap" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
     <style>
         * { box-sizing: border-box; margin: 0; padding: 0; }
         body, html { height: 100%; background: #000; color: #00ffcc; font-family: 'Consolas', monospace; overflow: hidden; }
 
         /* ─── TERMINAL ─── */
-        .console-container { display: flex; flex-direction: column; height: 100vh; padding: 20px; }
+        #main-console { display: flex; flex-direction: column; height: 100vh; padding: 20px; }
         .console-output { flex-grow: 1; overflow-y: auto; display: flex; flex-direction: column; justify-content: flex-end; padding-bottom: 20px; font-size: 1rem; line-height: 1.6; }
         .console-input-row { display: flex; align-items: center; border-top: 1px dashed #00ffcc44; padding-top: 15px; }
         .console-input { flex-grow: 1; background: transparent; border: none; color: #fff; font-family: 'Consolas', monospace; font-size: 1.2rem; outline: none; margin-left: 10px; }
-        .prompt { color: #00ffcc; }
 
-        /* ─── DOX OVERLAY ─── */
+        /* ─── PHASE 1-2: PARTICLE FIGURE ─── */
         #dive-overlay {
             position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
             background: #000; z-index: 100; display: none; overflow: hidden;
+            /* CRITICAL: perspective here makes the monitor 3D */
+            perspective: 900px;
         }
-        #particle-canvas {
-            position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 1;
-        }
+        #particle-canvas { position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 1; }
+
         #loop-text {
-            position: absolute; top: 50%; left: 50%;
-            transform: translate(-50%, -50%);
-            font-size: clamp(4rem, 12vw, 10rem);
-            color: rgba(255, 0, 51, 0);
-            font-weight: 900;
-            font-family: 'Consolas', monospace;
-            letter-spacing: 20px;
-            text-shadow: 0 0 60px red, 0 0 120px red;
-            z-index: 5; pointer-events: none;
-            text-align: center; width: 100%;
-        }
-        #scanlines {
-            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
-            background: repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(0,0,0,0.15) 2px, rgba(0,0,0,0.15) 4px);
-            z-index: 6; pointer-events: none; opacity: 0;
-        }
-        #vignette {
-            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
-            background: radial-gradient(ellipse at center, transparent 40%, rgba(0,0,0,0.9) 100%);
-            z-index: 4; pointer-events: none;
-        }
-        #bottom-info {
-            position: absolute; bottom: 40px; left: 50%;
-            transform: translateX(-50%);
-            font-family: 'Consolas', monospace; font-size: 0.9rem;
-            color: rgba(0, 255, 204, 0.6); letter-spacing: 3px;
-            z-index: 7; text-align: center; opacity: 0; transition: opacity 1s;
+            position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
+            font-size: clamp(5rem, 14vw, 12rem); color: rgba(255,0,51,0);
+            font-weight: 900; letter-spacing: 15px;
+            text-shadow: 0 0 80px red, 0 0 160px red, 0 0 300px rgba(255,0,0,0.3);
+            z-index: 2; pointer-events: none; text-align: center; width: 100%;
+            transition: color 0.5s;
         }
 
-        /* Monitor */
-        #monitor-scene {
+        /* ─── PHASE 3: 3D MONITOR ─── */
+        /* CSS monitor placed in perspective container (dive-overlay) */
+        #monitor-wrap {
             position: absolute; top: 50%; left: 50%;
-            transform: translate(-50%, -50%);
-            width: 520px; height: 360px; z-index: 8; display: none;
+            transform: translate(-50%, -50%) translateZ(-4000px);
+            width: 560px; height: 380px;
+            z-index: 5; opacity: 0;
         }
-        #monitor-body {
-            width: 100%; height: 100%; background: #0a0a0a;
-            border: 16px solid #1c1c1c; border-radius: 12px;
-            box-shadow: 0 0 0 2px #333, 0 0 80px rgba(0,255,204,0.3), inset 0 0 40px rgba(0,255,204,0.05);
-            display: flex; justify-content: center; align-items: center;
+        #monitor-frame {
+            width: 100%; height: 100%;
+            background: #111; border: 18px solid #222;
+            border-radius: 14px;
+            box-shadow:
+                0 0 0 2px #444,
+                0 0 40px rgba(0,255,204,0.4),
+                inset 0 0 30px rgba(0,255,204,0.08);
             position: relative; overflow: hidden;
+            display: flex; align-items: center; justify-content: center;
         }
-        #monitor-screen-content {
-            width: 100%; height: 100%; display: flex; align-items: flex-start;
-            justify-content: flex-start; font-family: 'Consolas', monospace;
-            font-size: 0.78rem; color: #00ffcc; padding: 16px; flex-direction: column; gap: 4px;
+        /* Screen glow scan */
+        #monitor-frame::before {
+            content: '';
+            position: absolute; top: 0; left: -100%;
+            width: 50%; height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.04), transparent);
+            animation: scanSheen 3s ease-in-out infinite;
         }
-        .monitor-line { opacity: 0; animation: fadeInLine 0.3s forwards; }
-        @keyframes fadeInLine { to { opacity: 1; } }
-        #monitor-stand {
-            position: absolute; bottom: -70px; left: 50%; transform: translateX(-50%);
+        @keyframes scanSheen { 0%{left:-100%} 100%{left:200%} }
+        #monitor-screen {
+            width: 100%; height: 100%;
+            font-family: 'Consolas', monospace; font-size: 0.8rem;
+            color: #00ffcc; padding: 18px; display: flex;
+            flex-direction: column; gap: 5px;
+        }
+        .mline { opacity: 0; animation: fadeInLine 0.25s forwards; }
+        @keyframes fadeInLine { to { opacity:1; } }
+
+        /* Stand */
+        #monitor-stand-wrap {
+            position: absolute; bottom: -80px; left: 50%;
+            transform: translateX(-50%);
+        }
+        #monitor-neck {
             width: 0; height: 0;
-            border-left: 60px solid transparent; border-right: 60px solid transparent; border-top: 70px solid #1c1c1c;
+            border-left: 55px solid transparent;
+            border-right: 55px solid transparent;
+            border-top: 75px solid #222;
+            margin: 0 auto;
         }
-        #monitor-base {
-            position: absolute; bottom: -90px; left: 50%; transform: translateX(-50%);
-            width: 200px; height: 20px; background: #1c1c1c; border-radius: 4px;
+        #monitor-foot {
+            width: 210px; height: 22px;
+            background: #1e1e1e; border-radius: 5px;
+            box-shadow: 0 6px 20px rgba(0,0,0,0.8);
+            margin-top: -2px;
         }
-        @keyframes monitorFlyIn {
-            0%   { transform: translate(-50%,-50%) translateZ(-3000px) scale(0.1); opacity: 0; }
-            15%  { opacity: 1; }
-            70%  { transform: translate(-50%,-50%) translateZ(0) scale(1); opacity: 1; }
-            85%  { transform: translate(-50%,-50%) translateZ(80px) scale(1.05); }
-            100% { transform: translate(-50%,-50%) translateZ(0) scale(1); opacity: 1; }
-        }
-        .monitor-fly-in { animation: monitorFlyIn 3s cubic-bezier(0.2,0,0.1,1) forwards; }
 
-        #flash { position: fixed; top:0; left:0; width:100%; height:100%; background:#fff; z-index:9999; display:none; opacity:0; }
+        /* Dive keyframe — same technique as original Gemini */
+        @keyframes diveIntoMonitor {
+            0%   { transform: translate(-50%,-50%) translateZ(-4000px); opacity:0; }
+            8%   { opacity:1; }
+            75%  { transform: translate(-50%,-50%) translateZ(600px);  opacity:1;
+                   filter: drop-shadow(0 0 80px #00ffcc); }
+            90%  { transform: translate(-50%,-50%) translateZ(1100px); opacity:1; filter: brightness(3); }
+            100% { transform: translate(-50%,-50%) translateZ(1400px); opacity:1; filter: brightness(8) saturate(0); }
+        }
+        .do-dive { animation: diveIntoMonitor 6s cubic-bezier(0.65,0,0.1,1) forwards; }
 
-        /* ─── BACKROOMS PHASE ─── */
+        /* Flash */
+        #flash { position:fixed; top:0; left:0; width:100%; height:100%; background:#fff; z-index:9999; display:none; opacity:0; }
+
+        /* ─── PHASE 4: BACKROOMS + LYRICS ─── */
         #backrooms-phase {
-            display: none; position: fixed; top:0; left:0; width:100vw; height:100vh;
-            background: #000; z-index: 300; overflow: hidden;
+            display: none; position: fixed; top:0; left:0;
+            width: 100vw; height: 100vh; z-index: 300; overflow: hidden;
         }
-        #backrooms-canvas {
-            position: absolute; top:0; left:0; width:100%; height:100%; z-index:1;
-        }
-        /* Floating messages */
-        #br-messages {
+        /* THREE.js canvas fills this */
+        #br-three-canvas {
             position: absolute; top:0; left:0; width:100%; height:100%;
-            z-index: 10; pointer-events: none; display: flex;
-            align-items: center; justify-content: center;
         }
-        .br-msg {
-            position: absolute; font-family: 'Consolas', monospace;
-            text-align: center; opacity: 0; pointer-events: none;
-            transition: opacity 1.5s;
-            text-shadow: 0 0 20px currentColor;
+
+        /* Cinematic letterbox */
+        #br-letterbox-top {
+            position: absolute; top:0; left:0; width:100%; height:80px;
+            background: #000; z-index: 10; pointer-events: none;
+        }
+        #br-letterbox-bot {
+            position: absolute; bottom:0; left:0; width:100%; height:80px;
+            background: #000; z-index: 10; pointer-events: none;
+        }
+
+        /* Scanlines */
+        #br-scan {
+            position: absolute; top:0; left:0; width:100%; height:100%;
+            background: repeating-linear-gradient(0deg, transparent, transparent 3px, rgba(0,0,0,0.07) 3px, rgba(0,0,0,0.07) 6px);
+            z-index: 9; pointer-events: none; opacity: 0.5;
+        }
+        /* Vignette */
+        #br-vig {
+            position: absolute; top:0; left:0; width:100%; height:100%;
+            background: radial-gradient(ellipse at center, transparent 30%, rgba(0,0,0,0.85) 100%);
+            z-index: 8; pointer-events: none;
+        }
+
+        /* Lyrics display */
+        #br-lyric {
+            position: absolute; top: 50%; left: 50%;
+            transform: translate(-50%, -50%);
+            z-index: 20; text-align: center; pointer-events: none;
+            opacity: 0; transition: opacity 0.8s ease;
+            white-space: pre-line;
+            line-height: 1.15;
+        }
+        #br-lyric.big {
+            font-family: 'Bebas Neue', 'Consolas', monospace;
+            font-size: clamp(3rem, 10vw, 9rem);
+            font-weight: 900;
+            letter-spacing: 8px;
+        }
+        #br-lyric.small {
+            font-family: 'Consolas', monospace;
+            font-size: clamp(1rem, 3vw, 1.8rem);
             letter-spacing: 4px;
         }
-        /* Beat visualizer bar */
-        #beat-bar {
-            position: absolute; bottom: 0; left: 0; width: 100%; height: 3px;
-            background: transparent; z-index: 20; display: flex; gap: 2px; align-items: flex-end;
+        #br-lyric.med {
+            font-family: 'Consolas', monospace;
+            font-size: clamp(1.6rem, 5vw, 3.5rem);
+            letter-spacing: 6px;
+            font-weight: 600;
         }
-        .beat-seg {
-            flex: 1; background: #c8a84b; opacity: 0.7;
-            transition: height 0.05s; border-radius: 1px 1px 0 0;
-        }
-        /* Vignette for backrooms */
-        #br-vignette {
-            position: absolute; top:0; left:0; width:100%; height:100%;
-            background: radial-gradient(ellipse at center, transparent 20%, rgba(0,0,0,0.7) 100%);
-            z-index: 5; pointer-events: none;
-        }
-        /* Scanlines for backrooms */
-        #br-scanlines {
-            position: absolute; top:0; left:0; width:100%; height:100%;
-            background: repeating-linear-gradient(0deg, transparent, transparent 3px, rgba(0,0,0,0.08) 3px, rgba(0,0,0,0.08) 6px);
-            z-index: 6; pointer-events: none; opacity: 0.5;
-        }
-        /* Restart hint */
-        #br-restart {
-            position: absolute; bottom: 30px; left: 50%; transform: translateX(-50%);
-            color: rgba(200,168,75,0.4); font-family: 'Consolas', monospace;
-            font-size: 0.75rem; letter-spacing: 3px; z-index: 20;
-            opacity: 0; transition: opacity 2s;
+
+        /* Exit hint */
+        #br-hint {
+            position: absolute; bottom: 90px; left: 50%;
+            transform: translateX(-50%);
+            color: rgba(200,168,75,0.35);
+            font-size: 0.72rem; letter-spacing: 3px;
+            z-index: 20; opacity: 0; transition: opacity 2s;
         }
 
         /* Glitch */
-        @keyframes glitchText {
+        @keyframes glitch {
+            0%  { transform: translate(-50%,-50%) translate(0); }
+            20% { transform: translate(-50%,-50%) translate(-4px,1px); filter: hue-rotate(90deg); }
+            40% { transform: translate(-50%,-50%) translate(4px,-2px); }
+            60% { transform: translate(-50%,-50%) translate(-2px,3px); }
+            80% { transform: translate(-50%,-50%) translate(3px,-1px); }
+            100%{ transform: translate(-50%,-50%) translate(0); }
+        }
+        .glitch-anim { animation: glitch 0.07s infinite; }
+
+        @keyframes glitchBody {
             0%  { transform: translate(0); }
-            20% { transform: translate(-3px,1px); filter: hue-rotate(90deg); }
-            40% { transform: translate(3px,-1px); color: #ff0033; }
-            60% { transform: translate(-2px,2px); }
-            80% { transform: translate(2px,-2px); color: #fff; }
+            30% { transform: translate(-3px, 1px); filter: hue-rotate(120deg); }
+            60% { transform: translate(3px,-1px); }
             100%{ transform: translate(0); }
         }
-        .glitch { animation: glitchText 0.08s infinite; }
     </style>
 </head>
 <body>
 
-    <div id="flash"></div>
+<div id="flash"></div>
 
-    <!-- ── DOX OVERLAY (phases 1-3) ── -->
-    <div id="dive-overlay">
-        <canvas id="particle-canvas"></canvas>
-        <div id="vignette"></div>
-        <div id="scanlines"></div>
-        <div id="loop-text">ПЕТЛЯ</div>
-        <div id="bottom-info">ДЕЖАВЮ АКТИВИРОВАНО // ЦИКЛ №∞</div>
-        <div id="monitor-scene" style="perspective:1200px;">
-            <div id="monitor-body">
-                <div id="monitor-screen-content"></div>
-            </div>
-            <div id="monitor-stand"></div>
-            <div id="monitor-base"></div>
+<!-- ─── PHASES 1-3: PARTICLE + MONITOR ─── -->
+<div id="dive-overlay">
+    <canvas id="particle-canvas"></canvas>
+    <div id="loop-text">ПЕТЛЯ</div>
+
+    <div id="monitor-wrap">
+        <div id="monitor-frame">
+            <div id="monitor-screen"></div>
+        </div>
+        <div id="monitor-stand-wrap">
+            <div id="monitor-neck"></div>
+            <div id="monitor-foot"></div>
         </div>
     </div>
+</div>
 
-    <!-- ── BACKROOMS PHASE (phase 4) ── -->
-    <div id="backrooms-phase">
-        <canvas id="backrooms-canvas"></canvas>
-        <div id="br-vignette"></div>
-        <div id="br-scanlines"></div>
-        <div id="br-messages"></div>
-        <div id="beat-bar"></div>
-        <div id="br-restart">[ нажми любую клавишу чтобы выйти ]</div>
-    </div>
+<!-- ─── PHASE 4: BACKROOMS ─── -->
+<div id="backrooms-phase">
+    <div id="br-three-canvas"></div>
+    <div id="br-vig"></div>
+    <div id="br-scan"></div>
+    <div id="br-letterbox-top"></div>
+    <div id="br-letterbox-bot"></div>
+    <div id="br-lyric" class="big"></div>
+    <div id="br-hint">[ нажми любую клавишу ]</div>
+</div>
 
-    <!-- ── TERMINAL ── -->
-    <div class="console-container" id="main-console">
-        <div style="border-bottom:1px dashed #00ffcc44;padding-bottom:15px;margin-bottom:20px;opacity:0.6;font-size:0.85rem;">
-            AUREX OS TERMINAL v2.3 // ПРЯМОЙ ДОСТУП АКТИВИРОВАН<br>
-            Введите <span style="color:#fff;">'help'</span> для списка команд. Для запуска протокола Дежавю — <span style="color:#ff0033;">'dox'</span>
-        </div>
-        <div id="console-output" class="console-output">
-            <div style="color:#7f91a4;">&gt; Инициализация консоли... <span style="color:#4caf50;">OK</span></div>
-            <div style="color:#7f91a4;">&gt; Подключение к ядру... <span style="color:#4caf50;">OK</span></div>
-            <div style="color:#7f91a4;">&gt; Ожидание ввода команды.</div>
-        </div>
-        <div class="console-input-row">
-            <span class="prompt">root@vault:~#</span>
-            <input type="text" id="console-input" class="console-input" autocomplete="off" autofocus>
-        </div>
+<!-- ─── TERMINAL ─── -->
+<div id="main-console">
+    <div style="border-bottom:1px dashed #00ffcc33;padding-bottom:15px;margin-bottom:20px;opacity:0.55;font-size:0.85rem;">
+        AUREX OS TERMINAL v2.4<br>
+        <span style="color:#555">help</span> — команды &nbsp;|&nbsp; <span style="color:#ff0033">dox</span> — запустить петлю
     </div>
+    <div id="console-output" class="console-output">
+        <div style="color:#3a5a4a;">&gt; Инициализация... <span style="color:#4caf50;">OK</span></div>
+        <div style="color:#3a5a4a;">&gt; Ожидание команды.</div>
+    </div>
+    <div class="console-input-row">
+        <span style="color:#00ffcc;">root@vault:~#</span>
+        <input type="text" id="console-input" class="console-input" autocomplete="off" autofocus>
+    </div>
+</div>
 
 <script>
-// ════════════════════════════════════════
+// ══════════════════════════════════════════════
 //  TERMINAL
-// ════════════════════════════════════════
+// ══════════════════════════════════════════════
 const consoleInput  = document.getElementById('console-input');
 const consoleOutput = document.getElementById('console-output');
 
-consoleInput.addEventListener('keydown', function(e) {
+consoleInput.addEventListener('keydown', e => {
     if (e.key !== 'Enter') return;
-    const cmd = this.value.trim();
-    this.value = '';
+    const cmd = consoleInput.value.trim();
+    consoleInput.value = '';
     if (!cmd) return;
-    const userLine = document.createElement('div');
-    userLine.innerHTML = `<span style="color:#00ffcc;">root@vault:~#</span> <span style="color:#fff;">${cmd}</span>`;
-    consoleOutput.appendChild(userLine);
-    processCommand(cmd.toLowerCase());
+    const line = document.createElement('div');
+    line.innerHTML = `<span style="color:#00ffcc;">root@vault:~#</span> <span style="color:#eee;">${cmd}</span>`;
+    consoleOutput.appendChild(line);
+    runCmd(cmd.toLowerCase());
     consoleOutput.scrollTop = consoleOutput.scrollHeight;
 });
 
-function addOutput(html, color='#7f91a4') {
-    const div = document.createElement('div');
-    div.style.color = color;
-    div.innerHTML = html;
-    consoleOutput.appendChild(div);
+function out(html, col='#4a7a6a') {
+    const d = document.createElement('div');
+    d.style.color = col; d.innerHTML = html;
+    consoleOutput.appendChild(d);
     consoleOutput.scrollTop = consoleOutput.scrollHeight;
 }
 
-function processCommand(cmd) {
+function runCmd(cmd) {
     if (cmd === 'help') {
-        addOutput(`Доступные команды:<br>
-&nbsp;<span style="color:#00ffcc;">help</span>     — Показать это сообщение<br>
-&nbsp;<span style="color:#00ffcc;">clear</span>    — Очистить экран<br>
-&nbsp;<span style="color:#00ffcc;">history</span>  — История петли<br>
-&nbsp;<span style="color:#00ffcc;">glitch</span>   — Визуальный сбой<br>
-&nbsp;<span style="color:#ff0033;">dox</span>      — [СЕКРЕТНО] Запустить протокол ДЕЖАВЮ`);
+        out(`help · clear · history · glitch · <span style="color:#ff0033;font-weight:bold;">dox</span>`);
     } else if (cmd === 'clear') {
         consoleOutput.innerHTML = '';
     } else if (cmd === 'history') {
-        addOutput('[2021-01-01] Петля запущена.<br>[2024-??-??] Потеря связи с реальностью.<br>[2026-06-24] Хранилище восстановлено.<br>[????-??-??] <span style="color:#ff0033;">ЗАПИСЬ ПОВРЕЖДЕНА</span>');
+        out('[2021] Петля запущена.<br>[2024] Потеря связи.<br>[2026] Хранилище восстановлено.<br>[????] <span style="color:#ff0033">ДАННЫЕ ПОВРЕЖДЕНЫ</span>');
     } else if (cmd === 'glitch') {
-        addOutput('Запуск протокола искажения...', '#ffbb33');
-        document.body.classList.add('glitch');
-        setTimeout(() => document.body.classList.remove('glitch'), 800);
+        document.body.style.animation = 'glitchBody 0.07s infinite';
+        setTimeout(()=>document.body.style.animation='', 700);
     } else if (cmd === 'dox') {
-        addOutput('<span style="color:#ff0033;">ПРЕДУПРЕЖДЕНИЕ: Протокол ДЕЖАВЮ активирован. Подготовьтесь.</span>');
-        setTimeout(triggerDox, 1200);
+        out('<span style="color:#ff0033;">▶ ПРОТОКОЛ ДЕЖАВЮ АКТИВИРОВАН</span>');
+        setTimeout(triggerDox, 1000);
     } else {
-        addOutput(`Команда не найдена: <span style="color:#fff;">${cmd}</span>. Введите 'help'.`);
+        out(`<span style="color:#444;">команда не найдена: ${cmd}</span>`);
     }
 }
 
-// ════════════════════════════════════════
-//  DOX PHASES 1–3 (PARTICLE FIGURE)
-// ════════════════════════════════════════
-let audioCtx, analyser, audioSource, audioBuffer;
-let audioEl = new Audio('/static/assets/loop_music.m4a');
+// ══════════════════════════════════════════════
+//  AUDIO + WEB AUDIO
+// ══════════════════════════════════════════════
+const audioEl = new Audio('/static/assets/loop_music.m4a');
 audioEl.loop = true;
+let analyser, freqData;
 
-let canvas, ctx;
-let animId;
-let loopSpeed = 1;
-let phase = 'walk';
-let doxTime = 0;
-let particles = [];
-let bgParticles = [];
+function initAudio() {
+    try {
+        const ctx = new (window.AudioContext || window.webkitAudioContext)();
+        analyser = ctx.createAnalyser();
+        analyser.fftSize = 256;
+        ctx.createMediaElementSource(audioEl).connect(analyser);
+        analyser.connect(ctx.destination);
+        freqData = new Uint8Array(analyser.frequencyBinCount);
+    } catch(e) {}
+}
 
-const FIGURE_JOINTS = {
-    head:[0.5,0.10], neck:[0.5,0.18],
-    lShoulder:[0.38,0.24], rShoulder:[0.62,0.24],
-    lElbow:[0.33,0.36], rElbow:[0.67,0.36],
-    lHand:[0.30,0.47], rHand:[0.70,0.47],
-    hip:[0.5,0.45], lHip:[0.43,0.48], rHip:[0.57,0.48],
-    lKnee:[0.40,0.65], rKnee:[0.60,0.65],
-    lFoot:[0.37,0.82], rFoot:[0.63,0.82],
-};
-const BODY_REGIONS = [
-    [0.5,0.13,0.06,0.06,25],[0.5,0.32,0.14,0.13,60],
-    [0.35,0.29,0.04,0.09,20],[0.65,0.29,0.04,0.09,20],
-    [0.31,0.41,0.04,0.08,16],[0.69,0.41,0.04,0.08,16],
-    [0.41,0.57,0.05,0.10,22],[0.59,0.57,0.05,0.10,22],
-    [0.39,0.73,0.04,0.08,18],[0.61,0.73,0.04,0.08,18],
+function getBass() {
+    if (analyser && freqData) {
+        analyser.getByteFrequencyData(freqData);
+        let s = 0;
+        for (let i=0;i<6;i++) s += freqData[i];
+        return s / 6 / 255;
+    }
+    return 0.1 + 0.08 * Math.sin(Date.now() * 0.0008);
+}
+
+// ══════════════════════════════════════════════
+//  PHASE 1-2: PARTICLE FIGURE
+// ══════════════════════════════════════════════
+let pCanvas, pCtx, particles = [], bgDots = [];
+let animId, doxT = 0, speed = 1, phase = 'walk';
+
+// Human body keypoints (normalized 0-1 relative to figure bounding box)
+const BODY = [
+    // [cx, cy, rx, ry, count, group]
+    [0.50, 0.10, 0.075, 0.075, 40,  'head'],   // head
+    [0.50, 0.10, 0.045, 0.045, 20,  'head'],   // inner head
+    [0.50, 0.30, 0.16,  0.14,  90,  'torso'],  // chest
+    [0.50, 0.42, 0.13,  0.08,  50,  'torso'],  // waist
+    [0.32, 0.27, 0.05,  0.11,  28,  'larm'],   // left upper arm
+    [0.68, 0.27, 0.05,  0.11,  28,  'rarm'],   // right upper arm
+    [0.28, 0.40, 0.045, 0.10,  22,  'larm'],   // left forearm
+    [0.72, 0.40, 0.045, 0.10,  22,  'rarm'],   // right forearm
+    [0.42, 0.58, 0.06,  0.13,  32,  'lleg'],   // left thigh
+    [0.58, 0.58, 0.06,  0.13,  32,  'rleg'],   // right thigh
+    [0.40, 0.76, 0.05,  0.11,  26,  'lleg'],   // left shin
+    [0.60, 0.76, 0.05,  0.11,  26,  'rleg'],   // right shin
+    [0.38, 0.88, 0.07,  0.04,  16,  'lleg'],   // left foot
+    [0.62, 0.88, 0.07,  0.04,  16,  'rleg'],   // right foot
 ];
 
-function triggerDox() {
-    document.getElementById('main-console').style.display = 'none';
-    const overlay = document.getElementById('dive-overlay');
-    overlay.style.display = 'block';
-
-    // Start audio + Web Audio API analyzer
-    audioEl.play().catch(() => {});
-    try {
-        audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-        analyser = audioCtx.createAnalyser();
-        analyser.fftSize = 256;
-        audioSource = audioCtx.createMediaElementSource(audioEl);
-        audioSource.connect(analyser);
-        analyser.connect(audioCtx.destination);
-    } catch(e) { /* browser may block */ }
-
-    canvas = document.getElementById('particle-canvas');
-    ctx = canvas.getContext('2d');
-    canvas.width = window.innerWidth;
-    canvas.height = window.innerHeight;
-    buildParticles();
-    buildBgParticles();
-    doxTime = 0;
-    animateLoop();
-
-    setTimeout(startAccelerate, 4000);
-    setTimeout(showMonitor, 13000);
-}
+const JOINTS = {
+    head:[0.5,0.08], neck:[0.5,0.17],
+    lSh:[0.37,0.23], rSh:[0.63,0.23],
+    lEl:[0.31,0.36], rEl:[0.69,0.36],
+    lHa:[0.27,0.47], rHa:[0.73,0.47],
+    hip:[0.50,0.47], lHi:[0.44,0.50], rHi:[0.56,0.50],
+    lKn:[0.41,0.67], rKn:[0.59,0.67],
+    lFt:[0.39,0.85], rFt:[0.61,0.85],
+};
 
 function buildParticles() {
     particles = [];
-    const W = canvas.width, H = canvas.height;
-    const figH = Math.min(H * 0.7, 500);
-    const figW = figH * 0.5;
-    const figX = W / 2, figY = H * 0.5 - figH * 0.05;
-    BODY_REGIONS.forEach(([cx,cy,rx,ry,count]) => {
-        for (let i=0; i<count; i++) {
+    const W = pCanvas.width, H = pCanvas.height;
+    // Figure takes 65% of screen height, centered
+    const FH = H * 0.70;
+    const FW = FH * 0.55;
+    const FX = W / 2 - FW / 2;
+    const FY = H / 2 - FH / 2;
+
+    BODY.forEach(([cx, cy, rx, ry, n, grp]) => {
+        for (let i = 0; i < n; i++) {
             const angle = Math.random() * Math.PI * 2;
-            const r = Math.random();
-            const px = (cx + rx*r*Math.cos(angle))*figW + figX - figW/2;
-            const py = (cy + ry*r*Math.sin(angle))*figH + figY - figH/2;
-            particles.push({ x:px, y:py, baseX:px, baseY:py,
-                regionCY:cy, isLeftSide: cx<0.5,
-                size: Math.random()*1.5+0.8,
-                brightness: 0.7+Math.random()*0.3,
-                phase: Math.random()*Math.PI*2 });
+            const r = Math.sqrt(Math.random()); // uniform disk
+            const px = FX + (cx + rx * r * Math.cos(angle)) * FW;
+            const py = FY + (cy + ry * r * Math.sin(angle)) * FH;
+            particles.push({
+                x: px, y: py,
+                bx: px, by: py,  // base positions
+                group: grp,
+                cx: cx, cy: cy,   // normalized region center
+                size: Math.random() * 2 + 1,
+                bright: 0.6 + Math.random() * 0.4,
+                phase: Math.random() * Math.PI * 2,
+                // for figure shift reference
+                FX, FY, FW, FH,
+            });
         }
     });
 }
-function buildBgParticles() {
-    bgParticles = [];
-    for (let i=0; i<120; i++) bgParticles.push({
-        x:Math.random()*canvas.width, y:Math.random()*canvas.height,
-        vx:(Math.random()-0.5)*0.3, vy:(Math.random()-0.5)*0.3,
-        size:Math.random()*1.2+0.3, alpha:Math.random()*0.3+0.05
+
+function buildBg() {
+    bgDots = [];
+    for (let i = 0; i < 150; i++) bgDots.push({
+        x: Math.random() * pCanvas.width,
+        y: Math.random() * pCanvas.height,
+        vx: (Math.random()-0.5)*0.4, vy: (Math.random()-0.5)*0.4,
+        s: Math.random()*1.5+0.3, a: Math.random()*0.2+0.03
     });
 }
 
-function animateLoop() {
-    animId = requestAnimationFrame(animateLoop);
-    doxTime += 0.016;
-    ctx.fillStyle = `rgba(0,0,0,${phase==='accelerate'?0.25:0.18})`;
-    ctx.fillRect(0,0,canvas.width,canvas.height);
+function animateFigure() {
+    animId = requestAnimationFrame(animateFigure);
+    doxT += 0.016;
 
-    bgParticles.forEach(p => {
-        p.x += p.vx*loopSpeed; p.y += p.vy*loopSpeed;
-        if(p.x<0) p.x=canvas.width; if(p.x>canvas.width) p.x=0;
-        if(p.y<0) p.y=canvas.height; if(p.y>canvas.height) p.y=0;
-        ctx.beginPath(); ctx.arc(p.x,p.y,p.size,0,Math.PI*2);
-        ctx.fillStyle=`rgba(0,255,204,${p.alpha})`; ctx.fill();
+    const fade = phase==='acc' ? 0.22 : 0.16;
+    pCtx.fillStyle = `rgba(0,0,0,${fade})`;
+    pCtx.fillRect(0,0,pCanvas.width,pCanvas.height);
+
+    // Background dots
+    bgDots.forEach(d => {
+        d.x += d.vx * speed; d.y += d.vy * speed;
+        if(d.x<0) d.x=pCanvas.width; if(d.x>pCanvas.width) d.x=0;
+        if(d.y<0) d.y=pCanvas.height; if(d.y>pCanvas.height) d.y=0;
+        pCtx.beginPath(); pCtx.arc(d.x,d.y,d.s,0,Math.PI*2);
+        pCtx.fillStyle=`rgba(0,255,204,${d.a})`; pCtx.fill();
     });
 
-    const t = doxTime * loopSpeed * 1.5;
-    const walkBob = Math.sin(t*2)*4*Math.min(loopSpeed,3);
-    const walkSway = Math.sin(t)*8*Math.min(loopSpeed,3);
-    const figureShiftX = phase==='accelerate' ? Math.min(loopSpeed*2,60)*Math.sin(doxTime*0.5) : 0;
+    const t = doxT * speed;
+    const walkBob = Math.sin(t*2.5) * 5 * Math.min(speed, 3);
 
+    // Walk: left-right arm/leg alternation
     particles.forEach(p => {
-        let offsetX=0, offsetY=0;
-        const isLeg = p.regionCY > 0.5;
-        const isArm = p.regionCY>0.24 && p.regionCY<0.5 && (p.baseX<canvas.width/2-30||p.baseX>canvas.width/2+30);
-        if(isLeg) {
-            const legPhase = p.isLeftSide ? t*2 : t*2+Math.PI;
-            const legAmp = 15*Math.min(loopSpeed,4);
-            offsetX = Math.sin(legPhase)*legAmp*(p.regionCY>0.65?1.2:0.8);
-            offsetY = -Math.abs(Math.sin(legPhase))*legAmp*0.4;
-        } else if(isArm) {
-            const armPhase = p.isLeftSide ? t*2+Math.PI : t*2;
-            const armAmp = 10*Math.min(loopSpeed,3);
-            offsetX = Math.sin(armPhase)*armAmp;
-            offsetY = Math.abs(Math.sin(armPhase))*armAmp*0.3;
+        let ox=0, oy=0;
+        const isLeft = p.cx < 0.5;
+        const isLeg = p.cy > 0.5;
+        const isArm = p.cy > 0.22 && p.cy < 0.5 && (p.cx < 0.38 || p.cx > 0.62);
+
+        if (isLeg) {
+            const ph = isLeft ? t*2.2 : t*2.2 + Math.PI;
+            const amp = 18 * Math.min(speed,4);
+            const lean = p.cy > 0.75 ? 1.4 : 0.85;
+            ox = Math.sin(ph) * amp * lean;
+            oy = -Math.abs(Math.sin(ph)) * amp * 0.35;
+        } else if (isArm) {
+            const ph = isLeft ? t*2.2+Math.PI : t*2.2;
+            const amp = 12 * Math.min(speed, 3);
+            ox = Math.sin(ph) * amp;
+            oy = Math.abs(Math.sin(ph)) * amp * 0.2;
         }
-        offsetY += walkBob; offsetX += walkSway*0.1+figureShiftX;
-        if(phase==='accelerate') {
-            const scatter=(loopSpeed-1)*0.5;
-            offsetX+=(Math.random()-0.5)*scatter*3;
-            offsetY+=(Math.random()-0.5)*scatter*3;
+
+        oy += walkBob;
+
+        if (phase === 'acc') {
+            const sc = (speed-1)*0.4;
+            ox += (Math.random()-0.5)*sc*4;
+            oy += (Math.random()-0.5)*sc*4;
         }
-        p.x=p.baseX+offsetX; p.y=p.baseY+offsetY;
-        const greenAmt=Math.max(0,255-(loopSpeed-1)*15);
-        const redAmt=Math.min(255,(loopSpeed-1)*15);
-        const alpha=Math.min(1,p.brightness*(0.6+0.4*Math.abs(Math.sin(doxTime*3+p.phase))));
-        ctx.beginPath(); ctx.arc(p.x,p.y,p.size*(1+(loopSpeed-1)*0.1),0,Math.PI*2);
-        ctx.fillStyle=`rgba(${redAmt},${greenAmt},${Math.max(0,200-redAmt)},${alpha})`; ctx.fill();
-        if(loopSpeed>10) {
-            ctx.beginPath(); ctx.arc(p.x,p.y,p.size*3,0,Math.PI*2);
-            ctx.fillStyle=`rgba(${redAmt},${greenAmt},0,${0.05*Math.min(loopSpeed/10,1)})`; ctx.fill();
+
+        p.x = p.bx + ox;
+        p.y = p.by + oy;
+
+        // Color green→red as speed rises
+        const r = Math.min(255, Math.round((speed-1)*14));
+        const g = Math.max(0, 255 - r);
+        const b = Math.max(0, 180 - r);
+        const a = p.bright * (0.7 + 0.3*Math.abs(Math.sin(doxT*2+p.phase)));
+
+        pCtx.beginPath();
+        pCtx.arc(p.x, p.y, p.size*(1+(speed-1)*0.08), 0, Math.PI*2);
+        pCtx.fillStyle=`rgba(${r},${g},${b},${a})`; pCtx.fill();
+
+        // Glow halo at high speed
+        if (speed > 15) {
+            pCtx.beginPath(); pCtx.arc(p.x, p.y, p.size*4, 0, Math.PI*2);
+            pCtx.fillStyle=`rgba(${r},${g},0,${0.04*Math.min(speed/15,1)})`; pCtx.fill();
         }
     });
 
-    drawSkeleton(t, walkBob, walkSway, figureShiftX);
+    // Skeleton lines (subtle connective tissue)
+    drawSkeleton(t, walkBob);
 
-    const loopTextEl=document.getElementById('loop-text');
-    if(phase==='accelerate') {
-        const op=Math.min((loopSpeed-1)/30,1);
-        loopTextEl.style.color=`rgba(255,0,51,${op})`;
-        loopTextEl.style.textShadow=`0 0 ${30*op}px red,0 0 ${80*op}px red`;
-        if(loopSpeed>35) loopTextEl.classList.add('glitch');
+    // ПЕТЛЯ text
+    const loopEl = document.getElementById('loop-text');
+    if (phase === 'acc') {
+        const op = Math.min((speed-1)/28, 1);
+        loopEl.style.color = `rgba(255,0,51,${op})`;
+        if (speed > 32) loopEl.classList.add('glitch-anim');
     }
 }
 
-function drawSkeleton(t,walkBob,walkSway,shiftX) {
-    const W=canvas.width, H=canvas.height;
-    const figH=Math.min(H*0.7,500), figW=figH*0.5;
-    const ox=W/2-figW/2, oy=H*0.5-figH*0.5+walkBob;
-    function joint(key) {
-        const [nx,ny]=FIGURE_JOINTS[key];
-        let dx=0,dy=0;
-        if(['lKnee','lFoot'].includes(key)){const p=t*2;dx=Math.sin(p)*15;dy=-Math.abs(Math.sin(p))*6;}
-        if(['rKnee','rFoot'].includes(key)){const p=t*2+Math.PI;dx=Math.sin(p)*15;dy=-Math.abs(Math.sin(p))*6;}
-        if(['lElbow','lHand'].includes(key)){const p=t*2+Math.PI;dx=Math.sin(p)*8;}
-        if(['rElbow','rHand'].includes(key)){const p=t*2;dx=Math.sin(p)*8;}
-        return [ox+nx*figW+dx+shiftX, oy+ny*figH+dy+walkBob];
+function drawSkeleton(t, bob) {
+    const sample = particles[0];
+    if (!sample) return;
+    const { FX, FY, FW, FH } = sample;
+
+    function j(key) {
+        const [nx,ny] = JOINTS[key];
+        let dx=0, dy=0;
+        if(key==='lKn'||key==='lFt'){const p=t*2.2;       dx=Math.sin(p)*18;  dy=-Math.abs(Math.sin(p))*7;}
+        if(key==='rKn'||key==='rFt'){const p=t*2.2+Math.PI;dx=Math.sin(p)*18;  dy=-Math.abs(Math.sin(p))*7;}
+        if(key==='lEl'||key==='lHa'){const p=t*2.2+Math.PI;dx=Math.sin(p)*10;}
+        if(key==='rEl'||key==='rHa'){const p=t*2.2;        dx=Math.sin(p)*10;}
+        return [FX+nx*FW+dx, FY+ny*FH+dy+bob];
     }
-    const greenAmt=Math.max(0,200-(loopSpeed-1)*12);
-    const redAmt=Math.min(200,(loopSpeed-1)*12);
-    const lineAlpha=Math.max(0.05,0.15-(loopSpeed-1)*0.003);
-    ctx.strokeStyle=`rgba(${redAmt},${greenAmt},150,${lineAlpha})`; ctx.lineWidth=1;
-    const conns=[['head','neck'],['neck','lShoulder'],['neck','rShoulder'],
-        ['lShoulder','lElbow'],['lElbow','lHand'],['rShoulder','rElbow'],['rElbow','rHand'],
-        ['neck','hip'],['hip','lHip'],['hip','rHip'],
-        ['lHip','lKnee'],['lKnee','lFoot'],['rHip','rKnee'],['rKnee','rFoot']];
-    conns.forEach(([a,b])=>{
-        const[x1,y1]=joint(a),[x2,y2]=joint(b);
-        ctx.beginPath();ctx.moveTo(x1,y1);ctx.lineTo(x2,y2);ctx.stroke();
+
+    const r = Math.min(180,(speed-1)*12);
+    const g = Math.max(0,180-r);
+    pCtx.strokeStyle=`rgba(${r},${g},120,${Math.max(0.03,0.12-(speed-1)*0.003)})`;
+    pCtx.lineWidth=1.5;
+
+    const links=[
+        ['head','neck'],['neck','lSh'],['neck','rSh'],
+        ['lSh','lEl'],['lEl','lHa'],['rSh','rEl'],['rEl','rHa'],
+        ['neck','hip'],['hip','lHi'],['hip','rHi'],
+        ['lHi','lKn'],['lKn','lFt'],['rHi','rKn'],['rKn','rFt'],
+    ];
+    links.forEach(([a,b])=>{
+        const[x1,y1]=j(a),[x2,y2]=j(b);
+        pCtx.beginPath();pCtx.moveTo(x1,y1);pCtx.lineTo(x2,y2);pCtx.stroke();
     });
-    const[hx,hy]=joint('head');
-    ctx.beginPath();ctx.arc(hx,hy-figH*0.03,figH*0.045,0,Math.PI*2);ctx.stroke();
+    // head circle
+    const[hx,hy]=j('head');
+    pCtx.beginPath();pCtx.arc(hx,hy-FH*0.035,FH*0.05,0,Math.PI*2);pCtx.stroke();
 }
 
-function startAccelerate() {
-    if(canvas.style.display==='none') return;
-    phase='accelerate';
-    document.getElementById('bottom-info').style.opacity='1';
-    document.getElementById('scanlines').style.opacity='0.4';
-    const accel=setInterval(()=>{
-        loopSpeed+=0.4;
-        if(loopSpeed>45) clearInterval(accel);
-    },80);
+// ══════════════════════════════════════════════
+//  TRIGGER DOX
+// ══════════════════════════════════════════════
+function triggerDox() {
+    document.getElementById('main-console').style.display='none';
+    const overlay = document.getElementById('dive-overlay');
+    overlay.style.display='block';
+
+    initAudio();
+    audioEl.play().catch(()=>{});
+
+    pCanvas = document.getElementById('particle-canvas');
+    pCtx = pCanvas.getContext('2d');
+    pCanvas.width = window.innerWidth;
+    pCanvas.height = window.innerHeight;
+    buildParticles();
+    buildBg();
+    doxT=0; speed=1; phase='walk';
+    animateFigure();
+
+    // Phase 2: accelerate at 4s
+    setTimeout(startAcc, 4000);
+    // Phase 3: show monitor at 12s
+    setTimeout(showMonitor, 12000);
 }
 
+function startAcc() {
+    phase='acc';
+    const iv = setInterval(()=>{
+        speed += 0.35;
+        if(speed>42) clearInterval(iv);
+    },70);
+}
+
+// ══════════════════════════════════════════════
+//  PHASE 3: 3D MONITOR DIVE
+// ══════════════════════════════════════════════
 function showMonitor() {
     cancelAnimationFrame(animId);
-    ctx.clearRect(0,0,canvas.width,canvas.height);
-    document.getElementById('bottom-info').style.opacity='0';
-    document.getElementById('loop-text').style.opacity='0';
-    document.getElementById('scanlines').style.opacity='0';
+    pCtx.clearRect(0,0,pCanvas.width,pCanvas.height);
+    pCanvas.style.display='none';
+    document.getElementById('loop-text').style.display='none';
 
-    const monitorScene=document.getElementById('monitor-scene');
-    monitorScene.style.display='block';
-    monitorScene.querySelector('#monitor-body').classList.add('monitor-fly-in');
+    const mw = document.getElementById('monitor-wrap');
+    mw.style.display='block';
 
-    const lines=[
-        '> Протокол ДЕЖАВЮ активирован...',
-        '> Поиск начала петли...',
-        '> [ОШИБКА] Начало не найдено.',
-        '> Переход в Backrooms...',
-    ];
-    lines.forEach((line,i)=>{
-        setTimeout(()=>{
-            const el=document.createElement('div');
-            el.className='monitor-line';
-            el.style.color = i===2?'#ff0033':'#00ffcc';
-            el.style.fontSize='0.75rem'; el.style.fontFamily='Consolas,monospace'; el.style.width='100%';
-            el.textContent=line;
-            document.getElementById('monitor-screen-content').appendChild(el);
-        }, i*600+500);
+    // Animate it flying in from distance using CSS class
+    requestAnimationFrame(()=>{
+        mw.style.opacity='1';
+        mw.classList.add('do-dive');
     });
 
+    // Type on screen
+    const lines=[
+        { t:1200, text:'> Протокол ДЕЖАВЮ активирован...', col:'#00ffcc'},
+        { t:2000, text:'> Поиск начала петли...', col:'#00ffcc'},
+        { t:2800, text:'> ОШИБКА: начало не найдено', col:'#ff0033'},
+        { t:3600, text:'> Загрузка уровня 0...', col:'#ffbb33'},
+        { t:4600, text:'> Добро пожаловать в петлю.', col:'#fff'},
+    ];
+    const scr = document.getElementById('monitor-screen');
+    lines.forEach(l=>{
+        setTimeout(()=>{
+            const el=document.createElement('div');
+            el.className='mline'; el.style.color=l.col;
+            el.textContent=l.text; scr.appendChild(el);
+        },l.t);
+    });
+
+    // Flash & enter backrooms after 6s
     setTimeout(()=>{
-        const flash=document.getElementById('flash');
-        flash.style.display='block'; flash.style.opacity='0'; flash.style.transition='opacity 0.4s';
+        const fl = document.getElementById('flash');
+        fl.style.display='block'; fl.style.opacity='0'; fl.style.transition='opacity 0.3s';
         requestAnimationFrame(()=>{
-            flash.style.opacity='1';
+            fl.style.opacity='1';
             setTimeout(()=>{
                 document.getElementById('dive-overlay').style.display='none';
-                flash.style.opacity='0';
-                setTimeout(()=>{
-                    flash.style.display='none';
-                    startBackrooms();
-                },500);
-            },600);
+                fl.style.opacity='0';
+                setTimeout(()=>{ fl.style.display='none'; startBackrooms(); }, 350);
+            }, 450);
         });
-    },5500);
+    }, 6200);
 }
 
-// ════════════════════════════════════════
-//  BACKROOMS PHASE 4
-// ════════════════════════════════════════
+// ══════════════════════════════════════════════
+//  PHASE 4: THREE.JS BACKROOMS CORRIDOR
+// ══════════════════════════════════════════════
 
-// Cinematic script — based on Brain Rot (ItAllCanWait / Kasane Teto)
-// "Всё в норме, так расслабься — не найдем мы выход никогда."
-// "Гниёт мой мозг, я словно пепел высоко."
-const BACKROOMS_SCRIPT = [
-    // Opening — you wake up here again
-    { t:  1.5, text: 'ты снова здесь',              size: '2rem',   color: 'rgba(200,168,75,0.7)', x:'50%', y:'38%' },
-    { t:  5,   text: 'всё в норме',                  size: '4.5rem', color: '#c8a84b',             x:'50%', y:'50%' },
-    { t: 10,   text: 'так расслабься',               size: '3rem',   color: 'rgba(255,255,255,0.6)',x:'50%', y:'55%' },
-
-    // Verse 1 — the descent begins
-    { t: 16,   text: 'не найдём мы\nвыход никогда', size: '2.4rem', color: '#ff4444',             x:'50%', y:'45%' },
-    { t: 23,   text: 'опасно',                       size: '6rem',   color: '#ff0033',             x:'50%', y:'50%' },
-    { t: 28,   text: 'не парься',                    size: '3.5rem', color: 'rgba(200,168,75,0.8)',x:'50%', y:'55%' },
-    { t: 34,   text: 'упал на дно',                  size: '2.8rem', color: '#fff',                x:'50%', y:'60%' },
-
-    // Chorus hits — ГНИЁТ МОЙ МОЗГ
-    { t: 40,   text: 'ГНИЁТ',                        size: '9rem',   color: '#ff0033',             x:'50%', y:'42%' },
-    { t: 43,   text: 'МОЙ МОЗГ',                     size: '7rem',   color: '#c8a84b',             x:'50%', y:'56%' },
-    { t: 48,   text: 'уже давно',                    size: '2rem',   color: 'rgba(255,255,255,0.5)',x:'50%', y:'70%' },
-
-    // Middle — the loop feeling
-    { t: 55,   text: 'я словно пепел',               size: '3rem',   color: 'rgba(200,168,75,0.9)',x:'50%', y:'48%' },
-    { t: 61,   text: 'высоко',                       size: '5.5rem', color: '#00ffcc',             x:'50%', y:'50%' },
-
-    // Verse 2 — full day of pain
-    { t: 68,   text: 'полный день боли',             size: '2.5rem', color: '#ff4444',             x:'50%', y:'44%' },
-    { t: 74,   text: 'я не в себе',                  size: '3.2rem', color: '#fff',                x:'50%', y:'50%' },
-    { t: 80,   text: 'и знаю сам',                   size: '2.2rem', color: 'rgba(200,168,75,0.7)',x:'50%', y:'60%' },
-    { t: 85,   text: 'но...',                        size: '5rem',   color: 'rgba(255,255,255,0.4)',x:'50%', y:'50%' },
-
-    // "ведь поздно" — the point of no return
-    { t: 91,   text: 'меня не спасти',               size: '3.5rem', color: '#ff0033',             x:'50%', y:'46%' },
-    { t: 97,   text: 'ВЕДЬ ПОЗДНО',                  size: '6.5rem', color: '#ff0033',             x:'50%', y:'50%' },
-
-    // Chorus reprise
-    { t:104,   text: 'ГНИЁТ МОЙ МОЗГ',               size: '5rem',   color: '#c8a84b',             x:'50%', y:'48%' },
-    { t:110,   text: 'но сладость\nни при чём',      size: '2.2rem', color: 'rgba(255,255,255,0.6)',x:'50%', y:'52%' },
-
-    // Loop marker — déjà vu
-    { t:117,   text: '.',                            size: '6rem',   color: '#fff',                x:'30%', y:'50%' },
-    { t:119,   text: '.',                            size: '6rem',   color: '#fff',                x:'50%', y:'50%' },
-    { t:121,   text: '.',                            size: '6rem',   color: '#fff',                x:'70%', y:'50%' },
-
-    // Final — loop restarts
-    { t:126,   text: 'ты снова здесь',              size: '2rem',   color: 'rgba(200,168,75,0.7)', x:'50%', y:'38%' },
-    { t:130,   text: 'всё в норме',                  size: '4.5rem', color: '#c8a84b',             x:'50%', y:'50%' },
-    { t:135,   text: 'так расслабься',               size: '3rem',   color: 'rgba(255,255,255,0.4)',x:'50%', y:'55%' },
+// Brain Rot lyrics — timed cinematic script
+const SCRIPT = [
+    { t:2,   text:'ты снова здесь',           cls:'small', col:'rgba(200,168,75,0.65)' },
+    { t:6,   text:'всё в норме',              cls:'big',   col:'#c8a84b' },
+    { t:11,  text:'так расслабься',           cls:'med',   col:'rgba(255,255,255,0.55)' },
+    { t:17,  text:'не найдём мы\nвыход никогда', cls:'med', col:'#ff4444' },
+    { t:24,  text:'ОПАСНО',                   cls:'big',   col:'#ff0033' },
+    { t:28,  text:'не парься',                cls:'med',   col:'rgba(200,168,75,0.8)' },
+    { t:34,  text:'упал на дно',              cls:'med',   col:'#ffffff' },
+    { t:41,  text:'ГНИЁТ',                    cls:'big',   col:'#ff0033' },
+    { t:44,  text:'МОЙ МОЗГ',                 cls:'big',   col:'#c8a84b' },
+    { t:49,  text:'уже давно',                cls:'small', col:'rgba(255,255,255,0.4)' },
+    { t:56,  text:'я словно пепел',           cls:'med',   col:'rgba(200,168,75,0.9)' },
+    { t:62,  text:'высоко',                   cls:'big',   col:'#00ffcc' },
+    { t:70,  text:'полный день боли',         cls:'med',   col:'#ff4444' },
+    { t:76,  text:'я не в себе',              cls:'med',   col:'#ffffff' },
+    { t:82,  text:'и знаю сам',               cls:'small', col:'rgba(200,168,75,0.7)' },
+    { t:87,  text:'но...',                    cls:'big',   col:'rgba(255,255,255,0.3)' },
+    { t:93,  text:'меня не спасти',           cls:'med',   col:'#ff0033' },
+    { t:99,  text:'ВЕДЬ\nПОЗДНО',             cls:'big',   col:'#ff0033' },
+    { t:106, text:'ГНИЁТ МОЙ МОЗГ',          cls:'med',   col:'#c8a84b' },
+    { t:112, text:'но сладость\nни при чём',  cls:'small', col:'rgba(255,255,255,0.5)' },
+    { t:118, text:'.',                        cls:'big',   col:'#fff', x:'30%' },
+    { t:120, text:'.',                        cls:'big',   col:'#fff', x:'50%' },
+    { t:122, text:'.',                        cls:'big',   col:'#fff', x:'70%' },
+    { t:127, text:'ты снова здесь',           cls:'small', col:'rgba(200,168,75,0.65)' },
+    { t:131, text:'всё в норме',              cls:'big',   col:'#c8a84b' },
+    { t:136, text:'так расслабься',           cls:'med',   col:'rgba(255,255,255,0.3)' },
 ];
 
-let brCanvas, brCtx;
-let brTime = 0;
-let brAnimId;
-let brZoom = 1.0;
-let brFlicker = 1.0;
-let brShownMessages = new Set();
-let freqData;
-
-// Corridor geometry constants
-const CORRIDOR = {
-    wallColor:   '#c8a84b',   // backrooms yellow
-    ceilColor:   '#a88a30',
-    floorColor:  '#6b5a20',
-    lightColor:  '#ffe8a0',
-    fogColor:    '#1a1400',
-};
+let brScene, brCamera, brRenderer, brAnimId, brT=0;
+let brShown=new Set();
 
 function startBackrooms() {
     const phase4 = document.getElementById('backrooms-phase');
-    phase4.style.display = 'block';
+    phase4.style.display='block';
 
-    brCanvas = document.getElementById('backrooms-canvas');
-    brCtx = brCanvas.getContext('2d');
-    brCanvas.width = window.innerWidth;
-    brCanvas.height = window.innerHeight;
+    const W=window.innerWidth, H=window.innerHeight;
 
-    // Setup beat analyser data array
-    if (analyser) {
-        freqData = new Uint8Array(analyser.frequencyBinCount);
-    }
+    // ── THREE.JS SETUP ──
+    brScene = new THREE.Scene();
+    brScene.fog = new THREE.FogExp2(0x1a1100, 0.025);
+    brScene.background = new THREE.Color(0x100d00);
 
-    // Beat segments
-    const beatBar = document.getElementById('beat-bar');
-    const segCount = 40;
-    for (let i=0; i<segCount; i++) {
-        const seg = document.createElement('div');
-        seg.className = 'beat-seg';
-        beatBar.appendChild(seg);
-    }
+    brCamera = new THREE.PerspectiveCamera(75, W/H, 0.1, 200);
+    brCamera.position.set(0, 0, 0);
 
-    // Exit on keypress
+    brRenderer = new THREE.WebGLRenderer({ antialias: true });
+    brRenderer.setSize(W, H);
+    brRenderer.shadowMap.enabled = true;
+    document.getElementById('br-three-canvas').appendChild(brRenderer.domElement);
+
+    buildCorridor();
+    buildLights();
+
+    // Exit on key
     document.addEventListener('keydown', exitBackrooms, {once:true});
+    setTimeout(()=>{ document.getElementById('br-hint').style.opacity='1'; }, 30000);
 
-    brTime = 0;
-    brZoom = 1.0;
     renderBackrooms();
-
-    // Show hint after 30s
-    setTimeout(()=>{
-        document.getElementById('br-restart').style.opacity='1';
-    }, 30000);
 }
 
-function exitBackrooms() {
-    cancelAnimationFrame(brAnimId);
-    audioEl.pause(); audioEl.currentTime = 0;
-    document.getElementById('backrooms-phase').style.display='none';
-    document.getElementById('main-console').style.display='flex';
-    addOutput('<span style="color:#00ffcc;">&gt; Протокол завершён. Добро пожаловать обратно.</span>');
+function buildCorridor() {
+    // Corridor: 5 units wide, 3.5 units tall, 200 units long
+    const CW=5, CH=3.5, CL=200;
+    const mat = new THREE.MeshLambertMaterial({
+        color: 0xc8a030, side: THREE.BackSide
+    });
+
+    // One big box for the corridor
+    const geo = new THREE.BoxGeometry(CW, CH, CL);
+    const corridor = new THREE.Mesh(geo, mat);
+    corridor.position.set(0, 0, -CL/2);
+    brScene.add(corridor);
+
+    // Floor (darker)
+    const floorMat = new THREE.MeshLambertMaterial({ color: 0x8a6a15 });
+    const floorGeo = new THREE.PlaneGeometry(CW, CL);
+    const floor = new THREE.Mesh(floorGeo, floorMat);
+    floor.rotation.x = -Math.PI/2;
+    floor.position.set(0, -CH/2, -CL/2);
+    brScene.add(floor);
+
+    // Ceiling tiles (grid lines via EdgesGeometry)
+    const tileSize = 1.5;
+    const tilesX = Math.ceil(CW/tileSize);
+    const tilesZ = Math.ceil(CL/tileSize);
+    const edgeMat = new THREE.LineBasicMaterial({ color: 0x9a7a10, transparent:true, opacity:0.3 });
+    for(let z=0; z<=tilesZ; z++) {
+        const geo2 = new THREE.BufferGeometry().setFromPoints([
+            new THREE.Vector3(-CW/2, CH/2-0.01, -z*tileSize),
+            new THREE.Vector3( CW/2, CH/2-0.01, -z*tileSize),
+        ]);
+        brScene.add(new THREE.Line(geo2, edgeMat));
+    }
+    for(let x=0; x<=tilesX; x++) {
+        const geo2 = new THREE.BufferGeometry().setFromPoints([
+            new THREE.Vector3(-CW/2+x*tileSize, CH/2-0.01, 0),
+            new THREE.Vector3(-CW/2+x*tileSize, CH/2-0.01, -CL),
+        ]);
+        brScene.add(new THREE.Line(geo2, edgeMat));
+    }
+
+    // Floor grid
+    const floorEdgeMat = new THREE.LineBasicMaterial({ color: 0x6a4a08, transparent:true, opacity:0.25 });
+    for(let z=0; z<=tilesZ; z++) {
+        const g = new THREE.BufferGeometry().setFromPoints([
+            new THREE.Vector3(-CW/2, -CH/2+0.01, -z*tileSize),
+            new THREE.Vector3( CW/2, -CH/2+0.01, -z*tileSize),
+        ]);
+        brScene.add(new THREE.Line(g, floorEdgeMat));
+    }
+
+    // Wall panels (vertical lines every 2 units on walls)
+    const wallLineMat = new THREE.LineBasicMaterial({ color: 0xb08820, transparent:true, opacity:0.2 });
+    for(let z=0; z<CL; z+=2) {
+        [-CW/2+0.01, CW/2-0.01].forEach(x=>{
+            const g = new THREE.BufferGeometry().setFromPoints([
+                new THREE.Vector3(x, -CH/2, -z),
+                new THREE.Vector3(x,  CH/2, -z),
+            ]);
+            brScene.add(new THREE.Line(g, wallLineMat));
+        });
+    }
+}
+
+function buildLights() {
+    // Ambient — very dim warm
+    brScene.add(new THREE.AmbientLight(0x3a2800, 0.3));
+
+    // Fluorescent lights every 4 units
+    for(let z=2; z<200; z+=4) {
+        const light = new THREE.PointLight(0xffe890, 0.8, 8);
+        light.position.set(0, 1.6, -z);
+        brScene.add(light);
+
+        // Visible light fixture (flat box on ceiling)
+        const fixtureGeo = new THREE.BoxGeometry(1.2, 0.06, 0.4);
+        const fixtureMat = new THREE.MeshBasicMaterial({ color: 0xfffde0 });
+        const fixture = new THREE.Mesh(fixtureGeo, fixtureMat);
+        fixture.position.set(0, 1.71, -z);
+        brScene.add(fixture);
+    }
 }
 
 function renderBackrooms() {
     brAnimId = requestAnimationFrame(renderBackrooms);
-    brTime += 0.016;
+    brT += 0.016;
 
-    const W = brCanvas.width, H = brCanvas.height;
+    const bass = getBass();
 
-    // Get beat data
-    let bass = 0, mid = 0;
-    if (analyser && freqData) {
-        analyser.getByteFrequencyData(freqData);
-        for (let i=0; i<4; i++) bass += freqData[i];
-        for (let i=4; i<20; i++) mid += freqData[i];
-        bass = bass / 4 / 255;
-        mid = mid / 16 / 255;
+    // Walk camera forward (slowly)
+    const walkSpeed = 0.4 + bass * 0.3;
+    brCamera.position.z -= walkSpeed * 0.016 * 60 * 0.016;
+    if (brCamera.position.z < -190) brCamera.position.z = 0;
 
-        // Update beat bar
-        const segs = document.querySelectorAll('.beat-seg');
-        segs.forEach((seg, i) => {
-            const val = freqData[Math.floor(i * analyser.frequencyBinCount / segs.length)] / 255;
-            seg.style.height = (val * 40 + 1) + 'px';
-            const hue = 40 + val * 20;
-            seg.style.background = `hsl(${hue}, 80%, ${30 + val*40}%)`;
+    // Subtle camera bob (walking feel)
+    brCamera.position.y = Math.sin(brT * 2.2) * 0.06;
+    brCamera.rotation.z = Math.sin(brT * 2.2) * 0.008;
+
+    // Flicker lights with bass
+    if (Math.random() < 0.015) {
+        brScene.traverse(obj => {
+            if (obj.isPointLight) obj.intensity = 0.2 + Math.random()*0.5;
         });
     } else {
-        // Fake gentle pulse if no analyser
-        bass = (Math.sin(brTime*0.8)*0.1 + 0.15);
-        mid  = (Math.sin(brTime*1.3)*0.05 + 0.1);
+        brScene.traverse(obj => {
+            if (obj.isPointLight) obj.intensity = Math.min(obj.intensity + 0.08, 0.8 + bass*0.4);
+        });
     }
 
-    // Slow zoom in — we "walk" deeper
-    brZoom += 0.0003 + bass * 0.002;
-    if (brZoom > 2.5) brZoom = 1.0; // reset (loop feel)
-
-    // Flicker effect
-    if (Math.random() < 0.015) brFlicker = 0.3 + Math.random()*0.4;
-    else brFlicker = Math.min(brFlicker + 0.08, 1.0);
-
-    // Light pulse with music
-    const lightPulse = 1.0 + bass * 0.4;
-
-    // ── Draw corridor ──
-    drawCorridor(W, H, brZoom, brFlicker, lightPulse, bass);
-
-    // ── Chromatic aberration glitch on bass hits ──
-    if (bass > 0.5) {
-        brCtx.save();
-        brCtx.globalAlpha = 0.15 * bass;
-        brCtx.globalCompositeOperation = 'screen';
-        const shift = bass * 8;
-        brCtx.drawImage(brCanvas, -shift, 0);
-        brCtx.restore();
-    }
-
-    // ── Show script messages ──
-    BACKROOMS_SCRIPT.forEach(item => {
-        if (brTime >= item.t && !brShownMessages.has(item.t)) {
-            brShownMessages.add(item.t);
-            showBrMessage(item);
+    // Show lyrics
+    SCRIPT.forEach(item => {
+        if (brT >= item.t && !brShown.has(item.t)) {
+            brShown.add(item.t);
+            showLyric(item);
         }
     });
+
+    brRenderer.render(brScene, brCamera);
 }
 
-function drawCorridor(W, H, zoom, flicker, lightPulse, bass) {
-    brCtx.clearRect(0,0,W,H);
+function showLyric(item) {
+    const el = document.getElementById('br-lyric');
+    // Reset
+    el.style.opacity='0';
+    el.className='br-lyric';
 
-    const cx = W/2, cy = H/2;
-
-    // Zoom matrix — make it feel like walking forward
-    brCtx.save();
-    const s = zoom;
-    brCtx.translate(cx, cy);
-    brCtx.scale(s, s);
-    brCtx.translate(-cx, -cy);
-
-    // --- Background / fog ---
-    brCtx.fillStyle = CORRIDOR.fogColor;
-    brCtx.fillRect(0,0,W,H);
-
-    // --- Draw recursive corridor boxes (perspective) ---
-    const levels = 8;
-    for (let i = levels; i >= 0; i--) {
-        const t = i / levels; // 0 = far, 1 = near
-        const t2 = t * t;
-
-        const roomW = W * 0.55 * t + W * 0.08 * (1-t);
-        const roomH = H * 0.65 * t + H * 0.12 * (1-t);
-        const rx = cx - roomW/2;
-        const ry = cy - roomH/2;
-
-        // Brightness based on distance + flicker + beat
-        const baseBrightness = 0.1 + t2 * 0.7;
-        const brightness = baseBrightness * flicker * lightPulse;
-
-        // Floor
-        const floorGrad = brCtx.createLinearGradient(0, cy, 0, H);
-        floorGrad.addColorStop(0, `rgba(107, 90, 32, ${brightness * 0.5})`);
-        floorGrad.addColorStop(1, `rgba(40, 30, 5, ${brightness * 0.3})`);
-        brCtx.fillStyle = floorGrad;
-        brCtx.fillRect(rx, cy + roomH/2, roomW, (H - cy - roomH/2));
-
-        // Ceiling
-        const ceilGrad = brCtx.createLinearGradient(0, 0, 0, cy);
-        ceilGrad.addColorStop(0, `rgba(40, 30, 5, ${brightness * 0.2})`);
-        ceilGrad.addColorStop(1, `rgba(168, 138, 48, ${brightness * 0.45})`);
-        brCtx.fillStyle = ceilGrad;
-        brCtx.fillRect(rx, 0, roomW, ry);
-
-        // Left wall
-        const lwGrad = brCtx.createLinearGradient(0, 0, cx, 0);
-        lwGrad.addColorStop(0, `rgba(30, 22, 2, ${brightness * 0.2})`);
-        lwGrad.addColorStop(1, `rgba(180, 150, 50, ${brightness * 0.5})`);
-        brCtx.fillStyle = lwGrad;
-        brCtx.fillRect(0, ry, rx, roomH);
-
-        // Right wall
-        const rwGrad = brCtx.createLinearGradient(cx, 0, W, 0);
-        rwGrad.addColorStop(0, `rgba(180, 150, 50, ${brightness * 0.5})`);
-        rwGrad.addColorStop(1, `rgba(30, 22, 2, ${brightness * 0.2})`);
-        brCtx.fillStyle = rwGrad;
-        brCtx.fillRect(rx+roomW, ry, W-(rx+roomW), roomH);
-
-        // Corridor border lines
-        brCtx.strokeStyle = `rgba(200, 168, 75, ${brightness * 0.4})`;
-        brCtx.lineWidth = 1.5;
-        brCtx.strokeRect(rx, ry, roomW, roomH);
-
-        // Fluorescent lights on ceiling (every other level)
-        if (i % 2 === 0 && t > 0.1) {
-            const lightW = roomW * 0.25;
-            const lightH = 6 * t;
-            const lightX = cx - lightW/2;
-            const lightY = ry + 2;
-
-            // Glow
-            const lightAlpha = brightness * lightPulse * 0.8 * (0.9 + Math.sin(brTime*3)*0.1);
-            brCtx.shadowColor = CORRIDOR.lightColor;
-            brCtx.shadowBlur = 30 * t * lightPulse;
-            brCtx.fillStyle = `rgba(255, 232, 160, ${lightAlpha})`;
-            brCtx.fillRect(lightX, lightY, lightW, lightH);
-            brCtx.shadowBlur = 0;
-
-            // Light cone on floor
-            if (t > 0.4) {
-                const coneGrad = brCtx.createRadialGradient(cx, cy-roomH*0.4, 0, cx, cy, roomH*0.8);
-                coneGrad.addColorStop(0, `rgba(255, 232, 160, ${lightAlpha * 0.3})`);
-                coneGrad.addColorStop(1, 'rgba(255,232,160,0)');
-                brCtx.fillStyle = coneGrad;
-                brCtx.beginPath();
-                brCtx.moveTo(lightX, lightY+lightH);
-                brCtx.lineTo(lightX-roomW*0.1, cy+roomH/2);
-                brCtx.lineTo(lightX+lightW+roomW*0.1, cy+roomH/2);
-                brCtx.lineTo(lightX+lightW, lightY+lightH);
-                brCtx.closePath();
-                brCtx.fill();
-            }
-        }
-
-        // Floor grid lines (perspective)
-        if (i > 0 && t > 0.05) {
-            const prevT = (i-1)/levels;
-            const prevRoomW = W*0.55*prevT + W*0.08*(1-prevT);
-            const prevRy = cy - (H*0.65*prevT + H*0.12*(1-prevT))/2;
-            const prevRx = cx - prevRoomW/2;
-
-            brCtx.strokeStyle = `rgba(107,90,32,${brightness*0.25})`;
-            brCtx.lineWidth = 0.5;
-            brCtx.beginPath();
-            // Floor lines
-            brCtx.moveTo(rx, cy+roomH/2); brCtx.lineTo(prevRx, cy+(H*0.65*prevT+H*0.12*(1-prevT))/2);
-            brCtx.moveTo(rx+roomW, cy+roomH/2); brCtx.lineTo(prevRx+prevRoomW, cy+(H*0.65*prevT+H*0.12*(1-prevT))/2);
-            brCtx.stroke();
-        }
-    }
-
-    // Silhouette figure walking away in the distance
-    drawDistantFigure(cx, cy, bass);
-
-    brCtx.restore();
-
-    // --- Vignette pulse with bass ---
-    const vigGrad = brCtx.createRadialGradient(cx,cy,H*0.1, cx,cy,H*0.8);
-    vigGrad.addColorStop(0, 'rgba(0,0,0,0)');
-    vigGrad.addColorStop(1, `rgba(0,0,0,${0.7 + bass*0.2})`);
-    brCtx.fillStyle = vigGrad;
-    brCtx.fillRect(0,0,W,H);
-
-    // --- Noise / grain overlay ---
-    if (Math.random() < 0.4) {
-        brCtx.save();
-        brCtx.globalAlpha = 0.03;
-        for (let i=0; i<300; i++) {
-            const gx = Math.random()*W, gy = Math.random()*H;
-            const gs = Math.random()*2;
-            const gv = Math.floor(Math.random()*200);
-            brCtx.fillStyle = `rgb(${gv},${gv},${gv})`;
-            brCtx.fillRect(gx,gy,gs,gs);
-        }
-        brCtx.restore();
-    }
-}
-
-function drawDistantFigure(cx, cy, bass) {
-    // Small silhouette far away that slowly walks
-    const figT = brTime * 0.05;
-    const figSize = 30 + bass * 8;
-    const figY = cy + 5;
-    const figX = cx + Math.sin(figT * 0.3) * 15;
-
-    const alpha = 0.15 + bass * 0.15;
-
-    // Body
-    brCtx.save();
-    brCtx.strokeStyle = `rgba(200,168,75,${alpha})`;
-    brCtx.lineWidth = 1.5;
-    brCtx.shadowColor = '#c8a84b';
-    brCtx.shadowBlur = 5;
-
-    const walkPhase = figT * 8;
-    const headR = figSize * 0.12;
-    const headY = figY - figSize * 0.5;
-
-    // Head
-    brCtx.beginPath();
-    brCtx.arc(figX, headY, headR, 0, Math.PI*2);
-    brCtx.stroke();
-
-    // Torso
-    brCtx.beginPath();
-    brCtx.moveTo(figX, headY+headR);
-    brCtx.lineTo(figX, figY - figSize*0.15);
-    brCtx.stroke();
-
-    // Arms
-    const armSwing = Math.sin(walkPhase) * figSize * 0.15;
-    brCtx.beginPath();
-    brCtx.moveTo(figX, headY+headR+figSize*0.05);
-    brCtx.lineTo(figX - figSize*0.12 - armSwing, figY - figSize*0.2);
-    brCtx.stroke();
-    brCtx.beginPath();
-    brCtx.moveTo(figX, headY+headR+figSize*0.05);
-    brCtx.lineTo(figX + figSize*0.12 + armSwing, figY - figSize*0.2);
-    brCtx.stroke();
-
-    // Legs
-    const legSwingL = Math.sin(walkPhase) * figSize * 0.18;
-    const legSwingR = Math.sin(walkPhase+Math.PI) * figSize * 0.18;
-    brCtx.beginPath();
-    brCtx.moveTo(figX, figY-figSize*0.15);
-    brCtx.lineTo(figX - figSize*0.06 + legSwingL, figY+figSize*0.18);
-    brCtx.stroke();
-    brCtx.beginPath();
-    brCtx.moveTo(figX, figY-figSize*0.15);
-    brCtx.lineTo(figX + figSize*0.06 + legSwingR, figY+figSize*0.18);
-    brCtx.stroke();
-
-    brCtx.restore();
-}
-
-function showBrMessage(item) {
-    const container = document.getElementById('br-messages');
-    const el = document.createElement('div');
-    el.className = 'br-msg';
-    el.style.left = item.x;
-    el.style.top = item.y;
-    el.style.transform = 'translate(-50%,-50%)';
-    el.style.fontSize = item.size;
-    el.style.color = item.color;
-    el.style.whiteSpace = 'pre-line';
-    el.style.lineHeight = '1.3';
-    el.textContent = item.text;
-
-    // Big messages get extra styling
-    if (parseFloat(item.size) >= 4) {
-        el.style.fontWeight = '900';
-        el.style.letterSpacing = '8px';
-    }
-
-    container.appendChild(el);
-
-    // Fade in
-    requestAnimationFrame(()=>{ el.style.opacity='1'; });
-
-    // Fade out after display time
-    const duration = item.text.length < 5 ? 2500 : Math.min(item.text.length * 120, 7000);
     setTimeout(()=>{
-        el.style.opacity='0';
-        setTimeout(()=>el.remove(), 1600);
-    }, duration);
+        el.textContent = item.text;
+        el.className = 'br-lyric ' + item.cls;
+        el.style.color = item.col;
+        if (item.x) { el.style.left=item.x; } else { el.style.left='50%'; }
+        el.style.textShadow = `0 0 30px ${item.col}, 0 0 60px ${item.col}`;
+
+        // Fade in
+        el.style.transition='opacity 0.7s ease';
+        requestAnimationFrame(()=>{ el.style.opacity='1'; });
+
+        // Hold then fade out
+        const hold = item.text.length < 4 ? 1800 : Math.min(item.text.length*130, 6000);
+        setTimeout(()=>{
+            el.style.opacity='0';
+        }, hold);
+    }, 50);
+}
+
+function exitBackrooms() {
+    cancelAnimationFrame(brAnimId);
+    audioEl.pause(); audioEl.currentTime=0;
+    if(brRenderer) brRenderer.dispose();
+    document.getElementById('backrooms-phase').style.display='none';
+    document.getElementById('main-console').style.display='flex';
+    out('<span style="color:#00ffcc;">&gt; Протокол завершён. Добро пожаловать обратно.</span>');
+    consoleInput.focus();
 }
 
 window.addEventListener('resize', ()=>{
-    if(brCanvas){ brCanvas.width=window.innerWidth; brCanvas.height=window.innerHeight; }
-    if(canvas){ canvas.width=window.innerWidth; canvas.height=window.innerHeight; }
+    if(pCanvas){ pCanvas.width=window.innerWidth; pCanvas.height=window.innerHeight; buildParticles(); buildBg(); }
+    if(brCamera && brRenderer){
+        brCamera.aspect=window.innerWidth/window.innerHeight;
+        brCamera.updateProjectionMatrix();
+        brRenderer.setSize(window.innerWidth, window.innerHeight);
+    }
 });
 </script>
 </body>
