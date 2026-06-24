@@ -678,18 +678,19 @@
     }
 
     // --- MODALS & PROFILE LOGIC ---
-    const profileModal = document.getElementById('profile-modal');
-    const settingsModal = document.getElementById('settings-modal');
-    const editMode = document.getElementById('profile-edit-mode');
-    const displayMode = document.getElementById('profile-display-mode');
+    function openProfile() { document.getElementById('profile-modal').classList.add('active'); sidebar.style.left = '-300px'; }
+    function closeProfile() { 
+        document.getElementById('profile-modal').classList.remove('active'); 
+        document.getElementById('profile-edit-mode').style.display = 'none'; 
+        document.getElementById('profile-display-mode').style.display = 'block'; 
+    }
     
-    function openProfile() { profileModal.classList.add('active'); sidebar.style.left = '-300px'; }
-    function closeProfile() { profileModal.classList.remove('active'); editMode.style.display = 'none'; displayMode.style.display = 'block'; }
-    
-    function openSettings() { settingsModal.classList.add('active'); sidebar.style.left = '-300px'; }
-    function closeSettings() { settingsModal.classList.remove('active'); }
+    function openSettings() { document.getElementById('settings-modal').classList.add('active'); sidebar.style.left = '-300px'; }
+    function closeSettings() { document.getElementById('settings-modal').classList.remove('active'); }
     
     function toggleProfileEdit() {
+        const editMode = document.getElementById('profile-edit-mode');
+        const displayMode = document.getElementById('profile-display-mode');
         if(editMode.style.display === 'none') {
             editMode.style.display = 'block';
             displayMode.style.display = 'none';
@@ -746,6 +747,8 @@
         }
     });
 
+    // START BACKGROUND RENDERER
+    initVault();
 </script>
 
     <!-- Profile Modal -->
