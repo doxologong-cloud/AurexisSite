@@ -179,6 +179,100 @@
             80% { transform: translate(1px, -2px); color: #ff0033; }
             100% { transform: translate(0); }
         }
+
+        /* --- TELEGRAM SIDEBAR STYLES --- */
+        .sidebar {
+            position: fixed;
+            top: 0;
+            left: -300px;
+            width: 300px;
+            height: 100vh;
+            background: #17212b; /* Telegram Dark Theme */
+            color: #fff;
+            z-index: 9999;
+            transition: left 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 5px 0 15px rgba(0,0,0,0.5);
+            display: flex;
+            flex-direction: column;
+            pointer-events: auto;
+            font-family: 'Inter', 'Segoe UI', Roboto, sans-serif;
+        }
+        .sidebar-trigger {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 20px;
+            height: 100vh;
+            z-index: 9998;
+            pointer-events: auto;
+        }
+        .sidebar-header {
+            padding: 20px;
+            background: #242f3d;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            border-bottom: 1px solid #10161c;
+        }
+        .sidebar-avatar {
+            width: 55px; height: 55px;
+            border-radius: 50%;
+            background: #000;
+            object-fit: cover;
+            border: 2px solid transparent;
+        }
+        .sidebar-user-info {
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+        }
+        .sidebar-name {
+            font-weight: 600; 
+            font-size: 1.1rem;
+            color: #fff;
+        }
+        .sidebar-status {
+            color: #7f91a4; 
+            font-size: 0.85rem; 
+            cursor: pointer;
+        }
+        .sidebar-menu {
+            flex-grow: 1;
+            overflow-y: auto;
+            padding: 10px 0;
+        }
+        .sidebar-menu::-webkit-scrollbar {
+            width: 6px;
+        }
+        .sidebar-menu::-webkit-scrollbar-thumb {
+            background: #2a394a;
+            border-radius: 3px;
+        }
+        .sidebar-item {
+            padding: 12px 20px;
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            cursor: pointer;
+            transition: background 0.15s;
+            color: #fff;
+            font-size: 0.95rem;
+            font-weight: 500;
+        }
+        .sidebar-item:hover {
+            background: #202b36;
+        }
+        .sidebar-item i {
+            width: 24px;
+            text-align: center;
+            color: #7f91a4;
+            font-size: 1.2rem;
+        }
+        .sidebar-divider {
+            height: 1px;
+            background: #10161c;
+            margin: 5px 0;
+        }
     </style>
 
     <!-- Dynamic Canvas Background -->
@@ -194,28 +288,41 @@
 
         <!-- Main Center Content Placeholder -->
         <div style="flex-grow: 1; display: flex; justify-content: center; align-items: center; pointer-events: auto;">
-            <!-- Будущий нормальный контент будет здесь -->
+            <div style="color: rgba(255,255,255,0.2); font-size: 1.2rem; letter-spacing: 2px;">ПОТЯНИ МЫШКУ К ЛЕВОМУ КРАЮ</div>
         </div>
+    </div>
 
-        <!-- Bottom Bar / Settings -->
-        <div style="padding: 30px; display: flex; justify-content: flex-end; pointer-events: auto;">
-            <button id="vault-settings-btn" style="background: rgba(20,0,0,0.8); border: 1px solid #ff0033; color: #ff0033; padding: 10px 20px; cursor: pointer; text-shadow: 0 0 5px #ff0033; box-shadow: 0 0 10px rgba(255,0,51,0.2); font-family: monospace;">[ НАСТРОЙКИ_СИСТЕМЫ ]</button>
+    <!-- TELEGRAM-LIKE SIDEBAR -->
+    <div class="sidebar-trigger" id="sidebar-trigger"></div>
+    <div class="sidebar" id="sidebar">
+        <div class="sidebar-header">
+            <img src="/static/assets/default-avatar.png" class="sidebar-avatar" id="vault-avatar">
+            <div class="sidebar-user-info">
+                <div class="sidebar-name">ДомадOX</div>
+                <div class="sidebar-status">Установить эмодзи-статус</div>
+            </div>
         </div>
         
-        <!-- Settings Panel -->
-        <div id="vault-settings-panel" style="display: none; position: absolute; bottom: 80px; right: 30px; background: rgba(10,0,0,0.95); border: 1px solid #ff0033; padding: 20px; pointer-events: auto; font-family: monospace; width: 250px; box-shadow: 0 0 20px rgba(255,0,51,0.3);">
-            <h3 style="color: #ff0033; margin-top: 0; font-size: 1rem; border-bottom: 1px solid rgba(255,0,51,0.3); padding-bottom: 5px;">ВИЗУАЛИЗАЦИЯ_ФОНА</h3>
-            <select id="bg-selector" style="background: #000; color: #ff0033; border: 1px solid #ff0033; padding: 8px; width: 100%; margin-bottom: 20px; outline: none; cursor: pointer;">
-                <option value="sparks">А: Пепел и Искры</option>
-                <option value="abyss">Б: Цифровая Бездна</option>
-                <option value="fluid">В: Живая Материя</option>
-            </select>
+        <div class="sidebar-menu">
+            <!-- Accounts (Optional, like in screenshot) -->
+            <div class="sidebar-item"><img src="/static/assets/default-avatar.png" style="width: 24px; height: 24px; border-radius: 50%;"> ДомадOX</div>
+            <div class="sidebar-divider"></div>
             
-            <h3 style="color: #ff0033; margin-top: 0; font-size: 1rem; border-bottom: 1px solid rgba(255,0,51,0.3); padding-bottom: 5px;">АУДИО_ПОТОК</h3>
-            <label style="display: flex; align-items: center; color: #ff0033; cursor: pointer; margin-bottom: 20px;">
-                <input type="checkbox" id="audio-toggle" style="margin-right: 10px; accent-color: #ff0033;">
-                ДАРК-ЭМБИЕНТ
-            </label>
+            <div class="sidebar-item" id="menu-profile"><i class="fa-regular fa-user"></i> Мой профиль</div>
+            <div class="sidebar-item" id="menu-wallet"><i class="fa-solid fa-wallet"></i> Кошелёк</div>
+            <div class="sidebar-item" id="menu-projects"><i class="fa-solid fa-folder-open"></i> Архив проектов</div>
+            <div class="sidebar-item" id="menu-diary"><i class="fa-solid fa-book"></i> Дневник</div>
+            <div class="sidebar-divider"></div>
+            <div class="sidebar-item" id="menu-settings"><i class="fa-solid fa-gear"></i> Настройки</div>
+            
+            <div class="sidebar-item" style="justify-content: space-between;">
+                <div style="display: flex; gap: 20px; align-items: center;">
+                    <i class="fa-solid fa-moon"></i> Ночной режим
+                </div>
+                <div style="width: 30px; height: 16px; background: #2a394a; border-radius: 10px; position: relative;">
+                    <div style="position: absolute; top: 2px; left: 16px; width: 12px; height: 12px; background: #8774e1; border-radius: 50%;"></div>
+                </div>
+            </div>
         </div>
     </div>
 </div>
@@ -254,6 +361,18 @@
         }, 800);
     }
 
+    // --- SIDEBAR LOGIC ---
+    const sidebar = document.getElementById('sidebar');
+    const trigger = document.getElementById('sidebar-trigger');
+    
+    trigger.addEventListener('mouseenter', () => {
+        sidebar.style.left = '0';
+    });
+    
+    sidebar.addEventListener('mouseleave', () => {
+        sidebar.style.left = '-300px';
+    });
+
     // --- VAULT LOGIC ---
     let canvas, ctx;
     let bgTheme = 'sparks';
@@ -274,22 +393,6 @@
         // Init UI
         initTimer();
         
-        // Settings bindings
-        document.getElementById('vault-settings-btn').onclick = () => {
-            const panel = document.getElementById('vault-settings-panel');
-            panel.style.display = panel.style.display === 'none' ? 'block' : 'none';
-        };
-        
-        document.getElementById('bg-selector').onchange = (e) => {
-            bgTheme = e.target.value;
-            particles = []; // reset
-        };
-
-        document.getElementById('audio-toggle').onchange = (e) => {
-            if(e.target.checked) startAudio();
-            else stopAudio();
-        };
-
         // Start render loop
         requestAnimationFrame(renderBackground);
     }
@@ -311,7 +414,6 @@
         requestAnimationFrame(renderBackground);
     }
 
-    // Theme A: Sparks
     function drawSparks() {
         ctx.fillStyle = 'rgba(0, 0, 0, 0.2)';
         ctx.fillRect(0, 0, canvas.width, canvas.height);
@@ -330,8 +432,6 @@
         particles.forEach((p, i) => {
             p.x += p.vx;
             p.y += p.vy;
-            
-            // Mouse interaction
             let dx = mx - p.x;
             let dy = my - p.y;
             let dist = Math.sqrt(dx*dx + dy*dy);
@@ -339,61 +439,11 @@
                 p.x -= dx * 0.05;
                 p.y -= dy * 0.05;
             }
-
             ctx.fillStyle = p.color;
             ctx.beginPath();
             ctx.arc(p.x, p.y, p.size, 0, Math.PI*2);
             ctx.fill();
-            
             if(p.y < -10) particles.splice(i, 1);
-        });
-    }
-
-    // Theme B: Digital Abyss
-    function drawAbyss() {
-        ctx.fillStyle = 'rgba(0, 0, 0, 0.1)';
-        ctx.fillRect(0, 0, canvas.width, canvas.height);
-        
-        ctx.strokeStyle = `rgba(255, 0, 51, ${(Math.sin(frameCount * 0.05) + 1) / 4})`;
-        ctx.lineWidth = 1;
-        
-        let cx = canvas.width / 2;
-        let cy = canvas.height / 2;
-        
-        for(let i=1; i<10; i++) {
-            let scale = (frameCount % 100) / 100 + i;
-            let size = scale * 50;
-            ctx.strokeRect(cx - size, cy - size, size*2, size*2);
-            ctx.beginPath();
-            ctx.moveTo(cx, cy);
-            ctx.lineTo(cx - size, cy - size);
-            ctx.stroke();
-            ctx.beginPath();
-            ctx.moveTo(cx, cy);
-            ctx.lineTo(cx + size, cy + size);
-            ctx.stroke();
-        }
-    }
-
-    // Theme C: Fluid (Simple trailing)
-    function drawFluid() {
-        ctx.fillStyle = 'rgba(0, 0, 0, 0.05)';
-        ctx.fillRect(0, 0, canvas.width, canvas.height);
-        
-        particles.push({x: mx, y: my, age: 0});
-        
-        ctx.beginPath();
-        particles.forEach((p, i) => {
-            p.age++;
-            p.y -= 2;
-            p.x += (Math.random()-0.5)*5;
-            ctx.strokeStyle = `rgba(255, 0, 51, ${1 - p.age/50})`;
-            ctx.lineWidth = 20 * (1 - p.age/50);
-            ctx.lineTo(p.x, p.y);
-            ctx.stroke();
-            ctx.beginPath();
-            ctx.moveTo(p.x, p.y);
-            if(p.age > 50) particles.splice(i, 1);
         });
     }
 
@@ -405,7 +455,6 @@
         setInterval(() => {
             let now = new Date();
             let diff = now - startDate;
-            
             let years = Math.floor(diff / (1000 * 60 * 60 * 24 * 365));
             diff -= years * (1000 * 60 * 60 * 24 * 365);
             let days = Math.floor(diff / (1000 * 60 * 60 * 24));
@@ -425,46 +474,9 @@
             } else {
                 timerEl.classList.remove('glitch-text-fx');
             }
-            
             timerEl.innerText = text;
         }, 50);
     }
-
-    // --- AUDIO GENERATOR ---
-    let audioCtx, osc, lfo, gain;
-    function startAudio() {
-        if(!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-        if(audioCtx.state === 'suspended') audioCtx.resume();
-        
-        osc = audioCtx.createOscillator();
-        lfo = audioCtx.createOscillator();
-        gain = audioCtx.createGain();
-        
-        osc.type = 'sine';
-        osc.frequency.value = 60;
-        
-        lfo.type = 'sine';
-        lfo.frequency.value = 0.2;
-        
-        let lfoGain = audioCtx.createGain();
-        lfoGain.gain.value = 10;
-        lfo.connect(lfoGain);
-        lfoGain.connect(osc.frequency);
-        
-        osc.connect(gain);
-        gain.connect(audioCtx.destination);
-        
-        gain.gain.value = 0.1;
-        
-        osc.start();
-        lfo.start();
-    }
-    
-    function stopAudio() {
-        if(osc) osc.stop();
-        if(lfo) lfo.stop();
-    }
-
 </script>
 </body>
 </html>
