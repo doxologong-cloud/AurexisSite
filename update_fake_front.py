@@ -1,17 +1,13 @@
-<!DOCTYPE html>
-<html lang="ru">
-<head>
-    <meta charset="UTF-8">
-    <title>Aurexis Studio | Наши Боты</title>
-    <style>
-        body, html { margin: 0; padding: 0; height: 100%; background: #000; overflow: hidden; }
-    </style>
+import os
+import re
 
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-</head>
-<body>
-    <!-- Фейковый фасад -->
-    <div id="fake-front" style="display: flex; flex-direction: column; justify-content: center; align-items: center; height: 100vh; width: 100vw; background: #050202; color: #ff0000; font-family: 'Consolas', monospace; position: fixed; top: 0; left: 0; z-index: 9999; overflow: hidden; transition: opacity 1s, filter 1s;">
+index_path = r"C:\Users\user\Desktop\сайт\templates\index.html"
+with open(index_path, 'r', encoding='utf-8') as f:
+    html = f.read()
+
+old_fake_front_regex = r'<div id="fake-front" style="display: flex; justify-content: center; align-items: center; height: 100vh; width: 100vw; background: #000; color: #ff0000; font-family: \'Space Grotesk\', sans-serif; font-size: 3rem; text-shadow: 0 0 20px #ff0000; position: fixed; top: 0; left: 0; z-index: 9999; transition: opacity 1s, filter 1s;">\s*\(Ведутся РАБОТЫ\)\s*</div>'
+
+new_fake_front = """<div id="fake-front" style="display: flex; flex-direction: column; justify-content: center; align-items: center; height: 100vh; width: 100vw; background: #050202; color: #ff0000; font-family: 'Consolas', monospace; position: fixed; top: 0; left: 0; z-index: 9999; overflow: hidden; transition: opacity 1s, filter 1s;">
         <!-- Matrix Rain or Grid Background -->
         <div style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: radial-gradient(circle, rgba(255,0,0,0.15) 0%, rgba(0,0,0,1) 100%); z-index: -1;"></div>
         
@@ -36,44 +32,30 @@
             <div style="opacity: 0.8;">> Маршрутизация закрыта администратором.</div>
             <div style="color: #ff0000; font-weight: bold; margin-top: 10px;">> Ожидание ввода протокола авторизации<span style="animation: pulseCursor 1s infinite;">_</span></div>
         </div>
-    </div>
+    </div>"""
 
-    <script>
-        let keySequence = "";
-        const secretCode = "3030";
+# Try regex replacement first
+new_html, count = re.subn(old_fake_front_regex, new_fake_front, html, flags=re.DOTALL)
 
-        document.addEventListener('keydown', function(e) {
-            keySequence += e.key.toLowerCase();
-            if (keySequence.length > secretCode.length) {
-                keySequence = keySequence.substring(1, keySequence.length);
-            }
-            if (keySequence === secretCode) {
-                unlockVault();
-            }
-        });
+# If regex failed (maybe slightly different spacing), try to replace manually
+if count == 0:
+    start_tag = '<div id="fake-front"'
+    end_tag = '(Ведутся РАБОТЫ)\n    </div>'
+    start_idx = html.find(start_tag)
+    end_idx = html.find(end_tag) + len(end_tag)
+    if start_idx != -1 and html.find(end_tag) != -1:
+        new_html = html[:start_idx] + new_fake_front + html[end_idx:]
+        count = 1
 
-        function unlockVault() {
-            const fakeFront = document.getElementById('fake-front');
-            fakeFront.style.filter = "blur(10px) hue-rotate(90deg)";
-            fakeFront.style.transform = "scale(1.1)";
-            
-            // Authenticate with server
-            fetch('/api/auth', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ code: secretCode })
-            })
-            .then(res => res.json())
-            .then(data => {
-                if(data.success) {
-                    window.location.href = '/vault';
-                } else {
-                    alert('Access Denied');
-                    fakeFront.style.filter = "none";
-                    fakeFront.style.transform = "scale(1)";
-                }
-            });
-        }
-    </script>
-</body>
-</html>
+if count > 0:
+    # Need to add FontAwesome to index.html if it's missing, since we added <i class="fa-solid fa-lock">
+    if "font-awesome" not in new_html:
+        head_end = new_html.find('</head>')
+        fa_link = '\n    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">\n'
+        new_html = new_html[:head_end] + fa_link + new_html[head_end:]
+        
+    with open(index_path, 'w', encoding='utf-8') as f:
+        f.write(new_html)
+    print("Fake front updated to look super cool.")
+else:
+    print("Could not find fake front to replace.")
