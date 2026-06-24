@@ -1,25 +1,11 @@
-<!DOCTYPE html>
-<html lang="ru">
-<head>
-    <meta charset="UTF-8">
-    <title>AUREX OS TERMINAL</title>
-    <style>
-        body, html { margin: 0; padding: 0; height: 100%; background: #000; color: #00ffcc; font-family: 'Consolas', monospace; overflow: hidden; }
-        .console-container { display: flex; flex-direction: column; height: 100vh; padding: 20px; box-sizing: border-box; }
-        .console-output { flex-grow: 1; overflow-y: auto; display: flex; flex-direction: column; justify-content: flex-end; padding-bottom: 20px; font-size: 1rem; line-height: 1.5; }
-        .console-input-row { display: flex; align-items: center; border-top: 1px dashed #00ffcc; padding-top: 15px; }
-        .console-input { flex-grow: 1; background: transparent; border: none; color: #fff; font-family: 'Consolas', monospace; font-size: 1.2rem; outline: none; margin-left: 10px; }
-        
-        @keyframes glitchText {
-            0% { transform: translate(0); }
-            20% { transform: translate(-2px, 1px); }
-            40% { transform: translate(2px, -1px); color: #fff; }
-            60% { transform: translate(-1px, 2px); }
-            80% { transform: translate(1px, -2px); color: #ff0033; }
-            100% { transform: translate(0); }
-        }
-    
-        
+import os
+
+console_path = r"C:\Users\user\Desktop\сайт\templates\console.html"
+with open(console_path, 'r', encoding='utf-8') as f:
+    text = f.read()
+
+# 1. Update CSS to include the new Particle Loop and Fake OS
+dox_css = """
         /* --- DOX DIVE & LOOP ANIMATIONS --- */
         #dive-overlay {
             position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
@@ -106,48 +92,22 @@
         #os-input {
             flex-grow: 1; background: #0d1117; border: 1px solid #30363d; padding: 10px 15px; border-radius: 20px; color: #fff; outline: none; font-size: 0.95rem;
         }
+"""
 
-        #dive-overlay {
-            position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
-            background: #000; z-index: 100; display: none;
-            perspective: 1000px; overflow: hidden;
+text = text.replace('/* --- DOX DIVE ANIMATIONS --- */', dox_css)
+# Clean up old css block
+text = text.replace("""        #story-chat {
+            display: none;
+            flex-direction: column; height: 100vh; padding: 40px; box-sizing: border-box;
+            background: #050a0f; font-family: 'Consolas', monospace; color: #fff;
         }
-        .grid-floor {
-            position: absolute; bottom: -50vh; left: -50vw; width: 200vw; height: 150vh;
-            background-image: 
-                linear-gradient(to right, rgba(0,255,204,0.3) 1px, transparent 1px),
-                linear-gradient(to top, rgba(0,255,204,0.3) 1px, transparent 1px);
-            background-size: 50px 50px;
-            transform: rotateX(80deg);
-            animation: gridMove 2s linear infinite;
-        }
-        @keyframes gridMove {
-            0% { transform: rotateX(80deg) translateY(0); }
-            100% { transform: rotateX(80deg) translateY(50px); }
-        }
-        #fake-monitor {
-            position: absolute; top: 50%; left: 50%; width: 200px; height: 150px;
-            background: #000; border: 2px solid #00ffcc; box-shadow: 0 0 50px #00ffcc;
-            transform: translate(-50%, -50%) translateZ(-2000px);
-            opacity: 0; display: flex; justify-content: center; align-items: center; color: #00ffcc;
-        }
-        .dive-animation {
-            animation: diveIntoMonitor 4s cubic-bezier(0.5, 0, 0.1, 1) forwards !important;
-        }
-        @keyframes diveIntoMonitor {
-            0% { transform: translate(-50%, -50%) translateZ(-2000px); opacity: 0; }
-            20% { transform: translate(-50%, -50%) translateZ(-1000px); opacity: 1; }
-            80% { transform: translate(-50%, -50%) translateZ(800px); opacity: 1; box-shadow: 0 0 200px #00ffcc; }
-            100% { transform: translate(-50%, -50%) translateZ(1200px); opacity: 1; box-shadow: 0 0 1000px #fff; background: #fff; border: none; }
-        }
-        
+        .story-msg { margin-bottom: 15px; opacity: 0; animation: fadeIn 0.5s forwards; line-height: 1.6; }
+        .story-ai { color: #00ffcc; }
+        .story-user { color: #8774e1; }
+        @keyframes fadeIn { to { opacity: 1; } }""", "")
 
-
-    </style>
-</head>
-<body>
-    
-    
+# 2. Update HTML
+dox_html = """
     <!-- Dox Dive Overlay -->
     <div id="dive-overlay">
         <canvas id="particle-canvas"></canvas>
@@ -190,42 +150,15 @@
             <div style="width: 30px; height: 30px; background: #1f6feb; border-radius: 4px; display: flex; justify-content: center; align-items: center; color: #fff; font-weight: bold; cursor: pointer;">A</div>
         </div>
     </div>
+"""
+
+# Replace old HTML
+import re
+text = re.sub(r'<!-- Dox Dive Overlay -->.*?<!-- Story Chat Mode -->.*?</div>\s*</div>', dox_html, text, flags=re.DOTALL)
 
 
-    <div class="console-container" id="main-console">
-        <div style="border-bottom: 1px dashed #00ffcc; padding-bottom: 15px; margin-bottom: 20px; opacity: 0.7;">
-            AUREX OS TERMINAL v2.1 // ПРЯМОЙ ДОСТУП<br>
-            Введите 'help' для списка команд.
-        </div>
-        <div id="console-output" class="console-output">
-            <div>> Инициализация консоли... Успешно.</div>
-            <div>> Ожидание ввода.</div>
-        </div>
-        <div class="console-input-row">
-            <span>root@vault:~#</span>
-            <input type="text" id="console-input" class="console-input" autocomplete="off" autofocus>
-        </div>
-    </div>
-    <script>
-        const consoleInput = document.getElementById('console-input');
-        const consoleOutput = document.getElementById('console-output');
-
-        consoleInput.addEventListener('keydown', function(e) {
-            if (e.key === 'Enter') {
-                const cmd = this.value.trim();
-                this.value = '';
-                
-                const userLine = document.createElement('div');
-                userLine.innerHTML = `<span style="color: #fff;">root@vault:~#</span> ${cmd}`;
-                consoleOutput.appendChild(userLine);
-                
-                processCommand(cmd);
-                consoleOutput.scrollTop = consoleOutput.scrollHeight;
-            }
-        });
-
-
-        
+# 3. Update JS Logic (WebGL Particles + Logic)
+dox_js = """
         // --- DOX & LOOP LOGIC ---
         let audio = new Audio('/static/assets/loop_music.mp3');
         audio.loop = true;
@@ -355,34 +288,11 @@
                 }
             }, 1000);
         }
+"""
 
-        function processCommand(cmd) {
-            const response = document.createElement('div');
-            response.style.color = '#7f91a4';
-            
-            const lowerCmd = cmd.toLowerCase();
-            if (lowerCmd === 'help') {
-                response.innerHTML = "Доступные команды:<br>help - Показать это сообщение<br>clear - Очистить экран<br>history - Показать историю петли<br>glitch - Вызвать визуальные искажения";
-            } else if (lowerCmd === 'clear') {
-                consoleOutput.innerHTML = '';
-                return;
-            } else if (lowerCmd === 'history') {
-                response.innerHTML = "Поиск записей...<br>[2021] Петля запущена.<br>[2024] Потеря связи с реальностью.<br>[2026] Хранилище восстановлено.";
-            } else if (lowerCmd === 'dox') {
-                triggerDox();
-                return;
-            } else if (lowerCmd === 'hacker') {
-                response.innerHTML = "Команда устарела. Используйте 'dox' для входа в матрицу.";
-            } else if (lowerCmd === 'glitch') {
-                response.innerHTML = "Запуск протокола искажения...";
-                document.body.style.animation = "glitchText 0.1s infinite";
-                setTimeout(() => { document.body.style.animation = ""; }, 1000);
-            } else if (cmd !== "") {
-                response.innerHTML = `Команда не найдена: ${cmd}`;
-            }
-            
-            if (cmd !== "") consoleOutput.appendChild(response);
-        }
-    </script>
-</body>
-</html>
+text = re.sub(r'// --- DOX LOGIC ---.*?        function processCommand\(cmd\)', dox_js + '\n        function processCommand(cmd)', text, flags=re.DOTALL)
+
+with open(console_path, 'w', encoding='utf-8') as f:
+    f.write(text)
+
+print("Real Dox Loop injected.")
