@@ -281,125 +281,94 @@
     <!-- UI Overlay -->
     <div style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 10; pointer-events: none; display: flex; flex-direction: column;">
 
-        <!-- Main Center Content Placeholder -->
-        <div style="flex-grow: 1; display: flex; justify-content: center; align-items: center; pointer-events: auto;"></div>
+                <!-- Main Center Content -->
+        <div style="flex-grow: 1; position: relative; pointer-events: auto; padding: 40px; display: flex; justify-content: center; align-items: center;">
+            
+            <!-- Default Welcome -->
+            <div id="tab-welcome" class="vault-tab" style="display: flex; flex-direction: column; align-items: center; color: rgba(255,255,255,0.3); font-size: 1.2rem; letter-spacing: 2px; text-align: center;">
+                <div style="font-size: 3rem; margin-bottom: 20px;"><i class="fa-solid fa-shield-halved"></i></div>
+                <div>СИСТЕМА АКТИВИРОВАНА.</div>
+                <div style="font-size: 0.9rem; margin-top: 10px;">ВЫБЕРИТЕ РАЗДЕЛ В МЕНЮ СЛЕВА.</div>
+            </div>
 
-    <!-- MODALS OVERLAY -->
-    <style>
-        .modal-overlay {
-            position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
-            background: rgba(0,0,0,0.6);
-            backdrop-filter: blur(5px);
-            z-index: 10000;
-            display: flex; justify-content: center; align-items: center;
-            opacity: 0; pointer-events: none;
-            transition: opacity 0.3s ease;
-        }
-        .modal-overlay.active {
-            opacity: 1; pointer-events: auto;
-        }
-        
-        /* Telegram Profile Card */
-        .profile-card {
-            width: 360px;
-            background: #1c242d;
-            border-radius: 12px;
-            overflow: hidden;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
-            transform: scale(0.9);
-            transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-            font-family: 'Inter', sans-serif;
-            color: #fff;
-        }
-        .modal-overlay.active .profile-card { transform: scale(1); }
-        
-        .profile-header {
-            position: relative;
-            text-align: center;
-            padding-bottom: 20px;
-        }
-        .profile-banner {
-            width: 100%; height: 120px;
-            background: #2b3a4a;
-            background-size: cover;
-            background-position: center;
-            transition: all 0.3s;
-        }
-        .profile-actions {
-            position: absolute; top: 10px; right: 10px;
-            display: flex; gap: 10px;
-        }
-        .icon-btn {
-            background: rgba(0,0,0,0.3); border: none; color: #fff;
-            width: 32px; height: 32px; border-radius: 50%;
-            cursor: pointer; display: flex; justify-content: center; align-items: center;
-            transition: background 0.2s;
-        }
-        .icon-btn:hover { background: rgba(0,0,0,0.6); }
-        
-        .profile-avatar-wrapper {
-            position: relative;
-            width: 100px; height: 100px;
-            margin: -50px auto 10px auto;
-            border-radius: 50%;
-            border: 4px solid #1c242d;
-            background: #1c242d;
-        }
-        .profile-avatar {
-            width: 100%; height: 100%;
-            border-radius: 50%; object-fit: cover;
-        }
-        .avatar-edit-overlay {
-            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
-            border-radius: 50%; background: rgba(0,0,0,0.5);
-            display: flex; justify-content: center; align-items: center;
-            cursor: pointer; opacity: 0; transition: opacity 0.2s;
-        }
-        .profile-avatar-wrapper:hover .avatar-edit-overlay { opacity: 1; }
-        
-        .profile-name { font-size: 1.3rem; font-weight: 600; margin-bottom: 5px; }
-        .profile-status { font-size: 0.9rem; color: #8774e1; }
-        
-        .profile-body { padding: 0 20px 20px 20px; text-align: left; }
-        .info-block { padding: 15px 0; border-bottom: 1px solid #232e3c; }
-        .info-block:last-child { border-bottom: none; }
-        .info-value { font-size: 1rem; color: #fff; margin-bottom: 4px; word-wrap: break-word; }
-        .info-label { font-size: 0.85rem; color: #7f91a4; }
-        
-        .edit-group { margin-bottom: 15px; }
-        .edit-group label { display: block; font-size: 0.85rem; color: #7f91a4; margin-bottom: 5px; }
-        .edit-group input, .edit-group textarea {
-            width: 100%; background: #242f3d; border: 1px solid #2b3a4a;
-            color: #fff; padding: 10px; border-radius: 6px; font-family: inherit;
-            box-sizing: border-box; outline: none;
-        }
-        .edit-group textarea { resize: vertical; min-height: 60px; }
-        .save-btn {
-            width: 100%; background: #8774e1; color: #fff; border: none;
-            padding: 12px; border-radius: 6px; font-weight: 600; cursor: pointer;
-            transition: background 0.2s;
-        }
-        .save-btn:hover { background: #7b68c9; }
-
-        /* Settings Card */
-        .settings-card {
-            width: 320px; background: #1c242d; border-radius: 12px;
-            padding: 20px; color: #fff; font-family: 'Inter', sans-serif;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
-            transform: scale(0.9); transition: transform 0.3s;
-        }
-        .modal-overlay.active .settings-card { transform: scale(1); }
-        .settings-header { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #232e3c; padding-bottom: 15px; margin-bottom: 15px; }
-        .settings-header h3 { margin: 0; font-size: 1.1rem; }
-    </style>
-
-    <!-- Profile Modal -->
-    <div id="profile-modal" class="modal-overlay">
-        <div class="profile-card">
-            <div class="profile-header">
-                <div class="profile-banner" id="profile-banner-bg" onclick="changeBanner()" style="cursor: pointer;">
-                    <div class="avatar-edit-overlay" id="banner-edit-overlay"><i class="fa-solid fa-camera"></i></div>
+            <!-- Bots Tab -->
+            <div id="tab-bots" class="vault-tab" style="display: none; width: 100%; max-width: 900px; background: rgba(20,28,36,0.9); border: 1px solid #2b3a4a; border-radius: 12px; padding: 30px; box-shadow: 0 10px 30px rgba(0,0,0,0.5); backdrop-filter: blur(10px);">
+                <h2 style="margin-top: 0; color: #fff; border-bottom: 1px solid #2b3a4a; padding-bottom: 15px; display: flex; justify-content: space-between;">
+                    <span><i class="fa-solid fa-robot"></i> УПРАВЛЕНИЕ БОТАМИ</span>
+                    <button style="background: transparent; border: 1px dashed #7f91a4; color: #7f91a4; cursor: pointer; padding: 5px 15px; border-radius: 4px;">+ ДОБАВИТЬ</button>
+                </h2>
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-top: 20px;">
+                    <!-- Bot Card 1 -->
+                    <div style="background: #1c242d; border: 1px solid #232e3c; border-radius: 8px; padding: 20px;">
+                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
+                            <div style="font-weight: bold; font-size: 1.1rem; color: #fff;">AUREX_CORE</div>
+                            <div style="color: #4caf50; font-size: 0.8rem; border: 1px solid #4caf50; padding: 2px 8px; border-radius: 10px;">ONLINE</div>
+                        </div>
+                        <p style="color: #7f91a4; font-size: 0.9rem; margin-bottom: 20px;">Главный нейро-модуль. Отвечает за логику и анализ данных.</p>
+                        <div style="display: flex; gap: 10px;">
+                            <button style="flex: 1; background: #2b3a4a; color: #fff; border: none; padding: 8px; border-radius: 4px; cursor: pointer; transition: 0.2s;" onmouseover="this.style.background='#ff4444'" onmouseout="this.style.background='#2b3a4a'">ОТКЛЮЧИТЬ</button>
+                            <button style="background: #2b3a4a; color: #fff; border: none; padding: 8px 15px; border-radius: 4px; cursor: pointer;"><i class="fa-solid fa-gear"></i></button>
+                        </div>
+                    </div>
+                    <!-- Bot Card 2 -->
+                    <div style="background: #1c242d; border: 1px solid #232e3c; border-radius: 8px; padding: 20px;">
+                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
+                            <div style="font-weight: bold; font-size: 1.1rem; color: #fff;">DOX_CRAWLER</div>
+                            <div style="color: #ff4444; font-size: 0.8rem; border: 1px solid #ff4444; padding: 2px 8px; border-radius: 10px;">OFFLINE</div>
+                        </div>
+                        <p style="color: #7f91a4; font-size: 0.9rem; margin-bottom: 20px;">Сбор информации. Требует обновления конфигурации прокси.</p>
+                        <div style="display: flex; gap: 10px;">
+                            <button style="flex: 1; background: #8774e1; color: #fff; border: none; padding: 8px; border-radius: 4px; cursor: pointer; transition: 0.2s;" onmouseover="this.style.background='#7b68c9'" onmouseout="this.style.background='#8774e1'">ЗАПУСТИТЬ</button>
+                            <button style="background: #2b3a4a; color: #fff; border: none; padding: 8px 15px; border-radius: 4px; cursor: pointer;"><i class="fa-solid fa-gear"></i></button>
+                        </div>
+                    </div>
                 </div>
+            </div>
+
+            <!-- Panel (Console) Tab -->
+            <div id="tab-panel" class="vault-tab" style="display: none; width: 100%; max-width: 800px; height: 60vh; background: rgba(5,10,15,0.95); border: 1px solid #00ffcc; border-radius: 8px; padding: 20px; box-shadow: 0 0 20px rgba(0,255,204,0.1); font-family: 'Consolas', monospace; color: #00ffcc; display: flex; flex-direction: column;">
+                <div style="border-bottom: 1px dashed #00ffcc; padding-bottom: 10px; margin-bottom: 10px; font-size: 0.9rem; opacity: 0.7;">
+                    AUREX OS TERMINAL v2.1 // ПРЯМОЙ ДОСТУП<br>
+                    Введите 'help' для списка команд.
+                </div>
+                <div id="console-output" style="flex-grow: 1; overflow-y: auto; display: flex; flex-direction: column; justify-content: flex-end; padding-bottom: 10px; font-size: 0.9rem; line-height: 1.5;">
+                    <div>> Инициализация консоли... Успешно.</div>
+                    <div>> Ожидание ввода.</div>
+                </div>
+                <div style="display: flex; align-items: center; border-top: 1px dashed #00ffcc; padding-top: 10px;">
+                    <span style="margin-right: 10px;">root@vault:~#</span>
+                    <input type="text" id="console-input" style="flex-grow: 1; background: transparent; border: none; color: #fff; font-family: 'Consolas', monospace; font-size: 1rem; outline: none;" autocomplete="off" autofocus>
+                </div>
+            </div>
+
+            <!-- Journal Tab -->
+            <div id="tab-journal" class="vault-tab" style="display: none; width: 100%; max-width: 700px; height: 70vh; background: #1c242d; border: 1px solid #2b3a4a; border-radius: 12px; padding: 30px; box-shadow: 0 10px 30px rgba(0,0,0,0.5); overflow-y: auto;">
+                <h2 style="margin-top: 0; color: #fff; border-bottom: 1px solid #2b3a4a; padding-bottom: 15px;"><i class="fa-solid fa-book-journal-whills"></i> Журнал Обновлений Системы</h2>
+                
+                <div style="margin-top: 20px; border-left: 2px solid #8774e1; padding-left: 15px; margin-bottom: 25px;">
+                    <div style="color: #8774e1; font-size: 0.85rem; font-weight: bold; margin-bottom: 5px;">СЕГОДНЯ</div>
+                    <div style="color: #fff; font-size: 1.05rem; margin-bottom: 5px;">Обновление UI Хранилища</div>
+                    <div style="color: #7f91a4; font-size: 0.9rem; line-height: 1.5;">
+                        - Добавлена новая боковая панель в стиле Telegram.<br>
+                        - Добавлен профиль с возможностью редактирования данных.<br>
+                        - Добавлена система вкладок (Боты, Консоль, Журнал).<br>
+                        - Исправлена привязка настроек фона и звука.
+                    </div>
+                </div>
+
+                <div style="border-left: 2px solid #2b3a4a; padding-left: 15px; margin-bottom: 25px; opacity: 0.6;">
+                    <div style="color: #7f91a4; font-size: 0.85rem; font-weight: bold; margin-bottom: 5px;">РАНЕЕ</div>
+                    <div style="color: #fff; font-size: 1.05rem; margin-bottom: 5px;">Инициализация Хранилища</div>
+                    <div style="color: #7f91a4; font-size: 0.9rem; line-height: 1.5;">
+                        - Удален старый сайт-визитка.<br>
+                        - Настроена кодовая фраза "open".<br>
+                        - Запущен генератор динамических фонов на Canvas.
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
                 <div class="profile-actions">
                     <button class="icon-btn edit-btn" onclick="toggleProfileEdit()"><i class="fa-solid fa-pen"></i></button>
                     <button class="icon-btn close-btn" onclick="closeProfile()"><i class="fa-solid fa-xmark"></i></button>
@@ -491,18 +460,19 @@
             </div>
         </div>
         
-                <div class="sidebar-menu">
+                        <div class="sidebar-menu">
             <div class="sidebar-item"><img src="/static/assets/default-avatar.png" id="sidebar-avatar-mini" style="width: 24px; height: 24px; border-radius: 50%; object-fit: cover;"> <span id="sidebar-name-mini">ДомадOX</span></div>
             <div class="sidebar-divider"></div>
             
             <div class="sidebar-item" onclick="openProfile()"><i class="fa-regular fa-user"></i> Мой профиль</div>
-            <div class="sidebar-item"><i class="fa-solid fa-robot"></i> БОТЫ</div>
-            <div class="sidebar-item"><i class="fa-solid fa-folder-open"></i> Архив проектов</div>
-            <div class="sidebar-item"><i class="fa-solid fa-book"></i> Журнал выживания</div>
+            <div class="sidebar-item" onclick="openTab('bots')"><i class="fa-solid fa-robot"></i> БОТЫ</div>
+            <div class="sidebar-item" onclick="openTab('panel')"><i class="fa-solid fa-terminal"></i> ПАНЕЛЬ</div>
+            <div class="sidebar-item" onclick="openTab('journal')"><i class="fa-solid fa-book"></i> Журнал</div>
             <div class="sidebar-divider"></div>
             <div class="sidebar-item" onclick="openSettings()"><i class="fa-solid fa-gear"></i> Настройки системы</div>
         </div>
     </div>
+</div>
 </div>
 </div>
 
@@ -551,6 +521,82 @@
     sidebar.addEventListener('mouseleave', () => {
         sidebar.style.left = '-300px';
     });
+
+    
+    // --- SETTINGS BINDINGS FIX ---
+    document.getElementById('bg-selector').addEventListener('change', (e) => {
+        bgTheme = e.target.value;
+        particles = []; // clear old particles
+    });
+
+    document.getElementById('audio-toggle').addEventListener('change', (e) => {
+        if(e.target.checked) startAudio();
+        else stopAudio();
+    });
+
+    // --- TAB SYSTEM ---
+    function openTab(tabId) {
+        // Hide all tabs
+        const tabs = document.querySelectorAll('.vault-tab');
+        tabs.forEach(tab => tab.style.display = 'none');
+        
+        // Show selected tab
+        const target = document.getElementById('tab-' + tabId);
+        if(target) {
+            target.style.display = tabId === 'panel' || tabId === 'welcome' ? 'flex' : 'block';
+        }
+        
+        // Close sidebar
+        sidebar.style.left = '-300px';
+    }
+
+    // --- CONSOLE LOGIC ---
+    const consoleInput = document.getElementById('console-input');
+    const consoleOutput = document.getElementById('console-output');
+
+    consoleInput.addEventListener('keydown', function(e) {
+        if (e.key === 'Enter') {
+            const cmd = this.value.trim();
+            this.value = '';
+            
+            // Print user command
+            const userLine = document.createElement('div');
+            userLine.innerHTML = `<span style="color: #fff;">root@vault:~#</span> ${cmd}`;
+            consoleOutput.appendChild(userLine);
+            
+            // Process command
+            processCommand(cmd);
+            
+            // Auto scroll to bottom
+            consoleOutput.scrollTop = consoleOutput.scrollHeight;
+        }
+    });
+
+    function processCommand(cmd) {
+        const response = document.createElement('div');
+        response.style.color = '#7f91a4';
+        
+        const lowerCmd = cmd.toLowerCase();
+        if (lowerCmd === 'help') {
+            response.innerHTML = "Доступные команды:<br>help - Показать это сообщение<br>clear - Очистить экран<br>history - Показать историю петли<br>glitch - Вызвать визуальные искажения";
+        } else if (lowerCmd === 'clear') {
+            consoleOutput.innerHTML = '';
+            return;
+        } else if (lowerCmd === 'history') {
+            response.innerHTML = "Поиск записей...<br>[2021] Петля запущена.<br>[2024] Потеря связи с реальностью.<br>[2026] Хранилище восстановлено.";
+        } else if (lowerCmd === 'glitch') {
+            response.innerHTML = "Запуск протокола искажения...";
+            document.body.style.animation = "glitchText 0.1s infinite";
+            setTimeout(() => { document.body.style.animation = ""; }, 1000);
+        } else if (cmd !== "") {
+            response.innerHTML = `Команда не найдена: ${cmd}`;
+        }
+        
+        if (cmd !== "") {
+            consoleOutput.appendChild(response);
+        }
+    }
+
 
     // --- VAULT LOGIC ---
     let canvas, ctx;
