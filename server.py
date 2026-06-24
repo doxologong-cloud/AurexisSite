@@ -1175,7 +1175,24 @@ def stop_bot(bot_id):
 
 @app.route('/console')
 def console():
+    if not session.get('authenticated'):
+        return "Access Denied. Nice try F12 hacker.", 403
     return render_template('console.html')
+
+
+@app.route('/api/auth', methods=['POST'])
+def api_auth():
+    data = request.json
+    if data and data.get('code') == '3030':
+        session['authenticated'] = True
+        return jsonify({"success": True})
+    return jsonify({"success": False}), 403
+
+@app.route('/vault')
+def vault():
+    if not session.get('authenticated'):
+        return "Access Denied. Nice try F12 hacker.", 403
+    return render_template('vault.html')
 
 if __name__ == '__main__':
     app.run(debug=True, port=5000)
