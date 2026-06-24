@@ -155,8 +155,48 @@
     <script src="/static/translations.js"></script>
 </head>
 <body>
-<div style="display: flex; justify-content: center; align-items: center; height: 100vh; width: 100vw; background: #000; color: #ff0000; font-family: 'Space Grotesk', sans-serif; font-size: 3rem; text-shadow: 0 0 20px #ff0000;">
+<!-- Фейковый фасад -->
+<div id="fake-front" style="display: flex; justify-content: center; align-items: center; height: 100vh; width: 100vw; background: #000; color: #ff0000; font-family: 'Space Grotesk', sans-serif; font-size: 3rem; text-shadow: 0 0 20px #ff0000; position: fixed; top: 0; left: 0; z-index: 9999; transition: opacity 1s, filter 1s;">
     (Ведутся РАБОТЫ)
 </div>
+
+<!-- Настоящий скрытый контент (пока что заглушка) -->
+<div id="secret-vault" style="display: none; min-height: 100vh; background: #0a0a0a; color: #00ffcc; font-family: 'Space Grotesk', sans-serif; padding: 50px;">
+    <h1 style="text-shadow: 0 0 10px #00ffcc;">Добро пожаловать в Хранилище.</h1>
+    <p>Доступ разрешен. Здесь будут твои проекты и дневник.</p>
+</div>
+
+<script>
+    let keySequence = "";
+    const secretCode = "open";
+
+    document.addEventListener('keydown', function(e) {
+        keySequence += e.key.toLowerCase();
+        
+        if (keySequence.length > secretCode.length) {
+            keySequence = keySequence.substring(1, keySequence.length);
+        }
+        
+        if (keySequence === secretCode) {
+            unlockVault();
+        }
+    });
+
+    function unlockVault() {
+        const fakeFront = document.getElementById('fake-front');
+        const vault = document.getElementById('secret-vault');
+        
+        // Крутой эффект растворения и глитча
+        fakeFront.style.filter = "blur(10px) hue-rotate(90deg)";
+        fakeFront.style.transform = "scale(1.1)";
+        fakeFront.style.opacity = "0";
+        fakeFront.style.transition = "all 0.8s ease-in-out";
+        
+        setTimeout(() => {
+            fakeFront.style.display = 'none';
+            vault.style.display = 'block';
+        }, 800);
+    }
+</script>
 </body>
 </html>
