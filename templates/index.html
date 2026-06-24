@@ -295,7 +295,10 @@
             <div id="tab-bots" class="vault-tab" style="display: none; width: 100%; max-width: 900px; background: rgba(20,28,36,0.9); border: 1px solid #2b3a4a; border-radius: 12px; padding: 30px; box-shadow: 0 10px 30px rgba(0,0,0,0.5); backdrop-filter: blur(10px);">
                 <h2 style="margin-top: 0; color: #fff; border-bottom: 1px solid #2b3a4a; padding-bottom: 15px; display: flex; justify-content: space-between;">
                     <span><i class="fa-solid fa-robot"></i> УПРАВЛЕНИЕ БОТАМИ</span>
-                    <button style="background: transparent; border: 1px dashed #7f91a4; color: #7f91a4; cursor: pointer; padding: 5px 15px; border-radius: 4px;">+ ДОБАВИТЬ</button>
+                    <div style="display: flex; gap: 10px;">
+                        <button style="background: transparent; border: 1px dashed #7f91a4; color: #7f91a4; cursor: pointer; padding: 5px 15px; border-radius: 4px;">+ ДОБАВИТЬ</button>
+                        <button onclick="openTab('welcome')" style="background: transparent; border: none; color: #7f91a4; font-size: 1.2rem; cursor: pointer; transition: 0.2s;" onmouseover="this.style.color='#fff'" onmouseout="this.style.color='#7f91a4'"><i class="fa-solid fa-xmark"></i></button>
+                    </div>
                 </h2>
                 <div id="bots-container" style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-top: 20px;">
                     <div style="color: #7f91a4;">Синхронизация с сервером...</div>
