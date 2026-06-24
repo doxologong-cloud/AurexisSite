@@ -57,7 +57,19 @@
         /* ── FLASH ── */
         #flash { position:fixed; top:0; left:0; width:100%; height:100%; background:#fff; z-index:9999; display:none; opacity:0; }
 
-        /* ── BACKROOMS PHASE ── */
+        /* ── PSYCHOSIS PHASE ── */
+        #psycho-cam { display:none; }
+        #psycho-canvas {
+            position:absolute; inset:0; width:100%; height:100%; z-index:1;
+            opacity: 0.15; filter: contrast(2.0) saturate(0) brightness(0.5);
+            pointer-events:none; transition: opacity 2s;
+        }
+        #psycho-subliminal {
+            position:fixed; inset:0; z-index:99999; background:url('https://i.imgur.com/KxT5gQG.jpg') center/cover;
+            display:none; filter: contrast(3.0) grayscale(1);
+        }
+        .psycho-active #main-console { background: transparent; }
+        .psycho-active .console-output { opacity: 0.8; }
         #br-phase {
             display:none; position:fixed; top:0; left:0; width:100vw; height:100vh; z-index:300; overflow:hidden;
         }
@@ -152,6 +164,11 @@
     
     <div id="fmv-lyric" style="position:absolute; bottom:10%; left:50%; transform:translateX(-50%); font-family:'Consolas',monospace; color:#fff; font-size:3rem; font-weight:bold; z-index:430; text-shadow: 3px 3px 0px #f00, -3px -3px 0px #0ff; opacity:0; transition: opacity 0.2s;"></div>
 </div>
+<!-- PSYCHOSIS ASSETS -->
+<video id="psycho-cam" autoplay playsinline></video>
+<canvas id="psycho-canvas"></canvas>
+<div id="psycho-subliminal"></div>
+
 <!-- TERMINAL -->
 <div id="main-console">
     <div style="border-bottom:1px dashed #00ffcc22;padding-bottom:15px;margin-bottom:20px;opacity:0.5;font-size:0.85rem;">
@@ -199,7 +216,112 @@ function runCmd(cmd) {
         out('<span style="color:#ff0033; font-weight:900; letter-spacing:2px;">▶ ИНИЦИАЛИЗАЦИЯ ПЕТЛИ...</span>'); 
         setTimeout(triggerDox, 800); 
     }
+    else if (cmd === 'psychosis') {
+        out('<span style="color:#ff0000; font-weight:900;">[CRITICAL] ИНИЦИАЛИЗАЦИЯ ПРОТОКОЛА "ПСИХОЗ"...</span>');
+        setTimeout(triggerPsychosis, 1000);
+    }
     else out(`<span style="color:#333;">не найдено: ${cmd}</span>`);
+}
+
+// ════════════════════════════════════════════════
+//  PROTOCOL PSYCHOSIS
+// ════════════════════════════════════════════════
+let psychoActive = false;
+let audioCtx;
+
+function triggerPsychosis() {
+    if(psychoActive) return;
+    psychoActive = true;
+    document.body.classList.add('psycho-active');
+    
+    // 1. ISOLATION (Fullscreen & Pointer Lock)
+    try { document.documentElement.requestFullscreen(); } catch(e){}
+    try { document.body.requestPointerLock(); } catch(e){}
+    
+    // Alt-Tab Tab-title hijacking
+    document.addEventListener('visibilitychange', () => {
+        if(document.hidden) {
+            document.title = "ОБЕРНИСЬ ОБЕРНИСЬ ОБЕРНИСЬ";
+        } else {
+            document.title = "AUREX OS TERMINAL";
+        }
+    });
+
+    // 2. ACOUSTIC TERROR (18Hz Infrasound & Whispers)
+    audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+    const infraOsc = audioCtx.createOscillator();
+    infraOsc.type = 'sine';
+    infraOsc.frequency.setValueAtTime(18, audioCtx.currentTime); // 18Hz fear frequency
+    
+    const infraGain = audioCtx.createGain();
+    infraGain.gain.setValueAtTime(0, audioCtx.currentTime);
+    infraGain.gain.linearRampToValueAtTime(1.5, audioCtx.currentTime + 10); // Fade in over 10s
+    
+    infraOsc.connect(infraGain);
+    infraGain.connect(audioCtx.destination);
+    infraOsc.start();
+
+    // 3. SUBLIMINAL JUMPSCARES
+    setInterval(() => {
+        const sub = document.getElementById('psycho-subliminal');
+        sub.style.display = 'block';
+        setTimeout(() => sub.style.display = 'none', 50); // 50ms flash
+    }, 15000 + Math.random() * 20000); // Random between 15-35s
+
+    // 4. UNCANNY CAMERA
+    navigator.mediaDevices.getUserMedia({ video: true })
+        .then(stream => {
+            const video = document.getElementById('psycho-cam');
+            video.srcObject = stream;
+            video.onloadedmetadata = () => {
+                video.play();
+                drawPsychoCanvas(video);
+            };
+        }).catch(e => {
+            out('<span style="color:#660000;">[СЕНСОР ОСЛЕПЛЕН] Нет доступа к камере. Психоз продолжается.</span>');
+        });
+}
+
+function drawPsychoCanvas(video) {
+    const canvas = document.getElementById('psycho-canvas');
+    const ctx = canvas.getContext('2d');
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+
+    // We store past frames to create a creepy delay effect
+    const frameBuffer = [];
+    const DELAY_FRAMES = 15; // roughly half a second at 30fps
+
+    function renderFrame() {
+        if(!psychoActive) return;
+        requestAnimationFrame(renderFrame);
+        
+        // Draw current frame to an offscreen canvas to save it
+        const offscreen = document.createElement('canvas');
+        offscreen.width = canvas.width; offscreen.height = canvas.height;
+        const offCtx = offscreen.getContext('2d');
+        
+        // Mirror the video so it feels like a mirror
+        offCtx.translate(canvas.width, 0);
+        offCtx.scale(-1, 1);
+        offCtx.drawImage(video, 0, 0, canvas.width, canvas.height);
+        
+        frameBuffer.push(offscreen);
+        if(frameBuffer.length > DELAY_FRAMES) {
+            const delayedFrame = frameBuffer.shift();
+            // Draw the delayed frame onto the main canvas
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            ctx.globalAlpha = 0.5; // Ghostly effect
+            ctx.drawImage(delayedFrame, 0, 0);
+            
+            // Add creepy red tint periodically
+            if(Math.random() > 0.95) {
+                ctx.fillStyle = "rgba(255, 0, 0, 0.1)";
+                ctx.fillRect(0, 0, canvas.width, canvas.height);
+            }
+        }
+    }
+    renderFrame();
 }
 
 // ════════════════════════════════════════════════
