@@ -1172,5 +1172,10 @@ def stop_bot(bot_id):
         
     return jsonify({"success": True})
 
+
+@app.route('/console')
+def console():
+    return render_template('console.html')
+
 if __name__ == '__main__':
     app.run(debug=True, port=5000)
