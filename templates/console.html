@@ -131,14 +131,27 @@
     <div id="petlya-text">ПЕТЛЯ</div>
 </div>
 
-<!-- BACKROOMS -->
-<div id="br-phase">
-    <div id="br-three"></div>
-    <div id="br-vignette"></div>
-    <div id="vhs-overlay"></div>
-    <div id="br-lyric" class="big"></div>
+<!-- FAKE DESKTOP -->
+<div id="desktop-phase" style="display:none; position:fixed; inset:0; z-index:300; background:#111; font-family:sans-serif; overflow:hidden;">
+    <div style="position:absolute; inset:0; background:radial-gradient(circle, #333, #000); opacity:0.5;"></div>
+    <div style="position:absolute; top:40px; left:40px; text-align:center; cursor:pointer;" id="fake-icon">
+        <i class="fa-solid fa-gamepad" style="font-size:64px; color:#ff0033; filter:drop-shadow(0 0 10px #ff0033);"></i>
+        <div style="color:#fff; text-shadow:1px 1px 2px #000; font-size:16px; margin-top:10px; font-weight:bold;">LOOP.exe</div>
+    </div>
+    <div id="fake-mouse" style="position:absolute; top:80%; left:80%; width:24px; height:36px; background:url('data:image/svg+xml;utf8,<svg xmlns=\'http://www.w3.org/2000/svg\' viewBox=\'0 0 24 24\' fill=\'white\' stroke=\'black\' stroke-width=\'1\'><path d=\'M3 3l7.07 16.97 2.51-7.39 7.39-2.51L3 3z\'/></svg>') no-repeat; z-index:310; transition: top 2s ease-in-out, left 2s ease-in-out;"></div>
 </div>
 
+<!-- FMV GAME -->
+<div id="fmv-phase" style="display:none; position:fixed; inset:0; z-index:400; background:#000;">
+    <video id="bg-video" src="/static/assets/bg_dance.mp4" loop muted playsinline style="position:absolute; inset:0; width:100%; height:100%; object-fit:cover; opacity:0.6; filter: saturate(1.2) contrast(1.5) hue-rotate(-20deg);"></video>
+    <div id="vhs-overlay" style="z-index:410;"></div>
+    <div id="vhs-tracking" style="z-index:410;"></div>
+    
+    <!-- Placeholder for user video (Point Cloud / Mask) -->
+    <canvas id="fmv-canvas" style="position:absolute; inset:0; width:100%; height:100%; z-index:420;"></canvas>
+    
+    <div id="fmv-lyric" style="position:absolute; bottom:10%; left:50%; transform:translateX(-50%); font-family:'Consolas',monospace; color:#fff; font-size:3rem; font-weight:bold; z-index:430; text-shadow: 3px 3px 0px #f00, -3px -3px 0px #0ff; opacity:0; transition: opacity 0.2s;"></div>
+</div>
 <!-- TERMINAL -->
 <div id="main-console">
     <div style="border-bottom:1px dashed #00ffcc22;padding-bottom:15px;margin-bottom:20px;opacity:0.5;font-size:0.85rem;">
@@ -525,15 +538,21 @@ function doMonitorZoom() {
     animZoom();
 }
 
-function doFlashToBR() {
+function doFlashToDesktop() {
     const fl = document.getElementById('flash');
     fl.style.display='block'; fl.style.opacity='1';
+    
+    // Play breaking dishes / scream audio here (placeholder synth noise for now)
+    const osc = new (window.AudioContext || window.webkitAudioContext)().createOscillator();
+    osc.type = 'sawtooth'; osc.frequency.setValueAtTime(100, 0); osc.frequency.exponentialRampToValueAtTime(1000, 1);
+    osc.connect(analyser); osc.start(); osc.stop(1);
+
     setTimeout(()=>{
         cancelAnimationFrame(doxAnimId); doxRenderer.dispose();
         document.getElementById('dox-phase').style.display='none';
         fl.style.opacity='0';
-        setTimeout(()=>{ fl.style.display='none'; startBackrooms(); }, 200);
-    }, 100);
+        setTimeout(()=>{ fl.style.display='none'; startDesktop(); }, 200);
+    }, 150);
 }
 
 let doxLastTime = 0;
@@ -580,84 +599,106 @@ function doxLoop(ts=0) {
 }
 
 // ════════════════════════════════════════════════
-//  BACKROOMS
+//  DESKTOP PHASE
 // ════════════════════════════════════════════════
-let brScene, brCam, brRenderer, brAnimId, brT=0, brShown=new Set();
-
-const SCRIPT = [
-    {t:2,  text:'ты снова здесь',           cls:'sm',  col:'#c8a84b'},
-    {t:6,  text:'всё в норме',              cls:'big', col:'#fff'},
-    {t:11, text:'так расслабься',           cls:'med', col:'#aaa'},
-    {t:17, text:'не найдём мы\nвыход никогда',cls:'med',col:'#f00'},
-    {t:24, text:'ОПАСНО',                   cls:'big', col:'#f00'},
-    {t:28, text:'не парься',                cls:'med', col:'#c8a84b'},
-    {t:34, text:'упал на дно',              cls:'med', col:'#fff'},
-    {t:41, text:'ГНИЁТ',                    cls:'big', col:'#f00'},
-    {t:44, text:'МОЙ МОЗГ',                 cls:'big', col:'#fff'},
-];
-
-function startBackrooms() {
-    document.getElementById('br-phase').style.display='block';
-    const W=window.innerWidth, H=window.innerHeight;
-    brScene = new THREE.Scene();
-    brScene.fog = new THREE.FogExp2(0x110800, 0.05);
-    brScene.background = new THREE.Color(0x050200);
-    brCam = new THREE.PerspectiveCamera(80, W/H, 0.1, 100);
+function startDesktop() {
+    document.getElementById('desktop-phase').style.display = 'block';
     
-    brRenderer = new THREE.WebGLRenderer({antialias:false});
-    brRenderer.setSize(W,H);
-    document.getElementById('br-three').appendChild(brRenderer.domElement);
+    const mouse = document.getElementById('fake-mouse');
+    const icon = document.getElementById('fake-icon');
     
-    // Corridors
-    const texLoader = new THREE.TextureLoader();
-    // Use basic materials with heavy bump for grunge
-    const wallM = new THREE.MeshStandardMaterial({color:0x886611, roughness:1, side:THREE.BackSide});
-    const box = new THREE.Mesh(new THREE.BoxGeometry(6,4,100), wallM);
-    box.position.set(0,0,-50); brScene.add(box);
+    // Simulate user grabbing mouse
+    setTimeout(()=>{
+        mouse.style.top = '60px';
+        mouse.style.left = '70px';
+    }, 1000);
     
-    brScene.add(new THREE.AmbientLight(0x221100));
-    for(let z=2;z<100;z+=6){
-        const l=new THREE.PointLight(0xffcc55, 1.5, 12);
-        l.position.set(0,1.8,-z); brScene.add(l);
-    }
-    
-    brT=0; renderBR();
+    // Simulate double click
+    setTimeout(()=>{
+        icon.style.transform = 'scale(0.9)';
+        icon.style.filter = 'drop-shadow(0 0 20px #ff0033)';
+        setTimeout(()=> icon.style.transform = 'scale(1)', 100);
+        setTimeout(()=> icon.style.transform = 'scale(0.9)', 200);
+        setTimeout(()=> { icon.style.transform = 'scale(1)'; startFMV(); }, 300);
+    }, 3200);
 }
 
-function renderBR() {
-    brAnimId=requestAnimationFrame(renderBR);
-    brT+=0.016;
-    const bass = getBass();
-
-    brCam.position.z -= 0.1 + bass*0.2;
-    if(brCam.position.z < -90) brCam.position.z = 0;
+// ════════════════════════════════════════════════
+//  FMV PHASE (POINT CLOUD PLACEHOLDER)
+// ════════════════════════════════════════════════
+let fmvCanvas, fmvCtx;
+function startFMV() {
+    document.getElementById('desktop-phase').style.display = 'none';
+    document.getElementById('fmv-phase').style.display = 'block';
     
-    // Heavy head bobbing
-    brCam.position.y = Math.sin(brT*5)*0.15;
-    brCam.rotation.z = Math.sin(brT*3)*0.05;
-    
-    // Light flicker sync to bass
-    brScene.traverse(o=>{ if(o.isPointLight) o.intensity = Math.max(0.2, bass * 5); });
+    const video = document.getElementById('bg-video');
+    video.play().catch(e=>console.log("Auto-play blocked"));
 
-    SCRIPT.forEach(item=>{
-        if(brT>=item.t && !brShown.has(item.t)){
-            brShown.add(item.t); showLyric(item);
-        }
+    fmvCanvas = document.getElementById('fmv-canvas');
+    fmvCtx = fmvCanvas.getContext('2d');
+    resizeFMV();
+    
+    // Start abstract placeholder renderer (Silhouette of dots)
+    requestAnimationFrame(renderFMVPlaceholder);
+    
+    // Lyrics sequence
+    const LYRICS = [
+        {t: 2000, txt: 'ДЕЖАВЮ'},
+        {t: 4000, txt: 'Я СНОВА ЗДЕСЬ'},
+        {t: 6000, txt: 'В ПЕТЛЕ'},
+        {t: 8000, txt: 'БЕЗ ВЫХОДА'}
+    ];
+    
+    LYRICS.forEach(l => {
+        setTimeout(()=>{
+            const el = document.getElementById('fmv-lyric');
+            el.textContent = l.txt;
+            el.style.opacity = 1;
+            setTimeout(()=> el.style.opacity = 0, 1500);
+        }, l.t);
     });
-
-    brRenderer.render(brScene,brCam);
 }
 
-function showLyric(item){
-    const el=document.getElementById('br-lyric');
-    el.textContent=item.text; el.className=item.cls; el.style.color=item.col;
-    el.style.opacity='1'; el.style.transform = `translate(-50%, -50%) scale(${1 + Math.random()*0.2})`;
-    setTimeout(()=>{ el.style.opacity='0'; }, 2000);
+function resizeFMV() {
+    if(fmvCanvas) {
+        fmvCanvas.width = window.innerWidth;
+        fmvCanvas.height = window.innerHeight;
+    }
+}
+
+function renderFMVPlaceholder(ts) {
+    requestAnimationFrame(renderFMVPlaceholder);
+    const W = fmvCanvas.width, H = fmvCanvas.height;
+    fmvCtx.clearRect(0,0,W,H);
+    
+    const cx = W/2;
+    const cy = H/2 + 100;
+    
+    // Draw dancing point-cloud silhouette placeholder
+    fmvCtx.fillStyle = '#00ffcc';
+    const dotSize = 3;
+    const spacing = 15;
+    
+    // Sine wave distortion
+    const distortion = Math.sin(ts * 0.005) * 50;
+    
+    for(let y = -200; y < 200; y += spacing) {
+        for(let x = -100; x < 100; x += spacing) {
+            // Very rough humanoid mask
+            if(Math.abs(x) < 50 || (y < -100 && Math.abs(x) < 30)) {
+                // Swaying animation
+                const sway = Math.sin(ts * 0.003 + y*0.01) * 30;
+                fmvCtx.beginPath();
+                fmvCtx.arc(cx + x + sway, cy + y + (Math.random()*5), dotSize, 0, Math.PI*2);
+                fmvCtx.fill();
+            }
+        }
+    }
 }
 
 window.addEventListener('resize',()=>{
     if(doxCam){ doxCam.aspect=window.innerWidth/window.innerHeight; doxCam.updateProjectionMatrix(); doxRenderer.setSize(window.innerWidth,window.innerHeight); }
-    if(brCam){ brCam.aspect=window.innerWidth/window.innerHeight; brCam.updateProjectionMatrix(); brRenderer.setSize(window.innerWidth,window.innerHeight); }
+    resizeFMV();
 });
 </script>
 </body>
