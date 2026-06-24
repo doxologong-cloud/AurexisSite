@@ -153,6 +153,22 @@
     })();
 </script>
     <script src="/static/translations.js"></script>
+<style>
+        .modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.75); z-index: 99999; align-items: center; justify-content: center; }
+        .modal-overlay.active { display: flex !important; }
+        .settings-card { background: #17212b; border-radius: 12px; width: 90%; max-width: 480px; box-shadow: 0 20px 60px rgba(0,0,0,0.9); overflow: hidden; }
+        .settings-header { padding: 18px 20px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #2b3a4a; background: #242f3d; }
+        .settings-header h3 { margin: 0; color: #fff; font-size: 1.1rem; }
+        .settings-body { padding: 20px; }
+        .icon-btn { background: transparent; border: none; color: #7f91a4; font-size: 1.1rem; cursor: pointer; padding: 5px 8px; border-radius: 4px; transition: 0.2s; }
+        .icon-btn:hover { color: #fff; background: rgba(255,255,255,0.1); }
+        .edit-group { margin-bottom: 12px; }
+        .edit-group label { display: block; color: #7f91a4; font-size: 0.82rem; margin-bottom: 5px; }
+        .edit-group input, .edit-group textarea { width: 100%; background: #242f3d; color: #fff; border: 1px solid #2b3a4a; padding: 8px 10px; border-radius: 6px; box-sizing: border-box; font-family: inherit; font-size: 0.9rem; }
+        .edit-group textarea { resize: vertical; min-height: 60px; }
+        .save-btn { width: 100%; background: #4caf50; color: #fff; border: none; padding: 10px; border-radius: 6px; cursor: pointer; font-size: 0.95rem; font-weight: 600; margin-top: 5px; }
+        .save-btn:hover { background: #43a047; }
+    </style>
 </head>
 <body>
 <!-- Фейковый фасад -->
@@ -367,56 +383,8 @@
 
         </div>
     </div>
-                <div class="profile-actions">
-                    <button class="icon-btn edit-btn" onclick="toggleProfileEdit()"><i class="fa-solid fa-pen"></i></button>
-                    <button class="icon-btn close-btn" onclick="closeProfile()"><i class="fa-solid fa-xmark"></i></button>
-                </div>
-                <div class="profile-avatar-wrapper">
-                    <img src="/static/assets/default-avatar.png" class="profile-avatar" id="profile-avatar-img-lrg">
-                    <div class="avatar-edit-overlay" onclick="changeAvatar()"><i class="fa-solid fa-camera"></i></div>
-                </div>
-                <div class="profile-name" id="profile-name-text">ДомадOX</div>
-                <div class="profile-status">в сети</div>
-            </div>
-            
-            <div class="profile-body" id="profile-display-mode">
-                <div class="info-block">
-                    <div class="info-value" id="disp-phone">+7 983 323 7549</div>
-                    <div class="info-label">Телефон</div>
-                </div>
-                <div class="info-block">
-                    <div class="info-value" id="disp-bio">возвращенипе челика под названием doxчеловекglitchитд. заброший акк</div>
-                    <div class="info-label">О себе</div>
-                </div>
-                <div class="info-block">
-                    <div class="info-value" id="disp-username">@dxdplayersnow</div>
-                    <div class="info-label">Имя пользователя</div>
-                </div>
-            </div>
-            
-            <div class="profile-body" id="profile-edit-mode" style="display: none;">
-                <div class="edit-group">
-                    <label>Имя</label>
-                    <input type="text" id="edit-name" value="ДомадOX">
-                </div>
-                <div class="edit-group">
-                    <label>Телефон</label>
-                    <input type="text" id="edit-phone" value="+7 983 323 7549">
-                </div>
-                <div class="edit-group">
-                    <label>О себе</label>
-                    <textarea id="edit-bio">возвращенипе челика под названием doxчеловекglitchитд. заброший акк</textarea>
-                </div>
-                <div class="edit-group">
-                    <label>Имя пользователя</label>
-                    <input type="text" id="edit-username" value="@dxdplayersnow">
-                </div>
-                <button class="save-btn" onclick="saveProfile()">Сохранить</button>
-            </div>
-        </div>
-    </div>
-    
-    <!-- Hidden file inputs -->
+                
+    <!-- Hidden file inputs<!-- Hidden file inputs -->
     <input type="file" id="avatar-upload" style="display: none;" accept="image/*">
     <input type="file" id="banner-upload" style="display: none;" accept="image/*">
 
@@ -602,53 +570,7 @@
     };
 
 
-    // --- CONSOLE LOGIC ---
-    const consoleInput = document.getElementById('console-input');
-    const consoleOutput = document.getElementById('console-output');
-
-    consoleInput.addEventListener('keydown', function(e) {
-        if (e.key === 'Enter') {
-            const cmd = this.value.trim();
-            this.value = '';
-            
-            // Print user command
-            const userLine = document.createElement('div');
-            userLine.innerHTML = `<span style="color: #fff;">root@vault:~#</span> ${cmd}`;
-            consoleOutput.appendChild(userLine);
-            
-            // Process command
-            processCommand(cmd);
-            
-            // Auto scroll to bottom
-            consoleOutput.scrollTop = consoleOutput.scrollHeight;
-        }
-    });
-
-    function processCommand(cmd) {
-        const response = document.createElement('div');
-        response.style.color = '#7f91a4';
-        
-        const lowerCmd = cmd.toLowerCase();
-        if (lowerCmd === 'help') {
-            response.innerHTML = "Доступные команды:<br>help - Показать это сообщение<br>clear - Очистить экран<br>history - Показать историю петли<br>glitch - Вызвать визуальные искажения";
-        } else if (lowerCmd === 'clear') {
-            consoleOutput.innerHTML = '';
-            return;
-        } else if (lowerCmd === 'history') {
-            response.innerHTML = "Поиск записей...<br>[2021] Петля запущена.<br>[2024] Потеря связи с реальностью.<br>[2026] Хранилище восстановлено.";
-        } else if (lowerCmd === 'glitch') {
-            response.innerHTML = "Запуск протокола искажения...";
-            document.body.style.animation = "glitchText 0.1s infinite";
-            setTimeout(() => { document.body.style.animation = ""; }, 1000);
-        } else if (cmd !== "") {
-            response.innerHTML = `Команда не найдена: ${cmd}`;
-        }
-        
-        if (cmd !== "") {
-            consoleOutput.appendChild(response);
-        }
-    }
-
+        // Console is on /console page
 
     // --- VAULT LOGIC ---
     let canvas, ctx;
@@ -825,5 +747,50 @@
     });
 
 </script>
+
+    <!-- Profile Modal -->
+    <div id="profile-modal" class="modal-overlay">
+        <div class="settings-card">
+            <div class="settings-header">
+                <h3>Профиль</h3>
+                <div style="display:flex;gap:8px;">
+                    <button class="icon-btn" onclick="toggleProfileEdit()" title="Редактировать"><i class="fa-solid fa-pen"></i></button>
+                    <button class="icon-btn close-btn" onclick="closeProfile()"><i class="fa-solid fa-xmark"></i></button>
+                </div>
+            </div>
+            <div class="settings-body">
+                <div style="text-align:center;margin-bottom:20px;">
+                    <div style="position:relative;display:inline-block;">
+                        <img src="/static/assets/default-avatar.png" id="profile-avatar-img-lrg" style="width:80px;height:80px;border-radius:50%;object-fit:cover;border:3px solid #8774e1;">
+                        <div onclick="changeAvatar()" style="position:absolute;bottom:0;right:0;background:#8774e1;border-radius:50%;width:26px;height:26px;display:flex;align-items:center;justify-content:center;cursor:pointer;"><i class="fa-solid fa-camera" style="font-size:11px;color:#fff;"></i></div>
+                    </div>
+                    <div id="profile-name-text" style="color:#fff;font-weight:700;font-size:1.2rem;margin-top:10px;">ДомадOX</div>
+                    <div class="profile-status" style="color:#7f91a4;font-size:0.85rem;">в сети</div>
+                </div>
+                <div id="profile-display-mode">
+                    <div style="padding:10px 0;border-bottom:1px solid #1e2c38;">
+                        <div id="disp-phone" style="color:#fff;font-size:0.95rem;">+7 983 323 7549</div>
+                        <div style="color:#7f91a4;font-size:0.78rem;margin-top:2px;">Телефон</div>
+                    </div>
+                    <div style="padding:10px 0;border-bottom:1px solid #1e2c38;">
+                        <div id="disp-bio" style="color:#fff;font-size:0.95rem;">возвращенипе челика под названием doxчеловекglitchитд. заброший акк</div>
+                        <div style="color:#7f91a4;font-size:0.78rem;margin-top:2px;">О себе</div>
+                    </div>
+                    <div style="padding:10px 0;">
+                        <div id="disp-username" style="color:#fff;font-size:0.95rem;">@dxdplayersnow</div>
+                        <div style="color:#7f91a4;font-size:0.78rem;margin-top:2px;">Имя пользователя</div>
+                    </div>
+                </div>
+                <div id="profile-edit-mode" style="display:none;">
+                    <div class="edit-group"><label>Имя</label><input type="text" id="edit-name" value="ДомадOX"></div>
+                    <div class="edit-group"><label>Телефон</label><input type="text" id="edit-phone" value="+7 983 323 7549"></div>
+                    <div class="edit-group"><label>О себе</label><textarea id="edit-bio">возвращенипе челика под названием doxчеловекglitchитд. заброший акк</textarea></div>
+                    <div class="edit-group"><label>Имя пользователя</label><input type="text" id="edit-username" value="@dxdplayersnow"></div>
+                    <button class="save-btn" onclick="saveProfile()">Сохранить</button>
+                    <button onclick="toggleProfileEdit()" style="width:100%;margin-top:6px;background:transparent;color:#7f91a4;border:1px solid #2b3a4a;padding:8px;border-radius:6px;cursor:pointer;">Отмена</button>
+                </div>
+            </div>
+        </div>
+    </div>
 </body>
 </html>
