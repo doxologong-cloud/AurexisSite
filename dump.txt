@@ -1,0 +1,5 @@
+<div id="fake-front" style="display: flex; justify-content: center; align-items: center; height: 100vh; width: 100vw; background: #000; color: #ff0000; font-family: 'Space Grotesk', sans-serif; font-size: 3rem; text-shadow: 0 0 20px #ff0000; position: fixed; top: 0; left: 0; z-index: 9999; transition: opacity 1s, filter 1s;">
+    (╨Т╨╡╨┤╤Г╤В╤Б╤П ╨а╨Р╨С╨Ю╨в╨л)
+</div>
+
+<!-- ╨Э╨░╤Б╤В╨╛╤П╤Й╨╕╨╣ ╤Б╨║╤А╤Л╤В╤Л╨╣ ╨║╨╛╨╜╤В╨╡╨╜╤В -->
