@@ -513,9 +513,9 @@ function endLoop() {
 
     document.getElementById('loop-counter').textContent = `LOOP ${loopCount}`;
 
-    if(loopCount >= 3) document.getElementById('dox-phase').classList.add('shaking');
-    if(loopCount >= 5) document.getElementById('petlya-text').style.color = 'rgba(255,0,51,0.8)';
-    if(loopCount >= 7) {
+    if(loopCount >= 2) document.getElementById('dox-phase').classList.add('shaking');
+    if(loopCount >= 3) document.getElementById('petlya-text').style.color = 'rgba(255,0,51,0.8)';
+    if(loopCount >= 4) {
         camZooming = true;
         setTimeout(doMonitorZoom, 200);
         return;
@@ -561,26 +561,18 @@ function doxLoop(ts=0) {
     const dt = ts - doxLastTime; doxLastTime = ts;
 
     if (!camZooming) {
-        // Dynamic Cinematic Camera Tracking
+        // Smooth, cinematic follow camera (no jumping)
         const intensity = (1 - speedFactor) * 0.5;
-        let targetCamPos = new THREE.Vector3();
-        let targetLookAt = new THREE.Vector3();
-
-        if (loopState === 'lying' || loopState === 'rising') {
-            targetCamPos.set(BED_POS.x - 3, 4, BED_POS.z + 4);
-            targetLookAt.set(BED_POS.x, CHAR_BED_Y, BED_POS.z);
-        } else if (loopState === 'walking' || loopState === 'arriving') {
-            // Follow character from behind and side
-            targetCamPos.set(charRoot.position.x - 2.5, 2.0, charRoot.position.z + 3);
-            targetLookAt.copy(charRoot.position).add(new THREE.Vector3(0, 1.2, 0));
-        } else {
-            // Sitting at desk
-            targetCamPos.set(DESK_POS.x - 2, 2.5, DESK_POS.z + 2);
-            targetLookAt.copy(charRoot.position).add(new THREE.Vector3(0, 1.2, 0));
-        }
+        
+        let targetCamPos = new THREE.Vector3(
+            charRoot.position.x - 3.5,
+            CHAR_STAND_Y + 1.5,
+            charRoot.position.z + 5.5
+        );
+        let targetLookAt = charRoot.position.clone().add(new THREE.Vector3(0, 0.8, 0));
 
         // Smoothly interpolate camera
-        doxCam.position.lerp(targetCamPos, 0.05);
+        doxCam.position.lerp(targetCamPos, 0.08);
         
         // Add shake based on speed/tension
         doxCam.position.x += Math.sin(ts*0.01)*intensity;
