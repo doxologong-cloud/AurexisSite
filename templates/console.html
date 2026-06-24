@@ -3,234 +3,129 @@
 <head>
     <meta charset="UTF-8">
     <title>AUREX OS TERMINAL</title>
-    <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Consolas&display=swap" rel="stylesheet">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
     <style>
-        * { box-sizing: border-box; margin: 0; padding: 0; }
-        body, html { height: 100%; background: #000; color: #00ffcc; font-family: 'Consolas', monospace; overflow: hidden; }
+        * { margin:0; padding:0; box-sizing:border-box; }
+        body, html { height:100%; background:#000; color:#00ffcc; font-family:'Consolas',monospace; overflow:hidden; }
 
-        /* ─── TERMINAL ─── */
-        #main-console { display: flex; flex-direction: column; height: 100vh; padding: 20px; }
-        .console-output { flex-grow: 1; overflow-y: auto; display: flex; flex-direction: column; justify-content: flex-end; padding-bottom: 20px; font-size: 1rem; line-height: 1.6; }
-        .console-input-row { display: flex; align-items: center; border-top: 1px dashed #00ffcc44; padding-top: 15px; }
-        .console-input { flex-grow: 1; background: transparent; border: none; color: #fff; font-family: 'Consolas', monospace; font-size: 1.2rem; outline: none; margin-left: 10px; }
+        /* ── TERMINAL ── */
+        #main-console { display:flex; flex-direction:column; height:100vh; padding:20px; }
+        .console-output { flex-grow:1; overflow-y:auto; display:flex; flex-direction:column; justify-content:flex-end; padding-bottom:20px; font-size:1rem; line-height:1.6; }
+        .console-input-row { display:flex; align-items:center; border-top:1px dashed #00ffcc33; padding-top:15px; }
+        .console-input { flex-grow:1; background:transparent; border:none; color:#fff; font-family:'Consolas',monospace; font-size:1.2rem; outline:none; margin-left:10px; }
 
-        /* ─── PHASE 1-2: PARTICLE FIGURE ─── */
-        #dive-overlay {
-            position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
-            background: #000; z-index: 100; display: none; overflow: hidden;
-            /* CRITICAL: perspective here makes the monitor 3D */
-            perspective: 900px;
+        /* ── DOX ROOM PHASE ── */
+        #dox-phase {
+            display:none; position:fixed; top:0; left:0; width:100%; height:100%; z-index:100;
         }
-        #particle-canvas { position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 1; }
+        #dox-three { position:absolute; top:0; left:0; width:100%; height:100%; }
 
-        #loop-text {
-            position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
-            font-size: clamp(5rem, 14vw, 12rem); color: rgba(255,0,51,0);
-            font-weight: 900; letter-spacing: 15px;
-            text-shadow: 0 0 80px red, 0 0 160px red, 0 0 300px rgba(255,0,0,0.3);
-            z-index: 2; pointer-events: none; text-align: center; width: 100%;
-            transition: color 0.5s;
+        #loop-counter {
+            position:absolute; top:20px; right:24px;
+            font-family:'Consolas',monospace; color:rgba(0,255,204,0.25);
+            font-size:0.75rem; letter-spacing:4px; z-index:20;
         }
 
-        /* ─── PHASE 3: 3D MONITOR ─── */
-        /* CSS monitor placed in perspective container (dive-overlay) */
-        #monitor-wrap {
-            position: absolute; top: 50%; left: 50%;
-            transform: translate(-50%, -50%) translateZ(-4000px);
-            width: 560px; height: 380px;
-            z-index: 5; opacity: 0;
-        }
-        #monitor-frame {
-            width: 100%; height: 100%;
-            background: #111; border: 18px solid #222;
-            border-radius: 14px;
-            box-shadow:
-                0 0 0 2px #444,
-                0 0 40px rgba(0,255,204,0.4),
-                inset 0 0 30px rgba(0,255,204,0.08);
-            position: relative; overflow: hidden;
-            display: flex; align-items: center; justify-content: center;
-        }
-        /* Screen glow scan */
-        #monitor-frame::before {
-            content: '';
-            position: absolute; top: 0; left: -100%;
-            width: 50%; height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.04), transparent);
-            animation: scanSheen 3s ease-in-out infinite;
-        }
-        @keyframes scanSheen { 0%{left:-100%} 100%{left:200%} }
-        #monitor-screen {
-            width: 100%; height: 100%;
-            font-family: 'Consolas', monospace; font-size: 0.8rem;
-            color: #00ffcc; padding: 18px; display: flex;
-            flex-direction: column; gap: 5px;
-        }
-        .mline { opacity: 0; animation: fadeInLine 0.25s forwards; }
-        @keyframes fadeInLine { to { opacity:1; } }
-
-        /* Stand */
-        #monitor-stand-wrap {
-            position: absolute; bottom: -80px; left: 50%;
-            transform: translateX(-50%);
-        }
-        #monitor-neck {
-            width: 0; height: 0;
-            border-left: 55px solid transparent;
-            border-right: 55px solid transparent;
-            border-top: 75px solid #222;
-            margin: 0 auto;
-        }
-        #monitor-foot {
-            width: 210px; height: 22px;
-            background: #1e1e1e; border-radius: 5px;
-            box-shadow: 0 6px 20px rgba(0,0,0,0.8);
-            margin-top: -2px;
+        #petlya-text {
+            position:absolute; top:50%; left:50%; transform:translate(-50%,-50%);
+            font-size:clamp(4rem,13vw,11rem); font-weight:900; letter-spacing:12px;
+            color:rgba(255,0,51,0); text-align:center; width:100%;
+            text-shadow:0 0 80px red, 0 0 180px rgba(255,0,0,0.3);
+            z-index:20; pointer-events:none;
+            transition: color 1s;
         }
 
-        /* Dive keyframe — same technique as original Gemini */
-        @keyframes diveIntoMonitor {
-            0%   { transform: translate(-50%,-50%) translateZ(-4000px); opacity:0; }
-            8%   { opacity:1; }
-            75%  { transform: translate(-50%,-50%) translateZ(600px);  opacity:1;
-                   filter: drop-shadow(0 0 80px #00ffcc); }
-            90%  { transform: translate(-50%,-50%) translateZ(1100px); opacity:1; filter: brightness(3); }
-            100% { transform: translate(-50%,-50%) translateZ(1400px); opacity:1; filter: brightness(8) saturate(0); }
+        #dox-scanlines {
+            position:absolute; top:0; left:0; width:100%; height:100%;
+            background:repeating-linear-gradient(0deg,transparent,transparent 3px,rgba(0,0,0,0.07) 3px,rgba(0,0,0,0.07) 6px);
+            z-index:19; pointer-events:none; opacity:0.45;
         }
-        .do-dive { animation: diveIntoMonitor 6s cubic-bezier(0.65,0,0.1,1) forwards; }
 
-        /* Flash */
+        /* ── FLASH ── */
         #flash { position:fixed; top:0; left:0; width:100%; height:100%; background:#fff; z-index:9999; display:none; opacity:0; }
 
-        /* ─── PHASE 4: BACKROOMS + LYRICS ─── */
-        #backrooms-phase {
-            display: none; position: fixed; top:0; left:0;
-            width: 100vw; height: 100vh; z-index: 300; overflow: hidden;
+        /* ── BACKROOMS PHASE ── */
+        #br-phase {
+            display:none; position:fixed; top:0; left:0; width:100vw; height:100vh; z-index:300; overflow:hidden;
         }
-        /* THREE.js canvas fills this */
-        #br-three-canvas {
-            position: absolute; top:0; left:0; width:100%; height:100%;
-        }
+        #br-three { position:absolute; top:0; left:0; width:100%; height:100%; }
 
-        /* Cinematic letterbox */
-        #br-letterbox-top {
-            position: absolute; top:0; left:0; width:100%; height:80px;
-            background: #000; z-index: 10; pointer-events: none;
+        /* Letterbox */
+        #br-phase::before, #br-phase::after {
+            content:''; position:absolute; left:0; width:100%; height:75px; background:#000; z-index:10;
         }
-        #br-letterbox-bot {
-            position: absolute; bottom:0; left:0; width:100%; height:80px;
-            background: #000; z-index: 10; pointer-events: none;
-        }
+        #br-phase::before { top:0; }
+        #br-phase::after  { bottom:0; }
 
-        /* Scanlines */
-        #br-scan {
-            position: absolute; top:0; left:0; width:100%; height:100%;
-            background: repeating-linear-gradient(0deg, transparent, transparent 3px, rgba(0,0,0,0.07) 3px, rgba(0,0,0,0.07) 6px);
-            z-index: 9; pointer-events: none; opacity: 0.5;
-        }
-        /* Vignette */
-        #br-vig {
-            position: absolute; top:0; left:0; width:100%; height:100%;
-            background: radial-gradient(ellipse at center, transparent 30%, rgba(0,0,0,0.85) 100%);
-            z-index: 8; pointer-events: none;
-        }
-
-        /* Lyrics display */
         #br-lyric {
-            position: absolute; top: 50%; left: 50%;
-            transform: translate(-50%, -50%);
-            z-index: 20; text-align: center; pointer-events: none;
-            opacity: 0; transition: opacity 0.8s ease;
-            white-space: pre-line;
-            line-height: 1.15;
+            position:absolute; top:50%; left:50%; transform:translate(-50%,-50%);
+            z-index:20; text-align:center; pointer-events:none;
+            opacity:0; transition:opacity 0.8s; white-space:pre-line; line-height:1.1;
         }
         #br-lyric.big {
-            font-family: 'Bebas Neue', 'Consolas', monospace;
-            font-size: clamp(3rem, 10vw, 9rem);
-            font-weight: 900;
-            letter-spacing: 8px;
-        }
-        #br-lyric.small {
-            font-family: 'Consolas', monospace;
-            font-size: clamp(1rem, 3vw, 1.8rem);
-            letter-spacing: 4px;
+            font-size:clamp(3rem,11vw,9rem); font-weight:900; letter-spacing:8px;
         }
         #br-lyric.med {
-            font-family: 'Consolas', monospace;
-            font-size: clamp(1.6rem, 5vw, 3.5rem);
-            letter-spacing: 6px;
-            font-weight: 600;
+            font-size:clamp(1.5rem,4vw,3.2rem); font-weight:600; letter-spacing:5px;
         }
-
-        /* Exit hint */
+        #br-lyric.sm {
+            font-size:clamp(0.9rem,2.5vw,1.6rem); letter-spacing:4px;
+        }
+        #br-vignette {
+            position:absolute; inset:0;
+            background:radial-gradient(ellipse at center, transparent 25%, rgba(0,0,0,0.82) 100%);
+            z-index:8; pointer-events:none;
+        }
+        #br-scan {
+            position:absolute; inset:0;
+            background:repeating-linear-gradient(0deg,transparent,transparent 3px,rgba(0,0,0,0.08) 3px,rgba(0,0,0,0.08) 6px);
+            z-index:9; pointer-events:none; opacity:0.5;
+        }
         #br-hint {
-            position: absolute; bottom: 90px; left: 50%;
-            transform: translateX(-50%);
-            color: rgba(200,168,75,0.35);
-            font-size: 0.72rem; letter-spacing: 3px;
-            z-index: 20; opacity: 0; transition: opacity 2s;
+            position:absolute; bottom:85px; left:50%; transform:translateX(-50%);
+            color:rgba(200,168,75,0.3); font-size:0.7rem; letter-spacing:3px; z-index:20;
+            opacity:0; transition:opacity 2s;
         }
 
-        /* Glitch */
-        @keyframes glitch {
-            0%  { transform: translate(-50%,-50%) translate(0); }
-            20% { transform: translate(-50%,-50%) translate(-4px,1px); filter: hue-rotate(90deg); }
-            40% { transform: translate(-50%,-50%) translate(4px,-2px); }
-            60% { transform: translate(-50%,-50%) translate(-2px,3px); }
-            80% { transform: translate(-50%,-50%) translate(3px,-1px); }
-            100%{ transform: translate(-50%,-50%) translate(0); }
+        @keyframes shake {
+            0%,100%{ transform:translate(0); }
+            25%{ transform:translate(-4px,2px); }
+            50%{ transform:translate(4px,-2px); }
+            75%{ transform:translate(-3px,3px); }
         }
-        .glitch-anim { animation: glitch 0.07s infinite; }
-
-        @keyframes glitchBody {
-            0%  { transform: translate(0); }
-            30% { transform: translate(-3px, 1px); filter: hue-rotate(120deg); }
-            60% { transform: translate(3px,-1px); }
-            100%{ transform: translate(0); }
-        }
+        .shaking { animation:shake 0.08s infinite; }
     </style>
 </head>
 <body>
 
 <div id="flash"></div>
 
-<!-- ─── PHASES 1-3: PARTICLE + MONITOR ─── -->
-<div id="dive-overlay">
-    <canvas id="particle-canvas"></canvas>
-    <div id="loop-text">ПЕТЛЯ</div>
-
-    <div id="monitor-wrap">
-        <div id="monitor-frame">
-            <div id="monitor-screen"></div>
-        </div>
-        <div id="monitor-stand-wrap">
-            <div id="monitor-neck"></div>
-            <div id="monitor-foot"></div>
-        </div>
-    </div>
+<!-- DOX ROOM -->
+<div id="dox-phase">
+    <div id="dox-three"></div>
+    <div id="dox-scanlines"></div>
+    <div id="loop-counter"></div>
+    <div id="petlya-text">ПЕТЛЯ</div>
 </div>
 
-<!-- ─── PHASE 4: BACKROOMS ─── -->
-<div id="backrooms-phase">
-    <div id="br-three-canvas"></div>
-    <div id="br-vig"></div>
+<!-- BACKROOMS -->
+<div id="br-phase">
+    <div id="br-three"></div>
+    <div id="br-vignette"></div>
     <div id="br-scan"></div>
-    <div id="br-letterbox-top"></div>
-    <div id="br-letterbox-bot"></div>
     <div id="br-lyric" class="big"></div>
-    <div id="br-hint">[ нажми любую клавишу ]</div>
+    <div id="br-hint">[ любая клавиша — выход ]</div>
 </div>
 
-<!-- ─── TERMINAL ─── -->
+<!-- TERMINAL -->
 <div id="main-console">
-    <div style="border-bottom:1px dashed #00ffcc33;padding-bottom:15px;margin-bottom:20px;opacity:0.55;font-size:0.85rem;">
-        AUREX OS TERMINAL v2.4<br>
-        <span style="color:#555">help</span> — команды &nbsp;|&nbsp; <span style="color:#ff0033">dox</span> — запустить петлю
+    <div style="border-bottom:1px dashed #00ffcc22;padding-bottom:15px;margin-bottom:20px;opacity:0.5;font-size:0.85rem;">
+        AUREX OS TERMINAL v2.5<br>
+        <span style="color:#444">help</span> — команды &nbsp;·&nbsp; <span style="color:#ff003388">dox</span> — петля
     </div>
     <div id="console-output" class="console-output">
-        <div style="color:#3a5a4a;">&gt; Инициализация... <span style="color:#4caf50;">OK</span></div>
-        <div style="color:#3a5a4a;">&gt; Ожидание команды.</div>
+        <div style="color:#2e5a48;">&gt; Инициализация... <span style="color:#4caf50;">OK</span></div>
+        <div style="color:#2e5a48;">&gt; Ожидание.</div>
     </div>
     <div class="console-input-row">
         <span style="color:#00ffcc;">root@vault:~#</span>
@@ -239,578 +134,743 @@
 </div>
 
 <script>
-// ══════════════════════════════════════════════
-//  TERMINAL
-// ══════════════════════════════════════════════
-const consoleInput  = document.getElementById('console-input');
-const consoleOutput = document.getElementById('console-output');
+'use strict';
 
-consoleInput.addEventListener('keydown', e => {
+// ════════════════════════════════════════════════
+//  TERMINAL
+// ════════════════════════════════════════════════
+const ci = document.getElementById('console-input');
+const co = document.getElementById('console-output');
+
+ci.addEventListener('keydown', e => {
     if (e.key !== 'Enter') return;
-    const cmd = consoleInput.value.trim();
-    consoleInput.value = '';
+    const cmd = ci.value.trim(); ci.value = '';
     if (!cmd) return;
-    const line = document.createElement('div');
-    line.innerHTML = `<span style="color:#00ffcc;">root@vault:~#</span> <span style="color:#eee;">${cmd}</span>`;
-    consoleOutput.appendChild(line);
+    const l = document.createElement('div');
+    l.innerHTML = `<span style="color:#00ffcc;">root@vault:~#</span> <span style="color:#ddd;">${cmd}</span>`;
+    co.appendChild(l);
     runCmd(cmd.toLowerCase());
-    consoleOutput.scrollTop = consoleOutput.scrollHeight;
+    co.scrollTop = co.scrollHeight;
 });
 
-function out(html, col='#4a7a6a') {
+function out(html) {
     const d = document.createElement('div');
-    d.style.color = col; d.innerHTML = html;
-    consoleOutput.appendChild(d);
-    consoleOutput.scrollTop = consoleOutput.scrollHeight;
+    d.style.color = '#4a7a6a'; d.innerHTML = html;
+    co.appendChild(d); co.scrollTop = co.scrollHeight;
 }
 
 function runCmd(cmd) {
-    if (cmd === 'help') {
-        out(`help · clear · history · glitch · <span style="color:#ff0033;font-weight:bold;">dox</span>`);
-    } else if (cmd === 'clear') {
-        consoleOutput.innerHTML = '';
-    } else if (cmd === 'history') {
-        out('[2021] Петля запущена.<br>[2024] Потеря связи.<br>[2026] Хранилище восстановлено.<br>[????] <span style="color:#ff0033">ДАННЫЕ ПОВРЕЖДЕНЫ</span>');
-    } else if (cmd === 'glitch') {
-        document.body.style.animation = 'glitchBody 0.07s infinite';
-        setTimeout(()=>document.body.style.animation='', 700);
-    } else if (cmd === 'dox') {
-        out('<span style="color:#ff0033;">▶ ПРОТОКОЛ ДЕЖАВЮ АКТИВИРОВАН</span>');
-        setTimeout(triggerDox, 1000);
-    } else {
-        out(`<span style="color:#444;">команда не найдена: ${cmd}</span>`);
-    }
+    if (cmd === 'help')    out('help · clear · history · <span style="color:#ff0033;font-weight:bold;">dox</span>');
+    else if (cmd === 'clear') co.innerHTML = '';
+    else if (cmd === 'history') out('[2021] Петля запущена.<br>[2024] Потеря связи.<br>[2026] Восстановлено.<br>[????] <span style="color:#ff0033">ПОВРЕЖДЕНО</span>');
+    else if (cmd === 'dox') { out('<span style="color:#ff0033;">▶ ПРОТОКОЛ ДЕЖАВЮ</span>'); setTimeout(triggerDox, 900); }
+    else out(`<span style="color:#333;">не найдено: ${cmd}</span>`);
 }
 
-// ══════════════════════════════════════════════
-//  AUDIO + WEB AUDIO
-// ══════════════════════════════════════════════
+// ════════════════════════════════════════════════
+//  AUDIO
+// ════════════════════════════════════════════════
 const audioEl = new Audio('/static/assets/loop_music.m4a');
 audioEl.loop = true;
 let analyser, freqData;
-
 function initAudio() {
     try {
         const ctx = new (window.AudioContext || window.webkitAudioContext)();
-        analyser = ctx.createAnalyser();
-        analyser.fftSize = 256;
+        analyser = ctx.createAnalyser(); analyser.fftSize = 256;
         ctx.createMediaElementSource(audioEl).connect(analyser);
         analyser.connect(ctx.destination);
         freqData = new Uint8Array(analyser.frequencyBinCount);
-    } catch(e) {}
+    } catch(e){}
 }
-
 function getBass() {
     if (analyser && freqData) {
         analyser.getByteFrequencyData(freqData);
-        let s = 0;
-        for (let i=0;i<6;i++) s += freqData[i];
-        return s / 6 / 255;
+        return (freqData[0]+freqData[1]+freqData[2]+freqData[3]) / 4 / 255;
     }
-    return 0.1 + 0.08 * Math.sin(Date.now() * 0.0008);
+    return 0.1 + 0.07*Math.sin(Date.now()*0.0007);
 }
 
-// ══════════════════════════════════════════════
-//  PHASE 1-2: PARTICLE FIGURE
-// ══════════════════════════════════════════════
-let pCanvas, pCtx, particles = [], bgDots = [];
-let animId, doxT = 0, speed = 1, phase = 'walk';
+// ════════════════════════════════════════════════
+//  THREE.JS DOX ROOM SCENE
+// ════════════════════════════════════════════════
+let doxScene, doxCam, doxRenderer, doxAnimId;
+let charRoot; // character THREE.Group
 
-// Human body keypoints (normalized 0-1 relative to figure bounding box)
-const BODY = [
-    // [cx, cy, rx, ry, count, group]
-    [0.50, 0.10, 0.075, 0.075, 40,  'head'],   // head
-    [0.50, 0.10, 0.045, 0.045, 20,  'head'],   // inner head
-    [0.50, 0.30, 0.16,  0.14,  90,  'torso'],  // chest
-    [0.50, 0.42, 0.13,  0.08,  50,  'torso'],  // waist
-    [0.32, 0.27, 0.05,  0.11,  28,  'larm'],   // left upper arm
-    [0.68, 0.27, 0.05,  0.11,  28,  'rarm'],   // right upper arm
-    [0.28, 0.40, 0.045, 0.10,  22,  'larm'],   // left forearm
-    [0.72, 0.40, 0.045, 0.10,  22,  'rarm'],   // right forearm
-    [0.42, 0.58, 0.06,  0.13,  32,  'lleg'],   // left thigh
-    [0.58, 0.58, 0.06,  0.13,  32,  'rleg'],   // right thigh
-    [0.40, 0.76, 0.05,  0.11,  26,  'lleg'],   // left shin
-    [0.60, 0.76, 0.05,  0.11,  26,  'rleg'],   // right shin
-    [0.38, 0.88, 0.07,  0.04,  16,  'lleg'],   // left foot
-    [0.62, 0.88, 0.07,  0.04,  16,  'rleg'],   // right foot
-];
+// Scene layout
+const BED_POS   = new THREE.Vector3(-4.5, 0, 0.5);
+const DESK_POS  = new THREE.Vector3( 4.2, 0, 0.5);
+const CHAR_STAND_Y = 1.25; // hip height when feet on floor
+const CHAR_BED_Y   = 1.05; // hip height when lying (above mattress)
 
-const JOINTS = {
-    head:[0.5,0.08], neck:[0.5,0.17],
-    lSh:[0.37,0.23], rSh:[0.63,0.23],
-    lEl:[0.31,0.36], rEl:[0.69,0.36],
-    lHa:[0.27,0.47], rHa:[0.73,0.47],
-    hip:[0.50,0.47], lHi:[0.44,0.50], rHi:[0.56,0.50],
-    lKn:[0.41,0.67], rKn:[0.59,0.67],
-    lFt:[0.39,0.85], rFt:[0.61,0.85],
-};
+// Loop state machine
+let loopState  = 'lying';   // lying | rising | walking | sitting | pause_desk | flash
+let stateT     = 0;         // 0..1 progress through current state
+let stateStart = 0;         // performance.now() when state began
+let loopCount  = 0;
+let speedFactor= 1.0;       // multiplier, shrinks each loop (faster)
 
-function buildParticles() {
-    particles = [];
-    const W = pCanvas.width, H = pCanvas.height;
-    // Figure takes 65% of screen height, centered
-    const FH = H * 0.70;
-    const FW = FH * 0.55;
-    const FX = W / 2 - FW / 2;
-    const FY = H / 2 - FH / 2;
+// Base durations (seconds)
+const BASE_DUR = { lying:0.9, rising:1.4, walking:2.2, arriving:0.9, sitting:0.5, pause_desk:0.6 };
+function getDur(s) { return BASE_DUR[s] * speedFactor; }
 
-    BODY.forEach(([cx, cy, rx, ry, n, grp]) => {
-        for (let i = 0; i < n; i++) {
-            const angle = Math.random() * Math.PI * 2;
-            const r = Math.sqrt(Math.random()); // uniform disk
-            const px = FX + (cx + rx * r * Math.cos(angle)) * FW;
-            const py = FY + (cy + ry * r * Math.sin(angle)) * FH;
-            particles.push({
-                x: px, y: py,
-                bx: px, by: py,  // base positions
-                group: grp,
-                cx: cx, cy: cy,   // normalized region center
-                size: Math.random() * 2 + 1,
-                bright: 0.6 + Math.random() * 0.4,
-                phase: Math.random() * Math.PI * 2,
-                // for figure shift reference
-                FX, FY, FW, FH,
-            });
-        }
-    });
-}
+// Character parts (Three.Groups)
+let hipGroup, torsoMesh, headMesh;
+let lShPivot, rShPivot, lElPivot, rElPivot;
+let lHipPivot, rHipPivot, lKneePivot, rKneePivot;
+let charMat;
 
-function buildBg() {
-    bgDots = [];
-    for (let i = 0; i < 150; i++) bgDots.push({
-        x: Math.random() * pCanvas.width,
-        y: Math.random() * pCanvas.height,
-        vx: (Math.random()-0.5)*0.4, vy: (Math.random()-0.5)*0.4,
-        s: Math.random()*1.5+0.3, a: Math.random()*0.2+0.03
-    });
-}
+// Accumulated walk time (for leg cycle)
+let walkTime = 0;
 
-function animateFigure() {
-    animId = requestAnimationFrame(animateFigure);
-    doxT += 0.016;
+// Camera target (for zoom into monitor)
+const CAM_NORMAL_POS = new THREE.Vector3(0, 6.5, 13);
+const CAM_NORMAL_TGT = new THREE.Vector3(0, 2.0, 0);
+const monitorWorldPos = new THREE.Vector3(DESK_POS.x, 1.85, DESK_POS.z - 0.6);
+let camZooming = false;
 
-    const fade = phase==='acc' ? 0.22 : 0.16;
-    pCtx.fillStyle = `rgba(0,0,0,${fade})`;
-    pCtx.fillRect(0,0,pCanvas.width,pCanvas.height);
-
-    // Background dots
-    bgDots.forEach(d => {
-        d.x += d.vx * speed; d.y += d.vy * speed;
-        if(d.x<0) d.x=pCanvas.width; if(d.x>pCanvas.width) d.x=0;
-        if(d.y<0) d.y=pCanvas.height; if(d.y>pCanvas.height) d.y=0;
-        pCtx.beginPath(); pCtx.arc(d.x,d.y,d.s,0,Math.PI*2);
-        pCtx.fillStyle=`rgba(0,255,204,${d.a})`; pCtx.fill();
-    });
-
-    const t = doxT * speed;
-    const walkBob = Math.sin(t*2.5) * 5 * Math.min(speed, 3);
-
-    // Walk: left-right arm/leg alternation
-    particles.forEach(p => {
-        let ox=0, oy=0;
-        const isLeft = p.cx < 0.5;
-        const isLeg = p.cy > 0.5;
-        const isArm = p.cy > 0.22 && p.cy < 0.5 && (p.cx < 0.38 || p.cx > 0.62);
-
-        if (isLeg) {
-            const ph = isLeft ? t*2.2 : t*2.2 + Math.PI;
-            const amp = 18 * Math.min(speed,4);
-            const lean = p.cy > 0.75 ? 1.4 : 0.85;
-            ox = Math.sin(ph) * amp * lean;
-            oy = -Math.abs(Math.sin(ph)) * amp * 0.35;
-        } else if (isArm) {
-            const ph = isLeft ? t*2.2+Math.PI : t*2.2;
-            const amp = 12 * Math.min(speed, 3);
-            ox = Math.sin(ph) * amp;
-            oy = Math.abs(Math.sin(ph)) * amp * 0.2;
-        }
-
-        oy += walkBob;
-
-        if (phase === 'acc') {
-            const sc = (speed-1)*0.4;
-            ox += (Math.random()-0.5)*sc*4;
-            oy += (Math.random()-0.5)*sc*4;
-        }
-
-        p.x = p.bx + ox;
-        p.y = p.by + oy;
-
-        // Color green→red as speed rises
-        const r = Math.min(255, Math.round((speed-1)*14));
-        const g = Math.max(0, 255 - r);
-        const b = Math.max(0, 180 - r);
-        const a = p.bright * (0.7 + 0.3*Math.abs(Math.sin(doxT*2+p.phase)));
-
-        pCtx.beginPath();
-        pCtx.arc(p.x, p.y, p.size*(1+(speed-1)*0.08), 0, Math.PI*2);
-        pCtx.fillStyle=`rgba(${r},${g},${b},${a})`; pCtx.fill();
-
-        // Glow halo at high speed
-        if (speed > 15) {
-            pCtx.beginPath(); pCtx.arc(p.x, p.y, p.size*4, 0, Math.PI*2);
-            pCtx.fillStyle=`rgba(${r},${g},0,${0.04*Math.min(speed/15,1)})`; pCtx.fill();
-        }
-    });
-
-    // Skeleton lines (subtle connective tissue)
-    drawSkeleton(t, walkBob);
-
-    // ПЕТЛЯ text
-    const loopEl = document.getElementById('loop-text');
-    if (phase === 'acc') {
-        const op = Math.min((speed-1)/28, 1);
-        loopEl.style.color = `rgba(255,0,51,${op})`;
-        if (speed > 32) loopEl.classList.add('glitch-anim');
-    }
-}
-
-function drawSkeleton(t, bob) {
-    const sample = particles[0];
-    if (!sample) return;
-    const { FX, FY, FW, FH } = sample;
-
-    function j(key) {
-        const [nx,ny] = JOINTS[key];
-        let dx=0, dy=0;
-        if(key==='lKn'||key==='lFt'){const p=t*2.2;       dx=Math.sin(p)*18;  dy=-Math.abs(Math.sin(p))*7;}
-        if(key==='rKn'||key==='rFt'){const p=t*2.2+Math.PI;dx=Math.sin(p)*18;  dy=-Math.abs(Math.sin(p))*7;}
-        if(key==='lEl'||key==='lHa'){const p=t*2.2+Math.PI;dx=Math.sin(p)*10;}
-        if(key==='rEl'||key==='rHa'){const p=t*2.2;        dx=Math.sin(p)*10;}
-        return [FX+nx*FW+dx, FY+ny*FH+dy+bob];
-    }
-
-    const r = Math.min(180,(speed-1)*12);
-    const g = Math.max(0,180-r);
-    pCtx.strokeStyle=`rgba(${r},${g},120,${Math.max(0.03,0.12-(speed-1)*0.003)})`;
-    pCtx.lineWidth=1.5;
-
-    const links=[
-        ['head','neck'],['neck','lSh'],['neck','rSh'],
-        ['lSh','lEl'],['lEl','lHa'],['rSh','rEl'],['rEl','rHa'],
-        ['neck','hip'],['hip','lHi'],['hip','rHi'],
-        ['lHi','lKn'],['lKn','lFt'],['rHi','rKn'],['rKn','rFt'],
-    ];
-    links.forEach(([a,b])=>{
-        const[x1,y1]=j(a),[x2,y2]=j(b);
-        pCtx.beginPath();pCtx.moveTo(x1,y1);pCtx.lineTo(x2,y2);pCtx.stroke();
-    });
-    // head circle
-    const[hx,hy]=j('head');
-    pCtx.beginPath();pCtx.arc(hx,hy-FH*0.035,FH*0.05,0,Math.PI*2);pCtx.stroke();
-}
-
-// ══════════════════════════════════════════════
-//  TRIGGER DOX
-// ══════════════════════════════════════════════
 function triggerDox() {
-    document.getElementById('main-console').style.display='none';
-    const overlay = document.getElementById('dive-overlay');
-    overlay.style.display='block';
-
+    document.getElementById('main-console').style.display = 'none';
+    document.getElementById('dox-phase').style.display = 'block';
     initAudio();
     audioEl.play().catch(()=>{});
-
-    pCanvas = document.getElementById('particle-canvas');
-    pCtx = pCanvas.getContext('2d');
-    pCanvas.width = window.innerWidth;
-    pCanvas.height = window.innerHeight;
-    buildParticles();
-    buildBg();
-    doxT=0; speed=1; phase='walk';
-    animateFigure();
-
-    // Phase 2: accelerate at 4s
-    setTimeout(startAcc, 4000);
-    // Phase 3: show monitor at 12s
-    setTimeout(showMonitor, 12000);
+    setupDoxScene();
+    loopCount = 0; speedFactor = 1.0;
+    startState('lying');
+    doxLoop();
 }
 
-function startAcc() {
-    phase='acc';
-    const iv = setInterval(()=>{
-        speed += 0.35;
-        if(speed>42) clearInterval(iv);
-    },70);
+function setupDoxScene() {
+    const W = window.innerWidth, H = window.innerHeight;
+    doxScene = new THREE.Scene();
+    doxScene.background = new THREE.Color(0x050404);
+    doxScene.fog = new THREE.Fog(0x050404, 18, 32);
+
+    doxCam = new THREE.PerspectiveCamera(52, W/H, 0.1, 100);
+    doxCam.position.copy(CAM_NORMAL_POS);
+    doxCam.lookAt(CAM_NORMAL_TGT);
+
+    doxRenderer = new THREE.WebGLRenderer({ antialias:true });
+    doxRenderer.setSize(W, H);
+    doxRenderer.shadowMap.enabled = true;
+    doxRenderer.shadowMap.type = THREE.PCFSoftShadowMap;
+    document.getElementById('dox-three').appendChild(doxRenderer.domElement);
+
+    buildRoom();
+    buildFurniture();
+    buildCharacter();
+    buildDoxLights();
 }
 
-// ══════════════════════════════════════════════
-//  PHASE 3: 3D MONITOR DIVE
-// ══════════════════════════════════════════════
-function showMonitor() {
-    cancelAnimationFrame(animId);
-    pCtx.clearRect(0,0,pCanvas.width,pCanvas.height);
-    pCanvas.style.display='none';
-    document.getElementById('loop-text').style.display='none';
+function buildRoom() {
+    const floorM  = new THREE.MeshLambertMaterial({ color:0x1a1410 });
+    const wallM   = new THREE.MeshLambertMaterial({ color:0x141008 });
+    const ceilM   = new THREE.MeshLambertMaterial({ color:0x0e0c06 });
 
-    const mw = document.getElementById('monitor-wrap');
-    mw.style.display='block';
+    // Floor
+    const floor = new THREE.Mesh(new THREE.PlaneGeometry(16, 14), floorM);
+    floor.rotation.x = -Math.PI/2; floor.receiveShadow = true;
+    doxScene.add(floor);
+    // Ceiling
+    const ceil = new THREE.Mesh(new THREE.PlaneGeometry(16, 14), ceilM);
+    ceil.rotation.x = Math.PI/2; ceil.position.y = 6;
+    doxScene.add(ceil);
+    // Back wall
+    const bw = new THREE.Mesh(new THREE.PlaneGeometry(16, 6), wallM);
+    bw.position.set(0, 3, -6); doxScene.add(bw);
+    // Left wall
+    const lw = new THREE.Mesh(new THREE.PlaneGeometry(14, 6), wallM);
+    lw.rotation.y = Math.PI/2; lw.position.set(-7.5, 3, 0); doxScene.add(lw);
+    // Right wall
+    const rw = new THREE.Mesh(new THREE.PlaneGeometry(14, 6), wallM);
+    rw.rotation.y = -Math.PI/2; rw.position.set(7.5, 3, 0); doxScene.add(rw);
+}
 
-    // Animate it flying in from distance using CSS class
+function buildFurniture() {
+    const woodM = new THREE.MeshLambertMaterial({ color:0x3a2512 });
+    const bedM  = new THREE.MeshLambertMaterial({ color:0x4a3520 });
+    const sheetM= new THREE.MeshLambertMaterial({ color:0x2a2035 }); // dark sheets
+    const pillowM=new THREE.MeshLambertMaterial({ color:0x3a3048 });
+    const deskM = new THREE.MeshLambertMaterial({ color:0x1a1a1a });
+    const legM  = new THREE.MeshLambertMaterial({ color:0x111111 });
+
+    // ── BED ──
+    const bx = BED_POS.x, bz = BED_POS.z;
+    // Frame
+    const bedFrame = new THREE.Mesh(new THREE.BoxGeometry(3.2, 0.5, 5.5), bedM);
+    bedFrame.position.set(bx, 0.25, bz); bedFrame.castShadow=true; doxScene.add(bedFrame);
+    // Headboard
+    const headboard = new THREE.Mesh(new THREE.BoxGeometry(3.2, 1.2, 0.15), woodM);
+    headboard.position.set(bx, 0.9, bz-2.75); doxScene.add(headboard);
+    // Mattress
+    const mattress = new THREE.Mesh(new THREE.BoxGeometry(2.9, 0.3, 5.1), bedM);
+    mattress.position.set(bx, 0.65, bz); doxScene.add(mattress);
+    // Sheets
+    const sheets = new THREE.Mesh(new THREE.BoxGeometry(2.85, 0.15, 3.5), sheetM);
+    sheets.position.set(bx, 0.87, bz+0.6); doxScene.add(sheets);
+    // Pillow
+    const pillow = new THREE.Mesh(new THREE.BoxGeometry(2.2, 0.2, 0.9), pillowM);
+    pillow.position.set(bx, 0.87, bz-2.0); doxScene.add(pillow);
+
+    // ── DESK ──
+    const dx = DESK_POS.x, dz = DESK_POS.z;
+    // Tabletop
+    const tabletop = new THREE.Mesh(new THREE.BoxGeometry(3.5, 0.08, 1.5), deskM);
+    tabletop.position.set(dx, 1.52, dz-0.2); tabletop.castShadow=true; doxScene.add(tabletop);
+    // Legs
+    [[-1.6,-0.6],[-1.6,0.5],[1.6,-0.6],[1.6,0.5]].forEach(([lx,lz])=>{
+        const leg = new THREE.Mesh(new THREE.BoxGeometry(0.07,1.52,0.07), legM);
+        leg.position.set(dx+lx, 0.76, dz-0.2+lz); doxScene.add(leg);
+    });
+
+    // ── PC MONITOR ──
+    const monBack = new THREE.Mesh(new THREE.BoxGeometry(2.0, 1.3, 0.12), deskM);
+    monBack.position.set(dx, 2.22, dz-0.65);
+    monBack.castShadow=true; doxScene.add(monBack);
+    // Monitor screen (glowing)
+    const screenM = new THREE.MeshBasicMaterial({ color:0x002a3a });
+    const screen = new THREE.Mesh(new THREE.BoxGeometry(1.85, 1.15, 0.02), screenM);
+    screen.position.set(dx, 2.22, dz-0.59); doxScene.add(screen);
+    // Monitor glow light
+    const monLight = new THREE.PointLight(0x006688, 1.5, 4);
+    monLight.position.set(dx, 2.2, dz-0.4); doxScene.add(monLight);
+    // Monitor stand
+    const monNeck = new THREE.Mesh(new THREE.BoxGeometry(0.08,0.35,0.08), legM);
+    monNeck.position.set(dx, 1.75, dz-0.65); doxScene.add(monNeck);
+    const monBase = new THREE.Mesh(new THREE.BoxGeometry(0.8,0.04,0.4), deskM);
+    monBase.position.set(dx, 1.58, dz-0.65); doxScene.add(monBase);
+
+    // ── CHAIR ──
+    const chairM = new THREE.MeshLambertMaterial({ color:0x0d0d0d });
+    const seat = new THREE.Mesh(new THREE.BoxGeometry(1.1, 0.1, 1.1), chairM);
+    seat.position.set(dx-0.1, 1.1, dz+0.7); doxScene.add(seat);
+    const back = new THREE.Mesh(new THREE.BoxGeometry(1.0, 1.0, 0.1), chairM);
+    back.position.set(dx-0.1, 1.65, dz+0.15); doxScene.add(back);
+    [[-0.45,-0.45],[0.45,-0.45],[-0.45,0.45],[0.45,0.45]].forEach(([cx,cz])=>{
+        const cl = new THREE.Mesh(new THREE.CylinderGeometry(0.04,0.04,1.1,6), chairM);
+        cl.position.set(dx-0.1+cx, 0.55, dz+0.7+cz); doxScene.add(cl);
+    });
+
+    // ── BEDSIDE LAMP ──
+    const lampBase = new THREE.Mesh(new THREE.CylinderGeometry(0.15,0.18,0.08,8), woodM);
+    lampBase.position.set(bx+1.8, 0.04, bz-2.3); doxScene.add(lampBase);
+    const lampPole = new THREE.Mesh(new THREE.CylinderGeometry(0.03,0.03,0.9,6), woodM);
+    lampPole.position.set(bx+1.8, 0.5, bz-2.3); doxScene.add(lampPole);
+    const lampShade = new THREE.Mesh(new THREE.CylinderGeometry(0.28,0.18,0.3,10), new THREE.MeshLambertMaterial({color:0x3a2a18, side:THREE.DoubleSide}));
+    lampShade.position.set(bx+1.8, 0.95, bz-2.3); doxScene.add(lampShade);
+    const lampGlow = new THREE.PointLight(0xff8833, 0.9, 4.5);
+    lampGlow.position.set(bx+1.8, 0.85, bz-2.3); doxScene.add(lampGlow);
+
+    // ── NIGHTSTAND ──
+    const ns = new THREE.Mesh(new THREE.BoxGeometry(0.6,0.8,0.5), woodM);
+    ns.position.set(bx+1.8, 0.4, bz-2.3); doxScene.add(ns);
+}
+
+function buildDoxLights() {
+    // Very dim ambient
+    doxScene.add(new THREE.AmbientLight(0x1a0e06, 0.4));
+    // Ceiling center light
+    const ceil = new THREE.PointLight(0x886644, 0.6, 14);
+    ceil.position.set(0, 5.5, 0); doxScene.add(ceil);
+}
+
+function buildCharacter() {
+    charMat = new THREE.MeshPhongMaterial({ color:0x00ffcc, emissive:0x003322, shininess:90 });
+    const C = (rt, rb, h) => new THREE.Mesh(new THREE.CylinderGeometry(rt,rb,h,10), charMat);
+    const S = (r) => new THREE.Mesh(new THREE.SphereGeometry(r,10,8), charMat);
+
+    charRoot = new THREE.Group();
+    doxScene.add(charRoot);
+
+    // charRoot.position = hip position
+    // Hip group rotates to lie down
+    hipGroup = new THREE.Group();
+    charRoot.add(hipGroup);
+
+    // Torso (going UP from hip)
+    torsoMesh = C(0.16, 0.19, 0.85);
+    torsoMesh.position.y = 0.425;
+    torsoMesh.castShadow = true;
+    hipGroup.add(torsoMesh);
+
+    // Neck
+    const neck = C(0.1, 0.12, 0.22);
+    neck.position.y = 0.96;
+    hipGroup.add(neck);
+
+    // Head
+    headMesh = S(0.22);
+    headMesh.position.y = 1.18;
+    headMesh.castShadow = true;
+    hipGroup.add(headMesh);
+
+    // ── LEFT ARM ──
+    lShPivot = new THREE.Group();
+    lShPivot.position.set(-0.28, 0.8, 0);
+    hipGroup.add(lShPivot);
+
+    const lUA = C(0.07, 0.08, 0.52);
+    lUA.position.y = -0.26;
+    lShPivot.add(lUA);
+
+    lElPivot = new THREE.Group();
+    lElPivot.position.y = -0.52;
+    lShPivot.add(lElPivot);
+
+    const lFA = C(0.055, 0.065, 0.44);
+    lFA.position.y = -0.22;
+    lElPivot.add(lFA);
+
+    // ── RIGHT ARM ──
+    rShPivot = new THREE.Group();
+    rShPivot.position.set(0.28, 0.8, 0);
+    hipGroup.add(rShPivot);
+
+    const rUA = C(0.07, 0.08, 0.52);
+    rUA.position.y = -0.26;
+    rShPivot.add(rUA);
+
+    rElPivot = new THREE.Group();
+    rElPivot.position.y = -0.52;
+    rShPivot.add(rElPivot);
+
+    const rFA = C(0.055, 0.065, 0.44);
+    rFA.position.y = -0.22;
+    rElPivot.add(rFA);
+
+    // ── LEFT LEG ──
+    lHipPivot = new THREE.Group();
+    lHipPivot.position.set(-0.14, 0, 0);
+    hipGroup.add(lHipPivot);
+
+    const lTh = C(0.10, 0.12, 0.65);
+    lTh.position.y = -0.325;
+    lHipPivot.add(lTh);
+
+    lKneePivot = new THREE.Group();
+    lKneePivot.position.y = -0.65;
+    lHipPivot.add(lKneePivot);
+
+    const lSh = C(0.075, 0.095, 0.60);
+    lSh.position.y = -0.30;
+    lKneePivot.add(lSh);
+
+    // foot
+    const lFt = new THREE.Mesh(new THREE.BoxGeometry(0.18,0.1,0.32), charMat);
+    lFt.position.set(-0.02,-0.62,0.06);
+    lKneePivot.add(lFt);
+
+    // ── RIGHT LEG ──
+    rHipPivot = new THREE.Group();
+    rHipPivot.position.set(0.14, 0, 0);
+    hipGroup.add(rHipPivot);
+
+    const rTh = C(0.10, 0.12, 0.65);
+    rTh.position.y = -0.325;
+    rHipPivot.add(rTh);
+
+    rKneePivot = new THREE.Group();
+    rKneePivot.position.y = -0.65;
+    rHipPivot.add(rKneePivot);
+
+    const rSh = C(0.075, 0.095, 0.60);
+    rSh.position.y = -0.30;
+    rKneePivot.add(rSh);
+
+    const rFt = new THREE.Mesh(new THREE.BoxGeometry(0.18,0.1,0.32), charMat);
+    rFt.position.set(0.02,-0.62,0.06);
+    rKneePivot.add(rFt);
+
+    // Character glow
+    const glow = new THREE.PointLight(0x00ffcc, 0.6, 2.5);
+    hipGroup.add(glow);
+
+    // Start lying on bed
+    charRoot.position.set(BED_POS.x, CHAR_BED_Y, BED_POS.z - 1.0);
+    charRoot.rotation.y = 0; // facing -Z (along bed length)
+    poseLying();
+}
+
+// ── POSE FUNCTIONS ──
+function poseLying() {
+    hipGroup.rotation.x = Math.PI/2; // rotate so body is horizontal
+    lHipPivot.rotation.x = 0; rHipPivot.rotation.x = 0;
+    lKneePivot.rotation.x = 0; rKneePivot.rotation.x = 0;
+    lShPivot.rotation.x = 0;  rShPivot.rotation.x = 0;
+    lElPivot.rotation.x = 0;  rElPivot.rotation.x = 0;
+}
+
+function poseStanding() {
+    hipGroup.rotation.x = 0;
+    lHipPivot.rotation.x = 0; rHipPivot.rotation.x = 0;
+    lKneePivot.rotation.x = 0; rKneePivot.rotation.x = 0;
+    lShPivot.rotation.x = 0;  rShPivot.rotation.x = 0;
+    lElPivot.rotation.x = 0;  rElPivot.rotation.x = 0;
+}
+
+function poseSitting() {
+    hipGroup.rotation.x = 0;
+    lHipPivot.rotation.x = -Math.PI*0.48; rHipPivot.rotation.x = -Math.PI*0.48;
+    lKneePivot.rotation.x =  Math.PI*0.52; rKneePivot.rotation.x =  Math.PI*0.52;
+    lShPivot.rotation.x = -0.5; rShPivot.rotation.x = -0.5;
+    lElPivot.rotation.x = 0.3;  rElPivot.rotation.x = 0.3;
+}
+
+function applyWalk(t) {
+    const freq = 2.4; // steps per second
+    const cyc = t * freq * Math.PI * 2;
+    const amp = 0.55;
+    const armAmp = 0.35;
+
+    lHipPivot.rotation.x  =  Math.sin(cyc) * amp;
+    rHipPivot.rotation.x  = -Math.sin(cyc) * amp;
+    lKneePivot.rotation.x = Math.max(0, -Math.sin(cyc)) * 0.6;
+    rKneePivot.rotation.x = Math.max(0,  Math.sin(cyc)) * 0.6;
+    lShPivot.rotation.x   = -Math.sin(cyc) * armAmp;
+    rShPivot.rotation.x   =  Math.sin(cyc) * armAmp;
+    lElPivot.rotation.x   = Math.max(0, Math.sin(cyc)) * 0.4;
+    rElPivot.rotation.x   = Math.max(0,-Math.sin(cyc)) * 0.4;
+
+    // Torso slight forward lean
+    hipGroup.rotation.x = -0.08;
+
+    // Bob
+    charRoot.position.y = CHAR_STAND_Y + Math.abs(Math.sin(cyc*0.5))*0.05;
+}
+
+function lerp(a, b, t) { return a + (b-a) * Math.min(Math.max(t,0),1); }
+function clamp(v,a,b) { return Math.min(Math.max(v,a),b); }
+
+// ── STATE MACHINE ──
+function startState(s) {
+    loopState = s; stateStart = performance.now()/1000; stateT = 0;
+    if (s === 'lying') {
+        charRoot.position.set(BED_POS.x, CHAR_BED_Y, BED_POS.z - 1.0);
+        charRoot.rotation.y = 0;
+        poseLying();
+    }
+    if (s === 'walking') {
+        charRoot.rotation.y = -Math.PI/2; // face +X
+        walkTime = 0;
+    }
+    if (s === 'sitting') {
+        charRoot.position.set(DESK_POS.x - 0.1, CHAR_STAND_Y, DESK_POS.z + 0.85);
+        charRoot.rotation.y = Math.PI; // face monitor (-Z)
+    }
+}
+
+function updateState(now) {
+    const elapsed = now/1000 - stateStart;
+    const dur = getDur(loopState) || 0.5;
+    stateT = clamp(elapsed / dur, 0, 1);
+
+    if (loopState === 'lying') {
+        poseLying();
+        if (stateT >= 1) startState('rising');
+    }
+    else if (loopState === 'rising') {
+        // Rotate from lying to standing, move to floor
+        hipGroup.rotation.x = lerp(Math.PI/2, 0, stateT);
+        const fromPos = new THREE.Vector3(BED_POS.x, CHAR_BED_Y, BED_POS.z-1.0);
+        const toPos   = new THREE.Vector3(BED_POS.x+1.5, CHAR_STAND_Y, BED_POS.z);
+        charRoot.position.lerpVectors(fromPos, toPos, stateT);
+        charRoot.rotation.y = lerp(0, -Math.PI/2, stateT);
+        // Reset limbs to standing as we rise
+        lHipPivot.rotation.x = lerp(0, 0, stateT);
+        rHipPivot.rotation.x = 0;
+        if (stateT >= 1) startState('walking');
+    }
+    else if (loopState === 'walking') {
+        walkTime += 0.016;
+        const fromX = BED_POS.x + 1.5;
+        const toX   = DESK_POS.x - 0.4;
+        charRoot.position.x = lerp(fromX, toX, stateT);
+        charRoot.position.z = BED_POS.z;
+        charRoot.position.y = CHAR_STAND_Y;
+        charRoot.rotation.y = -Math.PI/2;
+        applyWalk(walkTime);
+        if (stateT >= 1) startState('arriving');
+    }
+    else if (loopState === 'arriving') {
+        // Walk to chair and start sitting
+        const fromPos = new THREE.Vector3(DESK_POS.x-0.4, CHAR_STAND_Y, BED_POS.z);
+        const toPos   = new THREE.Vector3(DESK_POS.x-0.1, CHAR_STAND_Y, DESK_POS.z+0.85);
+        charRoot.position.lerpVectors(fromPos, toPos, stateT);
+        // Turn to face monitor
+        charRoot.rotation.y = lerp(-Math.PI/2, Math.PI, stateT);
+        // Start bending knees
+        lHipPivot.rotation.x  = lerp(0, -Math.PI*0.48, stateT);
+        rHipPivot.rotation.x  = lerp(0, -Math.PI*0.48, stateT);
+        lKneePivot.rotation.x = lerp(0,  Math.PI*0.52, stateT);
+        rKneePivot.rotation.x = lerp(0,  Math.PI*0.52, stateT);
+        lShPivot.rotation.x   = lerp(0, -0.5, stateT);
+        rShPivot.rotation.x   = lerp(0, -0.5, stateT);
+        hipGroup.rotation.x   = lerp(0, 0, stateT);
+        if (stateT >= 1) startState('sitting');
+    }
+    else if (loopState === 'sitting') {
+        poseSitting();
+        if (stateT >= 1) startState('pause_desk');
+    }
+    else if (loopState === 'pause_desk') {
+        poseSitting();
+        if (stateT >= 1) endLoop();
+    }
+}
+
+function endLoop() {
+    loopCount++;
+    speedFactor *= 0.72; // each loop is 28% faster
+    speedFactor = Math.max(speedFactor, 0.08);
+
+    document.getElementById('loop-counter').textContent = `LOOP ${loopCount}`;
+
+    // Update character color toward red
+    const r = Math.min(1.0, loopCount * 0.15);
+    const g = Math.max(0, 1.0 - r * 1.3);
+    charMat.color.setRGB(r + (1-r)*0, g + (1-g)*1*(1-r), (1-r));
+    charMat.emissive.setRGB(r*0.4, g*0.15, (1-r)*0.2);
+
+    const petlya = document.getElementById('petlya-text');
+    if (loopCount >= 4) {
+        const op = clamp((loopCount - 4) / 4, 0, 1);
+        petlya.style.color = `rgba(255,0,51,${op})`;
+    }
+
+    // Camera shake intensifies
+    if (loopCount >= 3) {
+        document.getElementById('dox-phase').classList.add('shaking');
+    }
+
+    // After 8 loops, zoom into monitor
+    if (loopCount >= 8) {
+        camZooming = true;
+        setTimeout(doMonitorZoom, 500);
+        return;
+    }
+
+    startState('lying');
+}
+
+function doMonitorZoom() {
+    // Animate camera into PC monitor over 2.5s
+    const start = performance.now();
+    const duration = 2500;
+    const startPos = doxCam.position.clone();
+
+    function animZoom() {
+        const t = clamp((performance.now()-start)/duration, 0, 1);
+        const ease = t < 0.5 ? 2*t*t : -1+(4-2*t)*t; // smooth
+
+        doxCam.position.lerpVectors(startPos, monitorWorldPos, ease);
+        doxCam.lookAt(monitorWorldPos);
+
+        if (t < 1) { requestAnimationFrame(animZoom); }
+        else { doFlashToBR(); }
+    }
+    animZoom();
+}
+
+function doFlashToBR() {
+    const fl = document.getElementById('flash');
+    fl.style.display='block'; fl.style.opacity='0'; fl.style.transition='opacity 0.35s';
     requestAnimationFrame(()=>{
-        mw.style.opacity='1';
-        mw.classList.add('do-dive');
-    });
-
-    // Type on screen
-    const lines=[
-        { t:1200, text:'> Протокол ДЕЖАВЮ активирован...', col:'#00ffcc'},
-        { t:2000, text:'> Поиск начала петли...', col:'#00ffcc'},
-        { t:2800, text:'> ОШИБКА: начало не найдено', col:'#ff0033'},
-        { t:3600, text:'> Загрузка уровня 0...', col:'#ffbb33'},
-        { t:4600, text:'> Добро пожаловать в петлю.', col:'#fff'},
-    ];
-    const scr = document.getElementById('monitor-screen');
-    lines.forEach(l=>{
+        fl.style.opacity='1';
         setTimeout(()=>{
-            const el=document.createElement('div');
-            el.className='mline'; el.style.color=l.col;
-            el.textContent=l.text; scr.appendChild(el);
-        },l.t);
+            cancelAnimationFrame(doxAnimId);
+            doxRenderer.dispose();
+            document.getElementById('dox-phase').style.display='none';
+            fl.style.opacity='0';
+            setTimeout(()=>{ fl.style.display='none'; startBackrooms(); }, 400);
+        }, 500);
     });
-
-    // Flash & enter backrooms after 6s
-    setTimeout(()=>{
-        const fl = document.getElementById('flash');
-        fl.style.display='block'; fl.style.opacity='0'; fl.style.transition='opacity 0.3s';
-        requestAnimationFrame(()=>{
-            fl.style.opacity='1';
-            setTimeout(()=>{
-                document.getElementById('dive-overlay').style.display='none';
-                fl.style.opacity='0';
-                setTimeout(()=>{ fl.style.display='none'; startBackrooms(); }, 350);
-            }, 450);
-        });
-    }, 6200);
 }
 
-// ══════════════════════════════════════════════
-//  PHASE 4: THREE.JS BACKROOMS CORRIDOR
-// ══════════════════════════════════════════════
+let doxLastTime = 0;
+function doxLoop(ts=0) {
+    doxAnimId = requestAnimationFrame(doxLoop);
+    const dt = ts - doxLastTime; doxLastTime = ts;
 
-// Brain Rot lyrics — timed cinematic script
+    if (!camZooming) {
+        // Subtle camera breathe
+        const breath = Math.sin(ts*0.0004)*0.08;
+        doxCam.position.y = CAM_NORMAL_POS.y + breath;
+        doxCam.lookAt(CAM_NORMAL_TGT);
+
+        updateState(ts);
+    }
+
+    doxRenderer.render(doxScene, doxCam);
+}
+
+// ════════════════════════════════════════════════
+//  BACKROOMS (Three.js corridor + Brain Rot lyrics)
+// ════════════════════════════════════════════════
+let brScene, brCam, brRenderer, brAnimId, brT=0, brShown=new Set();
+
 const SCRIPT = [
-    { t:2,   text:'ты снова здесь',           cls:'small', col:'rgba(200,168,75,0.65)' },
-    { t:6,   text:'всё в норме',              cls:'big',   col:'#c8a84b' },
-    { t:11,  text:'так расслабься',           cls:'med',   col:'rgba(255,255,255,0.55)' },
-    { t:17,  text:'не найдём мы\nвыход никогда', cls:'med', col:'#ff4444' },
-    { t:24,  text:'ОПАСНО',                   cls:'big',   col:'#ff0033' },
-    { t:28,  text:'не парься',                cls:'med',   col:'rgba(200,168,75,0.8)' },
-    { t:34,  text:'упал на дно',              cls:'med',   col:'#ffffff' },
-    { t:41,  text:'ГНИЁТ',                    cls:'big',   col:'#ff0033' },
-    { t:44,  text:'МОЙ МОЗГ',                 cls:'big',   col:'#c8a84b' },
-    { t:49,  text:'уже давно',                cls:'small', col:'rgba(255,255,255,0.4)' },
-    { t:56,  text:'я словно пепел',           cls:'med',   col:'rgba(200,168,75,0.9)' },
-    { t:62,  text:'высоко',                   cls:'big',   col:'#00ffcc' },
-    { t:70,  text:'полный день боли',         cls:'med',   col:'#ff4444' },
-    { t:76,  text:'я не в себе',              cls:'med',   col:'#ffffff' },
-    { t:82,  text:'и знаю сам',               cls:'small', col:'rgba(200,168,75,0.7)' },
-    { t:87,  text:'но...',                    cls:'big',   col:'rgba(255,255,255,0.3)' },
-    { t:93,  text:'меня не спасти',           cls:'med',   col:'#ff0033' },
-    { t:99,  text:'ВЕДЬ\nПОЗДНО',             cls:'big',   col:'#ff0033' },
-    { t:106, text:'ГНИЁТ МОЙ МОЗГ',          cls:'med',   col:'#c8a84b' },
-    { t:112, text:'но сладость\nни при чём',  cls:'small', col:'rgba(255,255,255,0.5)' },
-    { t:118, text:'.',                        cls:'big',   col:'#fff', x:'30%' },
-    { t:120, text:'.',                        cls:'big',   col:'#fff', x:'50%' },
-    { t:122, text:'.',                        cls:'big',   col:'#fff', x:'70%' },
-    { t:127, text:'ты снова здесь',           cls:'small', col:'rgba(200,168,75,0.65)' },
-    { t:131, text:'всё в норме',              cls:'big',   col:'#c8a84b' },
-    { t:136, text:'так расслабься',           cls:'med',   col:'rgba(255,255,255,0.3)' },
+    {t:2,  text:'ты снова здесь',           cls:'sm',  col:'rgba(200,168,75,0.65)'},
+    {t:6,  text:'всё в норме',              cls:'big', col:'#c8a84b'},
+    {t:11, text:'так расслабься',           cls:'med', col:'rgba(255,255,255,0.5)'},
+    {t:17, text:'не найдём мы\nвыход никогда',cls:'med',col:'#ff4444'},
+    {t:24, text:'ОПАСНО',                   cls:'big', col:'#ff0033'},
+    {t:28, text:'не парься',                cls:'med', col:'rgba(200,168,75,0.8)'},
+    {t:34, text:'упал на дно',              cls:'med', col:'#fff'},
+    {t:41, text:'ГНИЁТ',                    cls:'big', col:'#ff0033'},
+    {t:44, text:'МОЙ МОЗГ',                 cls:'big', col:'#c8a84b'},
+    {t:49, text:'уже давно',                cls:'sm',  col:'rgba(255,255,255,0.4)'},
+    {t:56, text:'я словно пепел',           cls:'med', col:'rgba(200,168,75,0.9)'},
+    {t:62, text:'высоко',                   cls:'big', col:'#00ffcc'},
+    {t:70, text:'полный день боли',         cls:'med', col:'#ff4444'},
+    {t:76, text:'я не в себе',              cls:'med', col:'#fff'},
+    {t:82, text:'и знаю сам',               cls:'sm',  col:'rgba(200,168,75,0.7)'},
+    {t:87, text:'но...',                    cls:'big', col:'rgba(255,255,255,0.3)'},
+    {t:93, text:'меня не спасти',           cls:'med', col:'#ff0033'},
+    {t:99, text:'ВЕДЬ\nПОЗДНО',             cls:'big', col:'#ff0033'},
+    {t:106,text:'ГНИЁТ МОЙ МОЗГ',          cls:'med', col:'#c8a84b'},
+    {t:112,text:'но сладость\nни при чём', cls:'sm',  col:'rgba(255,255,255,0.5)'},
+    {t:118,text:'.',                        cls:'big', col:'#fff'},
+    {t:120,text:'.',                        cls:'big', col:'#fff'},
+    {t:122,text:'.',                        cls:'big', col:'#fff'},
+    {t:127,text:'ты снова здесь',           cls:'sm',  col:'rgba(200,168,75,0.6)'},
+    {t:131,text:'всё в норме',              cls:'big', col:'#c8a84b'},
+    {t:136,text:'так расслабься',           cls:'med', col:'rgba(255,255,255,0.28)'},
 ];
 
-let brScene, brCamera, brRenderer, brAnimId, brT=0;
-let brShown=new Set();
-
 function startBackrooms() {
-    const phase4 = document.getElementById('backrooms-phase');
-    phase4.style.display='block';
-
+    document.getElementById('br-phase').style.display='block';
     const W=window.innerWidth, H=window.innerHeight;
-
-    // ── THREE.JS SETUP ──
     brScene = new THREE.Scene();
-    brScene.fog = new THREE.FogExp2(0x1a1100, 0.025);
-    brScene.background = new THREE.Color(0x100d00);
-
-    brCamera = new THREE.PerspectiveCamera(75, W/H, 0.1, 200);
-    brCamera.position.set(0, 0, 0);
-
-    brRenderer = new THREE.WebGLRenderer({ antialias: true });
-    brRenderer.setSize(W, H);
-    brRenderer.shadowMap.enabled = true;
-    document.getElementById('br-three-canvas').appendChild(brRenderer.domElement);
-
-    buildCorridor();
-    buildLights();
-
-    // Exit on key
-    document.addEventListener('keydown', exitBackrooms, {once:true});
-    setTimeout(()=>{ document.getElementById('br-hint').style.opacity='1'; }, 30000);
-
-    renderBackrooms();
+    brScene.fog = new THREE.FogExp2(0x1a1100, 0.028);
+    brScene.background = new THREE.Color(0x0e0b00);
+    brCam = new THREE.PerspectiveCamera(72, W/H, 0.1, 200);
+    brCam.position.set(0,0,0);
+    brRenderer = new THREE.WebGLRenderer({antialias:true});
+    brRenderer.setSize(W,H);
+    document.getElementById('br-three').appendChild(brRenderer.domElement);
+    buildBRCorridor(); buildBRLights();
+    document.addEventListener('keydown', exitBR, {once:true});
+    setTimeout(()=>{ document.getElementById('br-hint').style.opacity='1'; }, 28000);
+    brT=0; renderBR();
 }
 
-function buildCorridor() {
-    // Corridor: 5 units wide, 3.5 units tall, 200 units long
-    const CW=5, CH=3.5, CL=200;
-    const mat = new THREE.MeshLambertMaterial({
-        color: 0xc8a030, side: THREE.BackSide
-    });
+function buildBRCorridor() {
+    const CW=5.5, CH=3.8, CL=220;
+    const wallM = new THREE.MeshLambertMaterial({color:0xb89828, side:THREE.BackSide});
+    const box = new THREE.Mesh(new THREE.BoxGeometry(CW,CH,CL), wallM);
+    box.position.set(0,0,-CL/2); brScene.add(box);
 
-    // One big box for the corridor
-    const geo = new THREE.BoxGeometry(CW, CH, CL);
-    const corridor = new THREE.Mesh(geo, mat);
-    corridor.position.set(0, 0, -CL/2);
-    brScene.add(corridor);
+    const floorM = new THREE.MeshLambertMaterial({color:0x7a6010});
+    const floor = new THREE.Mesh(new THREE.PlaneGeometry(CW,CL), floorM);
+    floor.rotation.x=-Math.PI/2; floor.position.set(0,-CH/2,-CL/2); brScene.add(floor);
 
-    // Floor (darker)
-    const floorMat = new THREE.MeshLambertMaterial({ color: 0x8a6a15 });
-    const floorGeo = new THREE.PlaneGeometry(CW, CL);
-    const floor = new THREE.Mesh(floorGeo, floorMat);
-    floor.rotation.x = -Math.PI/2;
-    floor.position.set(0, -CH/2, -CL/2);
-    brScene.add(floor);
-
-    // Ceiling tiles (grid lines via EdgesGeometry)
-    const tileSize = 1.5;
-    const tilesX = Math.ceil(CW/tileSize);
-    const tilesZ = Math.ceil(CL/tileSize);
-    const edgeMat = new THREE.LineBasicMaterial({ color: 0x9a7a10, transparent:true, opacity:0.3 });
-    for(let z=0; z<=tilesZ; z++) {
-        const geo2 = new THREE.BufferGeometry().setFromPoints([
-            new THREE.Vector3(-CW/2, CH/2-0.01, -z*tileSize),
-            new THREE.Vector3( CW/2, CH/2-0.01, -z*tileSize),
-        ]);
-        brScene.add(new THREE.Line(geo2, edgeMat));
+    // Ceiling tiles grid
+    const gridM = new THREE.LineBasicMaterial({color:0x907820, transparent:true, opacity:0.25});
+    for(let z=0;z<CL;z+=1.5){
+        const g=new THREE.BufferGeometry().setFromPoints([
+            new THREE.Vector3(-CW/2,CH/2-0.01,-z),
+            new THREE.Vector3( CW/2,CH/2-0.01,-z)]);
+        brScene.add(new THREE.Line(g,gridM));
     }
-    for(let x=0; x<=tilesX; x++) {
-        const geo2 = new THREE.BufferGeometry().setFromPoints([
-            new THREE.Vector3(-CW/2+x*tileSize, CH/2-0.01, 0),
-            new THREE.Vector3(-CW/2+x*tileSize, CH/2-0.01, -CL),
-        ]);
-        brScene.add(new THREE.Line(geo2, edgeMat));
+    for(let x=-CW/2;x<=CW/2;x+=1.5){
+        const g=new THREE.BufferGeometry().setFromPoints([
+            new THREE.Vector3(x,CH/2-0.01,0),
+            new THREE.Vector3(x,CH/2-0.01,-CL)]);
+        brScene.add(new THREE.Line(g,gridM));
     }
-
-    // Floor grid
-    const floorEdgeMat = new THREE.LineBasicMaterial({ color: 0x6a4a08, transparent:true, opacity:0.25 });
-    for(let z=0; z<=tilesZ; z++) {
-        const g = new THREE.BufferGeometry().setFromPoints([
-            new THREE.Vector3(-CW/2, -CH/2+0.01, -z*tileSize),
-            new THREE.Vector3( CW/2, -CH/2+0.01, -z*tileSize),
-        ]);
-        brScene.add(new THREE.Line(g, floorEdgeMat));
+    // Floor tiles
+    const floorLineM=new THREE.LineBasicMaterial({color:0x5a4808,transparent:true,opacity:0.2});
+    for(let z=0;z<CL;z+=1.5){
+        const g=new THREE.BufferGeometry().setFromPoints([
+            new THREE.Vector3(-CW/2,-CH/2+0.01,-z),
+            new THREE.Vector3( CW/2,-CH/2+0.01,-z)]);
+        brScene.add(new THREE.Line(g,floorLineM));
     }
-
-    // Wall panels (vertical lines every 2 units on walls)
-    const wallLineMat = new THREE.LineBasicMaterial({ color: 0xb08820, transparent:true, opacity:0.2 });
-    for(let z=0; z<CL; z+=2) {
+    // Wall seam lines
+    const wallLineM=new THREE.LineBasicMaterial({color:0xa07818,transparent:true,opacity:0.18});
+    for(let z=0;z<CL;z+=3){
         [-CW/2+0.01, CW/2-0.01].forEach(x=>{
-            const g = new THREE.BufferGeometry().setFromPoints([
-                new THREE.Vector3(x, -CH/2, -z),
-                new THREE.Vector3(x,  CH/2, -z),
-            ]);
-            brScene.add(new THREE.Line(g, wallLineMat));
+            const g=new THREE.BufferGeometry().setFromPoints([
+                new THREE.Vector3(x,-CH/2,-z),
+                new THREE.Vector3(x, CH/2,-z)]);
+            brScene.add(new THREE.Line(g,wallLineM));
         });
     }
 }
 
-function buildLights() {
-    // Ambient — very dim warm
-    brScene.add(new THREE.AmbientLight(0x3a2800, 0.3));
-
-    // Fluorescent lights every 4 units
-    for(let z=2; z<200; z+=4) {
-        const light = new THREE.PointLight(0xffe890, 0.8, 8);
-        light.position.set(0, 1.6, -z);
-        brScene.add(light);
-
-        // Visible light fixture (flat box on ceiling)
-        const fixtureGeo = new THREE.BoxGeometry(1.2, 0.06, 0.4);
-        const fixtureMat = new THREE.MeshBasicMaterial({ color: 0xfffde0 });
-        const fixture = new THREE.Mesh(fixtureGeo, fixtureMat);
-        fixture.position.set(0, 1.71, -z);
-        brScene.add(fixture);
+function buildBRLights() {
+    brScene.add(new THREE.AmbientLight(0x3a2600,0.35));
+    for(let z=2;z<220;z+=4){
+        const l=new THREE.PointLight(0xffe080,0.9,9);
+        l.position.set(0,1.7,-z); brScene.add(l);
+        const fix=new THREE.Mesh(new THREE.BoxGeometry(1.4,0.05,0.5),
+            new THREE.MeshBasicMaterial({color:0xfffce0}));
+        fix.position.set(0,1.88,-z); brScene.add(fix);
     }
 }
 
-function renderBackrooms() {
-    brAnimId = requestAnimationFrame(renderBackrooms);
-    brT += 0.016;
+function renderBR() {
+    brAnimId=requestAnimationFrame(renderBR);
+    brT+=0.016;
+    const bass=getBass();
 
-    const bass = getBass();
+    // Walk forward
+    brCam.position.z-=0.45*0.016*60*0.016;
+    if(brCam.position.z<-210) brCam.position.z=0;
+    brCam.position.y=Math.sin(brT*2.2)*0.06;
+    brCam.rotation.z=Math.sin(brT*2.2)*0.007;
 
-    // Walk camera forward (slowly)
-    const walkSpeed = 0.4 + bass * 0.3;
-    brCamera.position.z -= walkSpeed * 0.016 * 60 * 0.016;
-    if (brCamera.position.z < -190) brCamera.position.z = 0;
-
-    // Subtle camera bob (walking feel)
-    brCamera.position.y = Math.sin(brT * 2.2) * 0.06;
-    brCamera.rotation.z = Math.sin(brT * 2.2) * 0.008;
-
-    // Flicker lights with bass
-    if (Math.random() < 0.015) {
-        brScene.traverse(obj => {
-            if (obj.isPointLight) obj.intensity = 0.2 + Math.random()*0.5;
-        });
+    // Flicker
+    if(Math.random()<0.02){
+        brScene.traverse(o=>{if(o.isPointLight)o.intensity=0.15+Math.random()*0.4;});
     } else {
-        brScene.traverse(obj => {
-            if (obj.isPointLight) obj.intensity = Math.min(obj.intensity + 0.08, 0.8 + bass*0.4);
-        });
+        brScene.traverse(o=>{if(o.isPointLight)o.intensity=Math.min(o.intensity+0.07, 0.9+bass*0.5);});
     }
 
-    // Show lyrics
-    SCRIPT.forEach(item => {
-        if (brT >= item.t && !brShown.has(item.t)) {
-            brShown.add(item.t);
-            showLyric(item);
+    SCRIPT.forEach(item=>{
+        if(brT>=item.t && !brShown.has(item.t)){
+            brShown.add(item.t); showLyric(item);
         }
     });
 
-    brRenderer.render(brScene, brCamera);
+    brRenderer.render(brScene,brCam);
 }
 
-function showLyric(item) {
-    const el = document.getElementById('br-lyric');
-    // Reset
+function showLyric(item){
+    const el=document.getElementById('br-lyric');
     el.style.opacity='0';
-    el.className='br-lyric';
-
     setTimeout(()=>{
-        el.textContent = item.text;
-        el.className = 'br-lyric ' + item.cls;
-        el.style.color = item.col;
-        if (item.x) { el.style.left=item.x; } else { el.style.left='50%'; }
-        el.style.textShadow = `0 0 30px ${item.col}, 0 0 60px ${item.col}`;
-
-        // Fade in
-        el.style.transition='opacity 0.7s ease';
+        el.textContent=item.text;
+        el.className='br-lyric '+item.cls;
+        el.style.color=item.col;
+        el.style.textShadow=`0 0 40px ${item.col}, 0 0 80px ${item.col}`;
+        el.style.left=item.x||'50%';
+        el.style.transition='opacity 0.7s';
         requestAnimationFrame(()=>{ el.style.opacity='1'; });
-
-        // Hold then fade out
-        const hold = item.text.length < 4 ? 1800 : Math.min(item.text.length*130, 6000);
-        setTimeout(()=>{
-            el.style.opacity='0';
-        }, hold);
-    }, 50);
+        const hold=item.text.length<4?1800:Math.min(item.text.length*130,6500);
+        setTimeout(()=>{ el.style.opacity='0'; }, hold);
+    },60);
 }
 
-function exitBackrooms() {
+function exitBR(){
     cancelAnimationFrame(brAnimId);
     audioEl.pause(); audioEl.currentTime=0;
     if(brRenderer) brRenderer.dispose();
-    document.getElementById('backrooms-phase').style.display='none';
+    document.getElementById('br-phase').style.display='none';
     document.getElementById('main-console').style.display='flex';
     out('<span style="color:#00ffcc;">&gt; Протокол завершён. Добро пожаловать обратно.</span>');
-    consoleInput.focus();
+    ci.focus();
 }
 
-window.addEventListener('resize', ()=>{
-    if(pCanvas){ pCanvas.width=window.innerWidth; pCanvas.height=window.innerHeight; buildParticles(); buildBg(); }
-    if(brCamera && brRenderer){
-        brCamera.aspect=window.innerWidth/window.innerHeight;
-        brCamera.updateProjectionMatrix();
-        brRenderer.setSize(window.innerWidth, window.innerHeight);
+window.addEventListener('resize',()=>{
+    if(doxCam&&doxRenderer){
+        doxCam.aspect=window.innerWidth/window.innerHeight;
+        doxCam.updateProjectionMatrix();
+        doxRenderer.setSize(window.innerWidth,window.innerHeight);
+    }
+    if(brCam&&brRenderer){
+        brCam.aspect=window.innerWidth/window.innerHeight;
+        brCam.updateProjectionMatrix();
+        brRenderer.setSize(window.innerWidth,window.innerHeight);
     }
 });
 </script>
