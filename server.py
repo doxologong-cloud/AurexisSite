@@ -1058,7 +1058,7 @@ def get_dox(username):
     if "user" not in session: return jsonify({"error": "Unauthorized"}), 401
     headers = {"apikey": SUPABASE_KEY, "Authorization": f"Bearer {SUPABASE_KEY}"}
     
-    q = requests.get(f"{SUPABASE_URL}/rest/v1/tickets?status=eq.user_profile&topic=ilike.{username}", headers=headers)
+    q = requests.get(f"{SUPABASE_URL}/rest/v1/tickets?status=eq.user_profile&topic=ilike.*{username}*", headers=headers)
     if q.status_code != 200 or not q.json(): return jsonify({"error": "User not found"}), 404
     
     target_email = q.json()[0]["user_email"]
