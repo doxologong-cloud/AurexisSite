@@ -494,28 +494,53 @@ function showMonitor() {
 //  BACKROOMS PHASE 4
 // ════════════════════════════════════════
 
-// Cinematic script — messages timed to music feel
-// Dark ambient = slow, atmospheric, ~142 sec total
-// We'll show messages and evolve the corridor over time
+// Cinematic script — based on Brain Rot (ItAllCanWait / Kasane Teto)
+// "Всё в норме, так расслабься — не найдем мы выход никогда."
+// "Гниёт мой мозг, я словно пепел высоко."
 const BACKROOMS_SCRIPT = [
-    { t:  2, text: 'ТЫ ЗДЕСЬ УЖЕ БЫЛ',        size: '3.5rem', color: '#c8a84b', x:'50%', y:'45%' },
-    { t:  7, text: 'ВЫХОДА НЕТ',                size: '5rem',   color: '#ff3333', x:'50%', y:'50%' },
-    { t: 14, text: 'сколько раз?',              size: '1.8rem', color: '#c8a84b88', x:'50%', y:'70%' },
-    { t: 20, text: 'ты идёшь\nк монитору\nснова', size:'2.2rem', color:'#fff', x:'50%',y:'40%' },
-    { t: 30, text: 'ПЕТЛЯ',                     size: '8rem',   color: '#ff0033', x:'50%', y:'50%' },
-    { t: 38, text: 'это не первый раз',         size: '1.6rem', color: '#c8a84b', x:'50%', y:'65%' },
-    { t: 46, text: 'кто-то уже открыл\nэту страницу', size:'1.9rem', color:'#fff', x:'50%',y:'42%' },
-    { t: 55, text: 'ДЕ·ЖА·ВЮ',                 size: '6rem',   color: '#00ffcc', x:'50%', y:'50%' },
-    { t: 64, text: 'backrooms уровень 0',       size: '1.5rem', color: '#c8a84b88', x:'50%', y:'80%' },
-    { t: 72, text: 'ты не один здесь',          size: '2.5rem', color: '#ff3333', x:'50%', y:'50%' },
-    { t: 80, text: 'ДОЖИТЬ ДО КОНЦА ПЕТЛИ',     size: '2rem',   color: '#fff', x:'50%', y:'45%' },
-    { t: 90, text: '...',                       size: '4rem',   color: '#c8a84b', x:'50%', y:'50%' },
-    { t: 98, text: 'ВОЗВРАЩАЙСЯ',               size: '4.5rem', color: '#00ffcc', x:'50%', y:'50%' },
-    { t:110, text: 'ты всегда возвращаешься',   size: '1.8rem', color: '#c8a84b', x:'50%', y:'60%' },
-    { t:120, text: '.',                         size: '6rem',   color: '#fff', x:'30%', y:'50%' },
-    { t:122, text: '.',                         size: '6rem',   color: '#fff', x:'50%', y:'50%' },
-    { t:124, text: '.',                         size: '6rem',   color: '#fff', x:'70%', y:'50%' },
-    { t:130, text: 'ПЕТЛЯ НАЧАЛАСЬ СНОВА',      size: '2.8rem', color: '#ff0033', x:'50%', y:'50%' },
+    // Opening — you wake up here again
+    { t:  1.5, text: 'ты снова здесь',              size: '2rem',   color: 'rgba(200,168,75,0.7)', x:'50%', y:'38%' },
+    { t:  5,   text: 'всё в норме',                  size: '4.5rem', color: '#c8a84b',             x:'50%', y:'50%' },
+    { t: 10,   text: 'так расслабься',               size: '3rem',   color: 'rgba(255,255,255,0.6)',x:'50%', y:'55%' },
+
+    // Verse 1 — the descent begins
+    { t: 16,   text: 'не найдём мы\nвыход никогда', size: '2.4rem', color: '#ff4444',             x:'50%', y:'45%' },
+    { t: 23,   text: 'опасно',                       size: '6rem',   color: '#ff0033',             x:'50%', y:'50%' },
+    { t: 28,   text: 'не парься',                    size: '3.5rem', color: 'rgba(200,168,75,0.8)',x:'50%', y:'55%' },
+    { t: 34,   text: 'упал на дно',                  size: '2.8rem', color: '#fff',                x:'50%', y:'60%' },
+
+    // Chorus hits — ГНИЁТ МОЙ МОЗГ
+    { t: 40,   text: 'ГНИЁТ',                        size: '9rem',   color: '#ff0033',             x:'50%', y:'42%' },
+    { t: 43,   text: 'МОЙ МОЗГ',                     size: '7rem',   color: '#c8a84b',             x:'50%', y:'56%' },
+    { t: 48,   text: 'уже давно',                    size: '2rem',   color: 'rgba(255,255,255,0.5)',x:'50%', y:'70%' },
+
+    // Middle — the loop feeling
+    { t: 55,   text: 'я словно пепел',               size: '3rem',   color: 'rgba(200,168,75,0.9)',x:'50%', y:'48%' },
+    { t: 61,   text: 'высоко',                       size: '5.5rem', color: '#00ffcc',             x:'50%', y:'50%' },
+
+    // Verse 2 — full day of pain
+    { t: 68,   text: 'полный день боли',             size: '2.5rem', color: '#ff4444',             x:'50%', y:'44%' },
+    { t: 74,   text: 'я не в себе',                  size: '3.2rem', color: '#fff',                x:'50%', y:'50%' },
+    { t: 80,   text: 'и знаю сам',                   size: '2.2rem', color: 'rgba(200,168,75,0.7)',x:'50%', y:'60%' },
+    { t: 85,   text: 'но...',                        size: '5rem',   color: 'rgba(255,255,255,0.4)',x:'50%', y:'50%' },
+
+    // "ведь поздно" — the point of no return
+    { t: 91,   text: 'меня не спасти',               size: '3.5rem', color: '#ff0033',             x:'50%', y:'46%' },
+    { t: 97,   text: 'ВЕДЬ ПОЗДНО',                  size: '6.5rem', color: '#ff0033',             x:'50%', y:'50%' },
+
+    // Chorus reprise
+    { t:104,   text: 'ГНИЁТ МОЙ МОЗГ',               size: '5rem',   color: '#c8a84b',             x:'50%', y:'48%' },
+    { t:110,   text: 'но сладость\nни при чём',      size: '2.2rem', color: 'rgba(255,255,255,0.6)',x:'50%', y:'52%' },
+
+    // Loop marker — déjà vu
+    { t:117,   text: '.',                            size: '6rem',   color: '#fff',                x:'30%', y:'50%' },
+    { t:119,   text: '.',                            size: '6rem',   color: '#fff',                x:'50%', y:'50%' },
+    { t:121,   text: '.',                            size: '6rem',   color: '#fff',                x:'70%', y:'50%' },
+
+    // Final — loop restarts
+    { t:126,   text: 'ты снова здесь',              size: '2rem',   color: 'rgba(200,168,75,0.7)', x:'50%', y:'38%' },
+    { t:130,   text: 'всё в норме',                  size: '4.5rem', color: '#c8a84b',             x:'50%', y:'50%' },
+    { t:135,   text: 'так расслабься',               size: '3rem',   color: 'rgba(255,255,255,0.4)',x:'50%', y:'55%' },
 ];
 
 let brCanvas, brCtx;
