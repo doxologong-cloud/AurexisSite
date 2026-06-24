@@ -280,11 +280,6 @@
 
     <!-- UI Overlay -->
     <div style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 10; pointer-events: none; display: flex; flex-direction: column;">
-        
-        <div class="loop-timer">
-            <div class="timer-label">ВРЕМЯ_В_ПЕТЛЕ (С 2021)</div>
-            <div class="timer-value" id="loop-time">00:00:00:00</div>
-        </div>
 
         <!-- Main Center Content Placeholder -->
         <div style="flex-grow: 1; display: flex; justify-content: center; align-items: center; pointer-events: auto;">
@@ -382,7 +377,7 @@
         });
 
         // Init UI
-        initTimer();
+        // initTimer();
         
         // Start render loop
         requestAnimationFrame(renderBackground);
