@@ -1,166 +1,10 @@
-<!DOCTYPE html>
+import re
 
-<html lang="ru">
-<head>
-<meta charset="utf-8"></meta>
-<meta content="width=device-width, initial-scale=1.0" name="viewport"></meta>
-<title><span data-i18n="t_1">Aurexis Studio | Наши Боты</span></title>
-<!-- Favicon -->
-<link href="{{ url_for('static', filename='assets/logo.png') }}" rel="icon" type="image/png"></link>
-<!-- Fonts -->
-<link href="https://fonts.googleapis.com" rel="preconnect"></link>
-<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"></link>
-<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;800&family=Space+Grotesk:wght@300;400;700&display=swap" rel="stylesheet"></link>
-<!-- Scripts -->
-<script async="" defer="" src="https://accounts.google.com/gsi/client"></script>
-<script src="https://cdn.jsdelivr.net/npm/particles.js@2.0.0/particles.min.js"></script>
-<!-- Styles -->
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-<link href="{{ url_for('static', filename='style.css') }}?v=116" rel="stylesheet"></link>
+index_path = r"C:\Users\user\Desktop\сайт\templates\index.html"
+with open(index_path, 'r', encoding='utf-8') as f:
+    text = f.read()
 
-<script>
-    (function() {
-        const theme = localStorage.getItem('aurex_theme') || 'matrix';
-        const root = document.documentElement;
-        let color1, color2, ptrColor1, ptrColor2;
-        
-        if (theme === 'matrix') {
-            root.style.setProperty('--neon-color', '#ffcc00');
-            root.style.setProperty('--bg-color', '#0a0a0a');
-            root.style.setProperty('--glow-color', 'rgba(255, 204, 0, 0.5)');
-            root.style.setProperty('--neon-primary', '#e5b322');
-            color1 = 'FFE373'; color2 = 'D4AF37'; ptrColor1 = 'ffffff'; ptrColor2 = 'FFE373';
-        } else if (theme === 'synthwave') {
-            root.style.setProperty('--neon-color', '#ff00ff');
-            root.style.setProperty('--bg-color', '#1a0b2e');
-            root.style.setProperty('--glow-color', 'rgba(255, 0, 255, 0.5)');
-            root.style.setProperty('--neon-primary', '#b026ff');
-            color1 = 'ff66ff'; color2 = 'ff00ff'; ptrColor1 = 'ffffff'; ptrColor2 = 'ff66ff';
-        } else if (theme === 'cyberpunk') {
-            root.style.setProperty('--neon-color', '#00ffcc');
-            root.style.setProperty('--bg-color', '#0b1a1a');
-            root.style.setProperty('--glow-color', 'rgba(0, 255, 204, 0.5)');
-            root.style.setProperty('--neon-primary', '#00ff88');
-            color1 = '66ffeb'; color2 = '00ffcc'; ptrColor1 = 'ffffff'; ptrColor2 = '66ffeb';
-        } else if (theme === 'vampire') {
-            root.style.setProperty('--neon-color', '#ff0000');
-            root.style.setProperty('--bg-color', '#1a0000');
-            root.style.setProperty('--glow-color', 'rgba(255, 0, 0, 0.5)');
-            root.style.setProperty('--neon-primary', '#ff0000');
-            color1 = 'ff4d4d'; color2 = 'cc0000'; ptrColor1 = 'ffffff'; ptrColor2 = 'ff4d4d';
-        } else if (theme === 'ocean') {
-            root.style.setProperty('--neon-color', '#00ffff');
-            root.style.setProperty('--bg-color', '#000a1a');
-            root.style.setProperty('--glow-color', 'rgba(0, 255, 255, 0.5)');
-            root.style.setProperty('--neon-primary', '#0088ff');
-            color1 = '66ffff'; color2 = '0088ff'; ptrColor1 = 'ffffff'; ptrColor2 = '66ffff';
-        } else if (theme === 'hacked') {
-            root.style.setProperty('--neon-color', '#ff0000');
-            root.style.setProperty('--bg-color', '#000000');
-            root.style.setProperty('--glow-color', 'rgba(255, 0, 0, 0.8)');
-            root.style.setProperty('--neon-primary', '#ff0000');
-            color1 = 'ff0000'; color2 = '8b0000'; ptrColor1 = 'ff0000'; ptrColor2 = 'ff0000';
-            document.body && document.body.classList.add('hacked-theme');
-        }
-        
-        let svgDefaultStr, svgPointerStr;
-        if (localStorage.getItem('aurex_cursor_shape') === 'circle') {
-            svgDefaultStr = `<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 32 32"><defs><linearGradient id="theme-grad" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#${color1}"/><stop offset="100%" stop-color="#${color2}"/></linearGradient></defs><circle cx="16" cy="16" r="10" fill="none" stroke="url(#theme-grad)" stroke-width="2"/><circle cx="16" cy="16" r="3" fill="url(#theme-grad)"/></svg>`;
-            svgPointerStr = `<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 32 32"><defs><linearGradient id="theme-grad-ptr" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#${ptrColor1}"/><stop offset="100%" stop-color="#${ptrColor2}"/></linearGradient></defs><circle cx="16" cy="16" r="12" fill="none" stroke="url(#theme-grad-ptr)" stroke-width="3"/><circle cx="16" cy="16" r="4" fill="url(#theme-grad-ptr)"/></svg>`;
-        } else {
-            svgDefaultStr = `<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 32 32"><defs><linearGradient id="theme-grad" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#${color1}"/><stop offset="100%" stop-color="#${color2}"/></linearGradient></defs><g transform="translate(12, 6) rotate(-25)"><polygon points="-1,0 -9,18 -4,18 -1,12" fill="rgba(0,0,0,0.5)" transform="translate(1, 2)"/><polygon points="1,0 9,18 4,18 1,12" fill="rgba(0,0,0,0.5)" transform="translate(1, 2)"/><polygon points="-1,0 -9,18 -4,18 -1,12" fill="url(#theme-grad)"/><polygon points="1,0 9,18 4,18 1,12" fill="url(#theme-grad)"/></g></svg>`;
-            svgPointerStr = `<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 32 32"><defs><linearGradient id="theme-grad-ptr" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#${ptrColor1}"/><stop offset="100%" stop-color="#${ptrColor2}"/></linearGradient></defs><g transform="translate(12, 6) rotate(-25)"><polygon points="-1,0 -9,18 -4,18 -1,12" fill="rgba(0,0,0,0.5)" transform="translate(1, 2)"/><polygon points="1,0 9,18 4,18 1,12" fill="rgba(0,0,0,0.5)" transform="translate(1, 2)"/><polygon points="-1,0 -9,18 -4,18 -1,12" fill="url(#theme-grad-ptr)"/><polygon points="1,0 9,18 4,18 1,12" fill="url(#theme-grad-ptr)"/></g></svg>`;
-        }
-        
-        let finalCursorDefault = `url("data:image/svg+xml,${encodeURIComponent(svgDefaultStr)}") 12 6, auto`;
-        let finalCursorPointer = `url("data:image/svg+xml,${encodeURIComponent(svgPointerStr)}") 12 6, pointer`;
-
-        if (theme === 'hacked') {
-            const hackerCursorStr = localStorage.getItem('aurex_cursor_shape') === 'circle' ? `<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"32\" height=\"32\" viewBox=\"0 0 32 32\"><circle cx=\"16\" cy=\"16\" r=\"10\" fill=\"none\" stroke=\"#ff0000\" stroke-width=\"2\"/><circle cx=\"16\" cy=\"16\" r=\"3\" fill=\"#ff0000\"/></svg>` : `<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"24\" height=\"24\" viewBox=\"0 0 24 24\"><path d=\"M 2 2 L 10 22 L 13 13 L 22 10 Z\" fill=\"#ff0000\" stroke=\"#ff0000\" stroke-width=\"2\" stroke-linejoin=\"round\" stroke-opacity=\"0.4\"/></svg>`;
-            finalCursorDefault = `url("data:image/svg+xml,${encodeURIComponent(hackerCursorStr)}") 2 2, crosshair`;
-            finalCursorPointer = `url("data:image/svg+xml,${encodeURIComponent(hackerCursorStr)}") 2 2, crosshair`;
-        }
-
-        
-        
-
-        let cursorStyleEl = document.getElementById('dynamic-cursor-style');
-        if (!cursorStyleEl) {
-            cursorStyleEl = document.createElement('style');
-            cursorStyleEl.id = 'dynamic-cursor-style';
-            document.head.appendChild(cursorStyleEl);
-        }
-        cursorStyleEl.innerHTML = `
-            html, body, div, p, span, h1, h2, h3, h4, h5, h6, section, article, nav, header, footer, main, ul, li, label,
-            .view, .view * {
-                cursor: ${finalCursorDefault} !important;
-            }
-            a, a:hover, a:active, a:focus,
-            button, button:hover, button:active, button:focus,
-            input, select, textarea, .theme-card, .msgr-tab, .dropdown-item,
-            [onclick], [onclick] * {
-                cursor: ${finalCursorPointer} !important;
-            }
-            #cursor-lock {
-                cursor: ${finalCursorDefault} !important;
-            }
-        `;
-
-        // SVG to PNG Rasterization to fix Chromium hardware cursor SVG cache eviction
-        function rasterizeSVGToPNG(svgStr, hotspotX, hotspotY, callback) {
-            const img = new Image();
-            img.onload = function() {
-                const canvas = document.createElement('canvas');
-                canvas.width = img.width || 32;
-                canvas.height = img.height || 32;
-                const ctx = canvas.getContext('2d');
-                ctx.drawImage(img, 0, 0);
-                const pngDataUrl = canvas.toDataURL('image/png');
-                callback(`url("${pngDataUrl}") ${hotspotX} ${hotspotY}`);
-            };
-            img.src = 'data:image/svg+xml,' + encodeURIComponent(svgStr);
-        }
-
-        // Apply PNG cursors asynchronously to prevent render blocking
-        const shape = localStorage.getItem('aurex_cursor_shape') || 'triangle';
-        if (shape === 'circle') document.documentElement.classList.add('cursor-circle');
-        let hotspotDefX = shape === 'circle' ? 16 : (theme === 'hacked' ? 2 : 12);
-        let hotspotDefY = shape === 'circle' ? 16 : (theme === 'hacked' ? 2 : 6);
-        let hotspotPtrX = shape === 'circle' ? 16 : (theme === 'hacked' ? 2 : 12);
-        let hotspotPtrY = shape === 'circle' ? 16 : (theme === 'hacked' ? 2 : 6);
-        
-        rasterizeSVGToPNG(theme === 'hacked' ? hackerCursorStr : svgDefaultStr, hotspotDefX, hotspotDefY, function(pngUrlDefault) {
-            rasterizeSVGToPNG(theme === 'hacked' ? hackerCursorStr : svgPointerStr, hotspotPtrX, hotspotPtrY, function(pngUrlPointer) {
-                let cursorStyleEl = document.getElementById('dynamic-cursor-style');
-                if (cursorStyleEl) {
-                    cursorStyleEl.innerHTML = `
-                        html, body, div, p, span, h1, h2, h3, h4, h5, h6, section, article, nav, header, footer, main, ul, li, label,
-                        .view, .view *, nav.navbar, nav.navbar * {
-                            cursor: ${pngUrlDefault}, auto !important;
-                        }
-                        a, a:hover, a:active, a:focus, a *,
-                        button, button:hover, button:active, button:focus, button *,
-                        input, select, textarea, .theme-card, .msgr-tab, .dropdown-item,
-                        [onclick], [onclick] * {
-                            cursor: ${pngUrlPointer}, pointer !important;
-                        }
-                        
-                    `;
-                }
-            });
-        });
-        
-    })();
-</script>
-    <script src="/static/translations.js"></script>
-</head>
-<body>
-<!-- Фейковый фасад -->
-<div id="fake-front" style="display: flex; justify-content: center; align-items: center; height: 100vh; width: 100vw; background: #000; color: #ff0000; font-family: 'Space Grotesk', sans-serif; font-size: 3rem; text-shadow: 0 0 20px #ff0000; position: fixed; top: 0; left: 0; z-index: 9999; transition: opacity 1s, filter 1s;">
-    (Ведутся РАБОТЫ)
-</div>
-
-<!-- Настоящий скрытый контент -->
+new_vault_content = """<!-- Настоящий скрытый контент -->
 <div id="secret-vault" style="display: none; min-height: 100vh; background: #000; color: #fff; font-family: 'Space Grotesk', sans-serif; position: relative; overflow: hidden; margin: 0; padding: 0;">
     
     <style>
@@ -612,5 +456,11 @@
     }
 
 </script>
-</body>
-</html>
+</body>"""
+
+new_text = re.sub(r'<!-- Настоящий скрытый контент \(пока что заглушка\) -->.*</body>', new_vault_content, text, flags=re.DOTALL)
+
+with open(index_path, 'w', encoding='utf-8') as f:
+    f.write(new_text)
+
+print("Vault built in index.html")
