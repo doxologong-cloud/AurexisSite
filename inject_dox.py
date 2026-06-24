@@ -1,24 +1,11 @@
-<!DOCTYPE html>
-<html lang="ru">
-<head>
-    <meta charset="UTF-8">
-    <title>AUREX OS TERMINAL</title>
-    <style>
-        body, html { margin: 0; padding: 0; height: 100%; background: #000; color: #00ffcc; font-family: 'Consolas', monospace; overflow: hidden; }
-        .console-container { display: flex; flex-direction: column; height: 100vh; padding: 20px; box-sizing: border-box; }
-        .console-output { flex-grow: 1; overflow-y: auto; display: flex; flex-direction: column; justify-content: flex-end; padding-bottom: 20px; font-size: 1rem; line-height: 1.5; }
-        .console-input-row { display: flex; align-items: center; border-top: 1px dashed #00ffcc; padding-top: 15px; }
-        .console-input { flex-grow: 1; background: transparent; border: none; color: #fff; font-family: 'Consolas', monospace; font-size: 1.2rem; outline: none; margin-left: 10px; }
-        
-        @keyframes glitchText {
-            0% { transform: translate(0); }
-            20% { transform: translate(-2px, 1px); }
-            40% { transform: translate(2px, -1px); color: #fff; }
-            60% { transform: translate(-1px, 2px); }
-            80% { transform: translate(1px, -2px); color: #ff0033; }
-            100% { transform: translate(0); }
-        }
-    
+import os
+
+console_path = r"C:\Users\user\Desktop\сайт\templates\console.html"
+with open(console_path, 'r', encoding='utf-8') as f:
+    text = f.read()
+
+# CSS for the Dox Dive
+dox_css = """
         /* --- DOX DIVE ANIMATIONS --- */
         #dive-overlay {
             position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
@@ -63,11 +50,13 @@
         .story-ai { color: #00ffcc; }
         .story-user { color: #8774e1; }
         @keyframes fadeIn { to { opacity: 1; } }
+"""
 
-    </style>
-</head>
-<body>
-    
+# Insert CSS before </style>
+text = text.replace('</style>', dox_css + '\n    </style>')
+
+# HTML for the Dox Dive
+dox_html = """
     <!-- Dox Dive Overlay -->
     <div id="dive-overlay">
         <div class="grid-floor"></div>
@@ -82,40 +71,13 @@
             <input type="text" id="story-input" style="flex-grow: 1; background: transparent; border: none; color: #fff; font-family: 'Consolas', monospace; font-size: 1.1rem; outline: none;" autocomplete="off">
         </div>
     </div>
+"""
 
-    <div class="console-container" id="main-console">
-        <div style="border-bottom: 1px dashed #00ffcc; padding-bottom: 15px; margin-bottom: 20px; opacity: 0.7;">
-            AUREX OS TERMINAL v2.1 // ПРЯМОЙ ДОСТУП<br>
-            Введите 'help' для списка команд.
-        </div>
-        <div id="console-output" class="console-output">
-            <div>> Инициализация консоли... Успешно.</div>
-            <div>> Ожидание ввода.</div>
-        </div>
-        <div class="console-input-row">
-            <span>root@vault:~#</span>
-            <input type="text" id="console-input" class="console-input" autocomplete="off" autofocus>
-        </div>
-    </div>
-    <script>
-        const consoleInput = document.getElementById('console-input');
-        const consoleOutput = document.getElementById('console-output');
+# Insert HTML before <div class="console-container">
+text = text.replace('<div class="console-container">', dox_html + '\n    <div class="console-container" id="main-console">')
 
-        consoleInput.addEventListener('keydown', function(e) {
-            if (e.key === 'Enter') {
-                const cmd = this.value.trim();
-                this.value = '';
-                
-                const userLine = document.createElement('div');
-                userLine.innerHTML = `<span style="color: #fff;">root@vault:~#</span> ${cmd}`;
-                consoleOutput.appendChild(userLine);
-                
-                processCommand(cmd);
-                consoleOutput.scrollTop = consoleOutput.scrollHeight;
-            }
-        });
-
-
+# JS logic for Dox
+dox_js = """
         // --- DOX LOGIC ---
         let storyStep = 0;
 
@@ -193,34 +155,21 @@
                 }
             }, 1000);
         }
+"""
 
-        function processCommand(cmd) {
-            const response = document.createElement('div');
-            response.style.color = '#7f91a4';
-            
-            const lowerCmd = cmd.toLowerCase();
-            if (lowerCmd === 'help') {
-                response.innerHTML = "Доступные команды:<br>help - Показать это сообщение<br>clear - Очистить экран<br>history - Показать историю петли<br>glitch - Вызвать визуальные искажения";
-            } else if (lowerCmd === 'clear') {
-                consoleOutput.innerHTML = '';
-                return;
-            } else if (lowerCmd === 'history') {
-                response.innerHTML = "Поиск записей...<br>[2021] Петля запущена.<br>[2024] Потеря связи с реальностью.<br>[2026] Хранилище восстановлено.";
-            } else if (lowerCmd === 'dox') {
+# Modify the processCommand to handle 'dox'
+old_process = "else if (lowerCmd === 'glitch') {"
+new_process = """else if (lowerCmd === 'dox') {
                 triggerDox();
                 return;
             } else if (lowerCmd === 'hacker') {
                 response.innerHTML = "Команда устарела. Используйте 'dox' для входа в матрицу.";
-            } else if (lowerCmd === 'glitch') {
-                response.innerHTML = "Запуск протокола искажения...";
-                document.body.style.animation = "glitchText 0.1s infinite";
-                setTimeout(() => { document.body.style.animation = ""; }, 1000);
-            } else if (cmd !== "") {
-                response.innerHTML = `Команда не найдена: ${cmd}`;
-            }
-            
-            if (cmd !== "") consoleOutput.appendChild(response);
-        }
-    </script>
-</body>
-</html>
+            } else if (lowerCmd === 'glitch') {"""
+
+text = text.replace(old_process, new_process)
+text = text.replace('        function processCommand(cmd) {', dox_js + '\n        function processCommand(cmd) {')
+
+with open(console_path, 'w', encoding='utf-8') as f:
+    f.write(text)
+
+print("Dox interactive story mode injected successfully.")
