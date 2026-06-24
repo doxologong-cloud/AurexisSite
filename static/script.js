@@ -3427,6 +3427,30 @@ function handleHackerCommand(cmd) {
         printHacker(`[+] Locating ${target}...`);
         setTimeout(() => printHacker(`[!] IP: 192.168.1.${Math.floor(Math.random()*255)}`), 1000);
         setTimeout(() => printHacker(`[!] Status: PWNED`), 2000);
+    } else if (c === 'locate') {
+        printHacker("Fetching IP-based Network Location...");
+        fetch('https://ipapi.co/json/')
+            .then(r => r.json())
+            .then(data => {
+                if(data.error) {
+                    printHacker("IP Location Failed: " + data.reason);
+                } else {
+                    printHacker(`[IP] ${data.ip} - ${data.city}, ${data.region}, ${data.country_name} (${data.org})`);
+                }
+            }).catch(() => printHacker("IP Location Request Failed."));
+            
+        if (navigator.geolocation) {
+            printHacker("Accessing Hardware GPS/Wi-Fi Triangulation...");
+            navigator.geolocation.getCurrentPosition((pos) => {
+                const lat = pos.coords.latitude;
+                const lon = pos.coords.longitude;
+                const acc = pos.coords.accuracy;
+                printHacker(`[GPS] Lat: ${lat.toFixed(5)}, Lon: ${lon.toFixed(5)} (Accuracy: ${Math.round(acc)}m)`);
+                printHacker(`[MAPS] <a href="https://www.google.com/maps?q=${lat},${lon}" target="_blank" style="color:var(--neon-primary);text-decoration:underline;">View on Google Maps</a>`);
+            }, (err) => {
+                printHacker(`[GPS] Access Denied or Unavailable: ${err.message}`);
+            });
+        }
     } else {
         printHacker("Command not found.");
     }
