@@ -209,6 +209,12 @@
     <div id="snake-help">Управление: Стрелочки / WASD. Выход: ESC</div>
 </div>
 
+<!-- DOOM PHASE -->
+<div id="doom-phase" style="display:none; position:fixed; inset:0; z-index:900; background:#000;">
+    <iframe id="doom-iframe" style="width:100%;height:100%;border:none;"></iframe>
+    <div style="position:absolute; top:20px; right:30px; color:#fff; font-size:24px; cursor:pointer; font-weight:bold; text-shadow:0 0 10px red;" onclick="stopDoom()">[ ВЫХОД ИЗ DOOM ]</div>
+</div>
+
 <!-- TERMINAL -->
 <div id="main-console">
     <div style="border-bottom:1px dashed #00ffcc22;padding-bottom:15px;margin-bottom:20px;opacity:0.5;font-size:0.85rem;">
@@ -259,6 +265,22 @@ function runCmd(cmd) {
     else if (cmd === 'snake') {
         out('<span style="color:#00ffcc;">[+] ЗАПУСК МОДУЛЯ "SNAKE.EXE"...</span>');
         setTimeout(startSnake, 500);
+    }
+    else if (cmd === 'doom') {
+        out('<span style="color:#ff9900; font-weight:bold;">[+] ИНИЦИАЛИЗАЦИЯ ДЕМОНИЧЕСКОГО КОДА... RIP AND TEAR!</span>');
+        setTimeout(startDoom, 800);
+    }
+    else if (cmd === 'help') {
+        out('<br><span style="color:#00ffcc; font-weight:bold;">ДОСТУПНЫЕ КОМАНДЫ:</span>');
+        out(' <span style="color:#fff;">help</span>      - Показать этот список');
+        out(' <span style="color:#ff0033;">psychosis</span> - Запуск хоррор-протокола');
+        out(' <span style="color:#00ffcc;">snake</span>     - Модуль извлечения данных (игра)');
+        out(' <span style="color:#ff9900;">doom</span>      - Запуск классического DOOM');
+        out(' <span style="color:#ff00bb;">cat333</span>    - Неизвестная аномалия');
+        out(' <span style="color:#fff;">clear</span>     - Очистить терминал<br>');
+    }
+    else if (cmd === 'clear') {
+        co.innerHTML = '';
     }
     else if (cmd === 'cat333') {
         out('<span style="color:#ff00bb;">[?] Обнаружена аномалия класса Feline...</span>');
@@ -1061,6 +1083,24 @@ function startCat333() {
         cat.remove();
         document.body.style.cursor = 'auto';
     }, 3000);
+}
+
+// ════════════════════════════════════════════════
+//  DOOM
+// ════════════════════════════════════════════════
+function startDoom() {
+    document.getElementById('main-console').style.display = 'none';
+    const phase = document.getElementById('doom-phase');
+    phase.style.display = 'block';
+    // Load Emupedia DOOM in iframe
+    document.getElementById('doom-iframe').src = 'https://emupedia.net/emupedia-game-id1-doom/';
+}
+
+function stopDoom() {
+    document.getElementById('doom-phase').style.display = 'none';
+    document.getElementById('doom-iframe').src = '';
+    document.getElementById('main-console').style.display = 'flex';
+    document.getElementById('console-input').focus();
 }
 
 </script>
