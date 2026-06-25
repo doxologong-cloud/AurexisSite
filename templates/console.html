@@ -174,7 +174,7 @@
     <div style="border-bottom:1px dashed #00ffcc22;padding-bottom:15px;margin-bottom:20px;opacity:0.5;font-size:0.85rem;">
         AUREX OS TERMINAL v2.5<br>
         <span style="color:#ff003388; text-shadow: 0 0 10px red;">[ CRITICAL WARNING: MEMORY CORRUPTION DETECTED ]</span><br>
-        type <span style="color:#fff">help</span> or <span style="color:#ff0033;font-weight:bold;">dox</span>
+        type <span style="color:#fff">help</span> or <span style="color:#ff0033;font-weight:bold;">psychosis</span>
     </div>
     <div id="console-output" class="console-output">
         <div style="color:#2e5a48;">&gt; Ожидание ввода.</div>
@@ -212,11 +212,7 @@ function out(html) {
 }
 
 function runCmd(cmd) {
-    if (cmd === 'dox') { 
-        out('<span style="color:#ff0033; font-weight:900; letter-spacing:2px;">▶ ИНИЦИАЛИЗАЦИЯ ПЕТЛИ...</span>'); 
-        setTimeout(triggerDox, 800); 
-    }
-    else if (cmd === 'psychosis') {
+    if (cmd === 'psychosis') {
         out('<span style="color:#ff0000; font-weight:900;">[CRITICAL] ИНИЦИАЛИЗАЦИЯ ПРОТОКОЛА "ПСИХОЗ"...</span>');
         setTimeout(triggerPsychosis, 1000);
     }
