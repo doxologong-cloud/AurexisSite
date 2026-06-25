@@ -70,6 +70,25 @@
         }
         .psycho-active #main-console { background: transparent; }
         .psycho-active .console-output { opacity: 0.8; }
+
+        /* ── SNAKE PHASE ── */
+        #snake-phase {
+            display:none; position:fixed; inset:0; z-index:500; background:#000;
+            display:flex; flex-direction:column; justify-content:center; align-items:center;
+            font-family:'Consolas',monospace;
+        }
+        #snake-canvas {
+            border: 2px solid #00ffcc; background: #0a0a0a;
+            box-shadow: 0 0 20px rgba(0, 255, 204, 0.2);
+            image-rendering: pixelated;
+        }
+        #snake-score {
+            color: #00ffcc; font-size: 1.5rem; margin-bottom: 20px;
+            text-shadow: 0 0 10px #00ffcc;
+        }
+        #snake-help {
+            color: #555; margin-top: 10px; font-size: 0.9rem;
+        }
         #br-phase {
             display:none; position:fixed; top:0; left:0; width:100vw; height:100vh; z-index:300; overflow:hidden;
         }
@@ -169,12 +188,19 @@
 <canvas id="psycho-canvas"></canvas>
 <div id="psycho-subliminal"></div>
 
+<!-- SNAKE GAME -->
+<div id="snake-phase">
+    <div id="snake-score">[ ИЗВЛЕЧЕНО ДАННЫХ: 0 MB ]</div>
+    <canvas id="snake-canvas" width="600" height="400"></canvas>
+    <div id="snake-help">Управление: Стрелочки / WASD. Выход: ESC</div>
+</div>
+
 <!-- TERMINAL -->
 <div id="main-console">
     <div style="border-bottom:1px dashed #00ffcc22;padding-bottom:15px;margin-bottom:20px;opacity:0.5;font-size:0.85rem;">
         AUREX OS TERMINAL v2.5<br>
         <span style="color:#ff003388; text-shadow: 0 0 10px red;">[ CRITICAL WARNING: MEMORY CORRUPTION DETECTED ]</span><br>
-        type <span style="color:#fff">help</span> or <span style="color:#ff0033;font-weight:bold;">psychosis</span>
+        type <span style="color:#fff">help</span>, <span style="color:#00ffcc;font-weight:bold;">snake</span> or <span style="color:#ff0033;font-weight:bold;">psychosis</span>
     </div>
     <div id="console-output" class="console-output">
         <div style="color:#2e5a48;">&gt; Ожидание ввода.</div>
@@ -215,6 +241,10 @@ function runCmd(cmd) {
     if (cmd === 'psychosis') {
         out('<span style="color:#ff0000; font-weight:900;">[CRITICAL] ИНИЦИАЛИЗАЦИЯ ПРОТОКОЛА "ПСИХОЗ"...</span>');
         setTimeout(triggerPsychosis, 1000);
+    }
+    else if (cmd === 'snake') {
+        out('<span style="color:#00ffcc;">[+] ЗАПУСК МОДУЛЯ "SNAKE.EXE"...</span>');
+        setTimeout(startSnake, 500);
     }
     else out(`<span style="color:#333;">не найдено: ${cmd}</span>`);
 }
@@ -806,9 +836,159 @@ function renderFMVPlaceholder(ts) {
     }
 }
 
+// ════════════════════════════════════════════════
+//  SNAKE GAME
+// ════════════════════════════════════════════════
+let snakeAnimId = null;
+let snakeActive = false;
+let snake = [];
+let snakeDir = {x:1, y:0};
+let nextSnakeDir = {x:1, y:0};
+let food = {x:0, y:0};
+let sScore = 0;
+const S_GRID = 20; // 20x20 pixel grid
+let sCanvas, sCtx;
+let lastSnakeTime = 0;
+const SNAKE_SPEED = 100; // ms per frame
+
+function startSnake() {
+    snakeActive = true;
+    document.getElementById('main-console').style.display = 'none';
+    const phase = document.getElementById('snake-phase');
+    phase.style.display = 'flex';
+    
+    sCanvas = document.getElementById('snake-canvas');
+    sCtx = sCanvas.getContext('2d');
+    
+    // Init state
+    sScore = 0;
+    snake = [
+        {x: 5, y: 10},
+        {x: 4, y: 10},
+        {x: 3, y: 10}
+    ];
+    snakeDir = {x:1, y:0};
+    nextSnakeDir = {x:1, y:0};
+    spawnFood();
+    updateSnakeScore();
+    
+    lastSnakeTime = performance.now();
+    snakeAnimId = requestAnimationFrame(snakeLoop);
+}
+
+function stopSnake() {
+    snakeActive = false;
+    cancelAnimationFrame(snakeAnimId);
+    document.getElementById('snake-phase').style.display = 'none';
+    document.getElementById('main-console').style.display = 'flex';
+    document.getElementById('console-input').focus();
+}
+
+function spawnFood() {
+    const cols = sCanvas.width / S_GRID;
+    const rows = sCanvas.height / S_GRID;
+    food.x = Math.floor(Math.random() * cols);
+    food.y = Math.floor(Math.random() * rows);
+    // Simple check so food isn't on snake
+    for(let segment of snake) {
+        if(segment.x === food.x && segment.y === food.y) spawnFood();
+    }
+}
+
+function updateSnakeScore() {
+    document.getElementById('snake-score').textContent = `[ ИЗВЛЕЧЕНО ДАННЫХ: ${sScore * 14} MB ]`;
+}
+
+function snakeLoop(ts) {
+    if(!snakeActive) return;
+    snakeAnimId = requestAnimationFrame(snakeLoop);
+    
+    if (ts - lastSnakeTime > SNAKE_SPEED) {
+        lastSnakeTime = ts;
+        updateSnake();
+        drawSnake();
+    }
+}
+
+function updateSnake() {
+    snakeDir = {x: nextSnakeDir.x, y: nextSnakeDir.y};
+    
+    const head = { x: snake[0].x + snakeDir.x, y: snake[0].y + snakeDir.y };
+    
+    const cols = sCanvas.width / S_GRID;
+    const rows = sCanvas.height / S_GRID;
+    
+    // Wrap around walls
+    if (head.x < 0) head.x = cols - 1;
+    if (head.x >= cols) head.x = 0;
+    if (head.y < 0) head.y = rows - 1;
+    if (head.y >= rows) head.y = 0;
+    
+    // Self collision
+    for (let i = 0; i < snake.length; i++) {
+        if (head.x === snake[i].x && head.y === snake[i].y) {
+            // Game Over
+            sScore = 0;
+            snake = [{x: 5, y: 10}, {x: 4, y: 10}, {x: 3, y: 10}];
+            snakeDir = {x:1, y:0}; nextSnakeDir = {x:1, y:0};
+            updateSnakeScore();
+            return;
+        }
+    }
+    
+    snake.unshift(head);
+    
+    // Eat food
+    if (head.x === food.x && head.y === food.y) {
+        sScore++;
+        updateSnakeScore();
+        spawnFood();
+    } else {
+        snake.pop(); // remove tail
+    }
+}
+
+function drawSnake() {
+    // Clear
+    sCtx.fillStyle = '#0a0a0a';
+    sCtx.fillRect(0, 0, sCanvas.width, sCanvas.height);
+    
+    // Grid (optional, makes it look cool)
+    sCtx.strokeStyle = '#111';
+    sCtx.lineWidth = 1;
+    for(let i=0; i<sCanvas.width; i+=S_GRID) { sCtx.beginPath(); sCtx.moveTo(i,0); sCtx.lineTo(i,sCanvas.height); sCtx.stroke(); }
+    for(let i=0; i<sCanvas.height; i+=S_GRID) { sCtx.beginPath(); sCtx.moveTo(0,i); sCtx.lineTo(sCanvas.width,i); sCtx.stroke(); }
+    
+    // Draw Food
+    sCtx.fillStyle = '#ff0033';
+    sCtx.shadowColor = '#ff0033';
+    sCtx.shadowBlur = 10;
+    sCtx.fillRect(food.x * S_GRID, food.y * S_GRID, S_GRID-2, S_GRID-2);
+    
+    // Draw Snake
+    sCtx.shadowColor = '#00ffcc';
+    for (let i = 0; i < snake.length; i++) {
+        sCtx.fillStyle = i === 0 ? '#ffffff' : '#00ffcc'; // Head is white
+        sCtx.shadowBlur = i === 0 ? 15 : 5;
+        sCtx.fillRect(snake[i].x * S_GRID, snake[i].y * S_GRID, S_GRID-2, S_GRID-2);
+    }
+    sCtx.shadowBlur = 0; // reset
+}
+
+// Global Key listener for Snake & ESC
+window.addEventListener('keydown', e => {
+    if (snakeActive) {
+        if (e.key === 'Escape') { e.preventDefault(); stopSnake(); }
+        if ((e.key === 'ArrowUp' || e.key === 'w' || e.key === 'W' || e.key === 'ц' || e.key === 'Ц') && snakeDir.y === 0) nextSnakeDir = {x:0, y:-1};
+        if ((e.key === 'ArrowDown' || e.key === 's' || e.key === 'S' || e.key === 'ы' || e.key === 'Ы') && snakeDir.y === 0) nextSnakeDir = {x:0, y:1};
+        if ((e.key === 'ArrowLeft' || e.key === 'a' || e.key === 'A' || e.key === 'ф' || e.key === 'Ф') && snakeDir.x === 0) nextSnakeDir = {x:-1, y:0};
+        if ((e.key === 'ArrowRight' || e.key === 'd' || e.key === 'D' || e.key === 'в' || e.key === 'В') && snakeDir.x === 0) nextSnakeDir = {x:1, y:0};
+    }
+});
+
 window.addEventListener('resize',()=>{
-    if(doxCam){ doxCam.aspect=window.innerWidth/window.innerHeight; doxCam.updateProjectionMatrix(); doxRenderer.setSize(window.innerWidth,window.innerHeight); }
-    resizeFMV();
+    if(typeof doxCam !== 'undefined' && doxCam){ doxCam.aspect=window.innerWidth/window.innerHeight; doxCam.updateProjectionMatrix(); doxRenderer.setSize(window.innerWidth,window.innerHeight); }
+    if(typeof resizeFMV === 'function') resizeFMV();
 });
 </script>
 </body>
