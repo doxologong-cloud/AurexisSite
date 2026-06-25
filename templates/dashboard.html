@@ -7,93 +7,102 @@
     <link rel="stylesheet" href="/static/style.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
 </head>
-<body class="dashboard-body" id="bg-container">
-    <!-- Overlay for color tint -->
-    <div id="bg-overlay"></div>
+<body class="dashboard-body">
+    <!-- ANIMATED BACKGROUND CONTAINERS -->
+    <canvas id="bg-canvas"></canvas>
+    <div id="bg-css-layer"></div>
+    <div id="bg-overlay"></div> <!-- Color tint -->
 
-    <!-- LEFT SETTINGS PANEL (HOVER) -->
+    <!-- MEGA SIDE PANEL (HOVER) -->
     <div class="side-panel" id="side-panel">
         <div class="side-panel-content">
-            <h3>НАСТРОЙКИ СИСТЕМЫ</h3>
             
-            <div class="settings-group">
-                <h4>Цветовой Фильтр (Тинт)</h4>
-                <div style="display:flex; gap:10px; align-items:center;">
-                    <input type="color" id="tint-color" value="#000000" onchange="updateTint()">
-                    <input type="range" id="tint-opacity" min="0" max="1" step="0.1" value="0.5" onchange="updateTint()" style="flex:1;">
+            <!-- HEADER (PROFILE) -->
+            <div class="panel-header glass-dark">
+                <img id="header-avatar" src="/static/assets/default-avatar.png">
+                <div class="header-info">
+                    <div id="header-name">LOADING...</div>
+                    <div class="header-status">В СИСТЕМЕ</div>
                 </div>
             </div>
-            
-            <div class="settings-group">
-                <h4>ФОНОВЫЕ ОБОИ (15 ШТ)</h4>
-                <div class="bg-grid" id="bg-grid">
-                    <!-- JS will populate 15 buttons here -->
+
+            <!-- TABS NAVIGATION -->
+            <div class="panel-nav">
+                <div class="nav-tab active" onclick="switchTab('telegram')">📝 ПРОФИЛЬ</div>
+                <div class="nav-tab" onclick="switchTab('panel')">🌐 БОТНЕТ</div>
+                <div class="nav-tab" onclick="switchTab('themes')">🎨 ОБОИ</div>
+            </div>
+
+            <!-- TAB CONTENT: TELEGRAM PROFILE -->
+            <div id="tab-telegram" class="tab-content active">
+                <div class="tg-profile-editor">
+                    <div class="tg-avatar-wrapper">
+                        <img id="tg-avatar-img" src="/static/assets/default-avatar.png">
+                        <button class="tg-btn" onclick="document.getElementById('tg-file').click()">Сменить фото</button>
+                        <input type="file" id="tg-file" style="display:none" accept="image/*" onchange="updateAvatar(this)">
+                    </div>
+                    <div class="tg-info">
+                        <label>Имя пользователя</label>
+                        <input type="text" id="tg-name" class="tg-input" placeholder="Введите имя...">
+                        <label>О себе (Bio)</label>
+                        <textarea id="tg-bio" class="tg-input" placeholder="Напишите что-нибудь о себе..."></textarea>
+                        
+                        <button class="tg-btn primary" onclick="saveTelegram()">СОХРАНИТЬ</button>
+                        <span id="tg-save-status"></span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- TAB CONTENT: BOTNET PANEL -->
+            <div id="tab-panel" class="tab-content" style="display:none;">
+                <div class="panel-stats glass-dark">
+                    <div class="stat-box">
+                        <h4>СТАТУС</h4>
+                        <div style="color:#00ffcc; font-weight:bold;">ONLINE</div>
+                    </div>
+                    <div class="stat-box">
+                        <h4>УЗЛЫ</h4>
+                        <div id="node-count" style="color:#fff; font-weight:bold;">14,293</div>
+                    </div>
+                    <div class="stat-box">
+                        <h4>ТРАФИК</h4>
+                        <div id="traffic" style="color:#fff; font-weight:bold;">1.2 TB/s</div>
+                    </div>
+                </div>
+                
+                <div class="panel-card glass-dark" style="height: 250px; position:relative; overflow:hidden; margin-top:20px;" id="globe-container">
+                    <!-- 3D GLOBE -->
+                </div>
+
+                <div class="panel-card glass-dark" style="margin-top:20px;">
+                    <h4 style="color:#888; font-size:12px; margin-bottom:10px;">ЛОГИ ПЕРЕХВАТА</h4>
+                    <div id="fake-logs" style="height: 100px; overflow:hidden; font-size:11px; font-family:monospace; color:#00ff00;"></div>
+                </div>
+            </div>
+
+            <!-- TAB CONTENT: THEMES -->
+            <div id="tab-themes" class="tab-content" style="display:none;">
+                <div class="settings-group glass-dark" style="padding:20px; border-radius:12px;">
+                    <h4>Цветовой Фильтр (Тинт)</h4>
+                    <div style="display:flex; gap:10px; align-items:center;">
+                        <input type="color" id="tint-color" value="#000000" onchange="updateTint()">
+                        <input type="range" id="tint-opacity" min="0" max="1" step="0.1" value="0.5" onchange="updateTint()" style="flex:1;">
+                    </div>
+                </div>
+                
+                <div class="settings-group" style="margin-top:20px;">
+                    <h4>ЖИВЫЕ ОБОИ (АНИМАЦИИ)</h4>
+                    <div class="bg-grid" id="bg-grid">
+                        <!-- Buttons populated by JS -->
+                    </div>
                 </div>
             </div>
             
             <button class="logout-btn" onclick="logout()">ВЫЙТИ ИЗ СИСТЕМЫ</button>
         </div>
+        
         <div class="side-panel-handle">
-            <span>⚙️ MENU</span>
-        </div>
-    </div>
-
-    <!-- MAIN DASHBOARD CONTENT -->
-    <div class="main-content">
-        <div class="top-nav glass">
-            <div class="nav-tab active" onclick="switchTab('telegram')">TELEGRAM</div>
-            <div class="nav-tab" onclick="switchTab('panel')">ПАНЕЛЬ УПРАВЛЕНИЯ</div>
-        </div>
-        
-        <!-- TELEGRAM TAB -->
-        <div id="tab-telegram" class="tab-content active glass">
-            <h2>ПРОФИЛЬ TELEGRAM</h2>
-            <div class="tg-profile-editor">
-                <div class="tg-avatar-wrapper">
-                    <img id="tg-avatar-img" src="/static/assets/default-avatar.png">
-                    <button class="tg-btn" onclick="document.getElementById('tg-file').click()">Изменить фото</button>
-                    <input type="file" id="tg-file" style="display:none" accept="image/*" onchange="updateAvatar(this)">
-                </div>
-                <div class="tg-info">
-                    <label>Имя пользователя</label>
-                    <input type="text" id="tg-name" class="tg-input" placeholder="Введите имя...">
-                    <label>О себе (Bio)</label>
-                    <textarea id="tg-bio" class="tg-input" placeholder="Напишите что-нибудь о себе..."></textarea>
-                    <div style="display:flex; gap:20px; align-items:center;">
-                        <button class="tg-btn primary" onclick="saveTelegram()">СОХРАНИТЬ ПРОФИЛЬ</button>
-                        <span id="tg-save-status"></span>
-                    </div>
-                </div>
-            </div>
-        </div>
-        
-        <!-- PANEL TAB -->
-        <div id="tab-panel" class="tab-content glass" style="display:none;">
-            <h2>ЦЕНТР УПРАВЛЕНИЯ БОТНЕТОМ</h2>
-            <div class="panel-grid">
-                <div class="panel-card glass">
-                    <h3>СТАТУС СИСТЕМЫ</h3>
-                    <p style="color:#00ffcc; font-size:1.2rem; margin-bottom:10px;">[ONLINE] СОЕДИНЕНИЕ УСТАНОВЛЕНО</p>
-                    <div style="display:flex; justify-content:space-between; margin-bottom:5px;">
-                        <span>Активных узлов:</span> <span id="node-count" style="font-weight:bold; color:#fff;">14,293</span>
-                    </div>
-                    <div style="display:flex; justify-content:space-between;">
-                        <span>Трафик данных:</span> <span id="traffic" style="font-weight:bold; color:#fff;">1.2 TB/s</span>
-                    </div>
-                </div>
-                <div class="panel-card glass">
-                    <h3>ЛОГИ ПЕРЕХВАТА</h3>
-                    <div id="fake-logs" style="height: 120px; overflow:hidden; font-size:12px; font-family:monospace; color:#00ff00;">
-                    </div>
-                </div>
-                <div class="panel-card glass" style="grid-column: span 2; height: 400px; position:relative; overflow:hidden;" id="globe-container">
-                    <div style="position:absolute; top:20px; left:30px; z-index:10;">
-                        <h3 style="color:#fff; letter-spacing:2px; margin-bottom:5px;">ГЛОБАЛЬНАЯ КАРТА ЗАРАЖЕНИЙ</h3>
-                        <p style="color:#888; font-size:12px;">Мониторинг сети в реальном времени</p>
-                    </div>
-                    <!-- 3D GLOBE GOES HERE -->
-                </div>
-            </div>
+            <span>⚙️ SYSTEM MENU</span>
         </div>
     </div>
     
