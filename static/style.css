@@ -1,6 +1,20 @@
 /* RESET & FONTS */
 * { box-sizing: border-box; margin: 0; padding: 0; }
-body { font-family: 'Inter', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; overflow: hidden; background: #000; margin: 0; }
+body, html { cursor: none; font-family: 'Inter', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; overflow: hidden; background: #000; margin: 0; }
+a, button, input, textarea, .nav-tab, .bg-thumb, .side-panel-handle { cursor: none !important; }
+
+/* CUSTOM CURSOR */
+#cursor-dot {
+    position: fixed; width: 8px; height: 8px; background: #00ffcc; border-radius: 50%;
+    pointer-events: none; z-index: 999999; transform: translate(-50%, -50%);
+    box-shadow: 0 0 10px #00ffcc, 0 0 20px #00ffcc;
+}
+#cursor-outline {
+    position: fixed; width: 30px; height: 30px; border: 2px solid rgba(0, 255, 204, 0.5);
+    border-radius: 50%; pointer-events: none; z-index: 999998; transform: translate(-50%, -50%);
+    transition: width 0.2s, height 0.2s; box-shadow: inset 0 0 10px rgba(0, 255, 204, 0.2);
+}
+.cursor-hover { width: 50px !important; height: 50px !important; background: rgba(0,255,204,0.1); border-color: #00ffcc !important; }
 
 /* ANIMATED BACKGROUND LAYERS */
 #bg-canvas { position: absolute; inset: 0; z-index: 1; width: 100vw; height: 100vh; }
@@ -85,9 +99,15 @@ textarea.tg-input { height: 120px; resize: none; font-family: inherit; }
 .tg-btn.primary:hover { box-shadow: 0 10px 25px rgba(0,170,255,0.6); transform: translateY(-2px); }
 
 /* PANEL (BOTNET) */
-.panel-stats { display: flex; gap: 15px; padding: 20px; }
+.panel-stats { display: flex; gap: 15px; padding: 20px; border-bottom: 1px solid rgba(255,255,255,0.05); }
 .stat-box { flex: 1; text-align: center; }
-.stat-box h4 { font-size: 10px; color: #888; letter-spacing: 1px; margin-bottom: 5px; }
+.stat-box h4 { font-size: 10px; color: #aaa; letter-spacing: 2px; margin-bottom: 8px; }
+
+/* PANEL METERS */
+.meter-wrap { display: flex; align-items: center; gap: 15px; font-size: 11px; font-weight: bold; letter-spacing: 1px; color: #fff; }
+.meter-label { width: 100px; text-shadow: 0 0 5px rgba(255,255,255,0.5); }
+.meter-bar { flex: 1; height: 8px; background: rgba(0,0,0,0.5); border-radius: 4px; overflow: hidden; border: 1px solid rgba(255,255,255,0.1); }
+.meter-fill { height: 100%; border-radius: 4px; box-shadow: 0 0 10px currentColor; transition: width 0.5s ease; }
 
 /* THEMES / SETTINGS */
 .bg-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; }

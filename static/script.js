@@ -1,22 +1,23 @@
 // AUREX OS v3 SCRIPT
 
 const backgrounds = [
-    { id: 'matrix', name: 'МАТРИЦА (АНИМАЦИЯ)', type: 'canvas' },
-    { id: 'stars', name: 'КОСМОС (АНИМАЦИЯ)', type: 'canvas' },
+    { id: 'matrix', name: 'МАТРИЦА', type: 'canvas' },
+    { id: 'stars', name: 'КОСМОС', type: 'canvas' },
     { id: 'video', name: 'ВИДЕО-ФОН', type: 'video', src: '/static/assets/bg_dance.mp4' },
     { id: 'cyber_grid', name: 'КИБЕР СЕТКА', type: 'css' },
     { id: 'neon_fluid', name: 'НЕОНОВЫЙ ПОТОК', type: 'css' },
-    { id: 'img_1', name: 'ХАКЕР', type: 'image', src: 'https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5?q=80&w=2070&auto=format&fit=crop' },
-    { id: 'img_2', name: 'АБСТРАКЦИЯ', type: 'image', src: 'https://images.unsplash.com/photo-1614729939124-032f0b56c9ce?q=80&w=2070&auto=format&fit=crop' },
-    { id: 'img_3', name: 'ГОРОД', type: 'image', src: 'https://images.unsplash.com/photo-1550684848-fac1c5b4e853?q=80&w=2070&auto=format&fit=crop' },
-    { id: 'img_4', name: 'РЕТРО', type: 'image', src: 'https://images.unsplash.com/photo-1550745165-9bc0b252726f?q=80&w=2070&auto=format&fit=crop' },
-    { id: 'img_5', name: 'ЧЕРНАЯ ДЫРА', type: 'image', src: 'https://images.unsplash.com/photo-1462331940025-496dfbfc7564?q=80&w=2045&auto=format&fit=crop' }
+    { id: 'blood_rain', name: 'КРОВАВЫЙ ДОЖДЬ', type: 'canvas' },
+    { id: 'tv_static', name: 'БЕЛЫЙ ШУМ', type: 'canvas' },
+    { id: 'pulse', name: 'ПСИХОЗ', type: 'css' },
+    { id: 'laser', name: 'ЛАЗЕРЫ', type: 'canvas' },
+    { id: 'plasma', name: 'ПЛАЗМА', type: 'css' }
 ];
 
 let currentAnimationId = null;
 let canvasAnimationRef = null;
 
 function initDashboard() {
+    initCursor();
     initThemePicker();
     loadTelegram();
     initPanelLogs();
@@ -35,6 +36,30 @@ function initDashboard() {
 }
 
 // ════════════════════════════════════════════════
+// CUSTOM CURSOR
+// ════════════════════════════════════════════════
+function initCursor() {
+    const dot = document.getElementById('cursor-dot');
+    const outline = document.getElementById('cursor-outline');
+    
+    window.addEventListener('mousemove', (e) => {
+        dot.style.left = e.clientX + 'px';
+        dot.style.top = e.clientY + 'px';
+        
+        // Slight delay for outline
+        setTimeout(() => {
+            outline.style.left = e.clientX + 'px';
+            outline.style.top = e.clientY + 'px';
+        }, 50);
+    });
+
+    document.querySelectorAll('button, a, input, .nav-tab, .bg-thumb, .side-panel-handle').forEach(el => {
+        el.addEventListener('mouseenter', () => outline.classList.add('cursor-hover'));
+        el.addEventListener('mouseleave', () => outline.classList.remove('cursor-hover'));
+    });
+}
+
+// ════════════════════════════════════════════════
 // THEME & BACKGROUND LOGIC
 // ════════════════════════════════════════════════
 
@@ -47,11 +72,15 @@ function initThemePicker() {
         div.className = 'bg-thumb';
         div.id = `thumb-${bg.id}`;
         
-        if(bg.type === 'image') div.style.backgroundImage = `url('${bg.src}')`;
-        else if(bg.id === 'matrix') div.style.background = '#003300';
+        if(bg.id === 'matrix') div.style.background = '#003300';
         else if(bg.id === 'stars') div.style.background = '#000022';
         else if(bg.id === 'cyber_grid') div.style.background = '#110022';
         else if(bg.id === 'neon_fluid') div.style.background = 'linear-gradient(45deg, #ff00cc, #3333ff)';
+        else if(bg.id === 'blood_rain') div.style.background = '#330000';
+        else if(bg.id === 'tv_static') div.style.background = '#555';
+        else if(bg.id === 'pulse') div.style.background = 'radial-gradient(circle, #ff0033, #000)';
+        else if(bg.id === 'laser') div.style.background = '#001133';
+        else if(bg.id === 'plasma') div.style.background = 'radial-gradient(circle at center, #00ffff, #ff00ff)';
         else if(bg.type === 'video') div.style.background = '#333';
         
         div.innerHTML = `<span>${bg.name}</span>`;
@@ -81,10 +110,7 @@ function setTheme(id) {
     cssLayer.style.background = 'transparent';
     cssLayer.innerHTML = '';
     
-    if(bg.type === 'image') {
-        cssLayer.style.backgroundImage = `url('${bg.src}')`;
-    } 
-    else if (bg.type === 'video') {
+    if (bg.type === 'video') {
         cssLayer.innerHTML = `
             <video autoplay loop muted playsinline style="width:100vw; height:100vh; object-fit:cover;">
                 <source src="${bg.src}" type="video/mp4">
@@ -92,12 +118,17 @@ function setTheme(id) {
     }
     else if (bg.type === 'canvas') {
         canvas.style.display = 'block';
-        if (bg.id === 'matrix') drawMatrix(canvas, ctx);
+        if (bg.id === 'matrix') drawMatrix(canvas, ctx, '#00ffcc');
+        if (bg.id === 'blood_rain') drawMatrix(canvas, ctx, '#ff0033');
         if (bg.id === 'stars') drawStars(canvas, ctx);
+        if (bg.id === 'tv_static') drawStatic(canvas, ctx);
+        if (bg.id === 'laser') drawLasers(canvas, ctx);
     }
     else if (bg.type === 'css') {
         if (bg.id === 'cyber_grid') drawCyberGrid(cssLayer);
         if (bg.id === 'neon_fluid') drawNeonFluid(cssLayer);
+        if (bg.id === 'pulse') drawPulse(cssLayer);
+        if (bg.id === 'plasma') drawPlasma(cssLayer);
     }
 }
 
@@ -116,7 +147,7 @@ function updateTint() {
 // CANVAS ANIMATIONS
 // ════════════════════════════════════════════════
 
-function drawMatrix(canvas, ctx) {
+function drawMatrix(canvas, ctx, color) {
     canvas.width = window.innerWidth;
     canvas.height = window.innerHeight;
     const katakana = 'アァカサタナハマヤャラワガザダバパイィキシチニヒミリヰギジヂビピウゥクスツヌフムユュルグズブヅプエェケセテネヘメレゲゼデベペオォコソトノホモヨョロゴゾドボポヴッン';
@@ -131,7 +162,7 @@ function drawMatrix(canvas, ctx) {
     function draw() {
         ctx.fillStyle = 'rgba(0, 0, 0, 0.05)';
         ctx.fillRect(0, 0, canvas.width, canvas.height);
-        ctx.fillStyle = '#00ffcc';
+        ctx.fillStyle = color;
         ctx.font = fontSize + 'px monospace';
         for(let i = 0; i < drops.length; i++) {
             const text = alphabet.charAt(Math.floor(Math.random() * alphabet.length));
@@ -204,6 +235,78 @@ function drawNeonFluid(container) {
         const style = document.createElement('style');
         style.id = 'fluid-style';
         style.innerHTML = `@keyframes fluidGradient { 0% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } 100% { background-position: 0% 50%; } }`;
+        document.head.appendChild(style);
+    }
+}
+
+function drawStatic(canvas, ctx) {
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+    function draw() {
+        const imgData = ctx.createImageData(canvas.width, canvas.height);
+        const data = imgData.data;
+        for(let i = 0; i < data.length; i += 4) {
+            const v = Math.random() * 255;
+            data[i] = v; data[i+1] = v; data[i+2] = v; data[i+3] = 255;
+        }
+        ctx.putImageData(imgData, 0, 0);
+        canvasAnimationRef = requestAnimationFrame(draw);
+    }
+    draw();
+}
+
+function drawLasers(canvas, ctx) {
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+    let lasers = [];
+    function draw() {
+        ctx.fillStyle = 'rgba(0, 0, 0, 0.2)';
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+        
+        if(Math.random() > 0.8) {
+            lasers.push({
+                x: Math.random() * canvas.width,
+                y: Math.random() * canvas.height,
+                w: Math.random() > 0.5 ? canvas.width : 2,
+                h: Math.random() > 0.5 ? 2 : canvas.height,
+                life: 1.0
+            });
+        }
+        
+        for(let i=lasers.length-1; i>=0; i--) {
+            let l = lasers[i];
+            ctx.fillStyle = `rgba(0, 255, 204, ${l.life})`;
+            ctx.shadowBlur = 20;
+            ctx.shadowColor = '#00ffcc';
+            ctx.fillRect(l.w===2 ? l.x : 0, l.h===2 ? l.y : 0, l.w, l.h);
+            ctx.shadowBlur = 0;
+            l.life -= 0.1;
+            if(l.life <= 0) lasers.splice(i, 1);
+        }
+        canvasAnimationRef = requestAnimationFrame(draw);
+    }
+    draw();
+}
+
+function drawPulse(container) {
+    container.style.background = 'radial-gradient(circle at center, #330000 0%, #000000 100%)';
+    container.style.animation = 'pulseBg 2s infinite alternate';
+    if(!document.getElementById('pulse-style')) {
+        const style = document.createElement('style');
+        style.id = 'pulse-style';
+        style.innerHTML = `@keyframes pulseBg { 0% { transform: scale(1); filter: brightness(1); } 100% { transform: scale(1.1); filter: brightness(2); } }`;
+        document.head.appendChild(style);
+    }
+}
+
+function drawPlasma(container) {
+    container.style.background = 'radial-gradient(circle at 50% 50%, rgba(255,0,255,0.5), transparent 50%), radial-gradient(circle at 20% 30%, rgba(0,255,255,0.5), transparent 50%)';
+    container.style.backgroundColor = '#000';
+    container.style.animation = 'plasmaMove 10s infinite alternate linear';
+    if(!document.getElementById('plasma-style')) {
+        const style = document.createElement('style');
+        style.id = 'plasma-style';
+        style.innerHTML = `@keyframes plasmaMove { 0% { background-position: 0% 0%, 0% 0%; } 100% { background-position: 100% 100%, -50% 50%; } }`;
         document.head.appendChild(style);
     }
 }
@@ -297,6 +400,11 @@ function initPanelLogs() {
     setInterval(() => {
         document.getElementById('node-count').innerText = (14000 + Math.floor(Math.random()*500)).toLocaleString();
         document.getElementById('traffic').innerText = (1.0 + Math.random()).toFixed(2) + " TB/s";
+        
+        // Randomize Ping and Meters
+        document.getElementById('ping-count').innerText = Math.floor(Math.random() * 30 + 5) + " ms";
+        document.getElementById('cpu-fill').style.width = Math.floor(Math.random() * 80 + 20) + "%";
+        document.getElementById('ram-fill').style.width = Math.floor(Math.random() * 50 + 40) + "%";
     }, 3000);
 }
 

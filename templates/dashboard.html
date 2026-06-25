@@ -8,6 +8,10 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
 </head>
 <body class="dashboard-body">
+    <!-- CUSTOM CURSOR -->
+    <div id="cursor-dot"></div>
+    <div id="cursor-outline"></div>
+
     <!-- ANIMATED BACKGROUND CONTAINERS -->
     <canvas id="bg-canvas"></canvas>
     <div id="bg-css-layer"></div>
@@ -29,7 +33,7 @@
             <!-- TABS NAVIGATION -->
             <div class="panel-nav">
                 <div class="nav-tab active" onclick="switchTab('telegram')">📝 ПРОФИЛЬ</div>
-                <div class="nav-tab" onclick="switchTab('panel')">🌐 БОТНЕТ</div>
+                <div class="nav-tab" onclick="switchTab('panel')">🌐 ПАНЕЛЬ</div>
                 <div class="nav-tab" onclick="switchTab('themes')">🎨 ОБОИ</div>
             </div>
 
@@ -53,16 +57,16 @@
                 </div>
             </div>
 
-            <!-- TAB CONTENT: BOTNET PANEL -->
+            <!-- TAB CONTENT: PANEL -->
             <div id="tab-panel" class="tab-content" style="display:none;">
                 <div class="panel-stats glass-dark">
                     <div class="stat-box">
-                        <h4>СТАТУС</h4>
-                        <div style="color:#00ffcc; font-weight:bold;">ONLINE</div>
+                        <h4>СТАТУС СЕТИ</h4>
+                        <div style="color:#00ffcc; font-weight:bold; text-shadow:0 0 10px #00ffcc;">[ АКТИВНО ]</div>
                     </div>
                     <div class="stat-box">
-                        <h4>УЗЛЫ</h4>
-                        <div id="node-count" style="color:#fff; font-weight:bold;">14,293</div>
+                        <h4>PING</h4>
+                        <div id="ping-count" style="color:#ff00ff; font-weight:bold; text-shadow:0 0 10px #ff00ff;">12 ms</div>
                     </div>
                     <div class="stat-box">
                         <h4>ТРАФИК</h4>
@@ -70,13 +74,27 @@
                     </div>
                 </div>
                 
+                <div class="panel-meters glass-dark" style="margin-top:20px; padding:20px;">
+                    <div class="meter-wrap">
+                        <div class="meter-label">НАГРУЗКА ЦП</div>
+                        <div class="meter-bar"><div class="meter-fill" id="cpu-fill" style="width:45%; background:#00ffcc;"></div></div>
+                    </div>
+                    <div class="meter-wrap" style="margin-top:15px;">
+                        <div class="meter-label">ОЗУ (RAM)</div>
+                        <div class="meter-bar"><div class="meter-fill" id="ram-fill" style="width:78%; background:#ff0033;"></div></div>
+                    </div>
+                </div>
+                
                 <div class="panel-card glass-dark" style="height: 250px; position:relative; overflow:hidden; margin-top:20px;" id="globe-container">
+                    <div style="position:absolute; top:15px; left:20px; z-index:10;">
+                        <h4 style="color:#fff; letter-spacing:2px; font-size:14px; text-shadow:0 0 5px #000;">ГЛОБАЛЬНАЯ СЕТЬ</h4>
+                    </div>
                     <!-- 3D GLOBE -->
                 </div>
 
                 <div class="panel-card glass-dark" style="margin-top:20px;">
-                    <h4 style="color:#888; font-size:12px; margin-bottom:10px;">ЛОГИ ПЕРЕХВАТА</h4>
-                    <div id="fake-logs" style="height: 100px; overflow:hidden; font-size:11px; font-family:monospace; color:#00ff00;"></div>
+                    <h4 style="color:#00ffcc; font-size:12px; margin-bottom:10px; letter-spacing:1px;">ТЕРМИНАЛ ПРОЦЕССОВ</h4>
+                    <div id="fake-logs" style="height: 120px; overflow:hidden; font-size:11px; font-family:monospace; color:#00ffcc; text-shadow:0 0 5px rgba(0,255,204,0.5);"></div>
                 </div>
             </div>
 
