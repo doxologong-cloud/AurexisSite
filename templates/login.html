@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>AUREX - LOGIN</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;700;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+<body class="login-body">
+    <div class="login-container glass">
+        <h1>СИСТЕМА AUREX</h1>
+        <p>Введите код доступа</p>
+        <input type="password" id="pass-input" placeholder="Пароль">
+        <button onclick="login()">ВХОД</button>
+        <div id="login-error"></div>
+    </div>
+    
+    <script>
+        function login() {
+            const pwd = document.getElementById('pass-input').value;
+            fetch('/api/login', {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify({password: pwd})
+            }).then(r=>r.json()).then(data => {
+                if(data.success) {
+                    window.location.href = '/dashboard';
+                } else {
+                    document.getElementById('login-error').innerText = data.message;
+                }
+            });
+        }
+        document.getElementById('pass-input').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') login();
+        });
+    </script>
+</body>
+</html>
