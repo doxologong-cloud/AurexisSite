@@ -217,6 +217,12 @@
     <div style="position:absolute; top:20px; right:30px; color:#fff; font-size:24px; cursor:pointer; font-weight:bold; text-shadow:0 0 10px red; z-index:1000;" onclick="stopDoom()">[ ВЫХОД ИЗ DOOM ]</div>
 </div>
 
+<!-- EDIT PHASE -->
+<div id="edit-phase" style="display:none; position:fixed; inset:0; z-index:10000; background:#000; flex-direction:column; justify-content:center; align-items:center; overflow:hidden;">
+    <img id="edit-img" src="/static/assets/hacker_glitch_edit_asset_1782385775598.png" style="width:100vw; height:100vh; object-fit:cover; filter:contrast(1.5) saturate(2); transform:scale(1.1); transition: all 0.05s;">
+    <div id="edit-text" style="position:absolute; font-size:8rem; color:#ff0033; font-weight:900; text-shadow:0 0 30px #ff0000, 5px 5px 0 #00ffff; text-transform:uppercase; mix-blend-mode:screen; letter-spacing: 5px;"></div>
+</div>
+
 <!-- TERMINAL -->
 <div id="main-console">
     <div style="border-bottom:1px dashed #00ffcc22;padding-bottom:15px;margin-bottom:20px;opacity:0.5;font-size:0.85rem;">
@@ -279,6 +285,8 @@ function runCmd(cmd) {
         out(' <span style="color:#00ffcc;">snake</span>     - Модуль извлечения данных (игра)');
         out(' <span style="color:#ff9900;">doom</span>      - Запуск классического DOOM');
         out(' <span style="color:#ff00bb;">cat333</span>    - Неизвестная аномалия');
+        out(' <span style="color:#ff0033;">pencil</span>    - ОШИБКА ДАННЫХ');
+        out(' <span style="color:#00ffcc;">edit24</span>    - Сгенерировать Эдит');
         out(' <span style="color:#fff;">clear</span>     - Очистить терминал<br>');
     }
     else if (cmd === 'clear') {
@@ -290,7 +298,11 @@ function runCmd(cmd) {
     }
     else if (cmd === 'pencil') {
         out('<span style="color:#333;">...</span>');
-        setTimeout(triggerPencil, 800); // Suspense delay
+        setTimeout(triggerPencil, 800);
+    }
+    else if (cmd === 'edit24' || cmd === '24dswtw2') {
+        out('<span style="color:#ff0033; font-weight:bold;">[+] ИНИЦИАЛИЗАЦИЯ GLITCH-EDIT ПРОТОКОЛА...</span>');
+        setTimeout(startEditSequence, 1000);
     }
     else out(`<span style="color:#333;">не найдено: ${cmd}</span>`);
 }
@@ -1185,6 +1197,116 @@ function triggerPencil() {
         co.innerHTML = '';
         out('<span style="color:#ff0000; font-size:2rem; font-weight:bold; letter-spacing:10px;">ТЫ СЛЕДУЮЩИЙ</span>');
     }, 800);
+}
+
+// ════════════════════════════════════════════════
+//  PHONK EDIT SEQUENCE
+// ════════════════════════════════════════════════
+function startEditSequence() {
+    document.getElementById('main-console').style.display = 'none';
+    const phase = document.getElementById('edit-phase');
+    phase.style.display = 'flex';
+    
+    const img = document.getElementById('edit-img');
+    const txt = document.getElementById('edit-text');
+    
+    const images = [
+        "/static/assets/hacker_glitch_edit_asset_1782385775598.png",
+        "/static/assets/edit_asset_skull_1782385864111.png",
+        "/static/assets/edit_asset_text_1782385848917.png",
+        "/static/assets/edit_asset_glitch_1782385879596.png"
+    ];
+    
+    const words = ["HACK", "SYSTEM", "24DSWTW2", "DESTROY", "CORRUPT", "PHONK", "GLITCH"];
+    
+    const ctx = new (window.AudioContext || window.webkitAudioContext)();
+    const masterGain = ctx.createGain();
+    const dist = ctx.createWaveShaper();
+    
+    // Heavy distortion
+    let curve = new Float32Array(44100);
+    for (let i = 0; i < 44100; ++i) {
+        let x = i * 2 / 44100 - 1;
+        curve[i] = (3 + 100) * x * 20 * (Math.PI / 180) / (Math.PI + 100 * Math.abs(x));
+    }
+    dist.curve = curve;
+    dist.oversample = '4x';
+    
+    dist.connect(masterGain);
+    masterGain.connect(ctx.destination);
+    
+    let bpm = 120;
+    let beatLen = 60 / bpm; // 0.5s per beat
+    
+    let frame = 0;
+    let editInt = setInterval(() => {
+        frame++;
+        // Visuals
+        img.src = images[Math.floor(Math.random() * images.length)];
+        
+        if (frame % 2 === 0) {
+            txt.innerText = words[Math.floor(Math.random() * words.length)];
+            txt.style.transform = `scale(${1 + Math.random()}) rotate(${Math.random() * 20 - 10}deg)`;
+        } else {
+            txt.innerText = '';
+        }
+        
+        let invert = Math.random() > 0.6 ? 'invert(1)' : '';
+        let hue = `hue-rotate(${Math.floor(Math.random() * 360)}deg)`;
+        let x = (Math.random() - 0.5) * 100;
+        let y = (Math.random() - 0.5) * 100;
+        let scale = 1.1 + Math.random() * 0.4;
+        
+        img.style.filter = `contrast(3) saturate(3) brightness(1.2) ${invert} ${hue}`;
+        img.style.transform = `scale(${scale}) translate(${x}px, ${y}px)`;
+        
+        // Audio: 808 Bass Kick
+        let osc = ctx.createOscillator();
+        osc.type = 'square';
+        osc.frequency.setValueAtTime(100, ctx.currentTime);
+        osc.frequency.exponentialRampToValueAtTime(20, ctx.currentTime + beatLen * 0.8);
+        
+        let env = ctx.createGain();
+        env.gain.setValueAtTime(0, ctx.currentTime);
+        env.gain.linearRampToValueAtTime(1.5, ctx.currentTime + 0.01);
+        env.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + beatLen * 0.8);
+        
+        osc.connect(env);
+        env.connect(dist);
+        osc.start(ctx.currentTime);
+        osc.stop(ctx.currentTime + beatLen);
+        
+    }, beatLen * 1000); // Main Beat
+    
+    // Fast HiHats
+    let hhInt = setInterval(() => {
+        let osc = ctx.createOscillator();
+        osc.type = 'sawtooth';
+        osc.frequency.setValueAtTime(10000, ctx.currentTime);
+        
+        let env = ctx.createGain();
+        env.gain.setValueAtTime(0, ctx.currentTime);
+        env.gain.linearRampToValueAtTime(0.3, ctx.currentTime + 0.01);
+        env.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.05);
+        
+        osc.connect(env);
+        env.connect(masterGain); // don't distort hihats
+        osc.start(ctx.currentTime);
+        osc.stop(ctx.currentTime + 0.05);
+    }, (beatLen / 4) * 1000); // 16th notes
+    
+    // Stop after 10 seconds
+    setTimeout(() => {
+        clearInterval(editInt);
+        clearInterval(hhInt);
+        phase.style.display = 'none';
+        document.getElementById('main-console').style.display = 'flex';
+        ctx.close();
+        
+        co.innerHTML = '';
+        out('<span style="color:#00ffcc; font-size:2rem; font-weight:bold; letter-spacing:5px;">24DSWTW2 EDIT GENERATED SUCCESSFULLY</span>');
+        document.getElementById('console-input').focus();
+    }, 10000);
 }
 
 </script>
