@@ -288,6 +288,10 @@ function runCmd(cmd) {
         out('<span style="color:#ff00bb;">[?] Обнаружена аномалия класса Feline...</span>');
         startCat333();
     }
+    else if (cmd === 'pencil') {
+        out('<span style="color:#333;">...</span>');
+        setTimeout(triggerPencil, 800); // Suspense delay
+    }
     else out(`<span style="color:#333;">не найдено: ${cmd}</span>`);
 }
 
@@ -1110,6 +1114,77 @@ function stopDoom() {
     document.getElementById('doom-phase').style.display = 'none';
     document.getElementById('main-console').style.display = 'flex';
     document.getElementById('console-input').focus();
+}
+
+// ════════════════════════════════════════════════
+//  PENCIL JUMPSCARE
+// ════════════════════════════════════════════════
+function triggerPencil() {
+    // 1. Visuals
+    const js = document.createElement('div');
+    js.style.position = 'fixed';
+    js.style.inset = '0';
+    js.style.zIndex = '9999999';
+    // Classic horrifying face
+    js.style.background = 'url("https://upload.wikimedia.org/wikipedia/en/thumb/e/ef/Jeff_the_Killer_original_image.jpg/400px-Jeff_the_Killer_original_image.jpg") center/cover no-repeat';
+    js.style.animation = 'shake 0.05s infinite';
+    js.style.filter = 'contrast(300%) saturate(500%) brightness(1.5) hue-rotate(90deg)';
+    document.body.appendChild(js);
+    
+    // Flash background red
+    document.body.style.backgroundColor = '#ff0000';
+
+    // 2. Audio (Synthetic Ear-Piercing Scream)
+    const ctx = new (window.AudioContext || window.webkitAudioContext)();
+    const osc = ctx.createOscillator();
+    const osc2 = ctx.createOscillator();
+    const gain = ctx.createGain();
+    const dist = ctx.createWaveShaper();
+    
+    // Make distortion curve for harsh noise
+    const curve = new Float32Array(44100);
+    for (let i = 0; i < 44100; ++i) {
+        let x = i * 2 / 44100 - 1;
+        curve[i] = (3 + 400) * x * 20 * (Math.PI / 180) / (Math.PI + 400 * Math.abs(x));
+    }
+    dist.curve = curve;
+    dist.oversample = '4x';
+    
+    // High pitched screaming frequencies
+    osc.type = 'sawtooth';
+    osc.frequency.setValueAtTime(1200, ctx.currentTime);
+    osc.frequency.exponentialRampToValueAtTime(3500, ctx.currentTime + 0.3);
+    
+    osc2.type = 'square';
+    osc2.frequency.setValueAtTime(800, ctx.currentTime);
+    osc2.frequency.exponentialRampToValueAtTime(2200, ctx.currentTime + 0.3);
+
+    osc.connect(dist);
+    osc2.connect(dist);
+    dist.connect(gain);
+    gain.connect(ctx.destination);
+    
+    gain.gain.setValueAtTime(0, ctx.currentTime);
+    gain.gain.linearRampToValueAtTime(2.0, ctx.currentTime + 0.05); // Instant LOUD
+    
+    osc.start();
+    osc2.start();
+
+    // 3. Cleanup after 0.8s
+    setTimeout(() => {
+        js.remove();
+        document.body.style.backgroundColor = '#000';
+        
+        gain.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.1);
+        setTimeout(() => {
+            osc.stop();
+            osc2.stop();
+        }, 150);
+        
+        // Final terminal message
+        co.innerHTML = '';
+        out('<span style="color:#ff0000; font-size:2rem; font-weight:bold; letter-spacing:10px;">ТЫ СЛЕДУЮЩИЙ</span>');
+    }, 800);
 }
 
 </script>
