@@ -4,6 +4,8 @@
     <meta charset="UTF-8">
     <title>AUREX OS TERMINAL</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="https://v7.js-dos.com/latest/js-dos.js"></script>
+    <link href="https://v7.js-dos.com/latest/js-dos.css" rel="stylesheet">
     <style>
         * { margin:0; padding:0; box-sizing:border-box; }
         body, html { height:100%; background:#000; color:#00ffcc; font-family:'Consolas',monospace; overflow:hidden; }
@@ -211,8 +213,8 @@
 
 <!-- DOOM PHASE -->
 <div id="doom-phase" style="display:none; position:fixed; inset:0; z-index:900; background:#000;">
-    <iframe id="doom-iframe" style="width:100%;height:100%;border:none;"></iframe>
-    <div style="position:absolute; top:20px; right:30px; color:#fff; font-size:24px; cursor:pointer; font-weight:bold; text-shadow:0 0 10px red;" onclick="stopDoom()">[ ВЫХОД ИЗ DOOM ]</div>
+    <div id="jsdos-container" style="width:100%; height:100%;"></div>
+    <div style="position:absolute; top:20px; right:30px; color:#fff; font-size:24px; cursor:pointer; font-weight:bold; text-shadow:0 0 10px red; z-index:1000;" onclick="stopDoom()">[ ВЫХОД ИЗ DOOM ]</div>
 </div>
 
 <!-- TERMINAL -->
@@ -1088,17 +1090,24 @@ function startCat333() {
 // ════════════════════════════════════════════════
 //  DOOM
 // ════════════════════════════════════════════════
+let dosInstance = null;
+
 function startDoom() {
     document.getElementById('main-console').style.display = 'none';
     const phase = document.getElementById('doom-phase');
     phase.style.display = 'block';
-    // Load Emupedia DOOM in iframe
-    document.getElementById('doom-iframe').src = 'https://emupedia.net/emupedia-game-id1-doom/';
+    
+    if (!dosInstance) {
+        window.emulators.pathPrefix = "https://v7.js-dos.com/latest/emulators/";
+        dosInstance = Dos(document.getElementById("jsdos-container"), {
+            url: "/static/assets/doom.jsdos",
+            theme: "dark"
+        });
+    }
 }
 
 function stopDoom() {
     document.getElementById('doom-phase').style.display = 'none';
-    document.getElementById('doom-iframe').src = '';
     document.getElementById('main-console').style.display = 'flex';
     document.getElementById('console-input').focus();
 }
