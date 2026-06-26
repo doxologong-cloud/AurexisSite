@@ -21,12 +21,12 @@
 
     <main>
         <section id="home" class="hero">
-            <div class="hero-content">
-                <h1>MOD DOWNLOADER <span class="highlight">v7.0</span></h1>
-                <p class="subtitle">Ultimate TLauncher Edition. Больше никаких консолей. Чистый интерфейс, система защиты от крашей и быстрая загрузка модов по коду сборки.</p>
+            <div class="hero-text">
+                <h1>MOD DOWNLOADER <span class="version">v10.0</span></h1>
+                <p class="subtitle">Ultimate TLauncher Edition. Больше никаких консолей. Умная распаковка готовых сборок (.mrpack), чистый интерфейс и система защиты от крашей.</p>
                 
                 <div class="hero-actions">
-                    <a href="ModDownloader.exe" class="btn-primary" download id="download-btn">
+                    <a href="#" class="btn-primary" id="download-btn">
                         <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
                         Скачать .EXE
                     </a>
@@ -103,11 +103,22 @@
                 <div class="timeline-item">
                     <div class="timeline-dot success"></div>
                     <div class="timeline-content">
-                        <h3>Версия 9.0 (Ultimate Update)</h3>
+                        <h3>Версия 10.0 (Modpack Parser Update)</h3>
                         <span class="date">Сегодня</span>
                         <ul>
+                            <li>Интеграция умного поиска готовых сборок (Modpacks)</li>
+                            <li>Встроенный распаковщик `.mrpack` форматов</li>
+                            <li>Синхронизация счетчика загрузок с глобальной базой</li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-dot primary"></div>
+                    <div class="timeline-content">
+                        <h3>Версия 9.0 (Ultimate Update)</h3>
+                        <span class="date">Сегодня ранее</span>
+                        <ul>
                             <li>Добавлена поддержка версий до 1.12.2</li>
-                            <li>Вкладка "Готовые сборки" (Пресеты) в один клик</li>
                             <li>Кнопка умного обновления модов без перекачивания лишнего</li>
                         </ul>
                     </div>
@@ -119,20 +130,53 @@
                         <span class="date">Сегодня ранее</span>
                         <ul>
                             <li>Полный редизайн интерфейса на веб-технологиях (Glassmorphism)</li>
-                            <li>Темная тема и новые анимации</li>
-                            <li>Плавный ползунок прогресса и живой терминал загрузки</li>
+                            <li>Темная тема и плавные CSS-анимации</li>
+                            <li>Переход на pywebview</li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-dot primary"></div>
+                    <div class="timeline-content">
+                        <h3>Версия 7.0 (GUI Edition)</h3>
+                        <span class="date">Вчера</span>
+                        <ul>
+                            <li>Первый полноценный графический интерфейс (CustomTkinter)</li>
+                            <li>Защита от крашей (Anti-Crash System)</li>
+                            <li>Полноценная интеграция с Modrinth API</li>
                         </ul>
                     </div>
                 </div>
                 <div class="timeline-item">
                     <div class="timeline-dot gray"></div>
                     <div class="timeline-content">
-                        <h3>Версия 7.0 (GUI Edition)</h3>
-                        <span class="date">Вчера</span>
+                        <h3>Версия 5.0 - 6.0 (Коды Сборок)</h3>
+                        <span class="date">Пару дней назад</span>
                         <ul>
-                            <li>Переход с консоли на графический интерфейс CustomTkinter</li>
-                            <li>Защита от крашей (Anti-Crash System)</li>
-                            <li>Интеграция с Modrinth API</li>
+                            <li>Добавлена система кодов (Hash) для удобного шеринга сборок</li>
+                            <li>Загрузчик и Создатель разделены</li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-dot gray"></div>
+                    <div class="timeline-content">
+                        <h3>Версия 2.0 - 4.0 (Умная Консоль)</h3>
+                        <span class="date">Неделю назад</span>
+                        <ul>
+                            <li>Консольный интерфейс с выбором версии игры и лоадера</li>
+                            <li>Поддержка CurseForge как резервного источника</li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-dot gray"></div>
+                    <div class="timeline-content">
+                        <h3>Версия 1.0 (Рождение)</h3>
+                        <span class="date">Давно</span>
+                        <ul>
+                            <li>Базовый скрипт для скачивания .jar файлов по прямым ссылкам</li>
+                            <li>Самая первая версия для личного пользования</li>
                         </ul>
                     </div>
                 </div>

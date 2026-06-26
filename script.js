@@ -55,7 +55,8 @@ async function fetchRealDownloads() {
 
 fetchRealDownloads();
 
-document.getElementById("download-btn").addEventListener("click", async () => {
+document.getElementById("download-btn").addEventListener("click", async (e) => {
+    e.preventDefault();
     try {
         const response = await fetch('https://api.counterapi.dev/v1/hacker-moddownloader/downloads/up');
         const data = await response.json();
@@ -63,5 +64,12 @@ document.getElementById("download-btn").addEventListener("click", async () => {
     } catch (e) {
         // Ignore errors
     }
+    // Initiate download after incrementing
+    const link = document.createElement('a');
+    link.href = 'ModDownloader.exe';
+    link.download = 'ModDownloader.exe';
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
 });
 
