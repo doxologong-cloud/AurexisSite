@@ -294,3 +294,133 @@ footer {
     color: #8b949e;
     border-top: 1px solid var(--border-color);
 }
+
+/* Download Stats */
+.download-stats {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    margin-top: 30px;
+    background: rgba(255, 255, 255, 0.03);
+    padding: 15px 20px;
+    border-radius: 12px;
+    border: 1px solid var(--border-color);
+    display: inline-flex;
+}
+
+.stat-icon {
+    background: rgba(35, 134, 54, 0.2);
+    color: var(--success);
+    padding: 10px;
+    border-radius: 8px;
+    display: flex;
+}
+
+.stat-info {
+    display: flex;
+    flex-direction: column;
+}
+
+.stat-number {
+    font-size: 1.5rem;
+    font-weight: 900;
+    line-height: 1;
+    color: white;
+}
+
+.stat-label {
+    font-size: 0.85rem;
+    color: #8b949e;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+/* Changelog Timeline */
+.changelog-section {
+    padding: 4rem 5%;
+    background-color: #0d1117;
+    border-top: 1px solid var(--border-color);
+}
+
+.changelog-section h2 {
+    font-size: 2.5rem;
+    color: white;
+    margin-bottom: 3rem;
+}
+
+.timeline {
+    position: relative;
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+.timeline::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 20px;
+    height: 100%;
+    width: 2px;
+    background: var(--border-color);
+}
+
+.timeline-item {
+    position: relative;
+    padding-left: 60px;
+    margin-bottom: 40px;
+}
+
+.timeline-dot {
+    position: absolute;
+    left: 14px;
+    top: 5px;
+    width: 14px;
+    height: 14px;
+    border-radius: 50%;
+    background: var(--border-color);
+    box-shadow: 0 0 0 4px #0d1117;
+}
+
+.timeline-dot.success { background: var(--success); box-shadow: 0 0 10px var(--success); }
+.timeline-dot.primary { background: var(--accent-color); box-shadow: 0 0 10px var(--accent-color); }
+.timeline-dot.gray { background: #8b949e; }
+
+.timeline-content {
+    background: var(--card-bg);
+    border: 1px solid var(--border-color);
+    border-radius: 12px;
+    padding: 25px;
+}
+
+.timeline-content h3 {
+    color: white;
+    margin-bottom: 5px;
+    font-size: 1.2rem;
+}
+
+.date {
+    display: block;
+    color: var(--accent-color);
+    font-size: 0.85rem;
+    font-weight: 600;
+    margin-bottom: 15px;
+}
+
+.timeline-content ul {
+    list-style-type: none;
+}
+
+.timeline-content li {
+    color: #c9d1d9;
+    margin-bottom: 10px;
+    position: relative;
+    padding-left: 20px;
+}
+
+.timeline-content li::before {
+    content: ">";
+    position: absolute;
+    left: 0;
+    color: var(--accent-color);
+}
+

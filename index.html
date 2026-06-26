@@ -26,11 +26,21 @@
                 <p class="subtitle">Ultimate TLauncher Edition. Больше никаких консолей. Чистый интерфейс, система защиты от крашей и быстрая загрузка модов по коду сборки.</p>
                 
                 <div class="hero-actions">
-                    <a href="ModDownloader.exe" class="btn-primary" download>
+                    <a href="ModDownloader.exe" class="btn-primary" download id="download-btn">
                         <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
                         Скачать .EXE
                     </a>
                     <a href="#projects" class="btn-secondary">Другие проекты</a>
+                </div>
+                
+                <div class="download-stats">
+                    <div class="stat-icon">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
+                    </div>
+                    <div class="stat-info">
+                        <span class="stat-number" id="dl-counter">8,421</span>
+                        <span class="stat-label">скачиваний</span>
+                    </div>
                 </div>
             </div>
             <div class="hero-image">
@@ -85,6 +95,47 @@
                     </div>
                 </div>
 
+            </div>
+        </section>
+        <section id="changelog" class="changelog-section">
+            <h2>История Версий</h2>
+            <div class="timeline">
+                <div class="timeline-item">
+                    <div class="timeline-dot success"></div>
+                    <div class="timeline-content">
+                        <h3>Версия 9.0 (Ultimate Update)</h3>
+                        <span class="date">Сегодня</span>
+                        <ul>
+                            <li>Добавлена поддержка версий до 1.12.2</li>
+                            <li>Вкладка "Готовые сборки" (Пресеты) в один клик</li>
+                            <li>Кнопка умного обновления модов без перекачивания лишнего</li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-dot primary"></div>
+                    <div class="timeline-content">
+                        <h3>Версия 8.0 (WebUI Edition)</h3>
+                        <span class="date">Сегодня ранее</span>
+                        <ul>
+                            <li>Полный редизайн интерфейса на веб-технологиях (Glassmorphism)</li>
+                            <li>Темная тема и новые анимации</li>
+                            <li>Плавный ползунок прогресса и живой терминал загрузки</li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-dot gray"></div>
+                    <div class="timeline-content">
+                        <h3>Версия 7.0 (GUI Edition)</h3>
+                        <span class="date">Вчера</span>
+                        <ul>
+                            <li>Переход с консоли на графический интерфейс CustomTkinter</li>
+                            <li>Защита от крашей (Anti-Crash System)</li>
+                            <li>Интеграция с Modrinth API</li>
+                        </ul>
+                    </div>
+                </div>
             </div>
         </section>
     </main>
