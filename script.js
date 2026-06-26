@@ -33,12 +33,35 @@ function animateCounter(id, start, end, duration) {
     window.requestAnimationFrame(step);
 }
 
-// Start counter when visible
-const observer = new IntersectionObserver((entries) => {
-    if(entries[0].isIntersecting) {
-        animateCounter("dl-counter", 8000, 8421, 2000);
-        observer.disconnect();
+let currentDownloads = 0;
+
+async function fetchRealDownloads() {
+    try {
+        const response = await fetch('https://api.counterapi.dev/v1/hacker-moddownloader/downloads');
+        const data = await response.json();
+        currentDownloads = data.count || 0;
+        
+        const observer = new IntersectionObserver((entries) => {
+            if(entries[0].isIntersecting) {
+                animateCounter("dl-counter", 0, currentDownloads, 1500);
+                observer.disconnect();
+            }
+        });
+        observer.observe(document.getElementById("dl-counter"));
+    } catch (e) {
+        document.getElementById("dl-counter").innerText = "0";
+    }
+}
+
+fetchRealDownloads();
+
+document.getElementById("download-btn").addEventListener("click", async () => {
+    try {
+        const response = await fetch('https://api.counterapi.dev/v1/hacker-moddownloader/downloads/up');
+        const data = await response.json();
+        document.getElementById("dl-counter").innerText = (data.count || currentDownloads + 1).toLocaleString();
+    } catch (e) {
+        // Ignore errors
     }
 });
-observer.observe(document.getElementById("dl-counter"));
 
