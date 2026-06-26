@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Мои Проекты | Портфолио</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="background-animation"></div>
+    
+    <header>
+        <div class="logo">CREATOR'S HUB</div>
+        <nav>
+            <a href="#home">Главная</a>
+            <a href="#projects">Мои Проекты</a>
+            <a href="#about">Обо мне</a>
+        </nav>
+    </header>
+
+    <main>
+        <section id="home" class="hero">
+            <div class="hero-content">
+                <h1>MOD DOWNLOADER <span class="highlight">v7.0</span></h1>
+                <p class="subtitle">Ultimate TLauncher Edition. Больше никаких консолей. Чистый интерфейс, система защиты от крашей и быстрая загрузка модов по коду сборки.</p>
+                
+                <div class="hero-actions">
+                    <a href="ModDownloader.exe" class="btn-primary" download>
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
+                        Скачать .EXE
+                    </a>
+                    <a href="#projects" class="btn-secondary">Другие проекты</a>
+                </div>
+            </div>
+            <div class="hero-image">
+                <div class="app-mockup">
+                    <div class="app-header">
+                        <span class="dot red"></span>
+                        <span class="dot yellow"></span>
+                        <span class="dot green"></span>
+                        <div class="app-title">ModDownloader 7.0</div>
+                    </div>
+                    <div class="app-body">
+                        <div class="sidebar"></div>
+                        <div class="content">
+                            <div class="search-bar-mock"></div>
+                            <div class="card-mock"></div>
+                            <div class="card-mock"></div>
+                            <div class="card-mock"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="projects" class="projects-section">
+            <h2>Все проекты</h2>
+            <div class="projects-grid">
+                
+                <div class="project-card">
+                    <div class="project-img bg-minecraft"></div>
+                    <div class="project-info">
+                        <h3>ModDownloader</h3>
+                        <p>Наш главный проект. Лаунчер для моментального скачивания сборок Minecraft.</p>
+                        <a href="ModDownloader.exe" download class="card-link">Скачать</a>
+                    </div>
+                </div>
+
+                <div class="project-card">
+                    <div class="project-img bg-coming-soon"></div>
+                    <div class="project-info">
+                        <h3>Discord Бот (Скоро)</h3>
+                        <p>Автоматическая система для управления сервером.</p>
+                        <a href="#" class="card-link disabled">В разработке</a>
+                    </div>
+                </div>
+
+                <div class="project-card">
+                    <div class="project-img bg-coming-soon"></div>
+                    <div class="project-info">
+                        <h3>Aternos Manager (Скоро)</h3>
+                        <p>Удобный интерфейс для управления нашим сервером Aternos.</p>
+                        <a href="#" class="card-link disabled">В разработке</a>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <p>© 2026 Все права защищены. Создано для друзей.</p>
+    </footer>
+
+    <script src="script.js"></script>
+</body>
+</html>
