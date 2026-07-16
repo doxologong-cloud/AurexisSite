@@ -1,90 +1,38 @@
-// Анимация часов HUD
-function updateClock() {
-    const now = new Date();
-    // Добавляем искусственные "миллисекунды" для создания эффекта быстрых вычислений
-    const ms = String(Math.floor(Math.random() * 99)).padStart(2, '0'); 
+document.addEventListener("DOMContentLoaded", () => {
+    const container = document.getElementById('dust-container');
     
-    const timeString = 
-        String(now.getHours()).padStart(2, '0') + ':' +
-        String(now.getMinutes()).padStart(2, '0') + ':' +
-        String(now.getSeconds()).padStart(2, '0') + ':' + 
-        ms;
+    // Создаем пыль и искры от стройки
+    for(let i = 0; i < 60; i++) {
+        let dust = document.createElement('div');
+        dust.className = 'dust';
         
-    document.getElementById('clock').textContent = timeString;
-    requestAnimationFrame(updateClock);
-}
-updateClock();
-
-// Эффект печатной машинки
-const phrases = [
-    "УСТАНОВКА СВЯЗИ СО ВРЕМЕНЕМ...",
-    "АНАЛИЗ ВЕРОЯТНОСТЕЙ...",
-    "РАСПАКОВКА ДАННЫХ ИЗ 2077 ГОДА.",
-    "БУДУЩЕЕ УЖЕ ЗДЕСЬ."
-];
-
-const typeWriterElement = document.getElementById('typewriter');
-let phraseIndex = 0;
-let charIndex = 0;
-let isDeleting = false;
-
-function typeWriter() {
-    const currentPhrase = phrases[phraseIndex];
-    
-    if (isDeleting) {
-        typeWriterElement.textContent = currentPhrase.substring(0, charIndex - 1);
-        charIndex--;
-    } else {
-        typeWriterElement.textContent = currentPhrase.substring(0, charIndex + 1);
-        charIndex++;
-    }
-
-    let typeSpeed = 50; // Скорость печати
-    if (isDeleting) { typeSpeed /= 2; } // Удаляем быстрее
-
-    if (!isDeleting && charIndex === currentPhrase.length) {
-        // Пауза перед удалением
-        typeSpeed = 2000;
-        if (phraseIndex === phrases.length - 1) {
-            // Если это последняя фраза - оставляем её
-            return; 
+        // Случайный размер, позиция и скорость
+        const size = Math.random() * 8 + 2;
+        dust.style.width = size + 'px';
+        dust.style.height = size + 'px';
+        
+        dust.style.left = Math.random() * 100 + 'vw';
+        dust.style.top = Math.random() * 100 + 'vh';
+        
+        dust.style.animationDuration = (Math.random() * 5 + 3) + 's';
+        dust.style.animationDelay = (Math.random() * 5) + 's';
+        
+        // Иногда пыль превращается в золотые строительные искры
+        if (Math.random() > 0.7) {
+            dust.style.background = 'rgba(255, 215, 0, 0.8)';
+            dust.style.boxShadow = '0 0 10px #ff8c00';
+            dust.style.filter = 'none';
+            dust.style.animationDuration = (Math.random() * 2 + 1) + 's'; // Искры летят быстрее
         }
-        isDeleting = true;
-    } else if (isDeleting && charIndex === 0) {
-        isDeleting = false;
-        phraseIndex++;
-        typeSpeed = 500;
-    }
-
-    setTimeout(typeWriter, typeSpeed);
-}
-
-// Запускаем печать через секунду
-setTimeout(typeWriter, 1000);
-
-// Интерактивный глитч-эффект при нажатии кнопки
-function triggerGlitch() {
-    const wrapper = document.querySelector('.content-wrapper');
-    const btn = document.querySelector('.cyber-btn');
-    const oldText = btn.innerHTML;
-    
-    // Визуальный сбой
-    wrapper.style.transform = 'translate(' + (Math.random() * 20 - 10) + 'px, ' + (Math.random() * 20 - 10) + 'px) skewX(' + (Math.random() * 10) + 'deg)';
-    wrapper.style.filter = 'hue-rotate(' + (Math.random() * 360) + 'deg) contrast(150%)';
-    
-    btn.innerHTML = "<span>[ СИНХРОНИЗАЦИЯ... ]</span>";
-    
-    setTimeout(() => {
-        wrapper.style.transform = 'none';
-        wrapper.style.filter = 'none';
-        btn.innerHTML = "<span>[ ПЕРЕДАЧА УСПЕШНА ]</span>";
-        btn.style.color = "#ff003c";
-        btn.style.borderColor = "#ff003c";
         
+        container.appendChild(dust);
+    }
+    
+    // Эффект "сотрясания" камеры при ударе киркой
+    setInterval(() => {
+        document.body.style.transform = "translate(2px, 2px)";
         setTimeout(() => {
-            btn.innerHTML = oldText;
-            btn.style.color = "";
-            btn.style.borderColor = "";
-        }, 2000);
-    }, 150);
-}
+            document.body.style.transform = "none";
+        }, 50);
+    }, 2000); // Синхронизировано с анимацией hammerImpact (2s)
+});

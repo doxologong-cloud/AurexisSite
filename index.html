@@ -3,49 +3,21 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ПРОЕКЦИЯ БУДУЩЕГО</title>
+    <title>ВЕДУТСЯ РАБОТЫ</title>
     <link rel="stylesheet" href="style.css">
-    <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Orbitron:wght@400;700;900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@900&display=swap" rel="stylesheet">
 </head>
 <body>
-    <div id="glitch-overlay"></div>
+    <div class="overlay"></div>
     
-    <div class="cyber-container">
-        <!-- Декоративные элементы интерфейса -->
-        <div class="hud-top-left">SYS.CORE // v9.9.0 // 2077</div>
-        <div class="hud-top-right">[ СИНХРОНИЗАЦИЯ ПОТОКА: <span id="sync-status" class="blink">АКТИВНА</span> ]</div>
-        <div class="hud-bottom-left">УГРОЗА: МИНИМАЛЬНАЯ</div>
-        <div class="hud-bottom-right" id="clock">00:00:00:00</div>
+    <!-- Искры и строительная пыль -->
+    <div id="dust-container"></div>
 
-        <div class="content-wrapper">
-            <!-- Главный заголовок -->
-            <div class="glitch-wrapper">
-                <h1 class="cyber-glitch" data-text="AUREXIS NEXUS">AUREXIS NEXUS</h1>
-            </div>
-            
-            <div class="cyber-separator"></div>
-            
-            <div class="typing-container">
-                <p id="typewriter"></p><span class="cursor">_</span>
-            </div>
-
-            <!-- Интерфейс сканера -->
-            <div class="scanner-box">
-                <div class="scanner-line"></div>
-                <div class="data-stream">
-                    <p>ИНИЦИАЛИЗАЦИЯ НЕЙРОИНТЕРФЕЙСА...</p>
-                    <p class="delayed-1">СКАНИРОВАНИЕ БИОМЕТРИИ...</p>
-                    <p class="delayed-2">ДОСТУП К АРХИВАМ БУДУЩЕГО ОТКРЫТ.</p>
-                </div>
-            </div>
-
-            <!-- "Кнопка" -->
-            <div class="cyber-btn" onclick="triggerGlitch()">
-                <span>[ ПРИНЯТЬ ПЕРЕДАЧУ ]</span>
-            </div>
-        </div>
+    <div class="content">
+        <h1 class="construction-text">ВЕДУТСЯ РАБОТЫ</h1>
+        <p class="sub-text">Мелкие рабочие уже копают камень и строят новый сайт...</p>
     </div>
-
+    
     <script src="script.js"></script>
 </body>
 </html>
